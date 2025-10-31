@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include 'partials/header/header-three.html' %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="container">
+        <h2 class="title mb-4">Mon partenariat</h2>
+        <div class="card p-4 shadow-sm rounded-3">
+          <p><strong>Société:</strong> {{ partenariat.nom_societe }}</p>
+          <p><strong>Email:</strong> {{ partenariat.email }}</p>
+          <p><strong>Téléphone:</strong> {{ partenariat.telephone }}</p>
+          <p><strong>CEO:</strong> {{ partenariat.nom_ceo }}</p>
+          <p><strong>Date:</strong> {{ partenariat.date_partenariat }}</p>
+          <p><strong>Plafond:</strong> {{ partenariat.plafond }}</p>
+          <p><strong>Statut:</strong> 
+            {% if partenariat.status == "pending" %}
+              <span class="badge bg-warning text-dark">En attente</span>
+            {% elif partenariat.status == "approved" %}
+              <span class="badge bg-success">Approuvé</span>
+            {% else %}
+              <span class="badge bg-danger">Rejeté</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer>test</footer>
+  </div>
+</div>
+{% endblock %}

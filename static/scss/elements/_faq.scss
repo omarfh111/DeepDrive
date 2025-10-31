@@ -1,0 +1,169 @@
+// Faq Area
+
+.rts-faq__accordion {        
+    & .accordion {
+        .accordion-item {
+            padding: 27px 30px;
+            border: 1px solid rgba(#555, $alpha: .15);
+            background: transparent;
+            transition: var(--transition);
+            border-radius: 6px;
+            &:not(:last-child){
+                margin-bottom: 30px;
+            }
+            .accordion-header {
+                .accordion-button {
+                    cursor: pointer;
+                    font-size: 18px;
+                    padding: 0;
+                    font-weight: 500;
+                    background: transparent;
+                    margin-bottom: 0;
+                    &:not(.collapsed) {
+                        background: transparent;
+                        color: var(--color-secondary);
+                        box-shadow: none;
+
+                        &::after {
+                            content: '\f068';
+                            font-family: "Font Awesome 6 Pro";
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: var(--color-heading-1);
+                        }
+                    }
+
+                    &::after {
+                        content: '\2b';
+                        font-family: "Font Awesome 6 Pro";
+                        background-image: none;
+                        font-size: 22px;
+                        font-weight: 700;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: var(--color-white);
+                    }
+
+                }
+            }
+
+            .accordion-body {
+                padding: 0;
+                padding-top: 15px;
+                max-width: 615px;
+            }
+
+            &.active {
+                background: var(--color-gray);
+                border: 1px solid transparent;
+            }
+        }
+    }
+}
+.contact-form{
+    background: var(--color-gray);
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    .form__control{
+        position: relative;
+        z-index: 1;
+        &:not(:last-child){
+            margin-bottom: 20px;
+        }
+        .icon{
+            position: absolute;
+            z-index: 1;
+            top: 12px;
+            left: 20px;
+        }
+        input, textarea{
+            background: var(--color-white);
+            border-radius: 6px;
+            border: 1px solid rgba( #555555, $alpha: .15);
+            padding: 12px 45px;
+        }
+        textarea{
+            height: 92px;
+        }
+        button{
+            text-align: center;
+            padding: 16px 0;
+            color: var(--color-white);
+            background: var(--color-heading-1);
+            border-radius: 6px;
+        }
+    }
+}
+.rts-faq-area.contact{
+    background: url(../images/contact/contact-bg.webp);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 1;
+    padding: 100px 0 0;
+    &::after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background: rgba(#050B20, $alpha: .9);
+        z-index: -1;
+    }
+    .rts-faq__accordion .accordion .accordion-item{
+        padding: 19px 30px 18px;
+        border: 1px solid rgba( #ffffff, $alpha: .3);
+        .accordion-button{
+            color: var(--color-white);
+        }
+        .accordion-button:not(.collapsed) {
+            color: var(--color-secondary);
+        }
+    }
+    .contact-form{
+        background: var(--color-primary);
+        margin-bottom: -60px;
+    }
+    .contact-form .form__control{
+        input, textarea{
+            background: transparent;
+            border-radius: 6px;
+            border: 1px solid rgba( #ffffff, $alpha: .3);
+            padding: 12px 45px;
+            color: var(--color-white);
+            &::placeholder{
+                color: var(--color-white);
+            } 
+        }
+        .icon{
+            svg{
+                path{
+                    fill: var(--color-white);
+                }
+            }
+        }
+        button{
+            border: 1px solid var(--color-secondary);
+        }
+    }
+    .contact-form .form__control:not(:last-child){
+        margin-bottom: 30px;
+    }
+}
+.rts-faq-area.two{
+    .rts-faq__accordion .accordion .accordion-item .accordion-header .accordion-button::after{
+        color: var(--color-heading-1);
+    }
+}
+.rts-faq-area.inner{
+    .rts-faq__accordion .accordion .accordion-item{
+        padding: 20px 30px;
+    }
+    .rts-faq__accordion .accordion .accordion-item .accordion-header .accordion-button::after{
+        color: var(--color-heading-1);
+    }
+}

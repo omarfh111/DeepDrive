@@ -1,0 +1,89 @@
+// Counter Area
+.rts-counter-area{
+    background: url(../images/counter/bg.webp);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    height: 294px;
+    &::after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(#050B20, $alpha: .5);
+        z-index: -1;
+    }
+    .counter-inner{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 110px 0;
+        gap: 30px;
+        .inner{
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            &:first-child{
+                .icon{
+                    img{
+                        width: 74px;
+                    }
+                }
+            }
+            .icon{
+                img{
+                    width: 46px;
+                    height: 46px;
+                }
+            }
+            .title{
+                line-height: 1;
+                margin-bottom: 10px;
+            }
+            .desc{
+                color: #B5B5B5;
+            }
+        }
+    }
+}
+
+.rts-counter-area-two{
+    .counter-inner{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 110px 0;
+        .inner{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: var(--color-gray);
+            padding: 40px 90px;
+            border-radius: 10px;
+            &:first-child{
+                .icon{
+                    img{
+                        width: 74px;
+                    }
+                }
+            }
+            .icon{
+                img{
+                    width: 46px;
+                    height: 46px;
+                }
+            }
+            .title{
+                line-height: 1;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
