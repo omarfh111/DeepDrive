@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include "partials/header/header-three.html" %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="container">
+        <h2 class="title mb-4">Modifier partenariat #{{ p.id_partenariat }}</h2>
+
+        <form method="post" class="card p-4 shadow-sm rounded-3">
+          {% csrf_token %}
+          <div class="row g-3">
+            {{ form.non_field_errors }}
+            {% for field in form %}
+              <div class="col-md-6">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                <div class="text-danger small">{{ field.errors }}</div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <a href="{% url 'deals:admin_partenariats_list' %}" class="btn btn-outline-secondary">Annuler</a>
+            <button class="btn btn-primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+   
+  </div>
+   {% include "partials/footer/footer-three.html" %}
+</div>
+{% endblock %}

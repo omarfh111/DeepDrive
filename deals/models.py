@@ -56,3 +56,10 @@ class Partenariat(models.Model):
     @property
     def plafond_effectif(self):
         return self.plafond or Decimal("0.00")
+    def approve(self):
+        self.status = self.Statut.APPROVED
+        self.save(update_fields=["status"])
+
+    def reject(self):
+        self.status = self.Statut.REJECTED
+        self.save(update_fields=["status"])

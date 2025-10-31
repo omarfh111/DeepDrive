@@ -46,3 +46,21 @@ class PartenariatCreateForm(forms.ModelForm):
         if v < 0:
             raise forms.ValidationError("Le plafond doit être positif.")
         return v
+class PartenariatAdminForm(forms.ModelForm):
+    class Meta:
+        model = Partenariat
+        fields = [
+            "user", "nom_societe", "email", "telephone", "nom_ceo",
+            "date_partenariat", "detail_societe", "plafond", "status"
+        ]
+        widgets = {
+            "date_partenariat": forms.DateInput(attrs={"class": "form-control-mod", "type": "date"}),
+        }
+
+    def clean_plafond(self):
+        v = self.cleaned_data.get("plafond")
+        if v in (None, ""):
+            return None
+        if v < 0:
+            raise forms.ValidationError("Le plafond doit être positif.")
+        return v

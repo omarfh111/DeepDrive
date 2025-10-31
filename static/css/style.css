@@ -26172,5 +26172,14 @@ li.has-dropdown:hover .submenu {
   .rts-faq__accordion .accordion .accordion-item {
     padding: 23px 15px;
   }
+  .btn i {
+  pointer-events: none;
+}
+
+.btn-outline-primary i { color: #0d6efd; }
+.btn-outline-danger i { color: #dc3545; }
+.btn-outline-success i { color: #198754; }
+.btn-outline-warning i { color: #ffc107; }
+
 }
 /*# sourceMappingURL=../maps/style.css.map */
