@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="portfolio" current="Faq" title="Faq" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <!-- FAQ Area Start -->
+            <section class="rts-faq-area inner rts-section-gap">
+                <div class="container">
+                    <div class="section-title-area2">
+                        <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">FAQ</p>
+                        <h2 class="section-title wow move-right">Frequently Asked <span>Question</span></h2>
+                    </div>
+                    <div class="section-inner mt--80">
+                        <div class="row g-5">
+                            <div class="col-xl-7 col-lg-6">
+                                <div class="rts-faq__accordion" >
+                                    <div class="accordion accordion-flush" id="rts-accordion">
+                                        <div class="accordion-item active">
+                                            <div class="accordion-header" id="first">
+                                                <h4 class="accordion-button collapse show" data-bs-toggle="collapse" data-bs-target="#item__one" aria-expanded="false" aria-controls="item__one">
+                                                    Are there mileage limits on the rental?
+                                                </h4>
+                                            </div>
+                                            <div id="item__one" class="accordion-collapse collapse collapse show" aria-labelledby="first" data-bs-parent="#rts-accordion">
+                                                <div class="accordion-body">
+                                                    Nullam varius luctus pharetra ultrices volpat facilisis donec tortor, nibhkisys abitant curabitur at nunc nisl magna ac rhoncus vehicula sociis tortor nist hendrerit molestie integer.Nullam varius luctus.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="two">
+                                                <h4 class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#item__two" aria-expanded="false" aria-controls="item__two">
+                                                    Can I get an estimate before you start the work?
+                                                </h4>
+                                            </div>
+                                            <div id="item__two" class="accordion-collapse collapse" aria-labelledby="two" data-bs-parent="#rts-accordion">
+                                                <div class="accordion-body">
+                                                    Nullam varius luctus pharetra ultrices volpat facilisis donec tortor, nibhkisys abitant curabitur at nunc nisl magna ac rhoncus vehicula sociis tortor nist hendrerit molestie integer.Nullam varius luctus.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="three">
+                                                <h4 class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#item__three" aria-expanded="false" aria-controls="item__three">
+                                                    What should I do if the rental car breaks down?
+                                                </h4>
+                                            </div>
+                                            <div id="item__three" class="accordion-collapse collapse" aria-labelledby="three" data-bs-parent="#rts-accordion">
+                                                <div class="accordion-body">
+                                                    Nullam varius luctus pharetra ultrices volpat facilisis donec tortor, nibhkisys abitant curabitur at nunc nisl magna ac rhoncus vehicula sociis tortor nist hendrerit molestie integer.Nullam varius luctus.
+                                                </div>
+                                            </div>
+                                        </div>
+                
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="four">
+                                                <h4 class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#item__four" aria-expanded="false" aria-controls="item__four">
+                                                    How do I modify or cancel my reservation?
+                                                </h4>
+                                            </div>
+                                            <div id="item__four" class="accordion-collapse collapse" aria-labelledby="four" data-bs-parent="#rts-accordion">
+                                                <div class="accordion-body">
+                                                    Nullam varius luctus pharetra ultrices volpat facilisis donec tortor, nibhkisys abitant curabitur at nunc nisl magna ac rhoncus vehicula sociis tortor nist hendrerit molestie integer.Nullam varius luctus.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="five">
+                                                <h4 class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#item__five" aria-expanded="false" aria-controls="item__four">
+                                                    Can I pick up a car in one location and drop it off in another?
+                                                </h4>
+                                            </div>
+                                            <div id="item__five" class="accordion-collapse collapse" aria-labelledby="five" data-bs-parent="#rts-accordion">
+                                                <div class="accordion-body">
+                                                    Nullam varius luctus pharetra ultrices volpat facilisis donec tortor, nibhkisys abitant curabitur at nunc nisl magna ac rhoncus vehicula sociis tortor nist hendrerit molestie integer.Nullam varius luctus.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-lg-6 order-change">
+                                <div class="image-area">
+                                    <img src="{% static 'images/banner/faq.webp' %}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </section>
+            <!-- FAQ Area End -->
+            <!-- Brand Area Start -->
+            <section class="rts-brand-area rts-section-gapBottom">
+                <div class="container">
+                    <div class="section-title-area2">
+                        <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Partners</p>
+                        <h2 class="section-title wow move-right">Browse by <span>Company</span></h2>
+                    </div>
+                    <div class="section-inner mt--80">
+                        <ul>
+                            <li class="wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/01-w.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/02.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".6s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/03.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".8s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/04.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/05.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1.2s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/06.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1.4s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/07.svg' %}" alt=""></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <!-- Brand Area End -->
+             <!-- Video Area Start -->
+            <div class="rts-video-area inner bg-video-five bg_image jarallax">
+                <video muted loop id="myVideo">
+                    <source src="{% static 'images/portfolio/video-01.webm' %}">
+                </video>
+                <div class="content">
+                    <div id="myBtn">
+                        <img src="{% static 'images/video/round-text.svg' %}" alt="">
+                        <img src="{% static 'images/video/play.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- Video Area End -->
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
