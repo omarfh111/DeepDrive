@@ -1,0 +1,18 @@
+// App Download Area
+.rts-app-download-area{
+    .left-side-content{
+        .desc{
+            font-size: 18px;
+            margin-top: 35px;
+        }
+        .button-area{
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+    }
+    .right-side-image{
+        margin-left: auto;
+        text-align: end;
+    }
+}

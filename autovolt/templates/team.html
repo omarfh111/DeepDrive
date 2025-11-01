@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            
+            {% with class="portfolio-3" current="Team" title="Team" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <!-- Team Area Start -->
+            <section class="rts-team-area rts-section-gap">
+                <div class="container">
+                    <div class="section-title-area2">
+                        <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Our Team</p>
+                        <h2 class="section-title wow move-right">Let’s Meet Our <span>Expert</span></h2>
+                    </div>
+                    <div class="section-inner mt--60">
+                        <div class="row g-5">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/05.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Amelia Scot</h6>
+                                            <p class="designation cw">Office Executive</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/06.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Michael Roy</h6>
+                                            <p class="designation cw">Manager</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/07.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Emma Elizabeth</h6>
+                                            <p class="designation cw">Office Executive</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/08.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Michael Roy</h6>
+                                            <p class="designation cw">Manager</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/01.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Amelia Scot</h6>
+                                            <p class="designation cw">Office Executive</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/02.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Michael Roy</h6>
+                                            <p class="designation cw">Manager</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/03.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Emma Elizabeth</h6>
+                                            <p class="designation cw">Office Executive</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="team-wrapper">
+                                    <div class="image-area">
+                                        <a href="#">
+                                            <img src="{% static 'images/team/04.webp' %}" alt="">
+                                        </a>
+                                        <div class="content">
+                                            <h6 class="title cw">Michael Roy</h6>
+                                            <p class="designation cw">Manager</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Team Area End -->
+             <!-- Counter Area Start -->
+             <section class="rts-counter-area jarallax">
+                <div class="container">
+                    <div class="counter-inner">
+                        <div class="inner wow zoomIn" data-wow-delay=".2s" data-wow-duration="1s">
+                            <div class="icon">
+                                <img src="{% static 'images/counter/icon-01.svg' %}" width="74" alt="">
+                            </div>
+                            <div class="text">
+                                <h3 class="title cw"><span class="counter">320</span><span>M</span></h3>
+                                <p class="desc">Cars For Sale</p>
+                            </div>
+                        </div>
+                        <div class="inner wow zoomIn" data-wow-delay=".4s" data-wow-duration="1s">
+                            <div class="icon">
+                                <img src="{% static 'images/counter/icon-02.svg' %}" alt="">
+                            </div>
+                            <div class="text">
+                                <h3 class="title cw"><span class="counter">5500</span><span>+</span></h3>
+                                <p class="desc">Dealer Review</p>
+                            </div>
+                        </div>
+                        <div class="inner wow zoomIn" data-wow-delay=".6s" data-wow-duration="1s">
+                            <div class="icon">
+                                <img src="{% static 'images/counter/icon-03.svg' %}" alt="">
+                            </div>
+                            <div class="text">
+                                <h3 class="title cw"><span class="counter">300</span><span>M</span></h3>
+                                <p class="desc">Verified User</p>
+                            </div>
+                        </div>
+                        <div class="inner wow zoomIn" data-wow-delay=".8s" data-wow-duration="1s">
+                            <div class="icon">
+                                <img src="{% static 'images/counter/icon-04.svg' %}" alt="">
+                            </div>
+                            <div class="text">
+                                <h3 class="title cw"><span class="counter">10</span><span>M</span></h3>
+                                <p class="desc">Visitor Per Day</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </section>
+            <!-- Counter Area End -->
+            <!-- Brand Area Start -->
+            <section class="rts-brand-area rts-section-gapTop">
+                <div class="container">
+                    <div class="section-title-area2">
+                        <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Partners</p>
+                        <h2 class="section-title wow move-right">Browse by <span>Company</span></h2>
+                    </div>
+                    <div class="section-inner mt--80">
+                        <ul>
+                            <li class="wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/01-w.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/02.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".6s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/03.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay=".8s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/04.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/05.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1.2s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/06.svg' %}" alt=""></li>
+                            <li class="wow fadeInUp" data-wow-delay="1.4s" data-wow-duration="1s"><img
+                                    src="{% static 'images/brand/07.svg' %}" alt=""></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <!-- Brand Area End -->
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

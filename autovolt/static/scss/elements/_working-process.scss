@@ -1,0 +1,21 @@
+// Working Area Start
+.working-inner{
+    display: flex;
+    justify-content: space-between;
+    gap: 88px;
+    position: relative;
+    z-index: 1;
+    .shape{
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+}
+.working-process-wrapper{
+    text-align: center;
+    .icon{
+        margin-bottom: 20px;
+    }
+}

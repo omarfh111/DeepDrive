@@ -1,0 +1,154 @@
+// Contact Area
+
+.rts-contact-area{
+    .section-inner{
+        .map-area{
+            width: 50%;
+            height: 100%;
+            .contact-map-area-fluid{
+                height: 607px;
+            }
+        }
+        .get-in-touch-area{
+            width: 50%;
+            background: url(../images/contact/contact-bg2.webp);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            z-index: 1;
+            &::after{
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: rgba(#FF3600, $alpha: .8);
+                top: 0;
+                left: 0;
+                z-index: -1;
+            }
+            .contact-form{
+                max-width: 582px;
+                height: 100%;
+                background: transparent;
+                padding: 127px 40px;
+                text-align: left;
+                .form__control{
+                    input, textarea{
+                        border-radius: 0;
+                    }
+                    button{
+                        max-width: max-content;
+                        padding: 16px 17px;
+                        border: none;
+                        line-height: 1;
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+    }
+    &.inner{
+        .map-area{
+            width: 60%;
+        }
+        .get-in-touch-area{
+            width: 40%;
+            background: var(--color-gray);
+            &::after{
+                display: none;
+            }
+            .contact-form{
+                padding: 40px;
+                .form__control{
+                    button{
+                        max-width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.rts-contact-area2{
+    .inner{
+        display: flex;
+        border-radius: 16px;
+        border: 1px solid rgba(#555555, $alpha: .11);
+        .contact-wrapper{
+            text-align: center;
+            padding: 58px 0;
+            width: 33%;
+            .icon{
+                width: 80px;
+                height: 80px;
+                line-height: 80px;
+                text-align: center;
+                display: block;
+                background: var(--color-gray);
+                border-radius: 6px;
+                margin: auto;
+                margin-bottom: 20px;
+            }
+            ul{
+                li{
+                    a{
+                        color: var(--color-body);
+                    }
+                }
+            }
+            &:nth-child(2){
+                border-width: 0 1px;
+                border-color: rgba(#555555, $alpha: .11);
+                border-style: solid;
+            }
+        }
+    }
+}
+
+.account-page-body{
+    background: #fff;
+    .rts-contact-page-form-area.account .mian-wrapper-form {
+        padding: 60px;
+        height: 100%;
+        border: 1px solid #f5f5f5;
+        margin: 0 15px;
+    }
+    .mian-wrapper-form {
+        padding: 120px 135px;
+        border: 1px solid #E9E9E9;
+        box-shadow: 0px 24px 39px rgba(0, 0, 0, 0.05);
+        input{
+            height: 50px;
+            border-radius: 0;
+            margin-bottom: 15px;
+            border-color: #f1f1f1;
+            &:focus{
+                border: 1px solid var(--color-primary);
+            }
+        }
+    }
+    button{
+        border: none;
+        padding: 14px 42px;
+    }
+    .checkbox{
+        margin-bottom: 15px;
+        input{
+            margin-bottom: 0;
+        }
+        label{
+            font-size: 16px;
+            padding-left: 15px;
+            &::after{
+                display: none;
+            }
+            &::before{
+                display: none;
+            }
+        }
+    }
+    .rts-contact-page-form-area.account .mian-wrapper-form .forgot-password {
+        margin-top: 30px;
+    }
+}
