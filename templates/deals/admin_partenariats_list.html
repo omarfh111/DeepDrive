@@ -1,34 +1,33 @@
-{% extends "base.html" %}
+{% extends "backoffice/admin_base.html" %}
 {% load static %}
-{% block content %}
-<div class="rts-wrapper">
-  <div class="rts-wrapper-inner">
-    {% include "partials/header/header-three.html" %}
 
-    <main class="ms-main rts-section-gap">
-      <div class="container">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h2 class="title">Gestion des partenariats</h2>
+{% block title %}Partenariats | Dusty{% endblock %}
+{% block page_title %}Partenariats{% endblock %}
+{% block breadcrumb_leaf %}Partenariats{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des partenariats</h5>
           <form class="d-flex" method="get">
-            <input class="form-control me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (société, email, user)">
-            <select class="form-select me-2" name="status">
+            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (société, email, user)">
+            <select class="form-select form-select-sm me-2" name="status">
               <option value="">— Statut (tous) —</option>
               {% for val, lab in choices %}
                 <option value="{{ val }}" {% if status == val %}selected{% endif %}>{{ lab }}</option>
               {% endfor %}
             </select>
-            <button class="rts-btn btn-primary">Filtrer</button>
+            <button class="btn btn-sm btn-primary">Filtrer</button>
           </form>
         </div>
+      </div>
 
-        {% if messages %}
-          <div class="mb-3">
-            {% for m in messages %}<div class="alert alert-success">{{ m }}</div>{% endfor %}
-          </div>
-        {% endif %}
-
-        <div class="table-responsive card p-3 shadow-sm rounded-3">
-          <table class="table align-middle">
+      <div class="card-body p-0">
+        <div class="table-responsive table-centered mt-0">
+          <table class="table table-centered table-nowrap table-hover mb-0">
             <thead>
               <tr>
                 <th>ID</th><th>User</th><th>Société</th><th>Email</th><th>Téléphone</th>
@@ -38,14 +37,8 @@
             <tbody>
               {% for p in page_obj %}
               <tr>
-                <td>#{{ p.id_partenariat }}</td>
-                <td>
-                    {% if p.user_id %}
-                        {{ p.user.username }}
-                    {% else %}
-                        &mdash;
-                    {% endif %}
-                    </td>
+                <td class="ps-3">#{{ p.id_partenariat }}</td>
+                <td>{% if p.user_id %}{{ p.user.username }}{% else %}&mdash;{% endif %}</td>
                 <td>{{ p.nom_societe|default:"—" }}</td>
                 <td>{{ p.email|default:"—" }}</td>
                 <td>{{ p.telephone|default:"—" }}</td>
@@ -53,74 +46,72 @@
                 <td>{{ p.date_partenariat }}</td>
                 <td>{{ p.plafond|default:"—" }}</td>
                 <td>
-                  {% if p.status == "pending" %}<span class="badge bg-warning text-dark">pending</span>
-                  {% elif p.status == "approved" %}<span class="badge bg-success">approved</span>
-                  {% else %}<span class="badge bg-danger">rejected</span>{% endif %}
+                  {% if p.status == "pending" %}
+                    <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">pending</span>
+                  {% elif p.status == "approved" %}
+                    <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">approved</span>
+                  {% else %}
+                    <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">rejected</span>
+                  {% endif %}
                 </td>
-                <td class="text-center align-middle">
-                <div class="d-flex justify-content-center align-items-center gap-2">
-
-                    <!-- ÉDITER -->
-                    <a href="{% url 'deals:admin_partenariat_update' p.pk %}" 
-                    class="icon-btn text-primary" title="Modifier">
-                    <i class="fa fa-pen"></i>
+                <td class="text-end align-middle">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    <a href="{% url 'deals:admin_partenariat_update' p.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
+                      <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
                     </a>
-
-                    <!-- SUPPRIMER -->
-                    <form method="post" action="{% url 'deals:admin_partenariat_delete' p.pk %}" class="d-inline m-0"
-                        onsubmit="return confirm('Supprimer ce partenariat ?');">
-                    {% csrf_token %}
-                    <button class="icon-btn text-danger" title="Supprimer">
-                        <i class="fa fa-trash"></i>
-                    </button>
+                    <form method="post" action="{% url 'deals:admin_partenariat_delete' p.pk %}" class="d-inline m-0" onsubmit="return confirm('Supprimer ce partenariat ?');">
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer">
+                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                      </button>
                     </form>
-
-                    <!-- APPROUVER -->
                     <form method="post" action="{% url 'deals:admin_partenariat_approve' p.pk %}" class="d-inline m-0">
-                    {% csrf_token %}
-                    <button class="icon-btn text-success" title="Approuver"
-                            {% if p.status == 'approved' %}disabled{% endif %}>
-                        <i class="fa fa-check"></i>
-                    </button>
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-success-subtle" {% if p.status == 'approved' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Approuver">
+                        <i class="mdi mdi-check text-success fs-14"></i>
+                      </button>
                     </form>
-
-                    <!-- REJETER -->
                     <form method="post" action="{% url 'deals:admin_partenariat_reject' p.pk %}" class="d-inline m-0">
-                    {% csrf_token %}
-                    <button class="icon-btn text-warning" title="Rejeter"
-                            {% if p.status == 'rejected' %}disabled{% endif %}>
-                        <i class="fa fa-times"></i>
-                    </button>
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-warning-subtle" {% if p.status == 'rejected' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Rejeter">
+                        <i class="mdi mdi-close text-warning fs-14"></i>
+                      </button>
                     </form>
-
-                </div>
+                  </div>
                 </td>
-
-
               </tr>
               {% empty %}
-              <tr><td colspan="10" class="text-center py-4">Aucun partenariat.</td></tr>
+              <tr><td colspan="10" class="text-center py-4 text-muted">Aucun partenariat.</td></tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
+      </div>
 
-        <nav class="mt-4">
-          <ul class="pagination">
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="card-footer">
+        <nav aria-label="Pagination">
+          <ul class="pagination mb-0 justify-content-end">
             {% if page_obj.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
             {% endif %}
             <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
             {% if page_obj.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
             {% endif %}
           </ul>
         </nav>
       </div>
-    </main>
-
-    
+      {% endif %}
+    </div>
   </div>
 </div>
-{% include "partials/footer/footer-three.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Activer les tooltips Bootstrap
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
 {% endblock %}

@@ -1,37 +1,111 @@
-{% extends "base.html" %}
+{# templates/deals/admin_partenariats_edit.html #}
+{% extends "backoffice/admin_base.html" %}
 {% load static %}
+
+{% block title %}{{ p|default:"Nouveau partenariat" }} | Dusty{% endblock %}
+{% block page_title %}Partenariats{% endblock %}
+{% block breadcrumb_leaf %}{{ p|yesno:"Modifier,Ajouter" }}{% endblock %}
+
 {% block content %}
-<div class="rts-wrapper">
-  <div class="rts-wrapper-inner">
-    {% include "partials/header/header-three.html" %}
+<div class="container-fluid">
 
-    <main class="ms-main rts-section-gap">
-      <div class="container">
-        <h2 class="title mb-4">Modifier partenariat #{{ p.id_partenariat }}</h2>
-
-        <form method="post" class="card p-4 shadow-sm rounded-3">
-          {% csrf_token %}
-          <div class="row g-3">
-            {{ form.non_field_errors }}
-            {% for field in form %}
-              <div class="col-md-6">
-                <label class="form-label">{{ field.label }}</label>
-                {{ field }}
-                <div class="text-danger small">{{ field.errors }}</div>
-              </div>
-            {% endfor %}
-          </div>
-
-          <div class="d-flex gap-2 mt-4">
-            <a href="{% url 'deals:admin_partenariats_list' %}" class="btn btn-outline-secondary">Annuler</a>
-            <button class="btn btn-primary">Enregistrer</button>
-          </div>
-        </form>
-      </div>
-    </main>
-
-   
+  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+    <div class="flex-grow-1">
+      <h4 class="fs-18 fw-semibold m-0">
+        {% if p %}Modifier partenariat #{{ p.id_partenariat }}{% else %}Ajouter un partenariat{% endif %}
+      </h4>
+    </div>
+    <div class="text-end">
+      <ol class="breadcrumb m-0 py-0">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Partenariats</a></li>
+        <li class="breadcrumb-item active">{% if p %}Modifier{% else %}Ajouter{% endif %}</li>
+      </ol>
+    </div>
   </div>
-   {% include "partials/footer/footer-three.html" %}
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header"><h5 class="card-title mb-0">Informations du partenariat</h5></div>
+
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.user.id_for_label }}">Utilisateur</label>
+                  {{ form.user }}
+                  <div class="text-danger small">{{ form.user.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.nom_societe.id_for_label }}">Société</label>
+                  {{ form.nom_societe }}
+                  <div class="text-danger small">{{ form.nom_societe.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                  {{ form.email }}
+                  <div class="text-danger small">{{ form.email.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.telephone.id_for_label }}">Téléphone</label>
+                  {{ form.telephone }}
+                  <div class="text-danger small">{{ form.telephone.errors }}</div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.nom_ceo.id_for_label }}">CEO</label>
+                  {{ form.nom_ceo }}
+                  <div class="text-danger small">{{ form.nom_ceo.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.date_partenariat.id_for_label }}">Date</label>
+                  {{ form.date_partenariat }}
+                  <div class="text-danger small">{{ form.date_partenariat.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.plafond.id_for_label }}">Plafond</label>
+                  {{ form.plafond }}
+                  <div class="text-danger small">{{ form.plafond.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.status.id_for_label }}">Statut</label>
+                  {{ form.status }}
+                  <div class="text-danger small">{{ form.status.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.detail_societe.id_for_label }}">Détails de la société</label>
+              {{ form.detail_societe }}
+              <div class="text-danger small">{{ form.detail_societe.errors }}</div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <a href="{% url 'deals:admin_partenariats_list' %}" class="btn btn-outline-secondary">Annuler</a>
+              <button class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
