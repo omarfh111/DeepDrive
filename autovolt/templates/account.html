@@ -23,9 +23,19 @@
                                     data-sal-duration="800">
                                     <h3 class="title">Login</h3>
                                 </div>
-                                <form id="contact-form-contact" action="mailer.php" method="post">
-                                    <input type="email" name="email" placeholder="Email Address or Username" required="">
-                                    <input type="text" name="name" placeholder="Password" required="">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <form id="login-form" action="{% url 'account' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" name="email" placeholder="Username" required="">
+                                    <input type="password" name="password" placeholder="Password" required="">
+                                    <input type="hidden" name="login" value="1">
                                     <div class="checkbox">
                                         <input type="checkbox" value="lsRememberMe" id="rememberMe"> <label
                                             for="rememberMe">Remember me</label>
@@ -43,11 +53,38 @@
                                     data-sal-duration="800">
                                     <h3 class="title">Registration</h3>
                                 </div>
-                                <form id="contact-form-contact" action="mailer.php" method="post">
-                                    <input type="text" name="name" placeholder="Your Name" required="">
-                                    <input type="email" name="email" placeholder="Email Address" required="">
-                                    <input type="text" name="name" placeholder="New Password" required="">
-                                    <input type="text" name="name" placeholder="Confirm Password" required="">
+                                {% if registration_errors %}
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            {% for field, errors in registration_errors.items %}
+                                                {% for error in errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                                <form id="register-form" action="{% url 'account' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" name="username" placeholder="Username" required="" value="{% if registration_form.username.value %}{{ registration_form.username.value }}{% endif %}">
+                                    {% if registration_form.username.errors %}
+                                        <div class="text-danger small">
+                                            {% for error in registration_form.username.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <input type="password" name="password1" placeholder="Password" required="">
+                                    {% if registration_form.password1.errors %}
+                                        <div class="text-danger small">
+                                            {% for error in registration_form.password1.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <input type="password" name="password2" placeholder="Confirm Password" required="">
+                                    {% if registration_form.password2.errors %}
+                                        <div class="text-danger small">
+                                            {% for error in registration_form.password2.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <input type="hidden" name="register" value="1">
                                     <button type="submit" class="rts-btn btn-primary radius-small">Register</button>
                                 </form>
                             </div>

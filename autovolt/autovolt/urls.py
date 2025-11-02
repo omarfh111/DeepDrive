@@ -15,11 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 from autovolt import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Django authentication URLs
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='account.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', views.indexMain, name='index'),
     path('index-two', views.indexTwo, name='index-two'),
     path('index-three', views.indexThree, name='index-three'),
@@ -53,5 +59,10 @@ urlpatterns = [
     path('checkout', views.checkout, name='checkout'),
     path('shop-details', views.shopDetails, name='shop-details'),
     path('contact', views.contact, name='contact'),
+    path('reviews/', include('reviews.urls')),
 
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

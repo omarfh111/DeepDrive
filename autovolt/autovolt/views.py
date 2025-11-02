@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 def indexMain(request):
     context= {
@@ -116,9 +119,43 @@ def calculator(request):
     return render(request, 'calculator.html', context)
 
 def account(request):
-    context= {
-            'title': 'Car Dealer Account',
+    """
+    Account page with login and registration forms
+    """
+    context = {
+        'title': 'Car Dealer Account',
     }
+    
+    # Initialize registration form
+    registration_form = UserCreationForm()
+    
+    # Handle login
+    if request.method == 'POST' and 'login' in request.POST:
+        username = request.POST.get('email')  # Form uses 'email' field name for username
+        password = request.POST.get('password')
+        if username and password:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'You have been logged in successfully!')
+                return redirect('index')
+            else:
+                messages.error(request, 'Invalid username or password.')
+        else:
+            messages.error(request, 'Please provide both username and password.')
+    
+    # Handle registration
+    elif request.method == 'POST' and 'register' in request.POST:
+        registration_form = UserCreationForm(request.POST)
+        if registration_form.is_valid():
+            user = registration_form.save()
+            username = registration_form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            # Auto-login after registration
+            login(request, user)
+            return redirect('index')
+    
+    context['registration_form'] = registration_form
     return render(request, 'account.html', context)
 
 def blog(request):
@@ -198,3 +235,4 @@ def contact(request):
             'title': 'Car Dealer Contact Page',
     }
     return render(request, 'contact.html', context)
+

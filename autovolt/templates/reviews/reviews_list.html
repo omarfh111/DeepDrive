@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        <!-- header area start -->
+        {% include 'partials/header/header-three.html' %}
+        <!-- header area end -->
+
+        <!-- Breadcrumb area start -->
+        {% with class="portfolio" current="Reviews" title="Reviews" %}
+            {% include 'partials/elements/breadcrumb.html' %}   
+        {% endwith %}
+        <!-- Breadcrumb area end -->
+        
+        <!-- Reviews Area Start -->
+        <section class="rts-faq-area inner rts-section-gap">
+            <div class="container">
+                <div class="section-title-area2">
+                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Reviews</p>
+                    <h2 class="section-title wow move-right">Customer <span>Reviews</span></h2>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card p-4 mb-4">
+                            <form method="get" action="{% url 'reviews:list' %}" class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" name="q" class="form-control" placeholder="Search reviews..." value="{{ search_query }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" name="min_note" class="form-control" placeholder="Min Rating" min="0" max="5" step="0.1">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" name="max_note" class="form-control" placeholder="Max Rating" min="0" max="5" step="0.1">
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="sort" class="form-select">
+                                        <option value="-date_review" {% if request.GET.sort == '-date_review' %}selected{% endif %}>Newest First</option>
+                                        <option value="date_review" {% if request.GET.sort == 'date_review' %}selected{% endif %}>Oldest First</option>
+                                        <option value="-note" {% if request.GET.sort == '-note' %}selected{% endif %}>Highest Rating</option>
+                                        <option value="note" {% if request.GET.sort == 'note' %}selected{% endif %}>Lowest Rating</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Average Rating -->
+                {% if avg_rating %}
+                <div class="text-center mb-4">
+                    <h3>Average Rating: <span class="text-warning">{{ avg_rating }}/5</span></h3>
+                    <p>Total Reviews: {{ total_reviews }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Reviews List -->
+                <div class="section-inner mt--80">
+                    <div class="row g-5">
+                        {% if page_obj %}
+                            {% for review in page_obj %}
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        {% if review.image %}
+                                        <div class="mb-3">
+                                            <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="img-fluid rounded" style="max-height: 200px; width: 100%; object-fit: cover;">
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <h5 class="card-title mb-0">
+                                                <a href="{% url 'reviews:detail' review.pk %}" class="text-decoration-none">
+                                                    {{ review.titre }}
+                                                </a>
+                                            </h5>
+                                            <div class="text-warning">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= review.note %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% elif forloop.counter|add:"-0.5" <= review.note %}
+                                                        <i class="fas fa-star-half-alt"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <span class="text-dark ms-2">{{ review.note }}/5</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="card-text text-muted">
+                                            {{ review.description|truncatewords:30 }}
+                                        </p>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <small class="text-muted">
+                                                <i class="fas fa-user"></i> {{ review.user.username }}
+                                                {% if review.car %}
+                                                    <i class="fas fa-car ms-2"></i> {{ review.car.name }}
+                                                {% endif %}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="far fa-calendar"></i> {{ review.date_review|date:"M d, Y" }}
+                                            </small>
+                                        </div>
+                                        
+                                        {% if review.comment_count > 0 %}
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="far fa-comments"></i> {{ review.comment_count }} comment{{ review.comment_count|pluralize }}
+                                            </small>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="mt-3">
+                                            <a href="{% url 'reviews:detail' review.pk %}" class="btn btn-sm btn-primary">
+                                                Read More
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <p>No reviews found. Be the first to leave a review!</p>
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'reviews:add' %}" class="btn btn-primary">Add Review</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <nav aria-label="Reviews pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Previous</a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Add Review Button -->
+                {% if user.is_authenticated %}
+                <div class="text-center mt-5">
+                    <a href="{% url 'reviews:add' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus"></i> Add Your Review
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center mt-5">
+                    <p>Please <a href="{% url 'account' %}">login</a> to add a review.</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        <!-- Reviews Area End -->
+    </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
+

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="portfolio" current="Reviews" title="Reviews" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <!-- Reviews Area Start -->
+            <section class="rts-faq-area inner rts-section-gap">
+                <div class="container">
+                    <div class="section-title-area2">
+                        <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Reviews</p>
+                        <h2 class="section-title wow move-right">Customer <span>Reviews</span></h2>
+                    </div>
+                    <div class="section-inner mt--80">
+                        <div class="row g-5">
+                            <div class="col-12">
+                                <div class="text-center">
+                                    <p class="mb-4">Customer reviews will be displayed here.</p>
+                                    <p>You can customize this page to show customer reviews and ratings.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </section>
+            <!-- Reviews Area End -->
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
+
