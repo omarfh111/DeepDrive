@@ -1,0 +1,88 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Utilisateurs | Dusty{% endblock %}
+{% block page_title %}Utilisateurs{% endblock %}
+{% block breadcrumb_leaf %}Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des utilisateurs</h5>
+          <form class="d-flex" method="get">
+            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (nom, email)">
+            <button class="btn btn-sm btn-primary">Filtrer</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive table-centered mt-0">
+          <table class="table table-centered table-nowrap table-hover mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Email</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Rôle</th>
+                <th>Actif</th>
+                <th>Staff</th>
+                <th>Superuser</th>
+                <th>Date Joined</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.first_name|default:"—" }}</td>
+                <td>{{ user.last_name|default:"—" }}</td>
+                <td>{{ user.get_role_display }}</td>
+                <td>{% if user.is_active %}✔{% else %}—{% endif %}</td>
+                <td>{% if user.is_staff %}✔{% else %}—{% endif %}</td>
+                <td>{% if user.is_superuser %}✔{% else %}—{% endif %}</td>
+                <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+                <td class="text-end align-middle">
+                <div class="d-inline-flex align-items-center gap-1">
+                    <a href="#" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
+                    <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
+                    </a>
+
+                    <form method="post"
+                        action="{% url 'admin_user_delete' user.pk %}"
+                        class="d-inline m-0"
+                        onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                    {% csrf_token %}
+                    <button class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer">
+                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                    </button>
+                    </form>
+                </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="text-center py-4 text-muted">Aucun utilisateur trouvé.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
