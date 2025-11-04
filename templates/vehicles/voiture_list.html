@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container ms-section-gap">
+  <h2>Voitures disponibles</h2>
+
+  <div class="row">
+    {% for voiture in voitures %}
+      <div class="col-md-4">
+        <div class="card mb-3 p-3">
+          <h5>{{ voiture.marque }} {{ voiture.modele }}</h5>
+          <p>Année : {{ voiture.annee }}</p>
+          <p>Prix : {{ voiture.prix }} TND</p>
+          <a class="btn btn-primary" href="{% url 'deals:marche_create' voiture.id %}">Passer un marché</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>Aucune voiture enregistrée pour le moment.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

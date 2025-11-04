@@ -54,5 +54,7 @@ urlpatterns = [
     path('shop-details', views.shopDetails, name='shop-details'),
     path('contact', views.contact, name='contact'),
     path("", include("deals.urls")),
+    path('', include('vehicles.urls')),
+
 
 ]

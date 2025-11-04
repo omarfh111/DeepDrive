@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container ms-section-gap">
+  <h2>Passer un marché</h2>
+  <div class="card p-3">
+    <p><strong>Voiture :</strong> {{ voiture.marque }} {{ voiture.modele }} (Prix unitaire : {{ voiture.prix|default:"N/A" }})</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-primary" type="submit">Confirmer</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

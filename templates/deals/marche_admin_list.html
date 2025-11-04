@@ -1,0 +1,27 @@
+{% extends "admin_base.html" %}
+{% block content %}
+<div class="container ms-section-gap">
+  <h2>Gestion des marchés</h2>
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Partenaire</th><th>Voiture</th><th>Qté</th><th>Total</th><th>Rentabilité</th><th>État</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for m in marches %}
+      <tr>
+        <td>#{{ m.id }}</td>
+        <td>{{ m.partenaire }}</td>
+        <td>{{ m.voiture.marque }} {{ m.voiture.modele }}</td>
+        <td>{{ m.quantite }}</td>
+        <td>{{ m.total_prix }}</td>
+        <td>{{ m.rentabilite_estime }}</td>
+        <td>{{ m.etat }}</td>
+        <td>
+          <a class="btn btn-sm btn-danger" href="{% url 'deals:admin_marche_delete' m.id %}" onclick="return confirm('Supprimer ce marché ?');">Supprimer</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

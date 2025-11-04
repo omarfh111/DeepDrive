@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container ms-section-gap">
+  <h2>Détail marché #{{ marche.id }}</h2>
+  <ul>
+    <li>Partenaire : {{ marche.partenaire }}</li>
+    <li>Voiture : {{ marche.voiture.marque }} {{ marche.voiture.modele }}</li>
+    <li>Quantité : {{ marche.quantite }}</li>
+    <li>Prix unitaire : {{ marche.prix_unitaire }}</li>
+    <li>Total : {{ marche.total_prix }}</li>
+    <li>Taux rentabilité : {{ marche.taux_rentabilite }} %</li>
+    <li>Rentabilité estimée : {{ marche.rentabilite_estime }}</li>
+    <li>État : {{ marche.etat }}</li>
+    <li>Créé le : {{ marche.created_at }}</li>
+  </ul>
+</div>
+{% endblock %}

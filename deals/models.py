@@ -63,3 +63,60 @@ class Partenariat(models.Model):
     def reject(self):
         self.status = self.Statut.REJECTED
         self.save(update_fields=["status"])
+#Marhce
+from decimal import Decimal
+from django.db import models
+from django.core.exceptions import ValidationError
+class Marche(models.Model):
+    ETAT_CHOICES = [
+        ('en_attente', 'En attente'),
+        ('valide', 'Validé'),
+        ('annule', 'Annulé'),
+    ]
+
+    partenaire = models.ForeignKey('deals.Partenariat', on_delete=models.CASCADE, related_name='marches')
+    voiture = models.ForeignKey('vehicles.Voiture', on_delete=models.PROTECT, related_name='marches')
+
+    quantite = models.PositiveIntegerField(default=1)
+    # snapshot du prix de la voiture au moment de la création (pour figer le deal)
+    prix_unitaire = models.DecimalField(max_digits=12, decimal_places=3)
+
+    # calculés automatiquement
+    total_prix = models.DecimalField(max_digits=14, decimal_places=3, editable=False)
+    taux_rentabilite = models.DecimalField(
+        max_digits=5, decimal_places=2, default=Decimal('10.00'),
+        help_text="En %, appliqué sur le total (modifiable côté back si besoin)."
+    )
+    rentabilite_estime = models.DecimalField(max_digits=14, decimal_places=3, editable=False)
+
+    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='en_attente')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def clean(self):
+            # vérifier que les FK sont posées sans toucher aux relations
+            if not self.partenaire_id:
+                raise ValidationError("Le partenaire est requis pour créer un marché.")
+            if not self.voiture_id:
+                raise ValidationError("La voiture est requise pour créer un marché.")
+            if self.quantite is None or self.quantite <= 0:
+                raise ValidationError("La quantité doit être positive.")
+            if self.prix_unitaire is None:
+                raise ValidationError("Le prix unitaire est requis.")
+
+            # maintenant seulement on accède à l'objet partenaire (id est garanti)
+            if getattr(self.partenaire, "status", None) != "approved":
+                raise ValidationError("Votre partenariat doit être approuvé pour créer un marché.")
+
+    def save(self, *args, **kwargs):
+        # Calculs automatiques
+        self.total_prix = (self.prix_unitaire or Decimal('0')) * Decimal(self.quantite or 0)
+        taux = (self.taux_rentabilite or Decimal('0')) / Decimal('100')
+        self.rentabilite_estime = (self.total_prix or Decimal('0')) * taux
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Marche #{self.id} - {self.partenaire} / {self.voiture} x{self.quantite}"
