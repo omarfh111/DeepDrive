@@ -14,7 +14,7 @@ def partenariat_create_view(request):
     # 🔹 Si l'utilisateur a déjà un partenariat => on affiche la fiche, pas le formulaire
     existing = getattr(request.user, "partenariat", None)
     if existing:
-        return render(request, "deals/partenariat_detail.html", {"partenariat": existing})
+        return render(request, "deals/partenariat_success.html", {"partenariat": existing})
 
     # 🔹 Sinon, il peut créer une nouvelle demande
     if request.method == "POST":
@@ -91,5 +91,13 @@ def admin_partenariat_delete(request, pk):
     p.delete()
     messages.success(request, f"Partenariat #{pk} supprimé.")
     return redirect("deals:admin_partenariats_list")
+@staff_member_required
 def admin_hub(request):
-    return render(request, "deals/admin_hub.html")
+    # Si tu as une enum Statut dans le modèle
+    ctx = {
+        "total_partenariats": Partenariat.objects.count(),
+        "pending_count": Partenariat.objects.filter(status=Partenariat.Statut.PENDING).count(),
+        "approved_count": Partenariat.objects.filter(status=Partenariat.Statut.APPROVED).count(),
+        "rejected_count": Partenariat.objects.filter(status=Partenariat.Statut.REJECTED).count(),
+    }
+    return render(request, "deals/admin_hub.html", ctx)

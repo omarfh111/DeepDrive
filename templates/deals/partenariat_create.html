@@ -19,14 +19,6 @@
           <div class="ms-default-page container entry-content">
             <div class="woocommerce">
               <div class="woocommerce-notices-wrapper">
-                {% if messages %}
-                  {% for m in messages %}
-                    <div class="woocommerce-message">{{ m }}</div>
-                  {% endfor %}
-                {% endif %}
-                {% if form.non_field_errors %}
-                  <div class="woocommerce-error">{{ form.non_field_errors }}</div>
-                {% endif %}
               </div>
 
               <form method="post" class="checkout woocommerce-checkout ms-woocommerce-checkout" novalidate>

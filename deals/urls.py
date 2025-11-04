@@ -12,6 +12,5 @@ urlpatterns = [
     path("back/partenariats/<int:pk>/reject/", admin_partenariat_reject, name="admin_partenariat_reject"),
     path("back/partenariats/<int:pk>/edit/", admin_partenariat_update, name="admin_partenariat_update"),
     path("back/partenariats/<int:pk>/delete/", admin_partenariat_delete, name="admin_partenariat_delete"),
-    path("back/partenariats/", admin_hub, name="admin_hub"),
-    path("back/partenariats/",admin_partenariats_list, name="admin_partenariats_list"),
+    path("back/", admin_hub, name="admin_hub"),
 ]
