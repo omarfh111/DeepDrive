@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Partenariat
+from .models import Partenariat, Marche
 from django.http import HttpResponse
 import csv
 
@@ -40,4 +40,13 @@ class PartenariatAdmin(admin.ModelAdmin):
     actions = [action_approve, action_reject, action_export_csv]
 
 # ❌ Ne PAS remettre admin.site.register(Partenariat, PartenariatAdmin)
-
+#Marche 
+@admin.register(Marche)
+class MarcheAdmin(admin.ModelAdmin):
+    list_display = (
+        "id", "partenaire", "voiture", "quantite",
+        "prix_unitaire", "total_prix", "taux_rentabilite",
+        "rentabilite_estime", "etat", "created_at",
+    )
+    list_filter = ("etat", "created_at", "partenaire__status")
+    search_fields = ("partenaire__nom_societe", "voiture__marque", "voiture__modele")

@@ -97,19 +97,27 @@ class Marche(models.Model):
         ordering = ['-created_at']
 
     def clean(self):
-            # vérifier que les FK sont posées sans toucher aux relations
-            if not self.partenaire_id:
-                raise ValidationError("Le partenaire est requis pour créer un marché.")
-            if not self.voiture_id:
-                raise ValidationError("La voiture est requise pour créer un marché.")
-            if self.quantite is None or self.quantite <= 0:
-                raise ValidationError("La quantité doit être positive.")
-            if self.prix_unitaire is None:
-                raise ValidationError("Le prix unitaire est requis.")
+        field_errors = {}
+        non_field_errors = []
 
-            # maintenant seulement on accède à l'objet partenaire (id est garanti)
-            if getattr(self.partenaire, "status", None) != "approved":
-                raise ValidationError("Votre partenariat doit être approuvé pour créer un marché.")
+        # champ présent dans le formulaire -> erreur ciblée OK
+        if self.quantite is not None and self.quantite <= 0:
+            field_errors['quantite'] = "La quantité doit être positive."
+
+        # ces champs NE sont PAS dans le formulaire -> erreurs globales
+        if self.prix_unitaire is None:
+            non_field_errors.append("Le prix unitaire est requis.")
+        if self.partenaire_id and getattr(self.partenaire, "status", None) != "approved":
+            non_field_errors.append("Votre partenariat doit être approuvé pour créer un marché.")
+        if self.voiture_id is None:
+            non_field_errors.append("La voiture est requise pour créer un marché.")
+
+        if field_errors and non_field_errors:
+            raise ValidationError({**field_errors, '__all__': non_field_errors})
+        if field_errors:
+            raise ValidationError(field_errors)
+        if non_field_errors:
+            raise ValidationError(non_field_errors)
 
     def save(self, *args, **kwargs):
         # Calculs automatiques

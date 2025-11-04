@@ -75,3 +75,47 @@ class PartenariatAdminForm(DustyFormMixin, forms.ModelForm):
         if v in (None, ""): return None
         if v < 0: raise forms.ValidationError("Le plafond doit être positif.")
         return v
+#Marche
+
+# deals/forms.py
+from django import forms
+from .models import Marche
+
+class MarcheCreateForm(forms.ModelForm):
+    class Meta:
+        model = Marche
+        fields = ["quantite"]
+        widgets = {
+            "quantite": forms.NumberInput(attrs={"min": 1, "class": "form-control-mod"})
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.voiture = kwargs.pop("voiture", None)
+        self.partenaire = kwargs.pop("partenaire", None)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned = super().clean()
+
+        # --- validations métier côté form ---
+        if not self.partenaire:
+            self.add_error(None, "Le partenaire est requis (et doit être approuvé).")
+        if not self.voiture:
+            self.add_error(None, "Aucune voiture sélectionnée.")
+        elif self.voiture.prix is None:
+            self.add_error(None, "Cette voiture n’a pas de prix défini.")
+
+        # --- IMPORTANT : préparer l’instance AVANT _post_clean/full_clean ---
+        self.instance.voiture = self.voiture
+        self.instance.partenaire = self.partenaire
+        self.instance.prix_unitaire = (self.voiture.prix if self.voiture else None)
+
+        return cleaned
+
+    def save(self, commit=True):
+        # Ici tout est déjà posé sur self.instance
+        obj = super().save(commit=False)
+        if commit:
+            obj.full_clean()  # ok maintenant
+            obj.save()
+        return obj

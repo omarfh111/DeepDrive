@@ -1,15 +1,153 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container ms-section-gap">
-  <h2>Passer un marché</h2>
-  <div class="card p-3">
-    <p><strong>Voiture :</strong> {{ voiture.marque }} {{ voiture.modele }} (Prix unitaire : {{ voiture.prix|default:"N/A" }})</p>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button class="btn btn-primary" type="submit">Confirmer</button>
-    </form>
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include 'partials/header/header-three.html' %}
+
+    {% with class="service" current="Marché" title="Passer un marché" %}
+      {% include 'partials/elements/breadcrumb.html' %}
+    {% endwith %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="ms-page-content">
+        <article class="page checkout-area type-page status-publish hentry">
+          <div class="ms-sp--header container">
+            <h2 class="title">Passer un marché</h2>
+          </div>
+          <div class="woocommerce-notices-wrapper">
+            {% for message in messages %}
+              <div class="woocommerce-message">{{ message }}</div>
+            {% endfor %}
+
+            {# <<< AJOUTE CECI pour voir les erreurs de clean() >>> #}
+            {% if form.non_field_errors %}
+              <div class="woocommerce-error">
+                {{ form.non_field_errors|join:", " }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ms-default-page container entry-content">
+            <div class="woocommerce">
+              <div class="woocommerce-notices-wrapper">
+                {% for message in messages %}
+                  <div class="woocommerce-message">{{ message }}</div>
+                {% endfor %}
+                {% if not partenaire_approved %}
+                  <div class="woocommerce-error">Votre partenariat doit être <b>approuvé</b> pour créer un marché.</div>
+                {% endif %}
+              </div>
+
+              <form method="post" class="checkout woocommerce-checkout ms-woocommerce-checkout" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="full-grid">
+                      <div class="billing-fields">
+                        <div class="checkout-title"><h3>Données de la voiture</h3></div>
+                        <div class="form-content-box">
+                          <div class="row">
+                            <div class="col-md-6"><div class="form-group">
+                              <label>Marque</label>
+                              <input class="form-control-mod" value="{{ voiture.marque }}" disabled>
+                            </div></div>
+                            <div class="col-md-6"><div class="form-group">
+                              <label>Modèle</label>
+                              <input class="form-control-mod" value="{{ voiture.modele }}" disabled>
+                            </div></div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-4"><div class="form-group">
+                              <label>Année</label>
+                              <input class="form-control-mod" value="{{ voiture.annee|default:'—' }}" disabled>
+                            </div></div>
+                            <div class="col-md-4"><div class="form-group">
+                              <label>Prix unitaire (TND)</label>
+                              <input id="prixUnitaire" class="form-control-mod" value="{{ voiture.prix|default:0 }}" disabled>
+                            </div></div>
+                            <div class="col-md-4"><div class="form-group">
+                              <label>Taux rentabilité (%)</label>
+                              <input id="taux" class="form-control-mod" value="{{ taux_rentabilite }}" disabled>
+                            </div></div>
+                          </div>
+
+                          <div class="checkout-title mt-30"><h3>Quantité</h3></div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Quantité *</label>
+                                {{ form.quantite }}
+                                {% if form.quantite.errors %}<small class="text-danger">{{ form.quantite.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="checkout-title mt-30"><h3>Récapitulatif</h3></div>
+                          <div class="row">
+                            <div class="col-md-6"><div class="form-group">
+                              <label>Total (TND)</label>
+                              <input id="totalAff" class="form-control-mod" value="0" disabled>
+                            </div></div>
+                            <div class="col-md-6"><div class="form-group">
+                              <label>Rentabilité estimée (TND)</label>
+                              <input id="rentAff" class="form-control-mod" value="0" disabled>
+                            </div></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="payment-method mt-40 md-mt-20">
+                        <div class="bottom-area">
+                          <button class="add-btn rts-btn btn-primary" type="submit" {% if not partenaire_approved %}disabled{% endif %}>
+                            Confirmer
+                          </button>
+                          {% if not partenaire_approved %}
+                            <p class="mt-10">Votre partenariat doit être approuvé pour soumettre le marché.</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pl-lg-5 col-md-4">
+                    <h3>Rappel</h3>
+                    <div class="woocommerce-checkout-review-order">
+                      <p>• Le prix total = prix unitaire × quantité.</p>
+                      <p>• La rentabilité estimée = total × (taux/100).</p>
+                      <p>• Les valeurs sont recalculées et enregistrées côté serveur.</p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </article>
+      </div>
+    </main>
   </div>
 </div>
-{% endblock %}
+
+<script>
+(function(){
+  function toNumber(v){ var n = parseFloat((v||"").toString().replace(",", ".")); return isNaN(n)?0:n; }
+  function update(){
+    var q = toNumber(document.getElementById("id_quantite").value);
+    var p = toNumber(document.getElementById("prixUnitaire").value);
+    var t = toNumber(document.getElementById("taux").value);
+    var total = p * q;
+    var rent  = total * (t/100.0);
+    document.getElementById("totalAff").value = total.toFixed(3);
+    document.getElementById("rentAff").value  = rent.toFixed(3);
+  }
+  document.addEventListener("input", function(e){
+    if(e.target && e.target.id === "id_quantite"){ update(); }
+  });
+  // init
+  update();
+})();
+</script>
+{% endblock content %}

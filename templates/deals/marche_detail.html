@@ -2,16 +2,17 @@
 {% block content %}
 <div class="container ms-section-gap">
   <h2>Détail marché #{{ marche.id }}</h2>
-  <ul>
-    <li>Partenaire : {{ marche.partenaire }}</li>
-    <li>Voiture : {{ marche.voiture.marque }} {{ marche.voiture.modele }}</li>
-    <li>Quantité : {{ marche.quantite }}</li>
-    <li>Prix unitaire : {{ marche.prix_unitaire }}</li>
-    <li>Total : {{ marche.total_prix }}</li>
-    <li>Taux rentabilité : {{ marche.taux_rentabilite }} %</li>
-    <li>Rentabilité estimée : {{ marche.rentabilite_estime }}</li>
-    <li>État : {{ marche.etat }}</li>
-    <li>Créé le : {{ marche.created_at }}</li>
-  </ul>
+  <div class="card p-3">
+    <p><b>Partenaire :</b> {{ marche.partenaire }}</p>
+    <p><b>Voiture :</b> {{ marche.voiture.marque }} {{ marche.voiture.modele }} ({{ marche.voiture.annee|default:"—" }})</p>
+    <p><b>Quantité :</b> {{ marche.quantite }}</p>
+    <p><b>Prix unitaire :</b> {{ marche.prix_unitaire }}</p>
+    <p><b>Total :</b> {{ marche.total_prix }}</p>
+    <p><b>Taux rentabilité :</b> {{ marche.taux_rentabilite }} %</p>
+    <p><b>Rentabilité estimée :</b> {{ marche.rentabilite_estime }}</p>
+    <p><b>État :</b> {{ marche.etat }}</p>
+    <p><b>Créé le :</b> {{ marche.created_at }}</p>
+    <a class="btn btn-outline-primary mt-2" href="{% url 'vehicles:liste_voitures' %}">Passer un autre marché</a>
+  </div>
 </div>
 {% endblock %}

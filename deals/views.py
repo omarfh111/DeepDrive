@@ -101,3 +101,51 @@ def admin_hub(request):
         "rejected_count": Partenariat.objects.filter(status=Partenariat.Statut.REJECTED).count(),
     }
     return render(request, "deals/admin_hub.html", ctx)
+
+#Marche
+# deals/views.py
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import MarcheCreateForm
+from .models import Partenariat, Marche
+from vehicles.models import Voiture
+from django.core.exceptions import PermissionDenied
+def _get_partenaire_approved_or_none(user):
+    if not user.is_authenticated:
+        return None
+    try:
+        p = user.partenariat  # OneToOneField
+    except Partenariat.DoesNotExist:
+        return None
+    return p if p.status == Partenariat.Statut.APPROVED else None
+
+@login_required
+def marche_create(request, voiture_id):
+    voiture = get_object_or_404(Voiture, pk=voiture_id)
+    partenaire = _get_partenaire_approved_or_none(request.user)
+
+    form = MarcheCreateForm(request.POST or None, voiture=voiture, partenaire=partenaire)
+    if request.method == "POST":
+        if not partenaire:
+            messages.error(request, "Votre partenariat doit être approuvé pour créer un marché.")
+        elif form.is_valid():
+            marche = form.save()
+            messages.success(request, "Marché créé avec succès.")
+            return redirect("deals:marche_detail", pk=marche.pk)  # (ou mes_marches si tu n'as pas encore la page détail)
+
+    ctx = {
+        "form": form,
+        "voiture": voiture,
+        "taux_rentabilite": 10,  # affichage côté front (le modèle recalculera de toute façon)
+        "partenaire_approved": bool(partenaire),
+    }
+    return render(request, "deals/marche_form.html", ctx)
+@login_required
+def marche_detail(request, pk):
+    marche = get_object_or_404(Marche.objects.select_related("voiture","partenaire"), pk=pk)
+    # sécurité: un partenaire ne voit que ses propres marchés (staff a accès total)
+    partenaire = _get_partenaire_approved_or_none(request.user)
+    if not request.user.is_staff and marche.partenaire != partenaire:
+        raise PermissionDenied
+    return render(request, "deals/marche_detail.html", {"marche": marche})

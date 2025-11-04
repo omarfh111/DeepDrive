@@ -45,12 +45,20 @@
                                 {% include 'partials/header/nav.html' %}
                                 <div class="bottom-right">
                                     <div class="button-area d-flex align-items-center gap-2">
-
+                                    {# --- bouton Marché (visible seulement si partenaire approuvé) --- #}
+                                    {% if user.is_authenticated and user.partenariat.status == 'approved' %}
+                                    <a href="{% url 'vehicles:liste_voitures' %}"
+                                        class="rts-btn btn-primary radius-small icon btn-compact"
+                                        title="Passer un marché">
+                                        <i class="fa fa-shopping-cart me-1"></i> Passer un marché
+                                    </a>
+                                    {% endif %}
                                     {# --- bouton Partenariat (toujours visible) --- #}
                                     <a href="{% url 'deals:partenariat_create' %}" class="rts-btn btn-primary radius-small icon btn-compact" title="Créer une demande de partenariat">
                                         <i class="fa fa-handshake-o me-1"></i> Devenir partenaire
                                     </a>
                                     <a href="{% url 'vehicles:liste_voitures' %}">Voir les voitures</a>
+
 
                                     {# --- bouton Back Office : visible seulement pour staff --- #}
                                     {% if user.is_authenticated and user.is_staff %}

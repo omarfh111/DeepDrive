@@ -2,6 +2,7 @@ from django.urls import path
 from .views import partenariat_create_view, partenariat_success_view  # ← relative import
 from .views import *
 from .views import admin_hub
+from . import views
 app_name = "deals"
 
 urlpatterns = [
@@ -13,5 +14,9 @@ urlpatterns = [
     path("back/partenariats/<int:pk>/edit/", admin_partenariat_update, name="admin_partenariat_update"),
     path("back/partenariats/<int:pk>/delete/", admin_partenariat_delete, name="admin_partenariat_delete"),
     path("back/", admin_hub, name="admin_hub"),
+    
+    #Marche
+    path("marches/nouveau/<int:voiture_id>/", views.marche_create, name="marche_create"),
+    path("marches/<int:pk>/", views.marche_detail, name="marche_detail"),
     
 ]
