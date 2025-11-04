@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from django.shortcuts import render, redirect
 from .form import PostForm
@@ -19,3 +19,23 @@ def add_car(request):
     else:
         form = PostForm()
     return render(request, 'add_car.html', {'form': form})
+
+def update_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('portfolio')
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'update_post.html', {'form': form, 'post': post})
+
+def delete_car(request, pk):
+    car = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        car.delete()
+        return redirect('portfolio')  # redirect to your main car list page
+    return render(request, 'delete_car.html', {'car': Post})

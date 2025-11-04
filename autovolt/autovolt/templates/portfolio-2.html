@@ -300,6 +300,9 @@
                                         <div class="button-area">
                                         <p>{{ post.price }} $</p>
                                         <a class="rts-btn btn-primary radius-small" href="/portfolio-details/{{ post.id }}">View Details</a>
+                                        <a class="rts-btn btn-secondary radius-small" href="{% url 'update_post' post.id %}">Update</a>
+                                        <a class="rts-btn btn-danger radius-small" href="{% url 'delete_car' post.id %}">Delete</a>
+
                                         </div>
                                     </div>
                                     </div>
