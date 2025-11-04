@@ -57,7 +57,12 @@
                                     <a href="{% url 'deals:partenariat_create' %}" class="rts-btn btn-primary radius-small icon btn-compact" title="Créer une demande de partenariat">
                                         <i class="fa fa-handshake-o me-1"></i> Devenir partenaire
                                     </a>
-                                    <a href="{% url 'vehicles:liste_voitures' %}">Voir les voitures</a>
+                                    {% if user.is_authenticated and user.partenariat.status == 'approved' %}
+                                    <a href="{% url 'deals:mes_marches' %}"
+                                        class="rts-btn btn-secondary radius-small icon btn-compact">
+                                        <i class="fa fa-list me-1"></i> Mes marchés
+                                    </a>
+                                    {% endif %}
 
 
                                     {# --- bouton Back Office : visible seulement pour staff --- #}

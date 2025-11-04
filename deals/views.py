@@ -2,13 +2,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import PartenariatCreateForm
-from .models import Partenariat
+from .models import Partenariat, Marche
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from .forms import PartenariatAdminForm
-
+from .forms import MarcheCreateForm
+from vehicles.models import Voiture
+from django.core.exceptions import PermissionDenied
 @login_required
 def partenariat_create_view(request):
     # 🔹 Si l'utilisateur a déjà un partenariat => on affiche la fiche, pas le formulaire
@@ -104,13 +106,7 @@ def admin_hub(request):
 
 #Marche
 # deals/views.py
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
-from .forms import MarcheCreateForm
-from .models import Partenariat, Marche
-from vehicles.models import Voiture
-from django.core.exceptions import PermissionDenied
+
 def _get_partenaire_approved_or_none(user):
     if not user.is_authenticated:
         return None
@@ -149,3 +145,115 @@ def marche_detail(request, pk):
     if not request.user.is_staff and marche.partenaire != partenaire:
         raise PermissionDenied
     return render(request, "deals/marche_detail.html", {"marche": marche})
+@login_required
+def mes_marches(request):
+    partenaire = _get_partenaire_approved_or_none(request.user)
+    if not partenaire:
+        raise PermissionDenied("Partenaire non approuvé.")
+
+    q = request.GET.get("q", "").strip()
+    etat = request.GET.get("etat", "").strip()
+
+    qs = (Marche.objects
+          .filter(partenaire=partenaire)
+          .select_related("voiture")
+          .order_by("-created_at"))
+
+    if q:
+        qs = qs.filter(
+            Q(voiture__marque__icontains=q) |
+            Q(voiture__modele__icontains=q)
+        )
+
+    if etat:
+        qs = qs.filter(etat=etat)
+
+    paginator = Paginator(qs, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj,
+        "q": q,
+        "etat": etat,
+        "choices": Marche.ETAT_CHOICES,  # pour le <select>
+    }
+    return render(request, "deals/mes_marches.html", context)
+@staff_member_required
+def admin_marches(request):
+    q = request.GET.get("q", "").strip()
+    etat = request.GET.get("etat", "").strip()
+
+    qs = (Marche.objects
+          .select_related("voiture", "partenaire")
+          .order_by("-created_at"))
+
+    if q:
+        qs = qs.filter(
+            Q(voiture__marque__icontains=q) |
+            Q(voiture__modele__icontains=q) |
+            Q(partenaire__nom_societe__icontains=q)
+        )
+    if etat:
+        qs = qs.filter(etat=etat)
+
+    page_obj = Paginator(qs, 12).get_page(request.GET.get("page"))
+    context = {
+        "page_obj": page_obj,
+        "q": q,
+        "etat": etat,
+        "choices": Marche.ETAT_CHOICES,
+    }
+    return render(request, "deals/marche_admin_list.html", context)
+
+@staff_member_required
+def admin_marche_delete(request, pk):
+    marche = get_object_or_404(Marche, pk=pk)
+    if request.method == "POST":
+        marche.delete()
+        messages.success(request, "Marché supprimé.")
+    return redirect("deals:admin_marches")
+
+@staff_member_required
+def admin_marche_confirm(request, pk):
+    marche = get_object_or_404(Marche, pk=pk)
+    if request.method == "POST":
+        marche.etat = "valide"
+        marche.save(update_fields=["etat"])
+        messages.success(request, "Marché confirmé.")
+    return redirect("deals:admin_marches")
+
+@staff_member_required
+def admin_marche_cancel(request, pk):
+    marche = get_object_or_404(Marche, pk=pk)
+    if request.method == "POST":
+        marche.etat = "annule"
+        marche.save(update_fields=["etat"])
+        messages.success(request, "Marché annulé.")
+    return redirect("deals:admin_marches")
+
+# (optionnel) édition basique via ModelForm
+from django import forms
+class AdminMarcheForm(forms.ModelForm):
+    class Meta:
+        model = Marche
+        fields = ["quantite", "taux_rentabilite", "etat"]
+        widgets = {
+            "quantite": forms.NumberInput(attrs={"min": 1, "class": "form-control"}),
+            "taux_rentabilite": forms.NumberInput(attrs={"step": "0.01", "class": "form-control"}),
+            "etat": forms.Select(attrs={"class": "form-select"}),
+        }
+@staff_member_required
+def admin_marche_update(request, pk):
+    marche = get_object_or_404(Marche.objects.select_related("voiture", "partenaire"), pk=pk)
+    if request.method == "POST":
+        form = AdminMarcheForm(request.POST, instance=marche)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            # Les recalculs (total_prix, rentabilite_estime) sont faits dans model.save()
+            obj.save()
+            messages.success(request, f"Marché #{obj.id} mis à jour.")
+            return redirect("deals:admin_marches")
+    else:
+        form = AdminMarcheForm(instance=marche)
+    return render(request, "deals/marche_admin_update.html", {"form": form, "marche": marche})

@@ -119,3 +119,18 @@ class MarcheCreateForm(forms.ModelForm):
             obj.full_clean()  # ok maintenant
             obj.save()
         return obj
+class AdminMarcheForm(forms.ModelForm):
+    class Meta:
+        model = Marche
+        fields = ["quantite", "taux_rentabilite", "etat"]
+        widgets = {
+            "quantite": forms.NumberInput(attrs={"min": 1, "class": "form-control"}),
+            "taux_rentabilite": forms.NumberInput(attrs={"step": "0.01", "class": "form-control"}),
+            "etat": forms.Select(attrs={"class": "form-select"}),
+        }
+
+    def clean_quantite(self):
+        q = self.cleaned_data.get("quantite")
+        if q is None or q <= 0:
+            raise forms.ValidationError("La quantité doit être positive.")
+        return q

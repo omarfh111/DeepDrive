@@ -18,5 +18,11 @@ urlpatterns = [
     #Marche
     path("marches/nouveau/<int:voiture_id>/", views.marche_create, name="marche_create"),
     path("marches/<int:pk>/", views.marche_detail, name="marche_detail"),
+    path("mes-marches/", views.mes_marches, name="mes_marches"),
     
+    path("backoffice/marches/", views.admin_marches, name="admin_marches"),
+    path("backoffice/marches/<int:pk>/update/", views.admin_marche_update, name="admin_marche_update"),
+    path("backoffice/marches/<int:pk>/delete/", views.admin_marche_delete, name="admin_marche_delete"),
+    path("backoffice/marches/<int:pk>/confirm/", views.admin_marche_confirm, name="admin_marche_confirm"),
+    path("backoffice/marches/<int:pk>/cancel/", views.admin_marche_cancel, name="admin_marche_cancel"),
 ]
