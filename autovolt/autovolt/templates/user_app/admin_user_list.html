@@ -1,9 +1,9 @@
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
-{% block title %}Utilisateurs | Dusty{% endblock %}
-{% block page_title %}Utilisateurs{% endblock %}
-{% block breadcrumb_leaf %}Utilisateurs{% endblock %}
+{% block title %}Utilisateurs{% endblock %}
+{% block page_title %}Bienvenue, <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>{% endblock %}
+
 
 {% block content %}
 <div class="row">
@@ -12,6 +12,7 @@
       <div class="card-header">
         <div class="d-flex align-items-center justify-content-between w-100">
           <h5 class="card-title text-dark mb-0">Liste des utilisateurs</h5>
+          
           <form class="d-flex" method="get">
             <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (nom, email)">
             <button class="btn btn-sm btn-primary">Filtrer</button>
@@ -52,10 +53,11 @@
                 <td>{{ user.date_joined|date:"Y-m-d" }}</td>
                 <td class="text-end align-middle">
                 <div class="d-inline-flex align-items-center gap-1">
-                    <a href="#" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
-                    <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
+                    <a href="{% url 'user_app:admin_user_edit' user.pk %}"
+                      class="btn btn-icon btn-sm bg-primary-subtle"
+                      data-bs-toggle="tooltip" data-bs-title="Modifier">
+                      <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
                     </a>
-
                     <form method="post"
                         action="{% url 'admin_user_delete' user.pk %}"
                         class="d-inline m-0"
