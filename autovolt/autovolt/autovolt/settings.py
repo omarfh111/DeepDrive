@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'htmlmin',
-    'posts',   
+    'posts', 
+    "vehicles",  
 ]
 
 MIDDLEWARE = [
