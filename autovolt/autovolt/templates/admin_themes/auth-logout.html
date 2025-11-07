@@ -1,114 +1,187 @@
 ﻿{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from zoyothemes.com/dusty/html/auth-logout by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:29:52 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
+  <meta charset="utf-8" />
+  <title>Logout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <meta charset="utf-8" />
-        <title>Logout | Dusty - Responsive Admin Dashboard Template</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
-        <meta name="author" content="Zoyothemes"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="shortcut icon" href="{% static 'admin_themes/assets/images/favicon.ico' %}">
+  <link href="{% static 'admin_themes/assets/css/app.min.css' %}" rel="stylesheet" id="app-style" />
+  <link href="{% static 'admin_themes/assets/css/icons.min.css' %}" rel="stylesheet" />
 
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="{% static 'admin_themes/assets/images/favicon.ico' %}">
+ 
+  <style>
+    :root{
+      --brand:#fe633a;
+      --brand-700:#e65730;
+      --ink:#0e1932;
+      --muted:#6b7785;
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --radius:26px;
+      --shadow:0 22px 48px rgba(14,25,50,.12);
+    }
 
-        <!-- App css -->
-        <link href="{% static 'admin_themes/assets/css/app.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+    html,body{height:100%}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      animation:fadeIn .35s ease-out;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-        <!-- Icons -->
-        <link href="{% static 'admin_themes/assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    .auth-shell{
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      padding:32px;
+    }
 
-        <script src="{% static 'admin_themes/assets/js/head.js' %}"></script>
+ 
+    .auth-split{
+      width:min(1180px, 100%);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1fr;           
+      overflow:hidden;
+    }
+    @media (min-width: 992px){
+      .auth-split{ grid-template-columns: 48% 52%; }  
+    }
 
-    </head>
 
-    <body>
+    .accent-pane{
+      position:relative;
+      background: linear-gradient(145deg, #ff8a66 0%, var(--brand) 58%, var(--brand-700) 100%);
+      color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      padding:48px 56px;
+      isolation:isolate;
+      z-index:0;
+    }
+    .accent-card{ text-align:center; max-width:420px; }
+    .accent-card h3{ font-weight:800; margin:14px 0 10px; }
+    .accent-card p{ opacity:.97; }
 
-        <!-- Begin page -->
-        <div class="account-page">
-            <div class="container-fluid p-0">
-                <div class="row align-items-center g-0 px-3 py-3 vh-100">
+    .accent-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:56px; padding:0 36px; border-radius:14px;
+      border:2px solid rgba(255,255,255,.85);
+      color:#fff; background:transparent; font-weight:700; letter-spacing:.3px;
+      transition:all .15s ease;
+    }
+    .accent-btn:hover{ background:rgba(255,255,255,.14); transform:translateY(-2px); }
 
-                    <div class="col-xl-5">
-                        <div class="row">
-                            <div class="col-md-8 mx-auto">
+    .accent-pane::before,
+    .accent-pane::after{
+      content:""; position:absolute;
+      background:var(--card); border-radius:50%;
+      pointer-events:none; z-index:-1;
+      right:-380px;
+      width:560px; height:500px;
+    }
+    .accent-pane::before{ top:-340px; }
+    .accent-pane::after { bottom:-340px; }
 
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="mb-0 p-0 p-lg-3">
-                                            <div class="mb-0 border-0 p-md-4 p-lg-0">
-                                                <div class="mb-3 p-0 text-center">
-                                                    <div class="auth-brand">
-                                                        <a class='logo logo-light' href='index.html'>
-                                                            <span class="logo-lg">
-                                                                <img src="{% static 'admin_themes/assets/images/logo-light.png' %}" alt="" height="24">
-                                                            </span>
-                                                        </a>
-                                                        <a class='logo logo-dark' href='index.html'>
-                                                            <span class="logo-lg">
-                                                                <img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="" height="24">
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="auth-title-section my-4 text-center"> 
-                                                    <h3 class="text-primary fw-semibold mb-1">You are Logged Out</h3>
-                                                    <p class="text-muted fs-14 mb-0">Thank you for using Dusty admin template</p>
-                                                </div>
 
-                                                <div class="maintenance-img text-center">
-                                                    <iconify-icon icon="solar:logout-3-bold-duotone" width="120" height="120"  style="color: #7168EE"></iconify-icon>
-                                                </div>
-                                            
-                                                <div class="text-center">
-                                                    <a class='btn btn-primary mt-3 me-1' href="{% url 'login' %}"> Log In </a>
-                                                </div>
-            
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    .form-pane{
+      padding:48px 56px;
+      position:relative; z-index:1;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .form-pane > *{ width:100%; max-width:420px; }
 
-                    <div class="col-xl-7 d-none d-xl-inline-block">
-                        <div class="account-page-bg rounded-4">
-                            <div class="text-center">
-                                <div class="auth-image">
-                                    <img src="{% static 'admin_themes/assets/images/auth-images.svg' %}" class="mx-auto img-fluid" alt="images">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    .auth-title{ font-weight:700; letter-spacing:.2px; }
+    .text-muted{ color:var(--muted)!important; }
 
-                </div>
+    .btn-primary{
+    background-color:var(--brand)!important; border-color:var(--brand)!important;
+    height:48px; border-radius:12px; font-weight:700;
+    font-size:18px;                  
+    letter-spacing:.3px;             
+    transition:transform .12s ease;
+    }
+    .btn-primary:hover,.btn-primary:focus{
+      background-color:var(--brand-700)!important; border-color:var(--brand-700)!important;
+      transform:translateY(-1px);
+    }
+
+    a.text-brand{ color:var(--brand)!important; }
+    a.text-brand:hover{ color:var(--brand-700)!important; }
+
+    @media (max-width: 991.98px){ .accent-pane{ order:-1; } }
+    @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important;} }
+  </style>
+</head>
+
+<body>
+  <main class="auth-shell" role="main">
+    <section class="auth-split">
+    <aside class="accent-pane">
+        <div class="accent-card">
+          <h3 style="font-size: 28px; margin-top: 20px;">See You Soon!</h3>
+          <p style="font-size: 17px; margin-bottom: 36px;">You've been safely signed out</p>
+          
+          <div style="text-align: left; max-width: 360px; margin: 0 auto;">
+            <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 16px;">
+              <i class="bi bi-shield-lock" style="font-size: 28px; flex-shrink: 0;"></i>
+              <span style="font-size: 17px; line-height: 1.4;">Your session is secure</span>
             </div>
+            <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 16px;">
+              <i class="bi bi-bookmark-check" style="font-size: 28px; flex-shrink: 0;"></i>
+              <span style="font-size: 17px; line-height: 1.4;">All changes saved</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <i class="bi bi-arrow-clockwise" style="font-size: 28px; flex-shrink: 0;"></i>
+              <span style="font-size: 17px; line-height: 1.4;">Ready when you return</span>
+            </div>
+          </div>
         </div>
-        <!-- END wrapper -->
+    </aside>
+      <div class="form-pane">
+        <div>
+          <div class="mb-3 text-center">
+            <a class="logo" href="#"><img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="Logo" height="28"></a>
+          </div>
 
-        <!-- Vendor -->
-        <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+          <div class="text-center mb-3">
+            <h2 class="auth-title mb-1">You are Logged Out</h2>
+            <p class="text-muted fs-14 mb-0">Thanks for visiting. Come back anytime.</p>
+          </div>
 
-        <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+          <div class="text-center my-4">
+            <iconify-icon icon="solar:logout-3-bold-duotone" width="120" height="120" style="color:#fe633a"></iconify-icon>
+          </div>
 
-        <!-- App js-->
-        <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
-        
-    </body>
+          <div class="d-grid">
+            <a class="btn btn-primary w-100" href="{% url 'login' %}">Sign In</a>
+          </div>
 
-<!-- Mirrored from zoyothemes.com/dusty/html/auth-logout by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:29:52 GMT -->
+          <div class="text-center text-muted mt-4">
+            <p class="mb-0">
+              Prefer the home page?
+              <a class="text-brand ms-2 fw-semibold" href="/">Go Home</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+
+  <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
+</body>
 </html>
-
