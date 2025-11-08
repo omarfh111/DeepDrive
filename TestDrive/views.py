@@ -46,10 +46,8 @@ class TestDriveList(LoginRequiredMixin, ListView):
     ordering = ["-reservation_date", "-reservation_time"]
 
     def get_queryset(self):
-        # UNIQUEMENT les TestDrives de l'utilisateur connecté
         qs = super().get_queryset().filter(user=self.request.user)
 
-        # Recherche par voiture
         q = self.request.GET.get("q", "").strip()
         if q:
             qs = qs.filter(
@@ -57,7 +55,6 @@ class TestDriveList(LoginRequiredMixin, ListView):
                 Q(car__modele__icontains=q)
             )
 
-        # Filtre par statut
         status = self.request.GET.get("status", "").strip()
         if status:
             qs = qs.filter(status=status)

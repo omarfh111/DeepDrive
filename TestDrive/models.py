@@ -9,7 +9,6 @@ class TestDrive(models.Model):
         ('not_done', 'Not done'),
     ]
 
-    # 🔽 Liste des villes du Grand Tunis
     CITY_CHOICES = [
         ('Tunis', 'Tunis'),
         ('Ariana', 'Ariana'),
