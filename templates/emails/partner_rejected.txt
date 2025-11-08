@@ -5,4 +5,4 @@ Après examen, votre demande de partenariat (#{{ id_partenariat }}) a été refu
 Vous pouvez mettre à jour vos informations et soumettre une nouvelle demande si nécessaire.
 
 Cordialement,
-L’équipe Autovolt
+L’équipe DeepDrive

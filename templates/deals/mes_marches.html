@@ -66,6 +66,9 @@
                   <a href="{% url 'deals:marche_detail' m.id %}" class="icon-btn text-primary" title="Détails">
                     <i class="fa fa-eye"></i>
                   </a>
+                  <a href="{% url 'deals:marche_invoice' m.id %}" class="icon-btn text-danger ms-2" title="Télécharger facture">
+                    <i class="fa fa-download"></i>
+                  </a>
                 </td>
               </tr>
               {% empty %}

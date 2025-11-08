@@ -262,3 +262,45 @@ def admin_marche_update(request, pk):
     else:
         form = AdminMarcheForm(instance=marche)
     return render(request, "deals/marche_admin_update.html", {"form": form, "marche": marche})
+# PDF facture
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+from io import BytesIO
+
+@login_required
+def marche_invoice_pdf(request, pk):
+    """
+    Génère la facture PDF d'un marché.
+    - Un partenaire ne peut télécharger QUE ses propres marchés approuvés (ou en attente, à toi de décider).
+    - Le staff peut tout télécharger.
+    """
+    marche = get_object_or_404(Marche.objects.select_related("voiture", "partenaire"), pk=pk)
+
+    # Sécurité: partenaire ne voit que ses marchés
+    partenaire = _get_partenaire_approved_or_none(request.user)
+    if not request.user.is_staff:
+        if not partenaire or marche.partenaire_id != partenaire.id_partenariat:
+            raise PermissionDenied
+
+    context = {
+        "marche": marche,
+        "voiture": marche.voiture,
+        "partenaire": marche.partenaire,
+        "societe": marche.partenaire.nom_societe or "",
+        "now": marche.created_at,  # date du marché (ou timezone.now() si tu veux l'instant)
+    }
+
+    html = render_to_string("deals/invoices/marche_invoice.html", context)
+
+    # Rendu PDF
+    pdf_io = BytesIO()
+    pisa_status = pisa.CreatePDF(src=html, dest=pdf_io, encoding="utf-8")
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la génération du PDF.", status=500)
+
+    pdf_io.seek(0)
+    filename = f"facture-marche-{marche.id}.pdf"
+    response = HttpResponse(pdf_io.read(), content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
