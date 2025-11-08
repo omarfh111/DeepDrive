@@ -140,3 +140,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_app.User"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = None
+
+
+# 👉 Forcer Python/OpenSSL à utiliser le bundle certifi (évite les CA cassés Windows/antivirus)
+import os, certifi
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
+# Dev seulement
+EMAIL_BACKEND = "deals.backends.UnverifiedTLSBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
+EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
+DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"

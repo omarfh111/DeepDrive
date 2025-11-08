@@ -106,7 +106,7 @@ def admin_hub(request):
 
 #Marche
 # deals/views.py
-
+from .emails import send_marche_creation_email
 def _get_partenaire_approved_or_none(user):
     if not user.is_authenticated:
         return None
@@ -128,12 +128,17 @@ def marche_create(request, voiture_id):
         elif form.is_valid():
             marche = form.save()
             messages.success(request, "Marché créé avec succès.")
-            return redirect("deals:marche_detail", pk=marche.pk)  # (ou mes_marches si tu n'as pas encore la page détail)
+            try:
+                send_marche_creation_email(marche)
+            except Exception as e:
+                print("Erreur envoi e-mail marché :", e)
+
+            return redirect("deals:marche_detail", pk=marche.pk)
 
     ctx = {
         "form": form,
         "voiture": voiture,
-        "taux_rentabilite": 10,  # affichage côté front (le modèle recalculera de toute façon)
+        "taux_rentabilite": 10,
         "partenaire_approved": bool(partenaire),
     }
     return render(request, "deals/marche_form.html", ctx)

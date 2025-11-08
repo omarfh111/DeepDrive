@@ -1,0 +1,8 @@
+Bonjour {{ societe }},
+
+Après examen, votre demande de partenariat (#{{ id_partenariat }}) a été refusée.
+
+Vous pouvez mettre à jour vos informations et soumettre une nouvelle demande si nécessaire.
+
+Cordialement,
+L’équipe Autovolt

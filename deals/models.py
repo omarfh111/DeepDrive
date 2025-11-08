@@ -63,6 +63,44 @@ class Partenariat(models.Model):
     def reject(self):
         self.status = self.Statut.REJECTED
         self.save(update_fields=["status"])
+        from django.db.models.signals import pre_save, post_save
+
+from django.dispatch import receiver
+from .emails import send_partner_status_email
+from django.db.models.signals import pre_save, post_save
+
+@receiver(pre_save, sender=Partenariat)
+def _flag_status_change(sender, instance, **kwargs):
+    """
+    Marque sur l'instance si le statut va changer pour 'approved' ou 'rejected'
+    afin d'envoyer l'email après sauvegarde.
+    """
+    if not instance.pk:
+        instance._send_status_mail = instance.status in (instance.Statut.APPROVED, instance.Statut.REJECTED)
+        return
+    try:
+        old = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        instance._send_status_mail = instance.status in (instance.Statut.APPROVED, instance.Statut.REJECTED)
+        return
+
+    instance._send_status_mail = (
+        old.status != instance.status and
+        instance.status in (instance.Statut.APPROVED, instance.Statut.REJECTED)
+    )
+
+@receiver(post_save, sender=Partenariat)
+def _send_status_change_email(sender, instance, **kwargs):
+    """
+    Envoie l'email seulement si le flag a été posé en pre_save.
+    """
+    if getattr(instance, "_send_status_mail", False):
+        send_partner_status_email(instance)
+        # nettoyage pour éviter tout effet de bord
+        try:
+            delattr(instance, "_send_status_mail")
+        except Exception:
+            pass
 #Marhce
 from decimal import Decimal
 from django.db import models

@@ -1,0 +1,16 @@
+<p>Bonjour <strong>{{ societe }}</strong>,</p>
+
+<p>Votre marché (<strong>#{{ id_marche }}</strong>) a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.</p>
+
+<h3>Détails du marché :</h3>
+<ul>
+  <li><strong>Voiture :</strong> {{ voiture }}</li>
+  <li><strong>Quantité :</strong> {{ quantite }}</li>
+  <li><strong>Prix unitaire :</strong> {{ prix_unitaire }} DT</li>
+  <li><strong>Total :</strong> {{ total_prix }} DT</li>
+  <li><strong>Taux de rentabilité :</strong> {{ taux_rentabilite }} %</li>
+  <li><strong>Rentabilité estimée :</strong> {{ rentabilite_estime }} DT</li>
+  <li><strong>État :</strong> {{ etat }}</li>
+</ul>
+
+<p>Merci pour votre confiance,<br>L’équipe <strong>Autovolt</strong>.</p>
