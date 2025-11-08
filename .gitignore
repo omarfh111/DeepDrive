@@ -1,0 +1,145 @@
+# ======================
+# ENVIRONNEMENTS VIRTUELS
+# ======================
+venv/
+.venv/
+ENV/
+env/
+
+# ======================
+# BASES DE DONNÉES
+# ======================
+*.sqlite3
+*.db
+*.pid
+autovolt/db.sqlite3
+
+# ======================
+# DOSSIERS DU PROJET
+# ======================
+autovolt/papers/*
+media/
+staticfiles/
+
+# ======================
+# CACHE ET COMPILÉS
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# ======================
+# EXTENSIONS PYTHON / C
+# ======================
+*.so
+
+# ======================
+# DISTRIBUTION / PACKAGING
+# ======================
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ======================
+# PYINSTALLER
+*.manifest
+*.spec
+
+# ======================
+# LOGS
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ======================
+# TESTS / COVERAGE
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# ======================
+# TRADUCTIONS
+*.mo
+*.pot
+
+# ======================
+# DJANGO SPECIFIQUE
+local_settings.py
+# Ignorer les migrations sauf __init__.py
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# ======================
+# FLASK
+instance/
+.webassets-cache
+
+# ======================
+# SCRAPY
+.scrapy
+
+# ======================
+# SPHINX DOCUMENTATION
+docs/_build/
+
+# ======================
+# PYBUILDER
+target/
+
+# ======================
+# JUPYTER
+.ipynb_checkpoints
+
+# ======================
+# PYENV
+.python-version
+
+# ======================
+# CELERY
+celerybeat-schedule
+
+# ======================
+# DOTENV
+.env
+*.env
+
+# ======================
+# IDEs
+.vscode/
+.idea/
+.spyderproject
+.spyproject
+.ropeproject
+
+# ======================
+# MKDOCS
+/site
+
+# ======================
+# MYPY
+.mypy_cache/
+
+# ======================
+# OS SPECIFIQUE
+.DS_Store
+Thumbs.db

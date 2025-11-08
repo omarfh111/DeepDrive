@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            
+            {% with class="portfolio" current="Cars" title="Cars" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <div class="rts-portfolio-area inner rts-section-gapNew">
+                <div class="container">
+                    <div class="row g-5">
+                        <div class="col-lg-4">
+                            <div class="sticky-top">
+                                <div class="left-side-bar">
+                                    <div class="search-area side-box">
+                                        <h2>Cars Search</h2>
+                                        <form action="#">
+                                            <div class="input-wrapper">
+                                                <input type="text" placeholder="Search Vehicles" required>
+                                                <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+                                            </div>
+                                        </form>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="car-make side-box">
+                                        <h2>Car Make</h2>
+                                        <ul class="checkbox-list">
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" checked />
+                                                <span>Mercedes-Benz</span>
+                                              </label>
+                                              <span>(130)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Volkswagen</span>
+                                              </label>
+                                              <span>(80)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Mitsubishi</span>
+                                              </label>
+                                              <span>(199)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Honda</span>
+                                              </label>
+                                              <span>(70)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Lamborghini</span>
+                                              </label>
+                                              <span>(160)</span>
+                                            </li>
+                                        </ul>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="car-make side-box">
+                                        <h2>Car Model</h2>
+                                        <ul class="checkbox-list">
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" checked />
+                                                <span>Chevrolet</span>
+                                              </label>
+                                              <span>(64)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Ford</span>
+                                              </label>
+                                              <span>(199)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Tesla</span>
+                                              </label>
+                                              <span>(59)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>BMW</span>
+                                              </label>
+                                              <span>(230)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Audi</span>
+                                              </label>
+                                              <span>(30)</span>
+                                            </li>
+                                        </ul>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="price-box side-box">
+                                        <h2>Price</h2>
+                                        <div class="slider-container">
+                                            <!-- Histogram -->
+                                            <div class="histogram">
+                                              <!-- Create bars dynamically -->
+                                              <div class="histogram-bar" style="height: 67px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 52px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 99px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 75px;"></div>
+                                              <div class="histogram-bar" style="height: 93px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 99px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 75px;"></div>
+                                              <div class="histogram-bar" style="height: 93px;"></div>
+                                              <div class="histogram-bar" style="height: 93px;"></div>
+                                              <div class="histogram-bar" style="height: 75px;"></div>
+                                              <div class="histogram-bar" style="height: 98px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 107px;"></div>
+                                              <div class="histogram-bar" style="height: 75px;"></div>
+                                              <div class="histogram-bar" style="height: 93px;"></div>
+                                              <div class="histogram-bar" style="height: 102px;"></div>
+                                              <div class="histogram-bar" style="height: 52px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                              <div class="histogram-bar" style="height: 94px;"></div>
+                                              <div class="histogram-bar" style="height: 75px;"></div>
+                                              <div class="histogram-bar" style="height: 86px;"></div>
+                                            </div>
+                                        
+                                            <!-- Range Slider -->
+                                            <div class="range-slider">
+                                              <div class="track"></div>
+                                              <div class="range" id="range"></div>
+                                              <input type="range" id="minRange" min="0" max="100" value="20">
+                                              <input type="range" id="maxRange" min="0" max="100" value="80">
+                                            </div>
+                                        
+                                            <!-- Price Labels -->
+                                            <div class="price-labels">
+                                              <span id="minPrice">$500</span>
+                                              <span id="maxPrice">$5000</span>
+                                            </div>
+                                        </div>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="car-make side-box">
+                                        <h2>Car Seats</h2>
+                                        <ul class="checkbox-list">
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" checked />
+                                                <span>2 seats</span>
+                                              </label>
+                                              <span>(30)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>3 seats</span>
+                                              </label>
+                                              <span>(23)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>4 seats</span>
+                                              </label>
+                                              <span>(179)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>5 seats</span>
+                                              </label>
+                                              <span>(40)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>6 seats</span>
+                                              </label>
+                                              <span>(120)</span>
+                                            </li>
+                                        </ul>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="car-make side-box">
+                                        <h2>Car Color</h2>
+                                        <ul class="checkbox-list">
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" checked />
+                                                <span>Matte Black</span>
+                                              </label>
+                                              <span>(30)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Orange</span>
+                                              </label>
+                                              <span>(23)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Black</span>
+                                              </label>
+                                              <span>(179)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Yellow</span>
+                                              </label>
+                                              <span>(40)</span>
+                                            </li>
+                                            <li class="checkbox-item">
+                                              <label class="checkbox-label">
+                                                <input type="checkbox" />
+                                                <span>Neon Colors</span>
+                                              </label>
+                                              <span>(120)</span>
+                                            </li>
+                                        </ul>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                    <div class="tag-area side-box">
+                                        <h2>Fuel</h2>
+                                        <ul>
+                                            <li>Gasoline</li>
+                                            <li>Diesel</li>
+                                            <li>Plug-in Hybrid</li>
+                                            <li>Hybrid</li>
+                                            <li>Electric</li>
+                                        </ul>
+                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="right">
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/08-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Honda Civic Hatchback</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/05-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mercedes-Benz E-Class</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/07-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mazda MX-5 Miata</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/08-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Honda Civic Hatchback</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/05-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mercedes-Benz E-Class</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/07-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mazda MX-5 Miata</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/08-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Honda Civic Hatchback</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style mb--30">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/05-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mercedes-Benz E-Class</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-wrapper2 list-style">
+                                    <div class="image-area">
+                                        <a href="{% url 'portfolio-details' %}">
+                                            <img src="{% static 'images/portfolio/07-sm.webp' %}" height="206" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="content-area">
+                                        <h6 class="title"><a href="{% url 'portfolio-details' %}">Mazda MX-5 Miata</a>
+                                        </h6>
+                                        <ul class="feature-area">
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                                100 Miles
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                                Petrol
+                                            </li>
+                                            <li>
+                                                <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                                Autometic
+                                            </li>
+                                        </ul>
+                                        <div class="button-area">
+                                            <p class="cw">$400</p>
+                                            <a href="{% url 'portfolio-details' %}"
+                                                class="rts-btn btn-primary radius-small">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="rts-btn load-more-btn btn-border">Load More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const minRange = document.getElementById('minRange');
+        const maxRange = document.getElementById('maxRange');
+        const range = document.getElementById('range');
+        const histogramBars = document.querySelectorAll('.histogram-bar');
+        const minPrice = document.getElementById('minPrice');
+        const maxPrice = document.getElementById('maxPrice');
+    
+        function updateRange() {
+          const minValue = parseInt(minRange.value);
+          const maxValue = parseInt(maxRange.value);
+    
+          // Update the range highlight
+          range.style.left = `${minValue}%`;
+          range.style.right = `${100 - maxValue}%`;
+    
+          // Update the active bars
+          histogramBars.forEach((bar, index) => {
+            const barValue = (index / (histogramBars.length - 1)) * 100;
+            if (barValue >= minValue && barValue <= maxValue) {
+              bar.classList.add('active');
+            } else {
+              bar.classList.remove('active');
+            }
+          });
+    
+          // Update price labels (example: mapping 0-100 to $500-$5000)
+          const minPriceValue = Math.round((minValue / 100) * (5000 - 500) + 500);
+          const maxPriceValue = Math.round((maxValue / 100) * (5000 - 500) + 500);
+          minPrice.textContent = `$${minPriceValue}`;
+          maxPrice.textContent = `$${maxPriceValue}`;
+        }
+    
+        // Add event listeners
+        minRange.addEventListener('input', () => {
+          if (parseInt(minRange.value) > parseInt(maxRange.value) - 10) {
+            minRange.value = maxRange.value - 10;
+          }
+          updateRange();
+        });
+    
+        maxRange.addEventListener('input', () => {
+          if (parseInt(maxRange.value) < parseInt(minRange.value) + 10) {
+            maxRange.value = parseInt(minRange.value) + 10;
+          }
+          updateRange();
+        });
+    
+        // Initialize
+        updateRange();
+    </script>
+    {% include 'partials/footer/footer-three.html' %}
+    {% endblock content %}

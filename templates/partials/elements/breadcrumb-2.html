@@ -1,0 +1,34 @@
+{% load static %}
+<!-- rts breadcrumb area start -->
+<div class="rts-breadcrumb-area {{class}} jarallax">
+    <div class="container">
+        <div class="breadcrumb-area-wrapper">
+            <div class="left">
+                <h1 class="title">{{title}}</h1>
+                <ul class="feature-area">
+                    <li>
+                        <img src="{% static 'images/portfolio/feature-icon/05.svg' %}" alt="">
+                        100 Miles
+                    </li>
+                    <li>
+                        <img src="{% static 'images/portfolio/feature-icon/06.svg' %}" alt="">
+                        Petrol
+                    </li>
+                    <li>
+                        <img src="{% static 'images/portfolio/feature-icon/07.svg' %}" alt="">
+                        Autometic
+                    </li>
+                    <li>
+                        <img src="{% static 'images/portfolio/feature-icon/08.svg' %}" alt="">
+                        Person
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-bread-crumb">
+                <a href="{% url 'index' %}">Home</a>
+                <a href="#" class="current">{{current}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- rts breadcrumb area end -->

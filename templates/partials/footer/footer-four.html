@@ -1,0 +1,72 @@
+{% load static %}
+<!-- rts footer area start -->
+<div class="rts-footer-area footer-four bg-white" id="rts-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-wrapper-style-between">
+                    <div class="single-wized logo-area">
+                        <a href="{% url 'index' %}" class="logo">
+                            <img src="{% static 'images/logo/logo.svg' %}" width="99" alt="">
+                        </a>
+                        <p class="desc">Welcome to Autovault where innovation drives every journey. Discover a range of designed 
+                            to elevate.</p>
+                    </div>
+                    <div class="single-wized">
+                        <h6 class="title">Contact & legal </h6>
+                        <div class="body">
+                            <ul class="nav-bottom">
+                                <li><a href="#">Legal</a></li>
+                                <li><a href="#">Privacy policy</a></li>
+                                <li><a href="#">Cookies policy </a></li>
+                                <li><a href="#">Disclaimer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="single-wized">
+                        <h6 class="title">Quick Links</h6>
+                        <div class="body">
+                            <ul class="nav-bottom">
+                                <li><a href="#">Get In Touch</a></li>
+                                <li><a href="#">Car Reviews</a></li>
+                                <li><a href="#">Maintenance Tips </a></li>
+                                <li><a href="#">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="single-wized">
+                        <h6 class="title">Download App</h6>
+                        <div class="body d-flex gap-3">
+                            <a href="#">
+                                <img src="{% static 'images/about/app-store.svg' %}" alt="">
+                            </a>
+                            <a href="#">
+                                <img src="{% static 'images/about/play-store.svg' %}" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copyright-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="copyright-area-inner d-flex align-items-center justify-content-between">
+                        <p>Copyright © {% now "Y" %}All Rights Reserved by Autovalut
+                         </p>
+                        <div class="social-area-transparent">
+                            <ul class="d-flex align-items-center">
+                                <li><a href="#"><img src="{% static 'images/icon/x.svg' %}" alt=""></a></li>
+                                <li><a href="#"><img src="{% static 'images/icon/in.svg' %}" alt=""></a></li>
+                                <li><a href="#"><img src="{% static 'images/icon/f.svg' %}" alt=""></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- rts footer area end -->

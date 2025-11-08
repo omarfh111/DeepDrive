@@ -1,0 +1,92 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Détails Test Drive #{{ t.id_test_drive }} | Dusty{% endblock %}
+{% block page_title %}Détail du Test Drive{% endblock %}
+{% block breadcrumb_leaf %}Test Drive #{{ t.id_test_drive }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-8 col-lg-10 mx-auto">
+    <div class="card overflow-hidden shadow-sm">
+      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h5 class="card-title text-dark mb-0">Test Drive #{{ t.id_test_drive }}</h5>
+        <a href="{% url 'admin_testdrive_list' %}" class="btn btn-sm btn-secondary">
+          <i class="mdi mdi-arrow-left me-1"></i> Retour à la liste
+        </a>
+      </div>
+
+      <div class="card-body">
+        <div class="mb-3">
+          <h6 class="text-uppercase text-muted mb-2">Informations générales</h6>
+          <p><strong>Utilisateur :</strong> {{ t.user.username }}</p>
+          <p><strong>Voiture :</strong> {{ t.car.marque }} {{ t.car.modele }}</p>
+          <p><strong>Lieu du test :</strong> {{ t.test_location|default:"—" }}</p>
+
+          <!-- 🟢 Ajout des nouveaux champs -->
+          <p><strong>Historique des absences (no-show) :</strong> {{ t.no_show_history|default:"0" }}</p>
+          <p><strong>Nombre de réservations :</strong> {{ t.reservation_count|default:"0" }}</p>
+        </div>
+
+        <div class="mb-3">
+          <h6 class="text-uppercase text-muted mb-2">Planification</h6>
+          <p><strong>Date :</strong> {{ t.reservation_date|date:"d/m/Y" }}</p>
+          <p><strong>Heure :</strong> {{ t.reservation_time|time:"H:i" }}</p>
+          <p><strong>Durée :</strong> {{ t.duration }} minutes</p>
+        </div>
+
+        <div class="mb-3">
+          <h6 class="text-uppercase text-muted mb-2">Contact</h6>
+          <p><strong>Téléphone :</strong> {{ t.contact_phone|default:"—" }}</p>
+          <p><strong>Email :</strong> {{ t.contact_email|default:"—" }}</p>
+        </div>
+
+        <div class="mb-3">
+          <h6 class="text-uppercase text-muted mb-2">Commentaire</h6>
+          <p>
+            {% if t.comments %}
+              {{ t.comments }}
+            {% else %}
+              <em class="text-muted">Aucun commentaire</em>
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <h6 class="text-uppercase text-muted mb-2">Statut</h6>
+          {% if t.status == "not_done" %}
+            <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">En attente</span>
+          {% elif t.status == "done" %}
+            <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">Terminé</span>
+          {% elif t.status == "cancelled" %}
+            <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">Annulé</span>
+          {% else %}
+            <span class="badge bg-secondary-subtle text-secondary fw-medium px-3 py-1 rounded-4">Inconnu</span>
+          {% endif %}
+        </div>
+
+        <div class="border-top pt-3">
+          <small class="text-muted d-block">
+            <strong>Créé le :</strong> {{ t.created_at|date:"d/m/Y H:i" }}
+          </small>
+          <small class="text-muted d-block">
+            <strong>Dernière mise à jour :</strong> {{ t.updated_at|date:"d/m/Y H:i" }}
+          </small>
+        </div>
+      </div>
+
+      <div class="card-footer bg-light d-flex justify-content-end gap-2">
+        <a href="{% url 'testdrive_edit' t.pk %}" class="btn btn-sm btn-primary">
+          <i class="mdi mdi-pencil-outline me-1"></i> Modifier
+        </a>
+        <form method="post" action="{% url 'testdrive_delete' t.pk %}" onsubmit="return confirm('Supprimer ce test drive ?');">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-danger">
+            <i class="mdi mdi-delete me-1"></i> Supprimer
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

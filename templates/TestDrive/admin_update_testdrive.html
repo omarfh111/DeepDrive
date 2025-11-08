@@ -1,0 +1,119 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}{{ t|default:"Nouveau test drive" }} | Dusty{% endblock %}
+{% block page_title %}Test Drives{% endblock %}
+{% block breadcrumb_leaf %}{{ t|yesno:"Modifier,Ajouter" }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- En-tête -->
+  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+    <div class="flex-grow-1">
+      <h4 class="fs-18 fw-semibold m-0">
+        {% if t %}Modifier Test Drive #{{ t.id_test_drive }}{% else %}Ajouter un Test Drive{% endif %}
+      </h4>
+    </div>
+    <div class="text-end">
+      <ol class="breadcrumb m-0 py-0">
+        <li class="breadcrumb-item"><a href="javascript:void(0);">Test Drives</a></li>
+        <li class="breadcrumb-item active">{% if t %}Modifier{% else %}Ajouter{% endif %}</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Informations du test drive</h5>
+        </div>
+
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.car.id_for_label }}">Voiture</label>
+                  {{ form.car }}
+                  <div class="text-danger small">{{ form.car.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.user.id_for_label }}">Utilisateur</label>
+                  {{ form.user }}
+                  <div class="text-danger small">{{ form.user.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.reservation_date.id_for_label }}">Date de réservation</label>
+                  {{ form.reservation_date }}
+                  <div class="text-danger small">{{ form.reservation_date.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.reservation_time.id_for_label }}">Heure de réservation</label>
+                  {{ form.reservation_time }}
+                  <div class="text-danger small">{{ form.reservation_time.errors }}</div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.duration.id_for_label }}">Durée (minutes)</label>
+                  {{ form.duration }}
+                  <div class="text-danger small">{{ form.duration.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.test_location.id_for_label }}">Lieu du test</label>
+                  {{ form.test_location }}
+                  <div class="text-danger small">{{ form.test_location.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.status.id_for_label }}">Statut</label>
+                  {{ form.status }}
+                  <div class="text-danger small">{{ form.status.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.comments.id_for_label }}">Commentaires</label>
+              {{ form.comments }}
+              <div class="text-danger small">{{ form.comments.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.driver_license_number.id_for_label }}">Numéro de permis</label>
+              {{ form.driver_license_number }}
+              <div class="text-danger small">{{ form.driver_license_number.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.contact_phone.id_for_label }}">Téléphone</label>
+              {{ form.contact_phone }}
+              <div class="text-danger small">{{ form.contact_phone.errors }}</div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <a href="{% url 'admin_testdrive_list' %}" class="btn btn-outline-secondary">Annuler</a>
+              <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

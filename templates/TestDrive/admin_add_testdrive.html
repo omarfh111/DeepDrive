@@ -1,0 +1,58 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Ajouter un Test Drive | Dusty{% endblock %}
+{% block page_title %}Ajouter un Test Drive{% endblock %}
+{% block breadcrumb_leaf %}Nouveau Test Drive{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-8 col-lg-10 mx-auto">
+    <div class="card overflow-hidden shadow-sm">
+      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h5 class="card-title text-dark mb-0">Créer un Test Drive</h5>
+        <a href="{% url 'admin_testdrive_list' %}" class="btn btn-sm btn-secondary">
+          <i class="mdi mdi-arrow-left me-1"></i> Retour à la liste
+        </a>
+      </div>
+
+      <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="row">
+            {% for field in form %}
+              <div class="col-md-6 mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-4 py-2">
+              <i class="mdi mdi-content-save-outline me-1"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-footer bg-light text-center">
+        <small class="text-muted">
+          <i class="mdi mdi-information-outline me-1"></i>
+          Tous les champs marqués sont obligatoires.
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
