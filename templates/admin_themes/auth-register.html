@@ -1,183 +1,255 @@
 ﻿{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from zoyothemes.com/dusty/html/auth-register by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:29:59 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
+  <meta charset="utf-8" />
+  <title>Register | Dusty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <meta charset="utf-8" />
-        <title>Register | Dusty - Responsive Admin Dashboard Template</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
-        <meta name="author" content="Zoyothemes"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="shortcut icon" href="{% static 'admin_themes/assets/images/favicon.ico' %}">
+  <link href="{% static 'admin_themes/assets/css/app.min.css' %}" rel="stylesheet" id="app-style" />
+  <link href="{% static 'admin_themes/assets/css/icons.min.css' %}" rel="stylesheet" />
 
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="{% static 'admin_themes/assets/images/favicon.ico' %}">
+  <style>
+    :root{
+      --brand:#fe633a;         
+      --brand-700:#e65730;     
+      --ink:#0e1932;
+      --muted:#6b7785;
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --radius:26px;
+      --shadow:0 22px 48px rgba(14,25,50,.12);
+    }
 
-        <!-- App css -->
-        <link href="{% static 'admin_themes/assets/css/app.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+    html,body{height:100%}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      animation:fadeIn .35s ease-out;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-        <!-- Icons -->
-        <link href="{% static 'admin_themes/assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    .auth-shell{
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      padding:32px;
+    }
 
-        <script src="{% static 'admin_themes/assets/js/head.js' %}"></script>
+    .auth-split{
+      width:min(1180px, 100%);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1fr;                
+      overflow:hidden;
+    }
+    @media (min-width: 992px){
+      .auth-split{ grid-template-columns: 52% 48%; }  
+    }
 
-    </head>
+  
+    .accent-pane-right{
+      position:relative;
+      background: linear-gradient(145deg, #ff8a66 0%, var(--brand) 58%, var(--brand-700) 100%);
+      color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      padding:56px 28px;
+      isolation:isolate;
+    }
+    .accent-card{ text-align:center; max-width:500px; }
+    .accent-card h3{ font-weight:800; margin:14px 0 10px; }
+    .accent-card p{ opacity:.97; }
 
-    <body>
-        <!-- Begin page -->
-        <div class="account-page">
-            <div class="container-fluid p-0">        
-                <div class="row align-items-center g-0 px-3 py-3 vh-100">
-                    
-                    <div class="col-xl-5">
-                        <div class="row">
-                            <div class="col-md-8 mx-auto">
+    .accent-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      height:56px; padding:0 36px; border-radius:14px;
+      border:2px solid rgba(255,255,255,.9);
+      color:#fff; background:transparent; font-weight:700; letter-spacing:.3px;
+      transition:all .15s ease;
+    }
+    .accent-btn:hover{ background:rgba(255,255,255,.18); transform:translateY(-2px); }
 
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="mb-0 p-0 p-lg-3">
-                                            <div class="mb-0 border-0 p-md-4 p-lg-0">
-                                                <div class="mb-3 p-0 text-center">
-                                                    <div class="auth-brand">
-                                                        <a class='logo logo-light' href='index.html'>
-                                                            <span class="logo-lg">
-                                                                <img src="{% static 'admin_themes/assets/images/logo-light.png' %}" alt="" height="24">
-                                                            </span>
-                                                        </a>
-                                                        <a class='logo logo-dark' href='index.html'>
-                                                            <span class="logo-lg">
-                                                                <img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="" height="24">
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-        
-                                                <div class="auth-title-section mb-4 text-center"> 
-                                                    <h3 class="text-primary fw-semibold mb-1">Create New Account</h3>
-                                                    <p class="text-muted fs-14 mb-0">Sign up to unlock exclusive content, special offers, and be the first to know about exciting updates.</p>
-                                                </div>
-                
-                                                <div class="pt-0">
-                                                    <form action="https://zoyothemes.com/dusty/html/index.html" class="my-4">
-                                                        <div class="form-group mb-3">
-                                                            <label for="username" class="form-label">Username</label>
-                                                            <input class="form-control" name="username" type="text" id="username" required="" placeholder="Enter your Username">
-                                                        </div>
-            
-                                                        <div class="form-group mb-3">
-                                                            <label for="emailaddress" class="form-label">Email address</label>
-                                                            <input class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email">
-                                                        </div>
-                            
-                                                        <div class="form-group mb-3">
-                                                            <label for="password" class="form-label">Password</label>
-                                                            <input class="form-control" type="password" required="" id="password" placeholder="Enter your password">
-                                                        </div>
-                            
-                                                        <div class="form-group d-flex mb-3">
-                                                            <div class="col-12">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" class="form-check-input" id="checkbox-signin">
-                                                                    <label class="form-check-label" for="checkbox-signin">I agree to the <a href="#" class="text-primary fw-medium"> Terms and Conditions</a></label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="form-group mb-0 row">
-                                                            <div class="col-12">
-                                                                <div class="d-grid">
-                                                                    <button class="btn btn-primary" type="submit"> Register</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
+ 
+    .accent-pane-right::before,
+    .accent-pane-right::after{
+      content:""; position:absolute; z-index:0;
+      background:var(--card);
+      border-radius:50%;
+      left:-380px;                              
+    }
+    .accent-pane-right::before{
+      width:560px; height:500px; top:-340px;
+    }
+    .accent-pane-right::after{
+      width:560px; height:500px; bottom:-340px;
+    }
 
-                                                </div>
+    .form-pane{ padding:36px 24px; position:relative; z-index:1; }
+    @media (min-width: 992px){ .form-pane{ padding:48px 56px; } }
 
-                                                <div class="saprator my-4"><span>or continue with email</span></div>
+    .auth-title{ font-weight:700; letter-spacing:.2px; }
+    .text-muted{ color:var(--muted)!important; }
 
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <a class="btn text-dark border fw-normal d-flex align-items-center justify-content-center"> 
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" class="me-2">
-                                                                <path fill="#ffc107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917"/><path fill="#ff3d00" d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691"/><path fill="#4caf50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44"/>
-                                                                <path fill="#1976d2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917"/>
-                                                            </svg>
-                                                            <span>Google</span>
-                                                        </a>
-                                                    </div>
-        
-                                                    <div class="col-4">
-                                                        <a class="btn text-dark border fw-normal d-flex align-items-center justify-content-center"> 
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256" class="me-2">
-                                                                <path fill="#1877f2" d="M256 128C256 57.308 198.692 0 128 0S0 57.308 0 128c0 63.888 46.808 116.843 108 126.445V165H75.5v-37H108V99.8c0-32.08 19.11-49.8 48.348-49.8C170.352 50 185 52.5 185 52.5V84h-16.14C152.959 84 148 93.867 148 103.99V128h35.5l-5.675 37H148v89.445c61.192-9.602 108-62.556 108-126.445"/><path fill="#fff" d="m177.825 165l5.675-37H148v-24.01C148 93.866 152.959 84 168.86 84H185V52.5S170.352 50 156.347 50C127.11 50 108 67.72 108 99.8V128H75.5v37H108v89.445A129 129 0 0 0 128 256a129 129 0 0 0 20-1.555V165z"/>
-                                                            </svg>
-                                                            <span>Facebook</span>
-                                                        </a>
-                                                    </div>
+   
+    .form-label{ font-weight:600; }
+    .form-control{
+      height:46px; border-radius:12px; border-color:#e8eaf0;
+    }
+    .form-control:focus{
+      border-color:var(--brand);
+      box-shadow:0 0 0 4px rgba(254,99,58,.18);
+    }
 
-                                                    <div class="col-4">
-                                                        <a class="btn text-dark border fw-normal d-flex align-items-center justify-content-center"> 
-                                                            <div>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 128 128" class="me-2">
-                                                                    <path d="M97.905 67.885c.174 18.8 16.494 25.057 16.674 25.137c-.138.44-2.607 8.916-8.597 17.669c-5.178 7.568-10.553 15.108-19.018 15.266c-8.318.152-10.993-4.934-20.504-4.934c-9.508 0-12.479 4.776-20.354 5.086c-8.172.31-14.395-8.185-19.616-15.724C15.822 94.961 7.669 66.8 18.616 47.791c5.438-9.44 15.158-15.417 25.707-15.571c8.024-.153 15.598 5.398 20.503 5.398c4.902 0 14.106-6.676 23.782-5.696c4.051.169 15.421 1.636 22.722 12.324c-.587.365-13.566 7.921-13.425 23.639M82.272 21.719c4.338-5.251 7.258-12.563 6.462-19.836c-6.254.251-13.816 4.167-18.301 9.416c-4.02 4.647-7.54 12.087-6.591 19.216c6.971.54 14.091-3.542 18.43-8.796"/>
-                                                                </svg>
-                                                            </div>
-                                                            <div>
-                                                                <span class="align-middle">Apple</span>
-                                                            </div>
-                                                        </a>
-                                                    </div>
+ 
+    .btn-primary{
+      background-color:var(--brand)!important; border-color:var(--brand)!important;
+      height:48px; border-radius:12px; font-weight:600;
+      transition:transform .12s ease;
+    }
+    .btn-primary:hover,.btn-primary:focus{
+      background-color:var(--brand-700)!important; border-color:var(--brand-700)!important;
+      transform:translateY(-1px);
+    }
 
-                                                </div>
 
-                                                <div class="text-center text-muted mt-4">
-                                                    <p class="mb-0">Already have an account ?<a class='text-primary ms-2 fw-medium' href='auth-login.html'>Login here</a></p>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+    .social-row{
+      display:flex; gap:16px; justify-content:center; margin:2px 0 18px;
+    }
+    .social-btn{
+      width:56px; height:56px; border-radius:14px;
+      border:2px solid var(--brand);
+      display:flex; align-items:center; justify-content:center;
+      background:#fff; color:var(--brand);
+      box-shadow:0 6px 18px rgba(254,99,58,.16);
+      transition:transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .social-btn i{ font-size:22px; line-height:1; }
+    .social-btn:hover{ background:var(--brand); color:#fff; transform:translateY(-2px); }
 
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-xl-7 d-none d-xl-inline-block">
-                        <div class="account-page-bg rounded-4">
-                            <div class="text-center">
-                                <div class="auth-image">
-                                    <img src="{% static 'admin_themes/assets/images/auth-images.svg' %}" class="mx-auto img-fluid" alt="images">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    a.text-brand{ color:var(--brand)!important; }
+    a.text-brand:hover{ color:var(--brand-700)!important; }
 
-                </div>
-            </div>
+    @media (max-width: 991.98px){ .accent-pane-right{ order:1; } .form-pane{ order:0; } }
+  </style>
+</head>
+
+<body>
+  <main class="auth-shell" role="main">
+    <section class="auth-split">
+
+
+      <div class="form-pane">
+        <div class="mb-3 text-center">
+          <a class="logo" href="#"><img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="Logo" height="28"></a>
         </div>
-        <!-- END wrapper -->
 
-        <!-- Vendor -->
-        <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+        <div class="text-center mb-2">
+          <h2 class="auth-title mb-1" style="color:#fe633a">Create Account</h2>
+          <p class="text-muted fs-14 mb-0">or continue with your email</p>
+        </div>
 
-        <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
-        <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+        <div class="social-row">
+          <a class="social-btn" href="javascript:void(0)" aria-label="Google"><i class="mdi mdi-google"></i></a>
+          <a class="social-btn" href="javascript:void(0)" aria-label="Facebook"><i class="mdi mdi-facebook"></i></a>
+          <a class="social-btn" href="javascript:void(0)" aria-label="LinkedIn"><i class="mdi mdi-linkedin"></i></a>
+        </div>
 
-        <!-- App js-->
-        <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
-        
-    </body>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger mb-3" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
 
-<!-- Mirrored from zoyothemes.com/dusty/html/auth-register by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:29:59 GMT -->
+        <form method="post" action="{% url 'user_app:register' %}" novalidate class="mt-2">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">First name</label>
+            {{ form.first_name }}
+            <div class="text-danger small">{{ form.first_name.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Last name</label>
+            {{ form.last_name }}
+            <div class="text-danger small">{{ form.last_name.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email address</label>
+            {{ form.email }}
+            <div class="text-danger small">{{ form.email.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            {{ form.password1 }}
+            <div class="text-danger small">{{ form.password1.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirm password</label>
+            {{ form.password2 }}
+            <div class="text-danger small">{{ form.password2.errors }}</div>
+          </div>
+
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="checkbox-terms" required>
+            <label class="form-check-label" for="checkbox-terms">
+              I agree to the <a href="#" class="text-brand fw-semibold">Terms and Conditions</a>
+            </label>
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">REGISTER</button>
+        </form>
+
+        <div class="text-center text-muted mt-4">
+          <p class="mb-0">
+            Already have an account?
+            <a class="text-brand ms-2 fw-semibold" href="{% url 'user_app:login' %}">Sign in here</a>
+          </p>
+        </div>
+      </div>
+
+      <aside class="accent-pane-right">
+              <div class="accent-card">
+                <h3 style="font-size: 28px;">Start Your Journey Today</h3>
+                <p style="font-size: 17px; margin-bottom: 36px;">Join drivers and dealers who trust our platform</p>
+                
+                <div style="text-align: left; max-width: 360px; margin: 0 auto;">
+                  <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 16px;">
+                    <i class="bi bi-search" style="font-size: 28px; flex-shrink: 0;"></i>
+                    <span style="font-size: 17px; line-height: 1.4;">Browse thousands of vehicles</span>
+                  </div>
+                  <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 16px;">
+                    <i class="bi bi-shield-check" style="font-size: 28px; flex-shrink: 0;"></i>
+                    <span style="font-size: 17px; line-height: 1.4;">Secure & verified listings</span>
+                  </div>
+                  <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 16px;">
+                    <i class="bi bi-calendar3" style="font-size: 28px; flex-shrink: 0;"></i>
+                    <span style="font-size: 17px; line-height: 1.4;">Book test drives instantly</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 16px;">
+                    <i class="bi bi-wrench" style="font-size: 28px; flex-shrink: 0;"></i>
+                    <span style="font-size: 17px; line-height: 1.4;">Access premium services</span>
+                  </div>
+                </div>
+              </div>
+        </aside>
+    </section>
+  </main>
+
+  <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+  <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
+</body>
 </html>
-

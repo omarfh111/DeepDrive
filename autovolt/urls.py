@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from autovolt import views
+from user_app import views as user_views
+from autovolt.views import RoleAwareLoginView, back_users
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -53,8 +56,20 @@ urlpatterns = [
     path('checkout', views.checkout, name='checkout'),
     path('shop-details', views.shopDetails, name='shop-details'),
     path('contact', views.contact, name='contact'),
+    path("", include("user_app.urls")),
+    path('back/', user_views.admin_dashboard, name='admin_dashboard'),
+    path('', include(('user_app.urls', 'user_app'), namespace='user_app')),
+    path("auth/login/", RoleAwareLoginView.as_view(), name="login"),
+    path("back/users/", back_users, name="back_users"),
+    path(
+        "auth/logout/",
+        LogoutView.as_view(
+            template_name="admin_themes/auth-logout.html",
+            next_page=None,
+        ),
+        name="logout",
+    ),
     path("", include("deals.urls")),
     path('', include('vehicles.urls')),
-
 
 ]

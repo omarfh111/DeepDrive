@@ -44,8 +44,26 @@
                             <div class="bottom d-flex align-items-center justify-content-between">
                                 {% include 'partials/header/nav.html' %}
                                 <div class="bottom-right">
-                                    <div class="button-area d-flex align-items-center gap-2">
-                                    {# --- bouton Marché (visible seulement si partenaire approuvé) --- #}
+                                    <div class="button-area">
+                                        {% comment %} Front header auth block {% endcomment %}
+                                        {% if request.user.is_authenticated %}
+                                        <div class="auth-inline" style="display:flex;align-items:center;gap:.5rem;">
+                                            <span class="user-name">
+                                            {{ request.user.first_name }} {{ request.user.last_name }}
+                                            </span>
+                                            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="rts-btn btn-border radius-small icon">
+                                                Sign Out
+                                            </button>
+                                            </form>
+                                        </div>
+                                        {% else %}
+                                        <a href="{% url 'login' %}" class="rts-btn btn-border radius-small icon">
+                                            Sign In
+                                        </a>
+                                        {% endif %}
+                                   {# --- bouton Marché (visible seulement si partenaire approuvé) --- #}
                                     {% if user.is_authenticated and user.partenariat.status == 'approved' %}
                                     <a href="{% url 'vehicles:liste_voitures' %}"
                                         class="rts-btn btn-primary radius-small icon btn-compact"
@@ -71,14 +89,8 @@
                                         <a href="{% url 'deals:admin_hub' %}" class="rts-btn btn-border radius-small icon btn-compact" title="Back office">
                                         <i class="fa fa-gauge me-1"></i> Back Office
                                         </a>
-                                    {% else %}
-                                        {# Auth (optionnel) #}
-                                        <a href="{% url 'account' %}" class="rts-btn btn-border radius-small icon btn-compact" title="Se connecter">
-                                        Sign In <i class="fa fa-sign-in ms-1"></i>
-                                        </a>
                                     {% endif %}
                                     </div>
-
                                     <div class="menu-btn radius-small" id="menu-btn">
                                         <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <rect width="55" height="55" rx="15" fill="#FF3600"/>

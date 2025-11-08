@@ -1,0 +1,123 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}{% if u %}Modifier utilisateur{% else %}Nouvel utilisateur{% endif %} | Dusty{% endblock %}
+{% block page_title %}Utilisateurs{% endblock %}
+{% block breadcrumb_leaf %}{% if u %}Modifier{% else %}Ajouter{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+    <div class="flex-grow-1">
+      <h4 class="fs-18 fw-semibold m-0">
+        {% if u %}
+          Modifier utilisateur – {{ u.first_name }} {{ u.last_name }}
+        {% else %}
+          Ajouter un utilisateur
+        {% endif %}
+      </h4>
+    </div>
+    <div class="text-end">
+      <ol class="breadcrumb m-0 py-0">
+        <li class="breadcrumb-item"><a href="{% url 'user_app:admin_user_list' %}">Utilisateurs</a></li>
+        <li class="breadcrumb-item active">{% if u %}Modifier{% else %}Ajouter{% endif %}</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Informations de l'utilisateur</h5>
+        </div>
+
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row gx-4 gy-3">
+              <!-- Left column -->
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                  {{ form.email }}
+                  <div class="text-danger small">{{ form.email.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.first_name.id_for_label }}">Prénom</label>
+                  {{ form.first_name }}
+                  <div class="text-danger small">{{ form.first_name.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.last_name.id_for_label }}">Nom</label>
+                  {{ form.last_name }}
+                  <div class="text-danger small">{{ form.last_name.errors }}</div>
+                </div>
+              </div>
+
+              <!-- Right column -->
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.role.id_for_label }}">Rôle</label>
+                  {{ form.role }}
+                  <div class="text-danger small">{{ form.role.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.password1.id_for_label }}">Nouveau mot de passe</label>
+                  {{ form.password1 }}
+                  <div class="text-danger small">{{ form.password1.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.password2.id_for_label }}">Confirmer le mot de passe</label>
+                  {{ form.password2 }}
+                  <div class="text-danger small">{{ form.password2.errors }}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-check mt-2">
+                      {{ form.is_active }} <label class="form-check-label ms-1" for="{{ form.is_active.id_for_label }}">Compte actif</label>
+                      <div class="text-danger small">{{ form.is_active.errors }}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-check mt-2">
+                      {{ form.is_staff }} <label class="form-check-label ms-1" for="{{ form.is_staff.id_for_label }}">Staff</label>
+                      <div class="text-danger small">{{ form.is_staff.errors }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              <a href="{% url 'user_app:admin_user_list' %}" class="btn btn-outline-secondary">Annuler</a>
+              <button class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}

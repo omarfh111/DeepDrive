@@ -1,4 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
+
+User = get_user_model()
 
 def indexMain(request):
     context= {
@@ -198,3 +205,32 @@ def contact(request):
             'title': 'Car Dealer Contact Page',
     }
     return render(request, 'contact.html', context)
+
+
+
+class RoleAwareLoginView(LoginView):
+    template_name = "auth/login.html"
+
+    def get_success_url(self):
+        nxt = self.get_redirect_url()
+        if nxt:
+            return nxt
+        user = self.request.user
+        if user.is_staff and getattr(user, "role", "") == "admin":
+            return reverse("back_users")
+        return reverse("home")
+
+
+def _is_admin_and_staff(u):
+    if not u.is_authenticated:
+        return False
+    if getattr(u, "role", "") == "admin" and u.is_staff:
+        return True
+    raise PermissionDenied
+
+@login_required(login_url="login")
+@user_passes_test(_is_admin_and_staff, login_url="login")
+def back_users(request):
+    if not (request.user.is_staff and getattr(request.user, "role", "") == "admin"):
+        raise PermissionDenied
+    return render(request, "user_app/admin_user_list.html")

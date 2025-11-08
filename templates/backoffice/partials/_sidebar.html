@@ -25,7 +25,6 @@
 
         <li class="menu-title">Gestion</li>
 
-        <!-- Gestion Partenariats -->
         <li>
           <a class="tp-link" href="{% url 'deals:admin_partenariats_list' %}">
             <span class="nav-icon">
@@ -36,7 +35,6 @@
         </li>
 
 
-        <!-- Gestion Marchés -->
         <li>
           <a class="tp-link" href="{% url 'deals:admin_marches' %}">
             <span class="nav-icon">
@@ -84,6 +82,17 @@
             </span>
             <span> Réponses </span>
             </a>
+        </li>
+        <li>
+          <a class="tp-link" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
+            <span class="nav-icon">
+              <iconify-icon icon="solar:logout-3-bold-duotone"></iconify-icon>
+            </span>
+            <span> Logout </span>
+          </a>
+          <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none">
+            {% csrf_token %}
+          </form>
         </li>
 
         </ul>
