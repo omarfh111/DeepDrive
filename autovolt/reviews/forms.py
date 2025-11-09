@@ -8,8 +8,7 @@ class ReviewForm(forms.ModelForm):
     """
     class Meta:
         model = Review
-        fields = ['titre', 'note', 'description', 'car']
-        # Make car optional since it might not exist yet
+        fields = ['titre', 'note', 'description', 'image']
         widgets = {
             'titre': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -26,23 +25,30 @@ class ReviewForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 6,
-                'placeholder': 'Décrivez votre expérience avec ce véhicule...',
+                'placeholder': 'Décrivez votre expérience...',
                 'required': True
             }),
-            'car': forms.Select(attrs={
+            'image': forms.FileInput(attrs={
                 'class': 'form-control',
+                'accept': 'image/*'
             })
         }
         labels = {
             'titre': 'Titre de l\'avis',
             'note': 'Note (0-5 étoiles)',
             'description': 'Votre avis détaillé',
-            'car': 'Véhicule'
+            'image': 'Image'
         }
         help_texts = {
             'note': 'Donnez une note entre 0 et 5 étoiles',
             'description': 'Partagez votre expérience en détail (minimum 50 caractères)'
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make image optional when editing an existing review
+        if self.instance and self.instance.pk:
+            self.fields['image'].required = False
     
     def clean_description(self):
         """Validate that description is at least 50 characters"""
@@ -61,12 +67,6 @@ class ReviewForm(forms.ModelForm):
                 'La note doit être entre 0 et 5.'
             )
         return note
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Make car field optional with empty choice
-        self.fields['car'].required = False
-        self.fields['car'].empty_label = "Select a car (optional)"
 
 
 class CommentaireForm(forms.ModelForm):

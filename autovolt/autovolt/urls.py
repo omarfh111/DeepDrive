@@ -60,7 +60,7 @@ urlpatterns = [
     path('shop-details', views.shopDetails, name='shop-details'),
     path('contact', views.contact, name='contact'),
     path('reviews/', include('reviews.urls')),
-
+    #path('backoffice/', include('backoffice.urls')),
 ]
 
 # Serve media files in development

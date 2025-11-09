@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Q, Avg, Count
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from .models import Review, Commentaire
 from .forms import ReviewForm, CommentaireForm
+
+
+def admin_required(user):
+    """Check if user is staff (admin)"""
+    return user.is_authenticated and user.is_staff
 
 
 def reviews_list(request):
@@ -13,7 +19,7 @@ def reviews_list(request):
     User Story 8.6 - Filter reviews
     User Story 8.4 - Search reviews
     """
-    reviews = Review.objects.filter(is_approved=True).select_related('user', 'car')
+    reviews = Review.objects.filter(is_approved=True).select_related('user')
     
     # Search functionality (8.4)
     search_query = request.GET.get('q', '')
@@ -32,14 +38,9 @@ def reviews_list(request):
     if max_note:
         reviews = reviews.filter(note__lte=max_note)
     
-    # Filter by car (8.6)
-    car_id = request.GET.get('car')
-    if car_id:
-        reviews = reviews.filter(car_id=car_id)
-    
     # Sort options (8.5)
-    sort_by = request.GET.get('sort', '-date_review')
-    allowed_sorts = ['-date_review', 'date_review', '-note', 'note']
+    sort_by = request.GET.get('sort', '-date_joined')
+    allowed_sorts = ['-date_joined', 'date_joined', '-date_review', 'date_review', '-note', 'note']
     if sort_by in allowed_sorts:
         reviews = reviews.order_by(sort_by)
     
@@ -55,7 +56,7 @@ def reviews_list(request):
     avg_rating = Review.objects.filter(is_approved=True).aggregate(Avg('note'))['note__avg']
     
     context = {
-        'title': 'Car Dealer Reviews',
+        'title': 'Reviews',
         'page_obj': page_obj,
         'search_query': search_query,
         'avg_rating': round(avg_rating, 1) if avg_rating else 0,
@@ -71,7 +72,7 @@ def review_detail(request, pk):
     User Story 9.1 - Add comment form here
     """
     review = get_object_or_404(
-        Review.objects.select_related('user', 'car'),
+        Review.objects.select_related('user'),
         pk=pk,
         is_approved=True
     )
@@ -106,26 +107,15 @@ def review_detail(request, pk):
 
 
 @login_required
-def add_review(request, car_id=None):
+def add_review(request):
     """
     Add a new review (User Story 8.1 - Must have)
     """
-    # Check if car_id provided and user hasn't already reviewed this car
-    if car_id:
-        # Note: Update this when you have the Car model
-        # car = get_object_or_404(Car, pk=car_id)
-        # if Review.objects.filter(user=request.user, car=car).exists():
-        #     messages.warning(request, 'Vous avez déjà posté un avis pour cette voiture.')
-        #     return redirect('car_detail', pk=car_id)
-        pass
-    
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
-            # if car_id:
-            #     review.car = car
             review.save()
             messages.success(request, 'Votre avis a été ajouté avec succès!')
             return redirect('reviews:detail', pk=review.pk)
@@ -135,7 +125,6 @@ def add_review(request, car_id=None):
     context = {
         'title': 'Ajouter un avis',
         'form': form,
-        # 'car': car if car_id else None,
     }
     
     return render(request, 'reviews/add_review.html', context)
@@ -150,7 +139,7 @@ def edit_review(request, pk):
     review = get_object_or_404(Review, pk=pk, user=request.user)
     
     if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
+        form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
             form.save()
             messages.success(request, 'Votre avis a été modifié avec succès!')
@@ -193,7 +182,7 @@ def my_reviews(request):
     """
     Display current user's reviews
     """
-    reviews = Review.objects.filter(user=request.user).order_by('-date_review')
+    reviews = Review.objects.filter(user=request.user).order_by('-date_joined')
     
     context = {
         'title': 'Mes avis',
@@ -247,3 +236,145 @@ def delete_comment(request, pk):
     }
     
     return render(request, 'reviews/delete_comment.html', context)
+
+
+# ==================== BACKOFFICE VIEWS (ADMIN ONLY) ====================
+
+@user_passes_test(admin_required)
+def backoffice_dashboard(request):
+    """
+    Backoffice dashboard showing overview of reviews and comments
+    """
+    total_reviews = Review.objects.count()
+    approved_reviews = Review.objects.filter(is_approved=True).count()
+    pending_reviews = Review.objects.filter(is_approved=False).count()
+    
+    total_comments = Commentaire.objects.count()
+    approved_comments = Commentaire.objects.filter(is_approved=True).count()
+    pending_comments = Commentaire.objects.filter(is_approved=False).count()
+    
+    avg_rating = Review.objects.filter(is_approved=True).aggregate(Avg('note'))['note__avg'] or 0
+    
+    recent_reviews = Review.objects.select_related('user').order_by('-date_joined')[:5]
+    recent_comments = Commentaire.objects.select_related('user', 'review').order_by('-date_commentaire')[:5]
+    
+    context = {
+        'total_reviews': total_reviews,
+        'approved_reviews': approved_reviews,
+        'pending_reviews': pending_reviews,
+        'total_comments': total_comments,
+        'approved_comments': approved_comments,
+        'pending_comments': pending_comments,
+        'avg_rating': round(avg_rating, 2),
+        'recent_reviews': recent_reviews,
+        'recent_comments': recent_comments,
+    }
+    
+    return render(request, 'reviews/dashboard.html', context)
+
+
+@user_passes_test(admin_required)
+def backoffice_reviews_list(request):
+    """
+    Backoffice view to list all reviews with DataTables
+    """
+    reviews = Review.objects.select_related('user').prefetch_related('commentaires').all()
+    
+    context = {
+        'reviews': reviews,
+    }
+    
+    return render(request, 'reviews/backreviews_list.html', context)
+
+
+@user_passes_test(admin_required)
+def backoffice_review_detail(request, pk):
+    """
+    Backoffice view to view/edit a single review
+    """
+    review = get_object_or_404(Review.objects.select_related('user'), pk=pk)
+    
+    if request.method == 'POST':
+        # Handle approval toggle
+        if 'toggle_approval' in request.POST:
+            review.is_approved = not review.is_approved
+            review.save()
+            messages.success(request, f'Review {"approved" if review.is_approved else "disapproved"} successfully.')
+            return redirect('reviews:backoffice_review_detail', pk=pk)
+        
+        # Handle delete
+        if 'delete' in request.POST:
+            review.delete()
+            messages.success(request, 'Review deleted successfully.')
+            return redirect('reviews:reviews_backreviews_list')
+        
+        # Handle edit
+        form = ReviewForm(request.POST, request.FILES, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Review updated successfully.')
+            return redirect('reviews:backoffice_review_detail', pk=pk)
+    else:
+        form = ReviewForm(instance=review)
+    
+    commentaires = review.commentaires.select_related('user').all()
+    
+    context = {
+        'review': review,
+        'form': form,
+        'commentaires': commentaires,
+    }
+    
+    return render(request, 'reviews/backreview_detail.html', context)
+
+
+@user_passes_test(admin_required)
+def backoffice_commentaires_list(request):
+    """
+    Backoffice view to list all commentaires with DataTables
+    """
+    commentaires = Commentaire.objects.select_related('user', 'review').all()
+    
+    context = {
+        'commentaires': commentaires,
+    }
+    
+    return render(request, 'reviews/commentaires_list.html', context)
+
+
+@user_passes_test(admin_required)
+def backoffice_commentaire_detail(request, pk):
+    """
+    Backoffice view to view/edit a single commentaire
+    """
+    commentaire = get_object_or_404(Commentaire.objects.select_related('user', 'review'), pk=pk)
+    
+    if request.method == 'POST':
+        # Handle approval toggle
+        if 'toggle_approval' in request.POST:
+            commentaire.is_approved = not commentaire.is_approved
+            commentaire.save()
+            messages.success(request, f'Comment {"approved" if commentaire.is_approved else "disapproved"} successfully.')
+            return redirect('reviews:backoffice_commentaire_detail', pk=pk)
+        
+        # Handle delete
+        if 'delete' in request.POST:
+            commentaire.delete()
+            messages.success(request, 'Comment deleted successfully.')
+            return redirect('reviews:reviews_commentaires_list')
+        
+        # Handle edit
+        form = CommentaireForm(request.POST, instance=commentaire)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Comment updated successfully.')
+            return redirect('reviews:backoffice_commentaire_detail', pk=pk)
+    else:
+        form = CommentaireForm(instance=commentaire)
+    
+    context = {
+        'commentaire': commentaire,
+        'form': form,
+    }
+    
+    return render(request, 'reviews/commentaire_detail.html', context)

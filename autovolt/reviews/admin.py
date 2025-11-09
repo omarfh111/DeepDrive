@@ -1,15 +1,5 @@
 from django.contrib import admin
-from .models import Car, Review, Commentaire
-
-@admin.register(Car)
-class CarAdmin(admin.ModelAdmin):
-    """
-    Admin interface for Car model (placeholder)
-    Update this when you have your actual Car model
-    """
-    list_display = ['name', 'created_at']
-    search_fields = ['name']
-    readonly_fields = ['created_at']
+from .models import Review, Commentaire
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
@@ -19,15 +9,16 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = [
         'titre',
         'user',
-        'car',
         'note',
         'is_approved',
-        'date_review'
+        'date_review',
+        'date_joined'
     ]
     list_filter = [
         'note',
         'is_approved',
-        'date_review'
+        'date_review',
+        'date_joined'
     ]
     search_fields = [
         'titre',
@@ -37,13 +28,13 @@ class ReviewAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         'date_review',
-        'date_updated'
+        'date_joined'
     ]
     list_editable = ['is_approved']
     
     fieldsets = (
         ('Informations principales', {
-            'fields': ('user', 'car', 'titre', 'note')
+            'fields': ('user', 'titre', 'note')
         }),
         ('Contenu', {
             'fields': ('description', 'image')
@@ -52,14 +43,14 @@ class ReviewAdmin(admin.ModelAdmin):
             'fields': ('is_approved',)
         }),
         ('Dates', {
-            'fields': ('date_review', 'date_updated'),
+            'fields': ('date_review', 'date_joined'),
             'classes': ('collapse',)
         }),
     )
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.select_related('user', 'car')
+        return qs.select_related('user')
 
 
 @admin.register(Commentaire)
@@ -84,8 +75,7 @@ class CommentaireAdmin(admin.ModelAdmin):
         'review__titre'
     ]
     readonly_fields = [
-        'date_commentaire',
-        'date_updated'
+        'date_commentaire'
     ]
     list_editable = ['is_approved']
     
@@ -100,7 +90,7 @@ class CommentaireAdmin(admin.ModelAdmin):
             'fields': ('is_approved',)
         }),
         ('Dates', {
-            'fields': ('date_commentaire', 'date_updated'),
+            'fields': ('date_commentaire',),
             'classes': ('collapse',)
         }),
     )

@@ -1,6 +1,72 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .form-control-wrapper input,
+    .form-control-wrapper select,
+    .form-control-wrapper textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #fff;
+        transition: border-color 0.3s;
+    }
+    
+    .form-control-wrapper input:focus,
+    .form-control-wrapper select:focus,
+    .form-control-wrapper textarea:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .form-control-wrapper textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .billing-fields {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+    }
+    
+    .ms-checkout-review-order {
+        background: #f9f9f9;
+        border: 1px solid #e5e5e5 !important;
+    }
+    
+    /* Star Rating Styles */
+    .star-rating {
+        display: flex;
+        gap: 8px;
+        font-size: 32px;
+        padding: 10px 0;
+    }
+    
+    .star-rating i {
+        color: #ffc107;
+        opacity: 0.3;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .star-rating i:hover {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+    
+    .star-rating i.active {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    
+    .star-rating i.active:hover {
+        transform: scale(1.15);
+    }
+</style>
 <div class="rts-wrapper">
     <div class="rts-wrapper-inner">
         <!-- header area start -->
@@ -13,87 +79,205 @@
         {% endwith %}
         <!-- Breadcrumb area end -->
         
-        <!-- Add Review Area Start -->
-        <section class="rts-faq-area inner rts-section-gap">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
-                                <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Add New Review</h4>
-                            </div>
-                            <div class="card-body">
-                                <form method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    
-                                    {% if form.errors %}
-                                        <div class="alert alert-danger">
-                                            <strong>Please correct the errors below:</strong>
-                                            {{ form.errors }}
+        <main class="ms-main rts-section-gap">
+            <div class="ms-page-content">
+
+                <!--================= Add Review Form (styled like Checkout) =================-->
+                <article class="page checkout-area type-page status-publish hentry">
+                    <div class="ms-sp--header container">
+                        <h2 class="title">Add New Review</h2>
+                    </div>
+                    <div class="ms-default-page container entry-content">
+                        <div class="woocommerce">
+                            <form method="post" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
+                                {% csrf_token %}
+                                
+                                {% if form.errors %}
+                                    <div class="alert alert-danger mb-4">
+                                        <strong>Please correct the errors below:</strong>
+                                        {{ form.errors }}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="full-grid">
+                                            <div class="billing-fields">
+                                                <div class="checkout-title">
+                                                    <h3>Review Details</h3>
+                                                </div>
+                                                <div class="form-content-box">
+                                                    <div class="row">
+                                                        <!-- Title Field -->
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-semibold">{{ form.titre.label }}</label>
+                                                                <div class="form-control-wrapper">
+                                                                    {{ form.titre }}
+                                                                </div>
+                                                                {% if form.titre.help_text %}
+                                                                    <small class="form-text text-muted">{{ form.titre.help_text }}</small>
+                                                                {% endif %}
+                                                                {% if form.titre.errors %}
+                                                                    <div class="text-danger small">{{ form.titre.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Rating Field -->
+                                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-semibold">{{ form.note.label }}</label>
+                                                                <div class="star-rating-wrapper">
+                                                                    <div class="star-rating" id="starRating">
+                                                                        <i class="fas fa-star" data-rating="1"></i>
+                                                                        <i class="fas fa-star" data-rating="2"></i>
+                                                                        <i class="fas fa-star" data-rating="3"></i>
+                                                                        <i class="fas fa-star" data-rating="4"></i>
+                                                                        <i class="fas fa-star" data-rating="5"></i>
+                                                                    </div>
+                                                                    <div class="form-control-wrapper" style="display: none;">
+                                                                        {{ form.note }}
+                                                                    </div>
+                                                                </div>
+                                                                <small class="form-text text-muted d-block mt-2">Click on a star to rate</small>
+                                                                {% if form.note.help_text %}
+                                                                    <small class="form-text text-muted">{{ form.note.help_text }}</small>
+                                                                {% endif %}
+                                                                {% if form.note.errors %}
+                                                                    <div class="text-danger small">{{ form.note.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Image Field -->
+                                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-semibold">{{ form.image.label }}</label>
+                                                                <div class="form-control-wrapper">
+                                                                    {{ form.image }}
+                                                                </div>
+                                                                {% if form.image.help_text %}
+                                                                    <small class="form-text text-muted">{{ form.image.help_text }}</small>
+                                                                {% endif %}
+                                                                {% if form.image.errors %}
+                                                                    <div class="text-danger small">{{ form.image.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Description Field -->
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-semibold">{{ form.description.label }}</label>
+                                                                <div class="form-control-wrapper">
+                                                                    {{ form.description }}
+                                                                </div>
+                                                                {% if form.description.help_text %}
+                                                                    <small class="form-text text-muted">{{ form.description.help_text }}</small>
+                                                                {% endif %}
+                                                                {% if form.description.errors %}
+                                                                    <div class="text-danger small">{{ form.description.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="payment-method mt-40 md-mt-20">
+                                                <div class="bottom-area">
+                                                    <p class="mt-15">
+                                                        Please verify all review details before submission.
+                                                    </p>
+                                                    <button type="submit" class="add-btn rts-btn btn-primary">
+                                                        <i class="fas fa-check"></i> Submit Review
+                                                    </button>
+                                                    <a href="{% url 'reviews:list' %}" class="rts-btn btn-border ms-2">
+                                                        <i class="fas fa-times"></i> Cancel
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                                    {% endif %}
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.titre.id_for_label }}" class="form-label">
-                                            {{ form.titre.label }}
-                                        </label>
-                                        {{ form.titre }}
-                                        {% if form.titre.help_text %}
-                                            <small class="form-text text-muted">{{ form.titre.help_text }}</small>
-                                        {% endif %}
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.note.id_for_label }}" class="form-label">
-                                            {{ form.note.label }}
-                                        </label>
-                                        {{ form.note }}
-                                        {% if form.note.help_text %}
-                                            <small class="form-text text-muted">{{ form.note.help_text }}</small>
-                                        {% endif %}
-                                        <div class="mt-2">
-                                            <small class="text-muted">Select a rating from 0 to 5 stars</small>
+
+                                    <div class="col-md-4">
+                                        <div class="ms-checkout-review-order p-3 border rounded">
+                                            <h3>Preview Info</h3>
+                                            <p>After saving, your review will appear on the reviews page.</p>
+                                            <div class="preview-placeholder">
+                                                <i class="fas fa-star text-warning" style="font-size: 3rem;"></i>
+                                                <p class="mt-3 text-muted">Your review rating will be displayed here</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.description.id_for_label }}" class="form-label">
-                                            {{ form.description.label }}
-                                        </label>
-                                        {{ form.description }}
-                                        {% if form.description.help_text %}
-                                            <small class="form-text text-muted">{{ form.description.help_text }}</small>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.image.id_for_label }}" class="form-label">
-                                            {{ form.image.label }}
-                                        </label>
-                                        {{ form.image }}
-                                        {% if form.image.help_text %}
-                                            <small class="form-text text-muted">{{ form.image.help_text }}</small>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <a href="{% url 'reviews:list' %}" class="btn btn-secondary">
-                                            <i class="fas fa-times"></i> Cancel
-                                        </a>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-check"></i> Submit Review
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
+                </article>
+                <!--================= End Add Review Form =================-->
+
             </div>
-        </section>
-        <!-- Add Review Area End -->
+        </main>
     </div>
 </div>
 {% include 'partials/footer/footer-three.html' %}
+<script>
+    // Star Rating Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star-rating i');
+        const ratingInput = document.querySelector('select[name="note"], input[name="note"]');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                
+                // Update hidden input
+                if (ratingInput) {
+                    ratingInput.value = rating;
+                }
+                
+                // Update star display
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Hover effect
+            star.addEventListener('mouseenter', function() {
+                const rating = this.getAttribute('data-rating');
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.style.opacity = '0.8';
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                stars.forEach(s => {
+                    if (!s.classList.contains('active')) {
+                        s.style.opacity = '0.3';
+                    } else {
+                        s.style.opacity = '1';
+                    }
+                });
+            });
+        });
+        
+        // Set initial rating if exists
+        if (ratingInput && ratingInput.value) {
+            const currentRating = ratingInput.value;
+            stars.forEach((s, index) => {
+                if (index < currentRating) {
+                    s.classList.add('active');
+                }
+            });
+        }
+    });
+</script>
 {% endblock content %}
-

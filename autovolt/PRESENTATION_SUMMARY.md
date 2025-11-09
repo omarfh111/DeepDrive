@@ -12,6 +12,7 @@ Convert a static HTML car dealer website into a dynamic Django web application w
 
 **Solution**:
 ```bash
+venv\Scripts\activate
 cd DeepDrive\autovolt
 pip install -r requirements.txt
 python manage.py migrate

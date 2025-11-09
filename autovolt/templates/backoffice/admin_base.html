@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Dashboard | Dusty{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link
+      rel="shortcut icon"
+      href="{% static 'admin_themes/assets/images/favicon.ico' %}"
+    />
+    <link
+      href="{% static 'admin_themes/assets/css/app.min.css' %}"
+      rel="stylesheet"
+      id="app-style"
+    />
+    <link
+      href="{% static 'admin_themes/assets/css/icons.min.css' %}"
+      rel="stylesheet"
+    />
+    <script src="{% static 'admin_themes/assets/js/head.js' %}"></script>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body data-menu-color="dark" data-sidebar="default">
+    <div id="app-layout">
+      {# Topbar #} {% include "backoffice/partials/_topbar.html" %} {# Sidebar
+      #} {% include "backoffice/partials/_sidebar.html" %}
+
+      <!-- Page Content -->
+      <div class="content-page">
+        <div class="content">
+          <div class="container-fluid">
+            <!-- Header de page + breadcrumb -->
+            <div
+              class="py-3 d-flex align-items-sm-center flex-sm-row flex-column"
+            >
+              <div class="flex-grow-1">
+                <h4 class="fs-18 fw-semibold m-0">
+                  {% block page_title %}Dashboard{% endblock %}
+                </h4>
+              </div>
+              <div class="text-end">
+                <ol class="breadcrumb m-0 py-0">
+                  <li class="breadcrumb-item">
+                    <a
+                      href="{% url 'reviews:reviews_dashboard' %}"
+                      class="text-primary"
+                      >Dashboard</a
+                    >
+                  </li>
+                  <li class="breadcrumb-item active">
+                    {% block breadcrumb_leaf %}Dashboard{% endblock %}
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+
+        {% include "backoffice/partials/_footer.html" %}
+      </div>
+      <!-- End Page Content -->
+    </div>
+
+    <!-- JS communs -->
+    <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+    <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
+
+    {# si tu as besoin d'ApexCharts/Maps sur certaines pages : charge-les dans
+    extra_js de la page enfant #} {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Commentaires | Dusty{% endblock %}
+{% block page_title %}Commentaires{% endblock %}
+{% block breadcrumb_leaf %}Commentaires{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des commentaires</h5>
+          <form class="d-flex" method="get">
+            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (texte, user, review)">
+            <select class="form-select form-select-sm me-2" name="status">
+              <option value="">— Statut (tous) —</option>
+              <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approuvés</option>
+              <option value="pending"  {% if status == 'pending'  %}selected{% endif %}>En attente</option>
+            </select>
+            <button class="btn btn-sm btn-primary">Filtrer</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive table-centered mt-0">
+          <table class="table table-centered table-nowrap table-hover mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Commentaire</th>
+                <th>Utilisateur</th>
+                <th>Avis</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% with rows=page_obj|default:commentaires %}
+              {% if rows %}
+                {% for c in rows %}
+                <tr>
+                  <td class="ps-3">#{{ c.id }}</td>
+                  <td>{{ c.commentaire|truncatewords:15 }}</td>
+                  <td>{{ c.user.username }}</td>
+                  <td>
+                    <a href="{% url 'reviews:backoffice_review_detail' c.review.pk %}" class="text-decoration-underline">
+                      {{ c.review.titre|truncatewords:6 }}
+                    </a>
+                  </td>
+                  <td>{{ c.date_commentaire|date:"Y-m-d" }}</td>
+                  <td>
+                    {% if c.is_approved %}
+                      <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">approved</span>
+                    {% else %}
+                      <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">pending</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end align-middle">
+                    <div class="d-inline-flex align-items-center gap-1">
+                      <!-- Voir -->
+                      <a href="{% url 'reviews:backoffice_commentaire_detail' c.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Détails">
+                        <i class="mdi mdi-eye-outline text-primary fs-14"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr><td colspan="7" class="text-center py-4 text-muted">Aucun commentaire.</td></tr>
+              {% endif %}
+              {% endwith %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if page_obj and page_obj.paginator.num_pages > 1 %}
+      <div class="card-footer">
+        <nav aria-label="Pagination">
+          <ul class="pagination mb-0 justify-content-end">
+            {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Tooltips Bootstrap
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
