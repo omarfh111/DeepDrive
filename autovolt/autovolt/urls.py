@@ -20,6 +20,9 @@ from autovolt import views
 from user_app import views as user_views
 from autovolt.views import RoleAwareLoginView, back_users
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -71,5 +74,9 @@ urlpatterns = [
     ),
     path("", include("deals.urls")),
     path('', include('vehicles.urls')),
+    path('', include('posts.urls')),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "user_app",
     'deals',
     'vehicles',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_app.User"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = None
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
