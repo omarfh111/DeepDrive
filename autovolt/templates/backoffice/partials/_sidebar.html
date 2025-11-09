@@ -84,18 +84,47 @@
             <span> Réponses </span>
             </a>
         </li>
-        <li>
-          <a class="tp-link" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
-            <span class="nav-icon">
-              <iconify-icon icon="solar:logout-3-bold-duotone"></iconify-icon>
-            </span>
-            <span> Logout </span>
-          </a>
-          <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none">
-            {% csrf_token %}
-          </form>
+        <li class="tp-menu-item">
+            <a class="tp-link" href="{% url 'reviews:reviews_dashboard' %}">
+                <span class="nav-icon">
+                    <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                </span>
+                <span>Reviews & Comments</span>
+                <span class="tp-submenu-arrow tp-dropdown-toggle">
+                    <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                </span>
+            </a>
+            <ul class="tp-submenu" style="display: none;">
+                <li>
+                    <a class="tp-link" href="{% url 'reviews:reviews_backreviews_list' %}">
+                        <span class="nav-icon">
+                            <iconify-icon icon="solar:star-bold-duotone"></iconify-icon>
+                        </span>
+                        <span>Reviews</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="tp-link" href="{% url 'reviews:reviews_commentaires_list' %}">
+                        <span class="nav-icon">
+                            <iconify-icon icon="solar:chat-line-bold-duotone"></iconify-icon>
+                        </span>
+                        <span>Comments</span>
+                    </a>
+                </li>
+            </ul>
         </li>
-
+          <li>
+            <a class="tp-link" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
+              <span class="nav-icon">
+                <iconify-icon icon="solar:logout-3-bold-duotone"></iconify-icon>
+              </span>
+              <span> Logout </span>
+            </a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none">
+              {% csrf_token %}
+            </form>
+          </li>
+        </li>
         </ul>
 
 
@@ -103,3 +132,23 @@
     <div class="clearfix"></div>
   </div>
 </div>
+<script>document.querySelectorAll('.tp-dropdown-toggle').forEach(function(arrow) {
+    arrow.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); 
+        
+        const link = this.closest('.tp-link');
+        const menuItem = link.parentElement;
+        const submenu = link.nextElementSibling;
+        const arrowIcon = this.querySelector('iconify-icon');
+    
+        if (submenu.style.display === 'none' || submenu.style.display === '') {
+            submenu.style.display = 'block';
+            arrowIcon.setAttribute('icon', 'solar:alt-arrow-up-linear');
+        } else {
+            submenu.style.display = 'none';
+            arrowIcon.setAttribute('icon', 'solar:alt-arrow-down-linear');
+        }
+        menuItem.classList.toggle('active');
+    });
+});</script>
