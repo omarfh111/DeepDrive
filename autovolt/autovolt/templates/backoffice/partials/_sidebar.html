@@ -1,4 +1,15 @@
 {% load static %}
+<style>
+.solar--wheel-bold-duotone {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%237e837e' opacity='0.5'%3E%3Cpath d='M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6'/%3E%3Cpath fill-rule='evenodd' d='M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10m-10 6a6 6 0 1 0 0-12a6 6 0 0 0 0 12m3-6a3 3 0 1 1-6 0a3 3 0 0 1 6 0' clip-rule='evenodd'/%3E%3C/g%3E%3Cpath fill='%235e5f5e' d='m9.672 17.532l1.525-2.64a3 3 0 0 1-1.299-.751l-1.524 2.64c.397.301.832.555 1.298.75M6.046 12.75h3.048a3 3 0 0 1 0-1.5H6.047a6 6 0 0 0 0 1.5m2.327-5.53l1.524 2.64a3 3 0 0 1 1.299-.751l-1.525-2.64a6 6 0 0 0-1.298.75m4.429 1.89l1.525-2.64c.465.195.901.449 1.298.75l-1.524 2.64a3 3 0 0 0-1.299-.75m2.103 3.641a3 3 0 0 0 0-1.5h3.048a6 6 0 0 1 0 1.5zm-2.103 2.141c.497-.137.942-.4 1.299-.75l1.524 2.64a6 6 0 0 1-1.298.75z'/%3E%3C/svg%3E");
+}
+
+</style>
 <div class="app-sidebar-menu">
   <div class="h-100" data-simplebar>
     <div id="sidebar-menu">
@@ -43,7 +54,14 @@
             <span>Marchés</span>
           </a>
         </li>
-
+        <li class="nav-item">
+            <a class="tp-link" href="{% url 'TestDrive:admin_testdrive_list' %}">
+                <span class="nav-icon me-2">
+                    <iconify-icon icon="solar:checklist-bold-duotone" ></iconify-icon>
+                </span>
+                <span class="fw-medium">Test Drive Bookings</span>
+            </a>
+        </li>
         <!-- Gestion Véhicules -->
         <li>
             <a class="tp-link" href="{% url 'posts:admin_portfolio' %}">
@@ -64,17 +82,6 @@
             </a>
         </li>
         
-
-        <!-- Gestion Évaluations -->
-        <li>
-            <a class="tp-link" href="javascript:void(0);">
-            <span class="nav-icon">
-                <iconify-icon icon="solar:checklist-bold-duotone"></iconify-icon>
-            </span>
-            <span> Évaluations </span>
-            </a>
-        </li>
-
         <!-- Gestion Réponses -->
         <li>
             <a class="tp-link" href="javascript:void(0);">

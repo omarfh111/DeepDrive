@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'vehicles',
     'posts',
     'reviews',
+    'TestDrive',
 ]
 
 MIDDLEWARE = [

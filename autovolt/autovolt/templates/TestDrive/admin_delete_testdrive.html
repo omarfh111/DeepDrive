@@ -1,0 +1,55 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Supprimer un Test Drive | Dusty{% endblock %}
+{% block page_title %}Suppression Test Drive{% endblock %}
+{% block breadcrumb_leaf %}Suppression Test Drive{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-danger-subtle">
+        <h5 class="card-title text-danger mb-0">
+          <i class="mdi mdi-alert-circle-outline me-1"></i> Confirmation de suppression
+        </h5>
+      </div>
+
+      <div class="card-body py-4">
+        <p class="fs-6">
+          Êtes-vous sûr de vouloir <strong class="text-danger">supprimer définitivement</strong> le Test Drive suivant&nbsp;?
+        </p>
+
+        <div class="border rounded-3 p-3 bg-light mb-4">
+          <ul class="list-unstyled mb-0">
+            <li><strong>ID :</strong> #{{ t.id_test_drive }}</li>
+            <li><strong>Utilisateur :</strong> {{ t.user.username }}</li>
+            <li><strong>Voiture :</strong> {{ t.car.marque }} {{ t.car.modele }}</li>
+            <li><strong>Date :</strong> {{ t.reservation_date|date:"d/m/Y" }} à {{ t.reservation_time|time:"H:i" }}</li>
+            <li><strong>Durée :</strong> {{ t.duration }} min</li>
+            <li><strong>Statut :</strong>
+              {% if t.status == "not_done" %}
+                <span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-4">Not done</span>
+              {% elif t.status == "done" %}
+                <span class="badge bg-success-subtle text-success px-3 py-1 rounded-4">Done</span>
+              {% else %}
+                <span class="badge bg-danger-subtle text-danger px-3 py-1 rounded-4">Cancelled</span>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+
+        <form method="post" class="text-center">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger px-4 py-2 rounded-pill me-2">
+            <i class="mdi mdi-delete-outline me-1"></i> Supprimer
+          </button>
+          <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+            <i class="mdi mdi-arrow-left me-1"></i> Annuler
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

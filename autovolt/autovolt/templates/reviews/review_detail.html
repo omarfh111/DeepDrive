@@ -56,19 +56,164 @@
         margin-bottom: 20px;
     }
     
-    /* Comment box styling */
+    /* Enhanced Comment Box Styling */
     .comment-box {
-        background: #f9f9f9;
-        border: 1px solid #e5e5e5 !important;
-        border-radius: 8px;
-        padding: 20px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 25px;
         margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .comment-box:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
     }
     
     .comment-box .author {
         display: flex;
         align-items: center;
         gap: 15px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .comment-box .author .image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #831414;
+    }
+    
+    .comment-box .author .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .comment-box .author .content h6 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .comment-box .author .content p {
+        margin: 0;
+        font-size: 13px;
+        color: #999;
+    }
+    
+    .comment-box .comment-text {
+        margin-top: 15px;
+        color: #555;
+        line-height: 1.7;
+        font-size: 15px;
+    }
+    
+    /* Enhanced Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+    }
+    
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        color: #666;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn-action.btn-edit {
+        color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-action.btn-edit:hover {
+        background: #0d6efd;
+        color: #fff;
+    }
+    
+    .btn-action.btn-delete {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-action.btn-delete:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    
+    .btn-action i {
+        font-size: 14px;
+    }
+    
+    /* Enhanced Review Action Buttons */
+    .review-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 40px;
+    }
+    
+    .btn-review-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border: 2px solid;
+    }
+    
+    .btn-review-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    
+    .btn-review-edit {
+        background: #fff;
+        color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-review-edit:hover {
+        background: #0d6efd;
+        color: #fff;
+    }
+    
+    .btn-review-delete {
+        background: #fff;
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-review-delete:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    
+    .btn-review-action i {
+        font-size: 16px;
     }
     
     /* Blog wrapper cards */
@@ -135,6 +280,38 @@
         background-color: #d1ecf1;
         border-radius: 6px;
         padding: 15px;
+    }
+    
+    .icon-primary {
+      color: #d91d13;
+    }
+    
+    /* Comment Count Badge */
+    .comment-count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #831414;
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    /* No Comments State */
+    .no-comments {
+        text-align: center;
+        padding: 40px 20px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        border: 2px dashed #ddd;
+    }
+    
+    .no-comments i {
+        font-size: 48px;
+        color: #ccc;
+        margin-bottom: 15px;
     }
 </style>
 
@@ -226,7 +403,7 @@
               <div class="card border-0 shadow-sm mb-5">
                 <div class="card-body p-4 p-md-5">
                   <h2 class="mb-4">
-                    <i class="fas fa-comment-dots text-primary me-2"></i>Review Details
+                    <i class="fas fa-comment-dots icon-primary me-2"></i>Review Details
                   </h2>
                   <div class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">
                     {{ review.description|linebreaks }}
@@ -263,58 +440,75 @@
               </div>
 
               {% if user == review.user %}
-              <div class="d-flex gap-2 mb--40">
-                <a
-                  href="{% url 'reviews:edit' review.pk %}"
-                  class="rts-btn btn-border"
-                  ><i class="fas fa-edit me-2"></i>Edit</a
-                >
-                <a
-                  href="{% url 'reviews:delete' review.pk %}"
-                  class="rts-btn btn-border"
-                  ><i class="fas fa-trash me-2"></i>Delete</a
-                >
+              <div class="review-actions">
+                <a href="{% url 'reviews:edit' review.pk %}" class="btn-review-action btn-review-edit">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit Review</span>
+                </a>
+                <a href="{% url 'reviews:delete' review.pk %}" class="btn-review-action btn-review-delete">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Delete Review</span>
+                </a>
               </div>
               {% endif %}
 
-              <!-- Share & tags (styled like blog) -->
+              <!-- Share & Tags -->
               <h2 class="mb--20">Share</h2>
               <div class="share-link mb--40">
                 <ul>
+                  <!-- Facebook -->
                   <li>
-                    <a href="#"
-                      ><img src="{% static 'images/icon/f-3.svg' %}" alt=""
-                    /></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/f-3.svg' %}" alt="Share on Facebook" />
+                    </a>
                   </li>
+
+                  <!-- X (Twitter) -->
                   <li>
-                    <a href="#"
-                      ><img src="{% static 'images/icon/x-3.svg' %}" alt=""
-                    /></a>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ blog.title|urlencode }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/x-3.svg' %}" alt="Share on X" />
+                    </a>
                   </li>
+
+                  <!-- Instagram (no direct share link, so use profile or copy link) -->
                   <li>
-                    <a href="#"
-                      ><img src="{% static 'images/icon/insta-3.svg' %}" alt=""
-                    /></a>
+                    <a href="https://www.instagram.com/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      title="Copy the link and share it on Instagram">
+                      <img src="{% static 'images/icon/insta-3.svg' %}" alt="Share on Instagram" />
+                    </a>
                   </li>
+
+                  <!-- LinkedIn -->
                   <li>
-                    <a href="#"
-                      ><img src="{% static 'images/icon/in-3.svg' %}" alt=""
-                    /></a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ blog.title|urlencode }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/in-3.svg' %}" alt="Share on LinkedIn" />
+                    </a>
                   </li>
                 </ul>
               </div>
 
+
               <!-- Comments -->
               <div class="comment-area mb--40">
-                <h2>
-                  Comments
-                  <span class="badge bg-secondary ms-2"
-                    >{{ commentaires.count }}</span
-                  >
-                </h2>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <h2 class="mb-0">Comments</h2>
+                  <span class="comment-count-badge">
+                    <i class="fas fa-comments"></i>
+                    {{ commentaires.count }}
+                  </span>
+                </div>
 
                 {% if user.is_authenticated %}
-                <div class="comment-form mb--30" style="background: #f9f9f9; padding: 25px; border-radius: 8px; border: 1px solid #e5e5e5;">
+                <div class="comment-form mb--30" style="background: #f9f9f9; padding: 25px; border-radius: 12px; border: 1px solid #e5e5e5;">
+                  <h5 class="mb-3"><i class="fas fa-pencil-alt me-2 icon-primary"></i>Leave a Comment</h5>
                   <form method="post">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
@@ -325,8 +519,8 @@
                 </div>
                 {% else %}
                 <div class="alert alert-info">
-                  Please <a href="{% url 'account' %}">login</a> to add a
-                  comment.
+                  <i class="fas fa-info-circle me-2"></i>
+                  Please <a href="{% url 'account' %}">login</a> to add a comment.
                 </div>
                 {% endif %}
                 
@@ -337,37 +531,48 @@
                       <div class="image">
                         <img
                           src="{% static 'images/testimonials/author-02.svg' %}"
-                          alt=""
+                          alt="{{ comment.user.first_name }} {{ comment.user.last_name }}"
                         />
                       </div>
                       <div class="content">
-                        <h6 class="mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
-                        <p class="m-0 text-muted">
-                          {{ comment.date_commentaire|date:"M d, Y" }}
+                        <h6>{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
+                        <p>
+                          <i class="far fa-clock me-1"></i>
+                          {{ comment.date_commentaire|date:"M d, Y" }} • {{ comment.date_commentaire|timesince }} ago
                         </p>
                       </div>
                       {% if user == comment.user %}
-                      <div class="ms-auto d-flex gap-2">
+                      <div class="action-buttons">
                         <a
                           href="{% url 'reviews:edit_comment' comment.pk %}"
-                          class="rts-btn btn-border btn-sm"
-                          ><i class="fas fa-edit"></i
-                        ></a>
+                          class="btn-action btn-edit"
+                          title="Edit comment"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </a>
                         <a
                           href="{% url 'reviews:delete_comment' comment.pk %}"
-                          class="rts-btn btn-border btn-sm"
-                          ><i class="fas fa-trash"></i
-                        ></a>
+                          class="btn-action btn-delete"
+                          title="Delete comment"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </a>
                       </div>
                       {% endif %}
                     </div>
-                    <p class="mt-3">{{ comment.commentaire|linebreaks }}</p>
+                    <div class="comment-text">
+                      {{ comment.commentaire|linebreaks }}
+                    </div>
                   </div>
                   {% endfor %}
                 {% else %}
-                  <p class="text-muted">
-                    No comments yet. Be the first to comment!
-                  </p>
+                  <div class="no-comments">
+                    <i class="fas fa-comments"></i>
+                    <p class="text-muted mb-0">
+                      <strong>No comments yet.</strong><br>
+                      Be the first to share your thoughts!
+                    </p>
+                  </div>
                 {% endif %}
               </div>
 
