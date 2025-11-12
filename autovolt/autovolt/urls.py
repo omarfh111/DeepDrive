@@ -77,6 +77,7 @@ urlpatterns = [
     path('', include('posts.urls')),
     path('reviews/', include('reviews.urls')),
     path('testdrive/',include('TestDrive.urls')),
+    path('achats/', include(('achats.urls', 'achats'), namespace='achats')),
 
 ]
 

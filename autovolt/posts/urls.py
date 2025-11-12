@@ -6,7 +6,7 @@ app_name="posts"
 urlpatterns = [
     # Front
     path('post/', views.portfolio, name='portfolio'),
-    #path('post/<int:pk>/', views.post_detail, name='post_detail'),
+    path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/add/', views.add_car, name='add_car'),
     path('post/<int:post_id>/edit/', views.update_post, name='update_post'),
     path('post/<int:pk>/delete/', views.delete_car, name='delete_car'),

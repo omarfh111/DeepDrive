@@ -6,7 +6,9 @@ from .models import Post
 from .form import PostForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import PermissionDenied
-
+from django.db.models import Exists, OuterRef
+from posts.models import Post
+from achats.models import Achat
 # --- Helpers d'accès ---
 def is_admin(user):
     # Adaptez selon votre app "user": ex. user.profile.role == 'admin'
@@ -25,7 +27,11 @@ def render_template(request, template_name, context=None, backoffice=False):
 
 # --- Liste / Portfolio ---
 def portfolio(request, backoffice=False):
-    posts = Post.objects.all()
+    posts = Post.objects.annotate(
+        has_paid_achat=Exists(
+            Achat.objects.filter(post_id=OuterRef('pk'), statut=Achat.Status.PAID)
+        )
+    ).filter(has_paid_achat=False)
     template = 'portfolio-2.html'
     return render_template(request, template, {'posts': posts}, backoffice)
 
@@ -102,3 +108,8 @@ def admin_update_post(request, post_id):
 @staff_member_required
 def admin_delete_car(request, pk):
     return delete_car(request, pk=pk, backoffice=True)
+
+def post_detail(request, pk, backoffice=False):
+    template = 'portfolio-details.html'  # file is templates/posts/portfolio-details.html
+    post = get_object_or_404(Post, pk=pk)
+    return render_template(request, template, {'post': post}, backoffice)

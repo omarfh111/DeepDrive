@@ -273,6 +273,7 @@
                                 <div class="row g-5">
                                     
                                 {% for post in posts %}
+                                {% if not post.has_paid_achat %}
                                 <div class="col-lg-6">
                                     <div class="project-wrapper2">
                                     <div class="image-area">
@@ -299,13 +300,19 @@
                                         </ul>
                                         <div class="button-area">
                                         <p>{{ post.price }} $</p>
-                                        <a class="rts-btn btn-primary radius-small" href="/portfolio-details/{{ post.id }}">Details</a>
+                                        <a class="rts-btn btn-primary radius-small"
+   href="{% url 'posts:post_detail' pk=post.pk %}">
+  Details
+</a>
+
+
 
                                         {% if request.user.is_authenticated %}
                                             {% if request.user.is_staff or request.user.id == post.owner_id %}
                                                 <a class="rts-btn btn-primary radius-small" href="{% url 'posts:update_post' post.id %}">Update</a>
                                                 <a class="rts-btn btn-primary radius-small" href="{% url 'posts:delete_car' post.id %}">Delete</a>
                                             {% endif %}
+                                        {% endif %}
                                         {% endif %}
                                         </div>
                                     </div>

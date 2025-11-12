@@ -52,7 +52,7 @@
               <tr>
                 <td>{{ review.id }}</td>
                 <td>{{ review.titre }}</td>
-                <td>{{ review.user.username }}</td>
+                <td>{{ review.user.first_name }} {{ review.user.last_name }}</td>
                 <td><span class="badge bg-success">{{ review.note }}/5</span></td>
                 <td>{{ review.description|truncatewords:10 }}</td>
                 <td>
