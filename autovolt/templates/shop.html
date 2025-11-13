@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="service" current="Shop" title="Shop" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <div class="rts-shop-area inner rts-section-gapTop">
+                <div class="container">
+                    <div class="shop-filter-area">
+                        <p>Showing 1-9 of 19 results</p>
+                        <div class="select-area">
+                            <form action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select" class="mySelect">
+                                    <option value="2" selected>Car Make</option>
+                                    <option value="10">Mazda</option>
+                                    <option value="1">Citroen</option>
+                                    <option value="13">Honda</option>
+                                    <option value="14">Mitsubishi</option>
+                                    <option value="15">Peugeot</option>
+                                </select>
+                            </form>
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Car Model</option>
+                                    <option value="10">155</option>
+                                    <option value="1">151</option>
+                                    <option value="13">150</option>
+                                    <option value="14">152</option>
+                                    <option value="15">156</option>
+                                </select>
+                            </form>
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Price</option>
+                                    <option value="10">22,000$</option>
+                                    <option value="1">27,000$</option>
+                                    <option value="13">30,000$</option>
+                                    <option value="14">32,000$</option>
+                                    <option value="15">38,000$</option>
+                                </select>
+                            </form>
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Sort By</option>
+                                    <option value="10">22,000$</option>
+                                    <option value="1">27,000$</option>
+                                    <option value="13">30,000$</option>
+                                    <option value="14">32,000$</option>
+                                    <option value="15">38,000$</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row g-5">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/11.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">Car Parts Gears and Equipment</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/12.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">Power Steering Pump</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$599</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/13.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">High-Performance Tires</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$399</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/14.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">Micrometer with check ring</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$790</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/15.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">Car Parts Mufflers And Pipes</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$270</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="project-wrapper4">
+                                <div class="image-area">
+                                    <a href="{% url 'shop-details' %}"><img src="{% static 'images/portfolio/16.webp' %}"
+                                            alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <ul class="star-rating">
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star"></i></li>
+                                        <li><i class="rt-icon-star-sharp-half-stroke"></i></li>
+                                    </ul>
+                                    <h6 class="title "><a href="{% url 'shop-details' %}">Car Gears Machine part</a>
+                                    </h6>
+                                    <div class="button-area">
+                                        <p class="">$699</p>
+                                        <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-big icon">
+                                            Add To Cart
+                                            <svg width="14" height="14" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1201_1501)">
+                                                <path d="M3.22189 6.46492H3.22235C3.22273 6.46492 3.22311 6.46484 3.22349 6.46484H8.53515C8.66592 6.46484 8.78089 6.37809 8.81683 6.25236L9.9887 2.1508C10.014 2.06238 9.99625 1.96731 9.94094 1.89392C9.88555 1.82053 9.79896 1.77734 9.70702 1.77734H2.54623L2.33681 0.834885C2.30697 0.700836 2.18811 0.605469 2.05078 0.605469H0.292969C0.131149 0.605469 0 0.736618 0 0.898437C0 1.06026 0.131149 1.19141 0.292969 1.19141H1.81579C1.85287 1.35841 2.81799 5.70152 2.87353 5.95138C2.56218 6.08673 2.34375 6.39717 2.34375 6.75781C2.34375 7.24243 2.73804 7.63671 3.22265 7.63671H8.53515C8.69697 7.63671 8.82812 7.50557 8.82812 7.34375C8.82812 7.18193 8.69697 7.05078 8.53515 7.05078H3.22265C3.06114 7.05078 2.92969 6.91932 2.92969 6.75781C2.92969 6.59652 3.06068 6.4653 3.22189 6.46492ZM9.31861 2.36328L8.31413 5.8789H3.45764L2.67639 2.36328H9.31861Z" fill="white"/>
+                                                <path d="M2.92969 8.51562C2.92969 9.00024 3.32397 9.39453 3.80859 9.39453C4.29321 9.39453 4.6875 9.00024 4.6875 8.51562C4.6875 8.03101 4.29321 7.63672 3.80859 7.63672C3.32397 7.63672 2.92969 8.03101 2.92969 8.51562ZM3.80859 8.22266C3.97011 8.22266 4.10156 8.35411 4.10156 8.51562C4.10156 8.67714 3.97011 8.80859 3.80859 8.80859C3.64708 8.80859 3.51562 8.67714 3.51562 8.51562C3.51562 8.35411 3.64708 8.22266 3.80859 8.22266Z" fill="white"/>
+                                                <path d="M7.07031 8.51562C7.07031 9.00024 7.4646 9.39453 7.94922 9.39453C8.43384 9.39453 8.82812 9.00024 8.82812 8.51562C8.82812 8.03101 8.43384 7.63672 7.94922 7.63672C7.4646 7.63672 7.07031 8.03101 7.07031 8.51562ZM7.94922 8.22266C8.11073 8.22266 8.24219 8.35411 8.24219 8.51562C8.24219 8.67714 8.11073 8.80859 7.94922 8.80859C7.7877 8.80859 7.65625 8.67714 7.65625 8.51562C7.65625 8.35411 7.7877 8.22266 7.94922 8.22266Z" fill="white"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath>
+                                                <rect width="10" height="10" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="rts-btn load-more-btn btn-border">Load More</a>
+                </div>
+            </div>
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
