@@ -22,10 +22,14 @@ from autovolt.views import RoleAwareLoginView, back_users
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
-
+from services import views_admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    path('service/', include('services.urls')),
+    path('back/', include('services.urls', namespace='services')),
+
     path('', views.indexMain, name='index'),
     path('index-two', views.indexTwo, name='index-two'),
     path('index-three', views.indexThree, name='index-three'),

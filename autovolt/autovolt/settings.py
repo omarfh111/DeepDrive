@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'reviews',
     'TestDrive',
     'achats',
+    'services',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
