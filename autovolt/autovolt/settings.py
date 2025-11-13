@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+import certifi
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,3 +154,15 @@ STRIPE_SECRET_KEY = "sk_test_51SRag7DU2Akojx7VAI9ZbOLJTHu7KkXUaGgLkLiJtm2FcYrz8H
 STRIPE_PUBLIC_KEY = "pk_test_51SRag7DU2Akojx7VyG0tPGiKb3JkfS64NmhmArV2ad89sEigE05Ji2JlEXKQGojSmabZDIhp5ZwmIvq2y6wdmh8w007kZLLNmn"
 STRIPE_WEBHOOK_SECRET = ""  # optional until you set webhook
 STRIPE_CURRENCY = "usd"  # Stripe doesn't support TND in Checkout; use usd/eur for tests
+
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
+
+EMAIL_BACKEND = "deals.backends.UnverifiedTLSBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
+EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
+DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"

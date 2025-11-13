@@ -25,4 +25,6 @@ urlpatterns = [
     path("backoffice/marches/<int:pk>/delete/", views.admin_marche_delete, name="admin_marche_delete"),
     path("backoffice/marches/<int:pk>/confirm/", views.admin_marche_confirm, name="admin_marche_confirm"),
     path("backoffice/marches/<int:pk>/cancel/", views.admin_marche_cancel, name="admin_marche_cancel"),
+
+    path("marche/<int:pk>/invoice/", views.marche_invoice_pdf, name="marche_invoice"),
 ]

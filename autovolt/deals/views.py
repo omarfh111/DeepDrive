@@ -106,7 +106,7 @@ def admin_hub(request):
 
 #Marche
 # deals/views.py
-
+from .emails import send_marche_creation_email
 def _get_partenaire_approved_or_none(user):
     if not user.is_authenticated:
         return None
@@ -128,12 +128,17 @@ def marche_create(request, voiture_id):
         elif form.is_valid():
             marche = form.save()
             messages.success(request, "Marché créé avec succès.")
-            return redirect("deals:marche_detail", pk=marche.pk)  # (ou mes_marches si tu n'as pas encore la page détail)
+            try:
+                send_marche_creation_email(marche)
+            except Exception as e:
+                print("Erreur envoi e-mail marché :", e)
+
+            return redirect("deals:marche_detail", pk=marche.pk)
 
     ctx = {
         "form": form,
         "voiture": voiture,
-        "taux_rentabilite": 10,  # affichage côté front (le modèle recalculera de toute façon)
+        "taux_rentabilite": 10,
         "partenaire_approved": bool(partenaire),
     }
     return render(request, "deals/marche_form.html", ctx)
@@ -257,3 +262,45 @@ def admin_marche_update(request, pk):
     else:
         form = AdminMarcheForm(instance=marche)
     return render(request, "deals/marche_admin_update.html", {"form": form, "marche": marche})
+# PDF facture
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+from io import BytesIO
+
+@login_required
+def marche_invoice_pdf(request, pk):
+    """
+    Génère la facture PDF d'un marché.
+    - Un partenaire ne peut télécharger QUE ses propres marchés approuvés (ou en attente, à toi de décider).
+    - Le staff peut tout télécharger.
+    """
+    marche = get_object_or_404(Marche.objects.select_related("voiture", "partenaire"), pk=pk)
+
+    # Sécurité: partenaire ne voit que ses marchés
+    partenaire = _get_partenaire_approved_or_none(request.user)
+    if not request.user.is_staff:
+        if not partenaire or marche.partenaire_id != partenaire.id_partenariat:
+            raise PermissionDenied
+
+    context = {
+        "marche": marche,
+        "voiture": marche.voiture,
+        "partenaire": marche.partenaire,
+        "societe": marche.partenaire.nom_societe or "",
+        "now": marche.created_at,  # date du marché (ou timezone.now() si tu veux l'instant)
+    }
+
+    html = render_to_string("deals/invoices/marche_invoice.html", context)
+
+    # Rendu PDF
+    pdf_io = BytesIO()
+    pisa_status = pisa.CreatePDF(src=html, dest=pdf_io, encoding="utf-8")
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la génération du PDF.", status=500)
+
+    pdf_io.seek(0)
+    filename = f"facture-marche-{marche.id}.pdf"
+    response = HttpResponse(pdf_io.read(), content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
