@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        <!-- header area start -->
+        {% include 'partials/header/header-three.html' %}
+        <!-- header area end -->
+
+        <!-- Breadcrumb area start -->
+        {% with class="service" current="About" title="About DeepDrive" %}
+            {% include 'partials/elements/breadcrumb.html' %}   
+        {% endwith %}
+        <!-- Breadcrumb area end -->
+
+        <!-- About Area Start -->
+        <section class="rts-about-area inner two rts-section-gapTop">
+            <div class="container">
+                <div class="section-inner">
+                    <div class="row align-items-center g-5">
+                        <!-- Visuel / Hero -->
+                        <div class="col-lg-6">
+                            <div class="about-image-area-two">
+                                <div class="left wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1s">
+                                    <img src="{% static 'images/about/12.webp' %}" width="360" alt="DeepDrive platform overview">
+                                </div>
+                                <div class="right wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s">
+                                    <img src="{% static 'images/about/13.webp' %}" width="280" alt="DeepDrive workflow">
+                                    <div class="counter-area">
+                                        <h2 class="title">
+                                            <span class="counter">1000</span><span>+</span>
+                                        </h2>
+                                        <p class="desc">Transactions déjà gérées</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contenu texte -->
+                        <div class="col-lg-6">
+                            <div class="about-content-area">
+                                <div class="section-title-area">
+                                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">
+                                        About DeepDrive
+                                    </p>
+                                    <h2 class="section-title wow move-right" data-wow-delay=".2s" data-wow-duration="1s">
+                                        A smart, <span>data-driven</span> platform to manage your automotive deals
+                                    </h2>
+                                </div>
+
+                                <p class="desc wow fadeInUp" data-wow-delay=".3s" data-wow-duration="1s">
+                                    DeepDrive centralises your vehicle sourcing, pricing and deal lifecycle in a single 
+                                    digital workspace. From partner onboarding to offer validation and reporting, every 
+                                    step is structured, traceable and aligned with your internal control framework.
+                                </p>
+
+                                <!-- Points clés / bullets façon PDF -->
+                                <div class="row g-3 mt-3 wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s">
+                                    <div class="col-sm-6">
+                                        <div class="about-feature-box">
+                                            <h6 class="title">Partner-centric workflow</h6>
+                                            <p class="desc">
+                                                Structured process for partner requests, validation and follow-up of all deals.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="about-feature-box">
+                                            <h6 class="title">Full deal traceability</h6>
+                                            <p class="desc">
+                                                From first contact to closing, every step is logged and easily auditable.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="about-feature-box">
+                                            <h6 class="title">Unified data model</h6>
+                                            <p class="desc">
+                                                Vehicles, partners, requests and deals share a consistent, report-ready structure.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="about-feature-box">
+                                            <h6 class="title">Designed for scaling</h6>
+                                            <p class="desc">
+                                                Architecture ready for multi-country, multi-brand and multi-channel deployment.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA type fiche projet -->
+                                <div class="d-flex align-items-center gap-3 mt-4 wow fadeInUp" data-wow-delay=".5s" data-wow-duration="1s">
+                                    <a href="callto:+21652340781" class="rts-btn call-btn">
+                                        <span><i class="fa-regular fa-phone"></i></span>
+                                        <div class="content">
+                                            <h6>Call Us Now</h6>
+                                            <p>+216 52 340 781</p>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'deals:partenariat_create' %}" class="rts-btn btn-primary radius-small icon">
+                                        <i class="fa fa-handshake-o me-1"></i> Request a demo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Contenu texte -->
+                    </div>
+                </div>
+            </div>
+            <div class="bg-shape-area">
+                <img src="{% static 'images/category/shape/shape-01.svg' %}" alt="">
+                <img src="{% static 'images/category/shape/shape-02.svg' %}" alt="">
+            </div>
+        </section>
+        <!-- About Area End -->
+
+        <!-- Counter Area Start (simplifié façon métriques PDF) -->
+        <section class="rts-counter-area-two">
+            <div class="container">
+                <div class="counter-inner">
+                    <div class="inner wow zoomIn" data-wow-delay=".2s" data-wow-duration="1s">
+                        <div class="icon">
+                            <img src="{% static 'images/counter/icon-01.svg' %}" width="60" alt="">
+                        </div>
+                        <div class="text">
+                            <h3 class="title"><span class="counter">150</span><span>+</span></h3>
+                            <p class="desc">Active partners</p>
+                        </div>
+                    </div>
+                    <div class="inner wow zoomIn" data-wow-delay=".4s" data-wow-duration="1s">
+                        <div class="icon">
+                            <img src="{% static 'images/counter/icon-02.svg' %}" width="60" alt="">
+                        </div>
+                        <div class="text">
+                            <h3 class="title"><span class="counter">5000</span><span>+</span></h3>
+                            <p class="desc">Managed deals</p>
+                        </div>
+                    </div>
+                    <div class="inner wow zoomIn" data-wow-delay=".6s" data-wow-duration="1s">
+                        <div class="icon">
+                            <img src="{% static 'images/counter/icon-03.svg' %}" width="60" alt="">
+                        </div>
+                        <div class="text">
+                            <h3 class="title"><span class="counter">98</span><span>%</span></h3>
+                            <p class="desc">Partner satisfaction</p>
+                        </div>
+                    </div>
+                    <div class="inner wow zoomIn" data-wow-delay=".8s" data-wow-duration="1s">
+                        <div class="icon">
+                            <img src="{% static 'images/counter/icon-04.svg' %}" width="60" alt="">
+                        </div>
+                        <div class="text">
+                            <h3 class="title"><span class="counter">24</span><span>/7</span></h3>
+                            <p class="desc">Platform availability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Counter Area End -->
+
+        <!-- Testimonials Area Start -->
+        <section class="rts-testimonials-area area-2 rts-section-gap">
+            <div class="bg-shape-area"></div>
+            <div class="shape wow slideInLeft" data-wow-delay=".5s" data-wow-duration="2s">
+                <img src="{% static 'images/testimonials/03.webp' %}" width="1107" alt="">
+            </div>
+            <div class="container">
+                <div class="section-inner">
+                    <div class="row align-items-center justify-content-end">
+                        <div class="col-xl-5">
+                            <div class="section-title-area">
+                                <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration=".8s">
+                                    Testimonials
+                                </p>
+                                <h2 class="section-title wow move-right">
+                                    What our <span>partners</span> say
+                                </h2>
+                            </div>
+                            <div class="slider-inner mt--50">
+                                <div class="swiper testimonialSlider">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="review-wrapper">
+                                                <p class="desc">
+                                                    “DeepDrive gave us a clear, structured view of our pipeline and 
+                                                    simplified the way we interact with dealers. The platform is now at 
+                                                    the centre of our internal deal process.”
+                                                </p>
+                                                <div class="author-area d-flex align-items-center">
+                                                    <div class="image">
+                                                        <img src="{% static 'images/testimonials/author-01.svg' %}" alt="">
+                                                    </div>
+                                                    <div class="text">
+                                                        <h6 class="title">Sarah Martinez</h6>
+                                                        <p class="designation">Head of Sales Operations</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="review-wrapper">
+                                                <p class="desc">
+                                                    “The visibility on each deal and the consistency of the data we get 
+                                                    from DeepDrive significantly improved our reporting and steering.”
+                                                </p>
+                                                <div class="author-area d-flex align-items-center">
+                                                    <div class="image">
+                                                        <img src="{% static 'images/testimonials/author-01.svg' %}" alt="">
+                                                    </div>
+                                                    <div class="text">
+                                                        <h6 class="title">Michael Roy</h6>
+                                                        <p class="designation">Business Controller</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Vous pouvez garder / dupliquer d'autres slides si nécessaire -->
+                                    </div>
+                                </div>
+                                <div class="swiper-pagination-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Testimonials Area End -->
+
+        <!-- Team Area Start (présenté comme dans une brochure) -->
+        <section class="rts-team-area rts-section-gap">
+            <div class="container">
+                <div class="section-title-area2">
+                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Core Team</p>
+                    <h2 class="section-title wow move-right">Meet the <span>project team</span></h2>
+                </div>
+                <div class="section-inner mt--60">
+                    <div class="row g-5">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="team-wrapper">
+                                <div class="image-area">
+                                    <a href="#">
+                                        <img src="{% static 'images/team/01.webp' %}" alt="">
+                                    </a>
+                                    <div class="content">
+                                        <h6 class="title cw">Amelia Scot</h6>
+                                        <p class="designation cw">Project Manager</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="team-wrapper">
+                                <div class="image-area">
+                                    <a href="#">
+                                        <img src="{% static 'images/team/02.webp' %}" alt="">
+                                    </a>
+                                    <div class="content">
+                                        <h6 class="title cw">Michael Roy</h6>
+                                        <p class="designation cw">Lead Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="team-wrapper">
+                                <div class="image-area">
+                                    <a href="#">
+                                        <img src="{% static 'images/team/03.webp' %}" alt="">
+                                    </a>
+                                    <div class="content">
+                                        <h6 class="title cw">Emma Elizabeth</h6>
+                                        <p class="designation cw">UX / UI Designer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="team-wrapper">
+                                <div class="image-area">
+                                    <a href="#">
+                                        <img src="{% static 'images/team/04.webp' %}" alt="">
+                                    </a>
+                                    <div class="content">
+                                        <h6 class="title cw">David Miller</h6>
+                                        <p class="designation cw">Data & Reporting</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Team Area End -->
+
+        <!-- Brand Area Start -->
+        <section class="rts-brand-area">
+            <div class="container">
+                <div class="section-title-area2">
+                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">Partners</p>
+                    <h2 class="section-title wow move-right">Some of our <span>key brands</span></h2>
+                </div>
+                <div class="section-inner mt--80">
+                    <ul>
+                        <li class="wow fadeInUp" data-wow-delay=".2s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/01-w.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/02.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay=".6s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/03.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay=".8s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/04.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay="1s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/05.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay="1.2s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/06.svg' %}" alt="">
+                        </li>
+                        <li class="wow fadeInUp" data-wow-delay="1.4s" data-wow-duration="1s">
+                            <img src="{% static 'images/brand/07.svg' %}" alt="">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- Brand Area End -->
+
+        <!-- CTA Area Start -->
+        <div class="rts-cta-area area-2">
+            <div class="container">
+                <div class="cta-inner">
+                    <h2 class="title">Need more details about the DeepDrive project?</h2>
+                    <div class="contact">
+                        <a href="callto:+21652340781">
+                            <img src="{% static 'images/cta/call.svg' %}" alt="">
+                            +216 52 340 781
+                        </a>
+                    </div>
+                    <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                    <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- CTA Area End -->
+
+    </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
