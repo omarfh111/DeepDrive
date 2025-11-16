@@ -24,12 +24,12 @@ urlpatterns = [
     # ============================================
     # BACKOFFICE ROUTES
     # ============================================
-    path("admin/", admin_hub, name="admin_hub"),  # /service/admin/ → Dashboard
-    path("admin/list/", admin_service_list, name="admin_service_list"),  # /service/admin/list/
-    path("admin/create/", admin_service_create, name="admin_service_create"),  # /service/admin/create/
-    path("admin/<int:pk>/update/", admin_service_update, name="admin_service_update"),  # /service/admin/1/update/
-    path("admin/<int:pk>/delete/", admin_service_delete, name="admin_service_delete"),  # /service/admin/1/delete/
-    path("admin/export-pdf/", export_services_pdf, name="export_services_pdf"),  # /service/admin/export-pdf/
+    path("back/admin/", admin_hub, name="admin_hub"),  # /service/admin/ → Dashboard
+    path("back/admin/list/", admin_service_list, name="admin_service_list"),  # /service/admin/list/
+    path("back/admin/create/", admin_service_create, name="admin_service_create"),  # /service/admin/create/
+    path("back/admin/<int:pk>/update/", admin_service_update, name="admin_service_update"),  # /service/admin/1/update/
+    path("back/admin/<int:pk>/delete/", admin_service_delete, name="admin_service_delete"),  # /service/admin/1/delete/
+    path("back/admin/export-pdf/", export_services_pdf, name="export_services_pdf"),  # /service/admin/export-pdf/
 ]
 
 

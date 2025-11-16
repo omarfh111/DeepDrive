@@ -25,9 +25,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    path('service/', include('services.urls')),
-    path('back/', include('services.urls', namespace='services')),
+    path('', include('services.urls')),
+    #path('back/', include('services.urls', namespace='services')),
 
     path('', views.indexMain, name='index'),
     path('index-two', views.indexTwo, name='index-two'),
@@ -43,7 +42,7 @@ urlpatterns = [
     path('portfolio-3', views.portfolioThree, name='portfolio-three'),
     path('portfolio-details', views.portfolioDetails, name='portfolio-details'),
     path('portfolio-details-2', views.portfolioDetailsTwo, name='portfolio-details-2'),
-    path('service', views.service, name='service'),
+    
     path('pricing', views.pricing, name='pricing'),
     path('faq', views.faq, name='faq'),
     path('sold-car', views.soldCar, name='sold-car'),
