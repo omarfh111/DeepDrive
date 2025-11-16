@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block class %}achat-page{% endblock %}
+
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+
+    {# If your header include was causing parsing issues, you can comment it out for now #}
+    {# {% include 'partials/header/header-three.html' %} #}
+
+    <!-- Simple solid breadcrumb/header (no background image) -->
+    <div class="rts-breadcrumb-area portfolio details breadcrumb-solid" style="background:#0f0f10;padding:48px 0;">
+      <div class="container">
+        <div class="breadcrumb-area-wrapper d-flex justify-content-between align-items-end">
+          <div class="left">
+            <h1 class="title" style="color:#fff;margin:0;">
+              Résumé d’achat — {{ achat.post.marque }} {{ achat.post.modele }}
+            </h1>
+            <ul class="feature-area" style="margin-top:12px;">
+              <li style="color:#ddd;">Année: {{ achat.post.year }}</li>
+              <li style="color:#ddd;">Kilométrage: {{ achat.post.kilometrage|floatformat:0 }} Km</li>
+              <li style="color:#ddd;">Énergie: {{ achat.post.energy }}</li>
+              <li style="color:#ddd;">Boîte: {{ achat.post.boite_vitesse }}</li>
+            </ul>
+          </div>
+          <div class="nav-bread-crumb">
+            <a href="{% url 'index' %}" style="color:#ddd;">Home</a>
+            <span class="mx-2" style="color:#666;">/</span>
+            <a href="{% url 'posts:portfolio' %}" style="color:#ddd;">Cars</a>
+            <span class="mx-2" style="color:#666;">/</span>
+            <span class="current" style="color:#fff;">Résumé d’achat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <main class="ms-main">
+      <div class="ms-page-content rts-section-gapNew">
+        <div class="container">
+          <div class="row g-5">
+            <!-- Left: car image & basic info -->
+            <div class="col-lg-8">
+              <div class="project-wrapper2" style="border-radius:14px; overflow:hidden;">
+                <div class="image-area">
+                  {% if achat.post.image %}
+                    <img src="{{ achat.post.image.url }}" alt="{{ achat.post.marque }} {{ achat.post.modele }}" style="width:100%;display:block;">
+                  {% else %}
+                    <img src="{% static 'images/portfolio/01.webp' %}" alt="Car" style="width:100%;display:block;">
+                  {% endif %}
+                </div>
+                <div class="content-area" style="padding:24px;">
+                  <h4 class="title mb-2">{{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})</h4>
+                  <ul class="feature-area" style="gap:16px;">
+                    <li>
+                      <img src="{% static 'images/portfolio/feature-icon/06.svg' %}" alt="">
+                      {{ achat.post.energy }}
+                    </li>
+                    <li>
+                      <img src="{% static 'images/portfolio/feature-icon/07.svg' %}" alt="">
+                      {{ achat.post.boite_vitesse }}
+                    </li>
+                    <li>
+                      <img src="{% static 'images/portfolio/feature-icon/05.svg' %}" alt="">
+                      {{ achat.post.kilometrage|floatformat:0 }} Km
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: summary card -->
+            <div class="col-lg-4">
+              <div class="sticky-top" style="top:110px;">
+                <div class="left-side-bar">
+                  <div class="price-area side-box">
+                    <h5>{{ achat.price|floatformat:0 }} DT</h5>
+                    <ul class="price-meta">
+                      <li><img src="{% static 'images/portfolio/calender.svg' %}" alt=""> {{ achat.date_achat|date:"M d, Y" }}</li>
+                      <li><img src="{% static 'images/portfolio/view.svg' %}" alt=""> État: {{ achat.get_statut_display }}</li>
+                    </ul>
+                    <div class="price-btn d-grid gap-2">
+                      {# Step 1: No Stripe yet. We'll add the payment URL in Step 2. #}
+                      <a href="{% url 'posts:post_detail' pk=achat.post.pk %}" class="rts-btn radius-small btn-primary outline">
+                        Voir l’annonce
+                      </a>
+                      <a href="{% url 'posts:portfolio' %}" class="rts-btn radius-small btn-primary">
+                        Continuer la navigation
+                      </a>
+                      <a class="rts-btn btn-primary" href="{% url 'achats:start_payment' achat.id %}">
+  Payer maintenant
+</a>
+
+                    </div>
+                  </div>
+
+                  <div class="overview side-box">
+                    <h2>Détails</h2>
+                    <ul class="feature-list2">
+                      <li>
+                        <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
+                        <div class="text">
+                          <p>Transmission</p><p>{{ achat.post.transmission }}</p>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="{% static 'images/portfolio/feature-icon/16.svg' %}" alt="">
+                        <div class="text">
+                          <p>Carrosserie</p><p>{{ achat.post.carrosserie }}</p>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="{% static 'images/portfolio/feature-icon/15.svg' %}" alt="">
+                        <div class="text">
+                          <p>Puissance fiscale</p><p>{{ achat.post.puissance_fiscale }}</p>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
+                        <div class="text">
+                          <p>Gouvernorat</p><p>{{ achat.post.gouvernerat }}</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="rts-cta-area area-2 pb--50">
+        <div class="container">
+          <div class="cta-inner">
+            <h2 class="title">If you have any questions Please Call.</h2>
+            <div class="contact">
+              <a href="callto:+16544521505">
+                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                +1-654-452-1505
+              </a>
+            </div>
+            <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+            <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+{# Optional footer include if your header is uncommented #}
+{# {% include 'partials/footer/footer-three.html' %} #}
+{% endblock content %}

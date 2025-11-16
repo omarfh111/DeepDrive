@@ -20,9 +20,14 @@ from autovolt import views
 from user_app import views as user_views
 from autovolt.views import RoleAwareLoginView, back_users
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('services.urls')),
+    #path('back/', include('services.urls', namespace='services')),
+
     path('', views.indexMain, name='index'),
     path('index-two', views.indexTwo, name='index-two'),
     path('index-three', views.indexThree, name='index-three'),
@@ -37,7 +42,7 @@ urlpatterns = [
     path('portfolio-3', views.portfolioThree, name='portfolio-three'),
     path('portfolio-details', views.portfolioDetails, name='portfolio-details'),
     path('portfolio-details-2', views.portfolioDetailsTwo, name='portfolio-details-2'),
-    path('service', views.service, name='service'),
+    
     path('pricing', views.pricing, name='pricing'),
     path('faq', views.faq, name='faq'),
     path('sold-car', views.soldCar, name='sold-car'),
@@ -71,5 +76,12 @@ urlpatterns = [
     ),
     path("", include("deals.urls")),
     path('', include('vehicles.urls')),
+    path('', include('posts.urls')),
+    path('reviews/', include('reviews.urls')),
+    path('testdrive/',include('TestDrive.urls')),
+    path('achats/', include(('achats.urls', 'achats'), namespace='achats')),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

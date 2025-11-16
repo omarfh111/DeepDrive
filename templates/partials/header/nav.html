@@ -18,44 +18,53 @@
         <li class="main-nav">
             <a class="main-menu" href="{% url 'about' %}">About Us</a>
         </li>
+        <li class="main-nav">
+            <a class="main-menu" href="{% url 'posts:portfolio' %}">Sell</a>
+        </li>
         <li class="main-nav has-dropdown">
-            <a class="main-menu" href="javascript:void(0)">Listing</a>
+            <a class="main-menu">Partnership</a>
+
             <ul class="submenu parent-nav">
-                <li><a href="{% url 'portfolio' %}">Cars One</a></li>
-                <li><a href="{% url 'portfolio-two' %}">Cars Two</a></li>
-                <li><a href="{% url 'portfolio-three' %}">Cars Three</a></li>
-                <li><a href="{% url 'portfolio-details' %}">Car Single</a></li>
-                <li><a href="{% url 'portfolio-details-2' %}">Car Single Two</a></li>
+
+                {% if user.is_authenticated and user.partenariat.status == 'approved' %}
+                <li>
+                    <a href="{% url 'vehicles:liste_voitures' %}"
+                    class="submenu-link">
+                        <i class="fa fa-shopping-cart me-1"></i> Passer un marché
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.is_authenticated and user.partenariat.status != 'approved' %}
+                <li>
+                    <a href="{% url 'deals:partenariat_create' %}"
+                    class="submenu-link">
+                        <i class="fa fa-handshake-o me-1"></i> Devenir partenaire
+                    </a>
+                </li>
+                {% endif %}
+                {% if user.is_authenticated and user.partenariat.status == 'approved' %}
+                <li>
+                    <a href="{% url 'deals:mes_marches' %}"
+                    class="submenu-link">
+                        <i class="fa fa-list me-1"></i> Mes marchés
+                    </a>
+                </li>
+                {% endif %}
+
             </ul>
         </li>
-        <li class="main-nav has-dropdown">
-            <a class="main-menu" href="javascript:void(0)">Page</a>
-            <ul class="submenu mega-menu parent-nav">
-                <li><a href="{% url 'service' %}">Service</a></li>
-                <li><a href="{% url 'blog' %}">Blog</a></li>
-                <li><a href="{% url 'pricing' %}">Pricing</a></li>
-                <li><a href="{% url 'blog-2' %}">Blog Two</a></li>
-                <li><a href="{% url 'faq' %}">FAQ</a></li>  
-                <li><a href="{% url 'blog-details' %}">Blog Single</a></li>
-                <li><a href="{% url 'sold-car' %}">Sold Car</a></li>  
-                <li><a href="{% url 'team' %}">Team</a></li>  
-                <li><a href="{% url 'calculator' %}">Calculator</a></li>  
-                <li><a href="{% url 'car-dealer' %}">Car Dealer</a></li>  
-                <li><a href="{% url 'account' %}">Account</a></li>  
-                <li><a href="{% url 'car-dealer-details' %}">Dealer Single</a></li>  
-            </ul>
+
+        <li class="main-nav">
+            <a class="main-menu" href="{% url 'services:service_list' %}">Services</a>
         </li>
+       
         <li class="main-nav has-dropdown">
-            <a class="main-menu" href="javascript:void(0)">Shop</a>
+            <a class="main-menu">Test Drive</a>
             <ul class="submenu parent-nav">
-                <li><a href="{% url 'shop' %}">Shop</a></li>
-                <li><a href="{% url 'shop-2' %}">Shop Two</a></li>
-                <li><a href="{% url 'shop-3' %}">Shop Three</a></li>
-                <li><a href="{% url 'cart' %}">Cart</a></li>
-                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                <li><a href="{% url 'shop-details' %}">Shop Single</a></li>
+                <li><a href="{% url 'TestDrive:TestDrive_creation' %}">Book Test Drive</a></li>
+                <li><a href="{% url 'TestDrive:liste_testdrive' %}">View History</a></li>
             </ul>
         </li>
-        <li class="main-nav"><a class="main-menu" href="{% url 'contact' %}">Contact</a></li>
+        <li class="main-nav"><a class="main-menu" href="{% url 'reviews:list' %}">Reviews</a></li>
     </ul>
 </div>

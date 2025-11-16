@@ -1,0 +1,138 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}Reviews Management{% endblock %}
+{% block page_title %}Reviews Management{% endblock %}
+{% block breadcrumb_leaf %}Reviews{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'admin_themes/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'admin_themes/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'admin_themes/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">All Reviews</h4>
+      </div>
+      <div class="card-body">
+
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+        {% endif %}
+
+        <table id="reviews-datatable" class="table table-bordered dt-responsive nowrap w-100">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>User</th>
+              <th>Rating</th>
+              <th>Description</th>
+              <th>Image</th>
+              <th>Date Review</th>
+              <th>Date Joined</th>
+              <th>Status</th>
+              <th>Comments</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% with rows=page_obj|default:reviews %}
+            {% if rows %}
+              {% for review in rows %}
+              <tr>
+                <td>{{ review.id }}</td>
+                <td>{{ review.titre }}</td>
+                <td>{{ review.user.first_name }} {{ review.user.last_name }}</td>
+                <td><span class="badge bg-success">{{ review.note }}/5</span></td>
+                <td>{{ review.description|truncatewords:10 }}</td>
+                <td>
+                  {% if review.image %}
+                    <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="img-thumbnail" style="max-width:50px;max-height:50px">
+                  {% else %}
+                    <span class="text-muted">No image</span>
+                  {% endif %}
+                </td>
+                <td>{{ review.date_review|date:"Y-m-d" }}</td>
+                <td>{{ review.date_joined|date:"Y-m-d H:i" }}</td>
+                <td>
+                  {% if review.is_approved %}
+                    <span class="badge bg-success">Approved</span>
+                  {% else %}
+                    <span class="badge bg-warning">Pending</span>
+                  {% endif %}
+                </td>
+                <td>{{ review.commentaires.count }}</td>
+                <td class="text-end">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    <!-- View -->
+                    <a href="{% url 'reviews:backoffice_review_detail' review.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="View">
+                      <i class="mdi mdi-eye-outline text-primary fs-14"></i>
+                    </a>
+                    <!-- Edit (optionnel si route existe) -->
+
+                    <!-- Delete -->
+
+                    <!-- Approve/Disapprove actions are handled in detail view -->
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="11" class="text-center text-muted py-4">No reviews.</td></tr>
+            {% endif %}
+            {% endwith %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'admin_themes/assets/libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'admin_themes/assets/libs/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+
+<script>
+  // Tooltips
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+  // DataTable
+  $(document).ready(function () {
+    $("#reviews-datatable").DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false,
+      pageLength: 25,
+      order: [[7, "desc"]], // tri par Date Joined
+      dom: "Bfrtip",
+      buttons: ["copy", "csv", "excel", "pdf", "print"],
+      language: {
+        search: "Search:",
+        lengthMenu: "Show _MENU_ entries",
+        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+        infoEmpty: "No entries found",
+        infoFiltered: "(filtered from _MAX_ total entries)",
+      },
+    });
+  });
+</script>
+{% endblock %}

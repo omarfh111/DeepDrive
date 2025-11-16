@@ -7,15 +7,18 @@
                 <div class="left d-flex align-items-center">
                     <div class="map-area">
                         <i class="rt-icon-phone-flip"></i>
-                        <a href="callto:12505550199">+12505550199</a>
+                        <a href="callto:++21652340781">+21652340781</a>
                     </div>
                     <div class="map-area">
                         <i class="rt-icon-envelope"></i>
-                        <a href="mailto:Autovault@gmail.com">Autovault@gmail.com</a>
+                        <a href="mailto:DeepDrive@gmail.com">DeepDrive@gmail.com</a>
                     </div>
                     <div class="map-area">
                         <i class="rt-icon-marker"></i>
-                        <a href="#">280 Augusta Avenue, M5T 2L9 Toronto, Canada</a>
+                        <a href="#">El Ghazala Technopark,
+Pôle Technologique El Ghazala,
+Ariana 2088,
+Tunisia</a>
                     </div>
                 </div>
                 <div class="right">
@@ -37,7 +40,7 @@
                     <div class="header-wrapper-1">
                         <div class="logo-area-start">
                             <a href="{% url 'index' %}" class="logo">
-                                <img src="{% static 'images/logo/logo.svg' %}" width="99" alt="logo_area">
+                                <img src="{% static 'admin_themes/assets/images/deepdrive-removebg.png' %}" alt="logo_area" style="height: auto; width: 200px; display: block;">
                             </a>
                         </div>
                         <div class="header-right d-block">
@@ -63,33 +66,7 @@
                                             Sign In
                                         </a>
                                         {% endif %}
-                                   {# --- bouton Marché (visible seulement si partenaire approuvé) --- #}
-                                    {% if user.is_authenticated and user.partenariat.status == 'approved' %}
-                                    <a href="{% url 'vehicles:liste_voitures' %}"
-                                        class="rts-btn btn-primary radius-small icon btn-compact"
-                                        title="Passer un marché">
-                                        <i class="fa fa-shopping-cart me-1"></i> Passer un marché
-                                    </a>
-                                    {% endif %}
-                                    {# --- bouton Partenariat (toujours visible) --- #}
-                                    <a href="{% url 'deals:partenariat_create' %}" class="rts-btn btn-primary radius-small icon btn-compact" title="Créer une demande de partenariat">
-                                        <i class="fa fa-handshake-o me-1"></i> Devenir partenaire
-                                    </a>
-                                    {% if user.is_authenticated and user.partenariat.status == 'approved' %}
-                                    <a href="{% url 'deals:mes_marches' %}"
-                                        class="rts-btn btn-secondary radius-small icon btn-compact">
-                                        <i class="fa fa-list me-1"></i> Mes marchés
-                                    </a>
-                                    {% endif %}
-
-
-                                    {# --- bouton Back Office : visible seulement pour staff --- #}
-                                    {% if user.is_authenticated and user.is_staff %}
-                                        {# Si tu as un hub back: deals:admin_hub ; sinon l'admin Django #}
-                                        <a href="{% url 'deals:admin_hub' %}" class="rts-btn btn-border radius-small icon btn-compact" title="Back office">
-                                        <i class="fa fa-gauge me-1"></i> Back Office
-                                        </a>
-                                    {% endif %}
+                                   
                                     </div>
                                     <div class="menu-btn radius-small" id="menu-btn">
                                         <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">

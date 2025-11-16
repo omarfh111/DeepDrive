@@ -1,0 +1,126 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Voitures | Dusty{% endblock %}
+{% block page_title %}Voitures{% endblock %}
+{% block breadcrumb_leaf %}Gestion des voitures{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+
+      <!-- Header -->
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des voitures</h5>
+          
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body p-0">
+        {% with cars=page_obj|default:posts %}
+          {% if cars %}
+          <div class="table-responsive table-centered mt-0">
+            <table class="table table-centered table-nowrap table-hover mb-0">
+              <thead>
+                <tr>
+                  <th class="ps-3">Image</th>
+                  <th>Marque</th>
+                  <th>Modèle</th>
+                  <th>Année</th>
+                  <th>Prix</th>
+                  <th>Énergie</th>
+                  <th class="text-end pe-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in cars %}
+                <tr>
+                  <td class="ps-3" style="width:120px;">
+                    {% if post.image %}
+                      <img src="{{ post.image.url }}" alt="{{ post.marque }}" class="img-fluid rounded-2" style="max-height:80px;">
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                  <td class="fw-medium">{{ post.marque }}</td>
+                  <td>{{ post.modele }}</td>
+                  <td>{{ post.year }}</td>
+                  <td>{{ post.price }}&nbsp;DT</td>
+                  <td>
+                    {% if post.energy %}
+                      <span class="badge bg-primary-subtle text-primary fw-medium px-3 py-1 rounded-4">{{ post.energy }}</span>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end align-middle pe-3">
+                    <div class="d-inline-flex align-items-center gap-1">
+                      <a href="{% url 'posts:admin_update_post' post.id %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
+                        <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
+                      </a>
+                      <a href="{% url 'posts:admin_delete_car' post.id %}" class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer" onclick="return confirm('Supprimer cette voiture ?');">
+                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">Aucune voiture trouvée.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          {% if cars.paginator and cars.paginator.num_pages > 1 %}
+          <div class="card-footer">
+            <nav aria-label="Pagination">
+              <ul class="pagination mb-0 justify-content-end">
+                {% if cars.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ cars.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">«</a>
+                </li>
+                {% endif %}
+                <li class="page-item disabled">
+                  <span class="page-link">Page {{ cars.number }} / {{ cars.paginator.num_pages }}</span>
+                </li>
+                {% if cars.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ cars.next_page_number }}{% if q %}&q={{ q }}{% endif %}">»</a>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+          {% endif %}
+
+          {% else %}
+            <div class="p-4">
+              <div class="alert alert-warning text-center mb-0">
+                Aucune voiture disponible. <a href="{% url 'posts:admin_add_car' %}" class="alert-link">Ajouter maintenant</a>.
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.bootstrap) {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    }
+    if (window.feather) feather.replace();
+  });
+</script>
+{% endblock %}

@@ -1,6 +1,8 @@
 # deals/forms.py
 from django import forms
-from .models import Partenariat
+from django.core.validators import RegexValidator
+from .models import Partenariat, Marche
+
 
 class DustyFormMixin:
     """Ajoute les classes Bootstrap/Dusty aux widgets sans widget-tweaks/crispy."""
@@ -28,7 +30,68 @@ class DustyFormMixin:
             if name == "detail_societe" and isinstance(w, forms.Textarea):
                 w.attrs.setdefault("rows", 4)
 
+
+# =========================
+#  FORM PARTENARIAT (FRONT)
+# =========================
 class PartenariatCreateForm(DustyFormMixin, forms.ModelForm):
+    # On OVERRIDE certains champs du modèle pour les rendre obligatoires
+    nom_societe = forms.CharField(
+        label="Nom de la société",
+        max_length=150,
+        required=True,
+        error_messages={
+            "required": "Le nom de la société est obligatoire.",
+        },
+    )
+    email = forms.EmailField(
+        label="Email",
+        required=True,
+        error_messages={
+            "required": "L’e-mail est obligatoire.",
+            "invalid": "Veuillez saisir un e-mail valide.",
+        },
+    )
+    telephone = forms.CharField(
+        label="Téléphone",
+        required=True,
+        validators=[
+            RegexValidator(
+                regex=r"^\+216[0-9 ]{8,}$",
+                message="Le numéro doit commencer par +216 et contenir au moins 8 chiffres.",
+            )
+        ],
+        error_messages={
+            "required": "Le téléphone est obligatoire.",
+        },
+    )
+    nom_ceo = forms.CharField(
+        label="Nom du CEO",
+        required=True,
+        error_messages={
+            "required": "Le nom du CEO est obligatoire.",
+        },
+    )
+    date_partenariat = forms.DateField(
+        label="Date du partenariat",
+        required=True,
+        widget=forms.DateInput(attrs={"type": "date"}),
+        error_messages={
+            "required": "La date du partenariat est obligatoire.",
+        },
+    )
+    plafond = forms.DecimalField(
+        label="Plafond (TND)",
+        required=True,
+        min_value=0,
+        decimal_places=2,
+        error_messages={
+            "required": "Le plafond est obligatoire.",
+            "min_value": "Le plafond doit être positif.",
+        },
+        widget=forms.NumberInput(attrs={"step": "0.01", "min": "0"}),
+    )
+
     class Meta:
         model = Partenariat
         fields = [
@@ -36,27 +99,33 @@ class PartenariatCreateForm(DustyFormMixin, forms.ModelForm):
             "nom_ceo", "date_partenariat",
             "detail_societe", "plafond",
         ]
-        widgets = {
-            "date_partenariat": forms.DateInput(attrs={"type": "date"}),
-            "plafond": forms.NumberInput(attrs={"step": "0.01", "min": "0"}),
-        }
 
     def clean(self):
         cleaned = super().clean()
+
+        # strip des strings
         for name in ["nom_societe", "email", "telephone", "nom_ceo", "detail_societe"]:
             v = cleaned.get(name)
             if isinstance(v, str):
                 cleaned[name] = v.strip() or None
+
+        # Vérif supplémentaire si besoin : date non vide (normalement géré par field.required)
         if not cleaned.get("date_partenariat"):
-            cleaned["date_partenariat"] = None
+            self.add_error("date_partenariat", "La date du partenariat est obligatoire.")
+
         return cleaned
 
     def clean_plafond(self):
         v = self.cleaned_data.get("plafond")
-        if v in (None, ""): return None
-        if v < 0: raise forms.ValidationError("Le plafond doit être positif.")
+        # min_value gère déjà le cas < 0, mais on ajoute un message au cas où
+        if v is not None and v < 0:
+            raise forms.ValidationError("Le plafond doit être positif.")
         return v
 
+
+# =======================
+#  FORM PARTENARIAT ADMIN
+# =======================
 class PartenariatAdminForm(DustyFormMixin, forms.ModelForm):
     class Meta:
         model = Partenariat
@@ -67,20 +136,20 @@ class PartenariatAdminForm(DustyFormMixin, forms.ModelForm):
         widgets = {
             "date_partenariat": forms.DateInput(attrs={"type": "date"}),
             "plafond": forms.NumberInput(attrs={"step": "0.01", "min": "0"}),
-            # (les autres recevront leurs classes via DustyFormMixin)
         }
 
     def clean_plafond(self):
         v = self.cleaned_data.get("plafond")
-        if v in (None, ""): return None
-        if v < 0: raise forms.ValidationError("Le plafond doit être positif.")
+        if v in (None, ""):
+            return None
+        if v < 0:
+            raise forms.ValidationError("Le plafond doit être positif.")
         return v
-#Marche
 
-# deals/forms.py
-from django import forms
-from .models import Marche
 
+# ==========
+#  MARCHE
+# ==========
 class MarcheCreateForm(forms.ModelForm):
     class Meta:
         model = Marche
@@ -93,6 +162,12 @@ class MarcheCreateForm(forms.ModelForm):
         self.voiture = kwargs.pop("voiture", None)
         self.partenaire = kwargs.pop("partenaire", None)
         super().__init__(*args, **kwargs)
+
+    def clean_quantite(self):
+        q = self.cleaned_data.get("quantite")
+        if q is None or q <= 0:
+            raise forms.ValidationError("La quantité doit être un entier positif.")
+        return q
 
     def clean(self):
         cleaned = super().clean()
@@ -116,9 +191,11 @@ class MarcheCreateForm(forms.ModelForm):
         # Ici tout est déjà posé sur self.instance
         obj = super().save(commit=False)
         if commit:
-            obj.full_clean()  # ok maintenant
+            obj.full_clean()  # ok maintenant avec quantite + contraintes modèle
             obj.save()
         return obj
+
+
 class AdminMarcheForm(forms.ModelForm):
     class Meta:
         model = Marche

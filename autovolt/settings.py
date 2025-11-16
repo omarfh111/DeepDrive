@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+import certifi
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +46,12 @@ INSTALLED_APPS = [
     "user_app",
     'deals',
     'vehicles',
+    'posts',
+    'reviews',
+    'TestDrive',
+    'achats',
+    'services',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -140,13 +149,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_app.User"
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = None
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+STRIPE_SECRET_KEY = "sk_test_51SRag7DU2Akojx7VAI9ZbOLJTHu7KkXUaGgLkLiJtm2FcYrz8HrqbUv1iq20yYCg2hjMm6FSnnTkJBYNN6wriEUo00wYLB6jqX"
+STRIPE_PUBLIC_KEY = "pk_test_51SRag7DU2Akojx7VyG0tPGiKb3JkfS64NmhmArV2ad89sEigE05Ji2JlEXKQGojSmabZDIhp5ZwmIvq2y6wdmh8w007kZLLNmn"
+STRIPE_WEBHOOK_SECRET = ""  # optional until you set webhook
+STRIPE_CURRENCY = "usd"  # Stripe doesn't support TND in Checkout; use usd/eur for tests
 
-# 👉 Forcer Python/OpenSSL à utiliser le bundle certifi (évite les CA cassés Windows/antivirus)
-import os, certifi
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
-# Dev seulement
+
 EMAIL_BACKEND = "deals.backends.UnverifiedTLSBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587

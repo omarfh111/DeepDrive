@@ -1,6 +1,6 @@
 Bonjour {{ societe }},
 
-Votre marché (#{{ id_marche }}) a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.
+Votre marché a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.
 
 Détails du marché :
 - Voiture : {{ voiture }}
