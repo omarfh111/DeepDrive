@@ -93,7 +93,6 @@ def review_detail(request, pk):
             commentaire.user = request.user
             commentaire.review = review
             commentaire.save()
-            messages.success(request, 'Votre commentaire a été ajouté avec succès!')
             return redirect('reviews:detail', pk=pk)
     
     context = {
@@ -117,7 +116,6 @@ def add_review(request):
             review = form.save(commit=False)
             review.user = request.user
             review.save()
-            messages.success(request, 'Votre avis a été ajouté avec succès!')
             return redirect('reviews:detail', pk=review.pk)
     else:
         form = ReviewForm()
@@ -142,7 +140,6 @@ def edit_review(request, pk):
         form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Votre avis a été modifié avec succès!')
             return redirect('reviews:detail', pk=pk)
     else:
         form = ReviewForm(instance=review)
@@ -166,7 +163,6 @@ def delete_review(request, pk):
     
     if request.method == 'POST':
         review.delete()
-        messages.success(request, 'Votre avis a été supprimé.')
         return redirect('reviews:list')
     
     context = {
@@ -203,7 +199,6 @@ def edit_comment(request, pk):
         form = CommentaireForm(request.POST, instance=commentaire)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Votre commentaire a été modifié!')
             return redirect('reviews:detail', pk=commentaire.review.pk)
     else:
         form = CommentaireForm(instance=commentaire)
@@ -227,7 +222,6 @@ def delete_comment(request, pk):
     
     if request.method == 'POST':
         commentaire.delete()
-        messages.success(request, 'Votre commentaire a été supprimé.')
         return redirect('reviews:detail', pk=review_pk)
     
     context = {
@@ -299,20 +293,17 @@ def backoffice_review_detail(request, pk):
         if 'toggle_approval' in request.POST:
             review.is_approved = not review.is_approved
             review.save()
-            messages.success(request, f'Review {"approved" if review.is_approved else "disapproved"} successfully.')
             return redirect('reviews:backoffice_review_detail', pk=pk)
         
         # Handle delete
         if 'delete' in request.POST:
             review.delete()
-            messages.success(request, 'Review deleted successfully.')
             return redirect('reviews:reviews_backreviews_list')
         
         # Handle edit
         form = ReviewForm(request.POST, request.FILES, instance=review)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Review updated successfully.')
             return redirect('reviews:backoffice_review_detail', pk=pk)
     else:
         form = ReviewForm(instance=review)
@@ -354,20 +345,17 @@ def backoffice_commentaire_detail(request, pk):
         if 'toggle_approval' in request.POST:
             commentaire.is_approved = not commentaire.is_approved
             commentaire.save()
-            messages.success(request, f'Comment {"approved" if commentaire.is_approved else "disapproved"} successfully.')
             return redirect('reviews:backoffice_commentaire_detail', pk=pk)
         
         # Handle delete
         if 'delete' in request.POST:
             commentaire.delete()
-            messages.success(request, 'Comment deleted successfully.')
             return redirect('reviews:reviews_commentaires_list')
         
         # Handle edit
         form = CommentaireForm(request.POST, instance=commentaire)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Comment updated successfully.')
             return redirect('reviews:backoffice_commentaire_detail', pk=pk)
     else:
         form = CommentaireForm(instance=commentaire)

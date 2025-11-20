@@ -32,7 +32,7 @@ class Partenariat(models.Model):
 
     plafond = models.DecimalField(
         max_digits=12,
-        decimal_places=2,
+        decimal_places=3,
         validators=[MinValueValidator(Decimal("0.00"))],
         blank=True,
         null=True
@@ -150,6 +150,24 @@ class Marche(models.Model):
         if self.voiture_id is None:
             non_field_errors.append("La voiture est requise pour créer un marché.")
 
+        # 🔹🔹 NOUVEAU : calcul du coût total + comparaison au plafond 🔹🔹
+        if self.partenaire_id and self.prix_unitaire is not None and self.quantite is not None:
+            # coût total du marché
+            total = (self.prix_unitaire or Decimal('0')) * Decimal(self.quantite or 0)
+
+            # plafond du partenariat (0 si None grâce à plafond_effectif)
+            plafond = getattr(self.partenaire, "plafond_effectif", None)
+            if plafond is None:
+                plafond = Decimal("0.00")
+
+            # si un plafond est défini (> 0) et que le total le dépasse => on refuse
+            if plafond > Decimal("0.00") and total > plafond:
+                non_field_errors.append(
+                    f"Le coût total du marché ({total} TND) dépasse le plafond autorisé ({plafond} TND)."
+                )
+
+        # -----------------------------------------
+
         if field_errors and non_field_errors:
             raise ValidationError({**field_errors, '__all__': non_field_errors})
         if field_errors:
@@ -166,3 +184,11 @@ class Marche(models.Model):
 
     def __str__(self):
         return f"Marche #{self.id} - {self.partenaire} / {self.voiture} x{self.quantite}"
+    @property
+    def depasse_plafond(self):
+        if not self.partenaire_id:
+            return False
+        plafond = self.partenaire.plafond_effectif
+        if plafond <= Decimal("0.00"):
+            return False
+        return self.total_prix > plafond

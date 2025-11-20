@@ -84,7 +84,6 @@ def delete_car(request, pk, backoffice=False):
     
     if request.method == 'POST':
         car.delete()
-        messages.success(request, "Annonce supprimée.")
         return redirect('posts:admin_portfolio' if backoffice else 'posts:portfolio')
     return render_template(request, template, {'car': car}, backoffice)
 

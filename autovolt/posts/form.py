@@ -79,5 +79,5 @@ class PostForm(DustyFormMixin, forms.ModelForm):
             "nb_proprietes": forms.NumberInput(),
             "price": forms.NumberInput(attrs={"step": "0.01", "min": "0"}),
             # Utiliser FileInput (et non ClearableFileInput) pour éviter "Currently / Change"
-            "image": forms.FileInput(attrs={"accept": "image/*"}),
+            "image": forms.FileInput(attrs={"accept": "image/png",'required': True}),
         }

@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+  .input-error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, .25);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+</style>
+
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
     {% include 'partials/header/header-three.html' %}
@@ -15,18 +23,13 @@
           <div class="ms-sp--header container">
             <h2 class="title">Passer un marché</h2>
           </div>
-          <div class="woocommerce-notices-wrapper">
-            {% for message in messages %}
-              <div class="woocommerce-message">{{ message }}</div>
-            {% endfor %}
+            <div class="woocommerce-notices-wrapper">
+              {% for message in messages %}
+                <div class="woocommerce-message">{{ message }}</div>
+              {% endfor %}
+            </div>
 
-            {# <<< AJOUTE CECI pour voir les erreurs de clean() >>> #}
-            {% if form.non_field_errors %}
-              <div class="woocommerce-error">
-                {{ form.non_field_errors|join:", " }}
-              </div>
-            {% endif %}
-          </div>
+
 
           <div class="ms-default-page container entry-content">
             <div class="woocommerce">
@@ -37,6 +40,20 @@
                 {% if not partenaire_approved %}
                   <div class="woocommerce-error">Votre partenariat doit être <b>approuvé</b> pour créer un marché.</div>
                 {% endif %}
+                {# 🔴 Erreur serveur de validation du marché #}
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger alert-auto mt-3 mb-4 shadow-sm d-flex align-items-center" role="alert">
+                    <div class="me-3 d-flex align-items-center justify-content-center rounded-circle"
+                        style="width: 34px; height: 34px; background-color: #ffe5e5; color: #dc3545; font-weight: 700;">
+                      !
+                    </div>
+                    <div>
+                      <strong>Impossible de valider ce marché.</strong><br>
+                      {{ form.non_field_errors|join:" " }}
+                    </div>
+                  </div>
+                {% endif %}
+
               </div>
 
               <form method="post" class="checkout woocommerce-checkout ms-woocommerce-checkout" novalidate>
@@ -76,11 +93,15 @@
                           <div class="checkout-title mt-30"><h3>Quantité</h3></div>
                           <div class="row">
                             <div class="col-md-6">
-                              <div class="form-group">
-                                <label>Quantité *</label>
-                                {{ form.quantite }}
-                                {% if form.quantite.errors %}<small class="text-danger">{{ form.quantite.errors.0 }}</small>{% endif %}
-                              </div>
+                          <div class="form-group">
+                            <label>Quantité *</label>
+                            {{ form.quantite }}
+                            <small class="text-muted">Entier strictement positif (1, 2, 3, ...).</small>
+                            {% if form.quantite.errors %}
+                              <small class="text-danger d-block mt-1">{{ form.quantite.errors.0 }}</small>
+                            {% endif %}
+                          </div>
+
                             </div>
                           </div>
 
@@ -132,22 +153,45 @@
 </div>
 
 <script>
-(function(){
-  function toNumber(v){ var n = parseFloat((v||"").toString().replace(",", ".")); return isNaN(n)?0:n; }
-  function update(){
-    var q = toNumber(document.getElementById("id_quantite").value);
-    var p = toNumber(document.getElementById("prixUnitaire").value);
-    var t = toNumber(document.getElementById("taux").value);
-    var total = p * q;
-    var rent  = total * (t/100.0);
-    document.getElementById("totalAff").value = total.toFixed(3);
-    document.getElementById("rentAff").value  = rent.toFixed(3);
+document.addEventListener("DOMContentLoaded", function () {
+  const qInput    = document.getElementById("id_quantite");
+  const prixInput = document.getElementById("prixUnitaire");
+  const tauxInput = document.getElementById("taux");
+  const totalAff  = document.getElementById("totalAff");
+  const rentAff   = document.getElementById("rentAff");
+
+  // Si un des champs est introuvable, on arrête
+  if (!qInput || !prixInput || !tauxInput || !totalAff || !rentAff) {
+    console.log("Un élément est introuvable, vérifie les IDs.");
+    return;
   }
-  document.addEventListener("input", function(e){
-    if(e.target && e.target.id === "id_quantite"){ update(); }
-  });
-  // init
-  update();
-})();
+
+  function toNumber(v) {
+    const n = parseFloat(String(v || "").replace(",", "."));
+    return isNaN(n) ? 0 : n;
+  }
+
+  function recalc() {
+    const q = toNumber(qInput.value);
+    const p = toNumber(prixInput.value);
+    const t = toNumber(tauxInput.value);
+
+    const total = p * q;
+    const rent  = total * (t / 100.0);
+
+    totalAff.value = total.toFixed(3);
+    rentAff.value  = rent.toFixed(3);
+  }
+
+  // 1️⃣ Calcul au chargement (quand la page s’ouvre)
+  recalc();
+
+  // 2️⃣ Calcul à chaque changement de quantité
+  qInput.addEventListener("input", recalc);
+  qInput.addEventListener("change", recalc);
+});
 </script>
+
+
+
 {% endblock content %}

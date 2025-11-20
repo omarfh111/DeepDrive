@@ -31,13 +31,10 @@ def service_list(request):
             service = form.save(commit=False)
             service.client = request.user
             service.save()
-            print(f"✅ Service créé : {service.nom_service}")
-            messages.success(request, f"✅ Service '{service.nom_service}' ajouté avec succès !")
             return redirect("services:service_list")
         else:
             print("❌ Erreurs dans le formulaire:")
             print(form.errors)
-            messages.error(request, "❌ Erreur lors de l'ajout. Vérifiez les champs.")
     else:
         form = ServiceForm()
     
@@ -68,12 +65,8 @@ def service_update(request, pk):
         form = ServiceForm(request.POST, request.FILES, instance=service)
         if form.is_valid():
             form.save()
-            print(f"✅ Service {pk} modifié")
-            messages.success(request, f"✅ Service '{service.nom_service}' modifié avec succès !")
             return redirect("services:service_list")
         else:
-            print(f"❌ Erreurs modification : {form.errors}")
-            messages.error(request, "❌ Erreur lors de la modification.")
             return redirect("services:service_list")
     
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -100,7 +93,6 @@ def service_delete(request, pk):
     nom = service.nom_service
     print(f"🗑️ Suppression du service {pk} : {nom}")
     service.delete()
-    messages.success(request, f"🗑️ Service '{nom}' supprimé avec succès !")
     return redirect("services:service_list")
 
 
@@ -157,7 +149,6 @@ def admin_service_create(request):
         form = ServiceForm(request.POST, request.FILES)
         if form.is_valid():
             service = form.save()
-            messages.success(request, f"✅ Service '{service.nom_service}' créé avec succès.")
             return redirect("services:admin_service_list")
     else:
         form = ServiceForm()
@@ -178,7 +169,6 @@ def admin_service_update(request, pk):
         form = ServiceForm(request.POST, request.FILES, instance=service)
         if form.is_valid():
             form.save()
-            messages.success(request, f"✅ Service '{service.nom_service}' mis à jour.")
             return redirect("services:admin_service_list")
     else:
         form = ServiceForm(instance=service)
@@ -199,7 +189,6 @@ def admin_service_delete(request, pk):
     if request.method == "POST":
         nom = service.nom_service
         service.delete()
-        messages.success(request, f"🗑️ Service '{nom}' supprimé.")
         return redirect("services:admin_service_list")
     
     return render(request, "service/admin_confirm_delete.html", {
