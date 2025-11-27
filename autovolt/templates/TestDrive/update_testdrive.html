@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* Styles globaux */
+  form input,
+  form select,
+  form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease-in-out;
+    background-color: #fff;
+  }
+
+  form select {
+    cursor: pointer;
+  }
+
+  form input:focus,
+  form select:focus,
+  form textarea:focus {
+    border-color: #dc3545; /* Rouge au focus */
+    box-shadow: 0 0 6px rgba(220, 53, 69, 0.4);
+    outline: none;
+  }
+
+  form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .form-col {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 280px;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .card {
+    border-radius: 15px;
+  }
+
+  /* TITRE */
+  h2.text-primary {
+    color: #dc3545 !important; /* Rouge */
+    font-family: 'Arial Black', Arial, sans-serif; /* Police plus marquée */
+    font-size: 2.2rem;
+    text-transform: uppercase;
+  }
+
+  /* BOUTON */
+  .btn-primary {
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 25px; /* réduit largeur */
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background-color: #b02a37;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+  }
+
+  .text-danger {
+    font-size: 0.875rem;
+  }
+
+  .status-field {
+    margin-top: 25px;
+  }
+
+  @media (max-width: 768px) {
+    .form-col {
+      flex: 1 1 100%;
+    }
+    form select {
+      width: 100%;
+      transform: none;
+    }
+  }
+</style>
+
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include "partials/header/header-three.html" %}
+    
+    {% with class="service" current="Test Drive" title="Modifier un test drive" %}
+      {% include "partials/elements/breadcrumb.html" %}
+    {% endwith %}
+
+    <div class="container mt-5 mb-5">
+      <div class="card shadow-lg border-0 p-4">
+        <h2 class="mb-4 text-center text-primary">Modification du Test Drive</h2>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="form-row">
+            {% for field in form %}
+              {% if field.name != 'status' %}
+                <div class="form-col">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="text-danger mt-1">{{ field.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="status-field">
+            <label class="form-label fw-semibold">Statut du test drive</label>
+            {% if object.status == "not_done" %}
+              <select name="status" class="form-select">
+                <option value="not_done" selected>En attente</option>
+                <option value="cancelled">Annulé</option>
+              </select>
+            {% else %}
+              <input type="text" value="{{ object.get_status_display }}" readonly class="form-control">
+            {% endif %}
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">
+              Mettre à jour
+            </button>
+            <a href="{% url 'TestDrive:liste_testdrive' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+              Annuler
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

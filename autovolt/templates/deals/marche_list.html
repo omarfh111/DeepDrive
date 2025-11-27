@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container ms-section-gap">
+  <h2>Mes marchés</h2>
+  {% if marches %}
+    <table class="table">
+      <thead>
+        <tr><th>ID</th><th>Voiture</th><th>Qté</th><th>Total</th><th>Rentabilité</th><th>État</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for m in marches %}
+        <tr>
+          <td>#{{ m.id }}</td>
+          <td>{{ m.voiture.marque }} {{ m.voiture.modele }}</td>
+          <td>{{ m.quantite }}</td>
+          <td>{{ m.total_prix }}</td>
+          <td>{{ m.rentabilite_estime }}</td>
+          <td>{{ m.etat }}</td>
+          <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'deals:marche_detail' m.id %}">Détails</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Vous n’avez pas encore de marchés.</p>
+  {% endif %}
+</div>
+{% endblock %}

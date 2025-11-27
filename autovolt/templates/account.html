@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block class %}account-page-body{% endblock class %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="service" current="Account" title="Account" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <!-- Contact Start -->
+            <div class="rts-contact-page-form-area rts-section-gapNew rts-section-gap account">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mian-wrapper-form">
+                                <div class="title-mid-wrapper-home-two sal-animate" data-sal="slide-up" data-sal-delay="150"
+                                    data-sal-duration="800">
+                                    <h3 class="title">Login</h3>
+                                </div>
+                                <form id="contact-form-contact" action="mailer.php" method="post">
+                                    <input type="email" name="email" placeholder="Email Address or Username" required="">
+                                    <input type="text" name="name" placeholder="Password" required="">
+                                    <div class="checkbox">
+                                        <input type="checkbox" value="lsRememberMe" id="rememberMe"> <label
+                                            for="rememberMe">Remember me</label>
+                                    </div>
+                                    <button type="submit" class="rts-btn btn-primary radius-small">Log In</button>
+                                    <div class="forgot-password">
+                                        <a href="#0">Forgot Your Password?</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mian-wrapper-form">
+                                <div class="title-mid-wrapper-home-two sal-animate" data-sal="slide-up" data-sal-delay="150"
+                                    data-sal-duration="800">
+                                    <h3 class="title">Registration</h3>
+                                </div>
+                                <form id="contact-form-contact" action="mailer.php" method="post">
+                                    <input type="text" name="name" placeholder="Your Name" required="">
+                                    <input type="email" name="email" placeholder="Email Address" required="">
+                                    <input type="text" name="name" placeholder="New Password" required="">
+                                    <input type="text" name="name" placeholder="Confirm Password" required="">
+                                    <button type="submit" class="rts-btn btn-primary radius-small">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Contact End -->
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

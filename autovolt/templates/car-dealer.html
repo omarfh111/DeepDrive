@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="portfolio-3" current="Dealer" title="Dealer List" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+            <div class="rts-shop-area inner rts-section-gapTop">
+                <div class="container">
+                    <div class="shop-filter-area">
+                        <p>Showing 1-9 of 19 results</p>
+                        <div class="select-area">
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Sort By Latest</option>
+                                    <option value="10">Top</option>
+                                    <option value="1">Price low to high</option>
+                                    <option value="13">Price high to low</option>
+                                    <option value="14">Best Matching</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row g-5">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/08.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Car Toys</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/09.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Club Car</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/10.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Car Next</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/11.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Ford Mustang</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/12.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Nissan Car</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/13.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Ticket Car Accor Service</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/14.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Be Car Care Aware</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/15.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Neptuno Car S.L</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="dealer-wrapper">
+                                <div class="image-area"><a href="{% url 'car-dealer-details' %}"><img src="{% static 'images/brand/16.webp' %}" alt=""></a>
+                                </div>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'car-dealer-details' %}">Audi Car</a></h6>
+                                    <p>Our call center is available for live support Monday to Friday, 8 am - 4 pm PST.</p>
+                                    <div class="button-area">
+                                        <a href="{% url 'car-dealer-details' %}" class="rts-btn btn-primary radius-small">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="rts-btn load-more-btn btn-border">Load More</a>
+                </div>
+            </div>
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

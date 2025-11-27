@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Facture Marché #{{ marche.id }}</title>
+<style>
+  body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12px; color: #111; }
+  .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 16px; }
+  .brand { font-size: 20px; font-weight: bold; }
+  .meta  { text-align: right; }
+  h2 { margin: 0 0 6px 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { border: 1px solid #ccc; padding: 8px; }
+  th { background: #f3f3f3; text-align: left; }
+  .totals { margin-top: 16px; width: 50%; margin-left: auto; }
+  .totals td { padding: 6px; }
+  .right { text-align: right; }
+  .small { font-size: 11px; color: #666; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">DeepDrive</div>
+    <div class="small">280 Augusta Avenue, Toronto, Canada</div>
+    <div class="small">support@DeepDrive.tn</div>
+  </div>
+  <div class="meta">
+    <h2>Facture marché #{{ marche.id }}</h2>
+    <div><strong>Date :</strong> {{ now|date:"d/m/Y H:i" }}</div>
+    <div><strong>État :</strong> {{ marche.get_etat_display }}</div>
+  </div>
+</div>
+
+<p><strong>Partenaire :</strong> {{ societe }}<br>
+<strong>E-mail :</strong> {{ partenaire.email|default:"—" }}<br>
+<strong>Téléphone :</strong> {{ partenaire.telephone|default:"—" }}</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Voiture</th>
+      <th>Qté</th>
+      <th>Prix unitaire (TND)</th>
+      <th>Total (TND)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ voiture.marque }} {{ voiture.modele }}</td>
+      <td class="right">{{ marche.quantite }}</td>
+      <td class="right">{{ marche.prix_unitaire|floatformat:3 }}</td>
+      <td class="right">{{ marche.total_prix|floatformat:3 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="totals">
+  <tr>
+    <td><strong>Total</strong></td>
+    <td class="right"><strong>{{ marche.total_prix|floatformat:3 }} TND</strong></td>
+  </tr>
+  <tr>
+    <td>Taux de rentabilité</td>
+    <td class="right">{{ marche.taux_rentabilite|floatformat:2 }} %</td>
+  </tr>
+  <tr>
+    <td>Rentabilité estimée</td>
+    <td class="right">{{ marche.rentabilite_estime|floatformat:3 }} TND</td>
+  </tr>
+</table>
+
+<p class="small" style="margin-top: 24px;">
+Facture générée automatiquement par DeepDrive. Cette facture récapitule le marché et ses montants à la date indiquée.
+</p>
+
+</body>
+</html>

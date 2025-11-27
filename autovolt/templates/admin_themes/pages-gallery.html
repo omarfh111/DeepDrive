@@ -1,0 +1,939 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    
+<!-- Mirrored from zoyothemes.com/dusty/html/pages-gallery by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:30:02 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+
+        <meta charset="utf-8" />
+        <title>Gallery | Dusty - Responsive Admin Dashboard Template</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
+        <meta name="author" content="Zoyothemes"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'admin_themes/assets/images/favicon.ico' %}">
+
+        <!-- Glight Box Css -->
+        <link href="{% static 'admin_themes/assets/libs/glightbox/css/glightbox.min.css' %}" rel="stylesheet" type="text/css"/>
+
+        <!-- App css -->
+        <link href="{% static 'admin_themes/assets/css/app.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+
+        <!-- Icons -->
+        <link href="{% static 'admin_themes/assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+
+        <script src="{% static 'admin_themes/assets/js/head.js' %}"></script>
+
+    </head>
+
+    <!-- body start -->
+    <body data-menu-color="dark" data-sidebar="default">
+
+        <!-- Begin page -->
+        <div id="app-layout">
+
+
+            <!-- Topbar Start -->
+            <div class="topbar-custom">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between">
+                        <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+                            <li>
+                                <button class="button-toggle-menu nav-link">
+                                    <i data-feather="menu" class="noti-icon"></i>
+                                </button>
+                            </li>
+                            <li class="d-none d-lg-block">
+                                <form class="app-search d-none d-md-block me-auto">
+                                    <div class="position-relative topbar-search">
+                                        <input type="text" class="form-control ps-4" placeholder="Search..." />
+                                        <iconify-icon icon="solar:minimalistic-magnifer-outline" class="align-middle fs-14 position-absolute text-muted top-50 translate-middle-y ms-2"></iconify-icon>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+
+                        <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+
+                            <li class="dropdown topbar-dropdown">
+                                <a class="nav-link dropdown-toggle me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <img src="{% static 'admin_themes/assets/images/flags/us.svg' %}" alt="user-image img-fluid" class="w-100 rounded-2" height="20" width="20" id="selected-language-image" />
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end profile-dropdown">
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item" data-translator-lang="en">
+                                        <img src="{% static 'admin_themes/assets/images/flags/us.svg' %}" alt="user-image" class="me-1 rounded" height="18" data-translator-image=""> <span class="align-middle">English</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item" data-translator-lang="hi">
+                                        <img src="{% static 'admin_themes/assets/images/flags/in.svg' %}" alt="user-image" class="me-1 rounded" height="18" data-translator-image=""> <span class="align-middle">Hindi</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <img src="{% static 'admin_themes/assets/images/flags/de.svg' %}" alt="user-image" class="me-1 rounded" height="18"> <span class="align-middle">German</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <img src="{% static 'admin_themes/assets/images/flags/ca.svg' %}" alt="user-image" class="me-1 rounded" height="18"> <span class="align-middle">Canada</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <img src="{% static 'admin_themes/assets/images/flags/au.svg' %}" alt="user-image" class="me-1 rounded" height="18"> <span class="align-middle">Australia</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <img src="{% static 'admin_themes/assets/images/flags/ru.svg' %}" alt="user-image" class="me-1 rounded" height="18"> <span class="align-middle">Russian</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <img src="{% static 'admin_themes/assets/images/flags/si.svg' %}" alt="user-image" class="me-1 rounded" height="18"> <span class="align-middle">Italian</span>
+                                    </a>
+                                </div>
+                            </li>
+
+                            <!-- Button Trigger Customizer Offcanvas -->
+                            <li class="d-none d-sm-flex">
+                                <button type="button" class="btn nav-link" data-toggle="fullscreen">
+                                    <iconify-icon icon="solar:minimize-square-outline" class="fs-24 align-middle"></iconify-icon>
+                                </button>
+                            </li>
+
+                            <!-- Light/Dark Mode Button Themes -->
+                            <li class="d-none d-sm-flex">
+                                <button type="button" class="btn nav-link" id="light-dark-mode">
+                                    <iconify-icon icon="solar:moon-outline" class="fs-24 align-middle dark-mode"></iconify-icon>
+                                    <iconify-icon icon="solar:sun-2-outline" class="fs-24 align-middle light-mode"></iconify-icon>
+                                </button>
+                            </li>
+
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                                    aria-haspopup="false" aria-expanded="false">
+                                    <iconify-icon icon="solar:bell-bing-outline" class="fs-24 align-middle light-mode"></iconify-icon>
+                                    <span class="badge bg-danger rounded-circle noti-icon-badge">9</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+                                    <!-- item-->
+                                    <div class="dropdown-item noti-title">
+                                        <h5 class="m-0 fs-16 fw-semibold">
+                                            <span class="float-end"><a href="javascript:void(0);" class="text-dark fs-14"><small class="text-primary">Make all as read</small></a></span>Notification
+                                        </h5>
+                                    </div>
+
+                                    <div class="noti-scroll" data-simplebar>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
+                                            <div class="d-flex align-items-center">
+                                                <div class="notify-icon">
+                                                    <img src="{% static 'admin_themes/assets/images/users/avatar/avatar-3.jpg' %}" class="img-fluid rounded-circle" alt="" />
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <p class="notify-details mb-0">Carl Steadham</p>
+                                                        <iconify-icon icon="solar:record-bold" class="fs-12 text-primary align-middle light-mode"></iconify-icon>
+                                                    </div>
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <p class="text-muted mb-0">Thursday 4:20pm</p>
+                                                        <p class="text-muted mb-0">2 hours ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
+                                            <div class="d-flex align-items-start">
+                                                <div class="notify-icon">
+                                                    <img src="{% static 'admin_themes/assets/images/users/avatar/avatar-5.jpg' %}" class="img-fluid rounded-circle" alt="" />
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <p class="notify-details mb-0">Carl Steadham</p>
+                                                        <iconify-icon icon="solar:record-bold" class="fs-12 text-primary align-middle light-mode"></iconify-icon>
+                                                    </div>
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <p class="text-muted mb-0">Thursday 4:00pm</p>
+                                                        <p class="text-muted mb-0">1 hours ago</p>
+                                                    </div>
+                                                    <div class="p-2 rounded-2 bg-light">
+                                                        <p class="text-dark mb-0">Love the background on this! <br> Would love to learn </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
+                                            <div class="d-flex align-items-center">
+                                                <div class="notify-icon">
+                                                    <img src="{% static 'admin_themes/assets/images/users/avatar/avatar-1.jpg' %}" class="img-fluid rounded-circle" alt="" />
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <p class="notify-details mb-0">Eleanor Mac </p>
+                                                        <iconify-icon icon="solar:record-bold" class="fs-12 text-primary align-middle light-mode"></iconify-icon>
+                                                    </div>
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <p class="text-muted mb-0">Thursday 3:20pm</p>
+                                                        <p class="text-muted mb-0">3 hours ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
+                                            <div class="d-flex align-items-start">
+                                                <div class="notify-icon">
+                                                    <img src="{% static 'admin_themes/assets/images/users/avatar/avatar-7.jpg' %}" class="img-fluid rounded-circle" alt="" />
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <p class="notify-details mb-0">Ollie diggs</p>
+                                                        <iconify-icon icon="solar:record-bold" class="fs-12 text-primary align-middle light-mode"></iconify-icon>
+                                                    </div>
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <p class="text-muted mb-0">Thursday 3:44pm</p>
+                                                        <p class="text-muted mb-0">2 hours ago</p>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-1">
+                                                        <button type="button" class="btn btn-sm bg-white border">Decline</button>
+                                                        <button type="button" class="btn btn-sm btn-primary">Accept</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                    </div>
+
+                                    <!-- All-->
+                                    <a href="javascript:void(0);"
+                                        class="dropdown-item text-center text-primary notify-item notify-all fw-bold border-top border-light">View all
+                                        <i class="fe-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </li>
+
+                            <!-- User Dropdown -->
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button"
+                                    aria-haspopup="false" aria-expanded="false">
+                                    <img src="{% static 'admin_themes/assets/images/users/profile.jpg' %}" alt="user-image" class="rounded-circle" />
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end profile-dropdown">
+                                    <!-- item-->
+                                    <div class="dropdown-header noti-title">
+                                        <h6 class="text-overflow m-0">Welcome Alex!</h6>
+                                    </div>
+
+                                    <!-- item-->
+                                    <a class='dropdown-item notify-item rounded-2' href='pages-profile.html'>
+                                        <iconify-icon icon="solar:shield-user-outline" class="fs-18 align-middle"></iconify-icon>
+                                        <span>Profile</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a class='dropdown-item notify-item rounded-2' href='pages-profile.html'>
+                                        <iconify-icon icon="solar:settings-linear" class="fs-18 align-middle"></iconify-icon>
+                                        <span>Setting</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a class='dropdown-item notify-item rounded-2' href='auth-lock-screen.html'>
+                                        <iconify-icon icon="solar:lock-keyhole-outline" class="fs-18 align-middle"></iconify-icon>
+                                        <span>Lock Screen</span>
+                                    </a>
+
+                                    <!-- item-->
+                                    <a class='dropdown-item notify-item rounded-2' href='auth-logout.html'>
+                                        <iconify-icon icon="solar:login-3-outline" class="fs-18 align-middle"></iconify-icon>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- end Topbar -->
+
+            <!-- Left Sidebar Start -->
+            <div class="app-sidebar-menu">
+                <div class="h-100" data-simplebar>
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+
+                        <div class="logo-box">
+                            <a class='logo logo-light' href='index.html'>
+                                <span class="logo-sm">
+                                    <img src="{% static 'admin_themes/assets/images/logo-sm.png' %}" alt="" height="22">
+                                </span>
+                                <span class="logo-lg">
+                                    <img src="{% static 'admin_themes/assets/images/logo-light.png' %}" alt="" height="24">
+                                </span>
+                            </a>
+                            <a class='logo logo-dark' href='index.html'>
+                                <span class="logo-sm">
+                                    <img src="{% static 'admin_themes/assets/images/logo-sm.png' %}" alt="" height="22">
+                                </span>
+                                <span class="logo-lg">
+                                    <img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="" height="24">
+                                </span>
+                            </a>
+                        </div>
+
+                        <ul id="side-menu">
+
+                            <li class="menu-title">Menu</li>
+
+                            <li>
+                                <a href="#sidebarDashboards" data-bs-toggle="collapse">
+                                    <span class="nav-icon">
+                                        <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
+                                    </span>
+                                    <span> Dashboard </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarDashboards">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='index.html'>Sales</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='analytics.html'>Analytics</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="menu-title mt-2">Apps</li>
+
+                            <li>
+                                <a class='tp-link' href='apps-todolist.html'>
+                                    <span class="nav-icon"><iconify-icon icon="solar:bill-list-bold-duotone"></iconify-icon></span>
+                                    <span> Todo List </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link' href='apps-contacts.html'>
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:shield-user-bold-duotone"></iconify-icon></span>
+                                    <span> Contacts </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link' href='apps-calendar.html'>
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:calendar-minimalistic-bold-duotone"></iconify-icon></span>
+                                    <span> Calendar </span>
+                                </a>
+                            </li>
+
+                            <li class="menu-title">Pages</li>
+
+                            <li>
+                                <a href="#sidebarAuth" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:lock-keyhole-bold-duotone"></iconify-icon></span>
+                                    <span> Authentication </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarAuth">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='auth-login.html'>Log In</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='auth-register.html'>Register</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='auth-recoverpw.html'>Recover Password</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='auth-lock-screen.html'>Lock Screen</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='auth-confirm-mail.html'>Confirm Mail</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='email-verification.html'>Email Verification</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='auth-logout.html'>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarError" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon icon="solar:cpu-bolt-bold-duotone"></iconify-icon></span>
+                                    <span> Error Pages </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarError">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='error-404.html'>Error 404</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='error-500.html'>Error 500</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='error-503.html'>Error 503</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='error-429.html'>Error 429</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='offline-page.html'>Offline Page</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarExpages" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:clipboard-text-bold-duotone"></iconify-icon></span>
+                                    <span> Utility </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarExpages">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='pages-starter.html'>Starter</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-profile.html'>Profile</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-pricing.html'>Pricing</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-timeline.html'>Timeline</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-invoice.html'>Invoice</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-faqs.html'>FAQs</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-gallery.html'>Gallery</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-maintenance.html'>Maintenance</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='pages-coming-soon.html'>Coming Soon</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="menu-title mt-2">General</li>
+
+                            <li>
+                                <a href="#sidebarBaseui" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:compass-square-bold-duotone"></iconify-icon></span>
+                                    <span> Components </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarBaseui">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='ui-accordions.html'>Accordions</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-alerts.html'>Alerts</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-badges.html'>Badges</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-breadcrumb.html'>Breadcrumb</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-buttons.html'>Buttons</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-cards.html'>Cards</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-collapse.html'>Collapse</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-dropdowns.html'>Dropdowns</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-video.html'>Embed Video</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-grid.html'>Grid</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-images.html'>Images</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-list.html'>List Group</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-modals.html'>Modals</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-placeholders.html'>Placeholders</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-pagination.html'>Pagination</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-popovers.html'>Popovers</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-progress.html'>Progress</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-scrollspy.html'>Scrollspy</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-spinners.html'>Spinners</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-tabs.html'>Tabs</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-tooltips.html'>Tooltips</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='ui-typography.html'>Typography</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarWidgetsui" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:box-minimalistic-bold-duotone"></iconify-icon></span>
+                                    <span> Widgets </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarWidgetsui">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='widget-card.html'>Widget Card</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='widget-chart.html'>Widget Chart</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!-- <li>
+                                <a href="widgets.html" class="tp-link">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:box-minimalistic-bold-duotone"></iconify-icon></span>
+                                    <span> Widgets </span>
+                                </a>
+                            </li> -->
+
+                            <li>
+                                <a href="#sidebarAdvancedUI" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:quit-full-screen-square-bold-duotone"></iconify-icon></span>
+                                    <span> Extended UI </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarAdvancedUI">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='extended-carousel.html'>Carousel</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='extended-notifications.html'>Notifications</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='extended-offcanvas.html'>Offcanvas</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='extended-range-slider.html'>Range Slider</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarIcons" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:wind-bold-duotone"></iconify-icon></span>
+                                    <span> Icons </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarIcons">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='icons-feather.html'>Feather Icons</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='icons-mdi.html'>Material Design Icons</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarForms" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:document-add-bold-duotone"></iconify-icon></span>
+                                    <span> Forms </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarForms">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='forms-elements.html'>General Elements</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='forms-validation.html'>Validation</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='forms-quilljs.html'>Quilljs Editor</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='forms-pickers.html'>Picker</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarTables" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon icon="solar:siderbar-bold-duotone"></iconify-icon></span>
+                                    <span> Tables </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarTables">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='tables-basic.html'>Basic Tables</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='tables-datatables.html'>Data Tables</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarCharts" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon
+                                            icon="solar:pie-chart-2-bold-duotone"></iconify-icon></span>
+                                    <span> Apex Charts </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarCharts">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='charts-area.html'>Area</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-bar.html'>Bar</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-boxplot.html'>Boxplot</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-bubble.html'>Bubble</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-candlestick.html'>Candlestick</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-column.html'>Column</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-funnel.html'>Funnel</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-heatmap.html'>Heatmap</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-line.html'>Line</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-mixed.html'>Mixed</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-pie.html'>Pie</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-polararea.html'>Polar</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-radar.html'>Radar</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-radialbar.html'>Radialbar</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-rangearea.html'>Range Area</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-scatter.html'>Scatter</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-timeline.html'>Timeline</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='charts-treemap.html'>Treemap</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a href="#sidebarMaps" data-bs-toggle="collapse">
+                                    <span class="nav-icon"><iconify-icon icon="solar:map-point-bold-duotone"></iconify-icon></span>
+                                    <span> Maps </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse" id="sidebarMaps">
+                                    <ul class="nav-second-level">
+                                        <li>
+                                            <a class='tp-link' href='maps-google.html'>Google Maps</a>
+                                        </li>
+                                        <li>
+                                            <a class='tp-link' href='maps-vector.html'>Vector Maps</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- End Sidebar -->
+         
+                    <div class="clearfix"></div>
+
+                </div>
+            </div>
+            <!-- Left Sidebar End -->
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+         
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+                            <div class="flex-grow-1">
+                                <h4 class="fs-18 fw-semibold m-0">Gallery</h4>
+                            </div>
+            
+                            <div class="text-end">
+                                <ol class="breadcrumb m-0 py-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                    <li class="breadcrumb-item active">Gallery</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/1.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/1.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/2.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/2.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/3.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/3.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/4.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/4.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/5.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/5.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/6.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/6.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/7.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/7.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/8.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/8.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/9.jpg' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/9.jpg' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/10.png' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/10.png' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/11.png' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/11.png' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="card gallery-container gallery-grid position-relative d-block overflow-hidden rounded mb-0">
+                                            <div class="card-body gallery-image p-1 border rounded">
+                                                <a href="{% static 'admin_themes/assets/images/gallery/12.png' %}" class="image-popup d-inline-block">
+                                                    <img src="{% static 'admin_themes/assets/images/gallery/12.png' %}" class="img-fluid" alt="gallery-image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- container-fluid -->
+
+                </div> <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col fs-13 text-muted text-center">
+                                &copy;
+                                <script>document.write(new Date().getFullYear())</script> - Made with <span
+                                    class="mdi mdi-heart text-danger"></span> by <a href="#!"
+                                    class="text-reset fw-semibold">Zoyothemes</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+        <!-- Vendor -->
+        <script src="{% static 'admin_themes/assets/libs/jquery/jquery.min.js' %}"></script>
+
+        <script src="{% static 'admin_themes/assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/iconify-icon/iconify-icon.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/simplebar/simplebar.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/node-waves/waves.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+        <script src="{% static 'admin_themes/assets/libs/feather-icons/feather.min.js' %}"></script>
+
+        <!-- Glight Box js -->
+        <script src="{% static 'admin_themes/assets/libs/glightbox/js/glightbox.min.js' %}"></script>
+
+        <!-- glight box init -->
+        <script src="{% static 'admin_themes/assets/js/pages/glightbox.init.js' %}"></script>
+
+        <!-- App js-->
+        <script src="{% static 'admin_themes/assets/js/app.js' %}"></script>
+        
+    </body>
+
+<!-- Mirrored from zoyothemes.com/dusty/html/pages-gallery by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 01 Nov 2025 19:30:17 GMT -->
+</html>
+

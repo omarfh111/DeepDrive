@@ -1,0 +1,214 @@
+// Breadcrumb Style
+.rts-breadcrumb-area{
+    position: relative;
+    z-index: 1;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 180px 0;
+    &::after{
+        content: '';
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(#050B20, $alpha: 0.7);
+    }
+    &.portfolio,
+    &.blog-details{
+        background: url(../images/breadcrumb/portfolio-breadcrumb.webp);
+    }
+    &.portfolio-2,
+    &.shop{
+        background: url(../images/breadcrumb/portfolio-breadcrumb2.webp);
+    }
+    &.portfolio-3{
+        background: url(../images/breadcrumb/portfolio-breadcrumb3.webp);
+    }
+    &.service{
+        background: url(../images/banner/banner-bg-01.webp);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    &.details{
+        padding: 160px 0;
+    }
+    .left{
+        ul{
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 15px;
+            li{
+                display: flex;
+                gap: 6px;
+                color: var(--color-white);
+                font-weight: 400;
+            }
+        }
+    }
+    &.portfolio-details2{
+        height: auto;
+        padding: 90px 0 50px;
+        &::after{
+            display: none;
+        }
+        .breadcrumb-area-wrapper{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .left{
+                .nav-bread-crumb{
+                    justify-content: start;
+                    &::after{
+                        display: none;
+                    }
+                    a{
+                        color: var(--color-heading-1);
+                        &:last-child::after{
+                            background: var(--color-primary);
+                        }
+                    }
+                }
+            }
+            .title{
+                color: var(--color-heading-1);
+            }
+            .feature-area{
+                li{
+                    color: var(--color-body);
+                }
+                &.dealer{
+                    margin-top: 30px;
+                    li{
+                        a{
+                            color: var(--color-body);
+                        }
+                    }
+                }
+            }
+            .price-area{
+                text-align: end;
+                ul{
+                    display: flex;
+                    align-items: center;
+                    gap: 35px;
+                }
+            }
+        }
+        .brand-image-area{
+            margin-top: 50px;
+            border-radius: 6px;
+            padding: 30px;
+            border: 1px solid rgba(#555555, $alpha: .15);
+        }
+    }
+    &.blog-details{
+        padding-top: 80px;
+        .breadcrumb-area-wrapper{
+            display: block;
+            text-align: center;
+            p{
+                color: var(--color-white);
+                font-size: 18px;
+                line-height: 1;
+                font-weight: 300;
+                margin-bottom: 15px;
+            }
+            .author-area{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 20px;
+                .image{
+                    img{
+                        width: 26px;
+                    }
+                }
+                ul{
+                    display: flex;
+                    align-items: center;
+                    gap: 7px;
+                    margin: 0;
+                    li{
+                        &:last-child{
+                            padding-left: 13px;
+                            position: relative;
+                            z-index: 1;
+                            &::after{
+                                position: absolute;
+                                content: '';
+                                width: 6px;
+                                height: 6px;
+                                border-radius: 50%;
+                                background: var(--color-primary);
+                                left: 0;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                z-index: -1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.breadcrumb-area-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title{
+        color: var(--color-white);
+        margin-bottom: 0;
+    }
+    .nav-bread-crumb{
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 55px;
+        &::after{
+            content: '';
+            position: absolute;
+            z-index: -1;
+            width: 308px;
+            height: 308px;
+            border-radius: 50%;
+            background: rgba( #FF3600, $alpha: .18);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        a{
+            color: var(--color-white);
+            font-size: 20px;
+            line-height: 1;
+            padding: 0 8px;
+            position: relative;
+            z-index: 1;
+            &:last-child{
+                padding-left: 14px;
+                &::after{
+                    content: '';
+                    position: absolute;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: var(--color-white);
+                    top: 50%;
+                    left: 0;
+                    transform: translateY(-50%);
+                    z-index: 1;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include 'partials/header/header-three.html' %}
+
+    {% with class="service" current="Partenariat" title="Créer un partenariat" %}
+      {% include 'partials/elements/breadcrumb.html' %}
+    {% endwith %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="ms-page-content">
+        <article class="page checkout-area type-page status-publish hentry">
+          <div class="ms-sp--header container">
+            <h2 class="title">Demande de Partenariat</h2>
+          </div>
+
+          <div class="ms-default-page container entry-content">
+            <div class="woocommerce">
+              <div class="woocommerce-notices-wrapper">
+              </div>
+
+              <form method="post" class="checkout woocommerce-checkout ms-woocommerce-checkout">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="full-grid">
+                      <div class="billing-fields">
+                        <div class="checkout-title"><h3>Informations Société</h3></div>
+                        <div class="form-content-box">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label>Nom de la société *</label>
+                                {{ form.nom_societe }}
+                                {% if form.nom_societe.errors %}<small class="text-danger">{{ form.nom_societe.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Email *</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}<small class="text-danger">{{ form.email.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Téléphone *</label>
+                                {{ form.telephone }}
+                                {% if form.telephone.errors %}<small class="text-danger">{{ form.telephone.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Nom du CEO *</label>
+                                {{ form.nom_ceo }}
+                                {% if form.nom_ceo.errors %}<small class="text-danger">{{ form.nom_ceo.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Date du partenariat *</label>
+                                {{ form.date_partenariat }}
+                                {% if form.date_partenariat.errors %}<small class="text-danger">{{ form.date_partenariat.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label>Détails (optionnel)</label>
+                                {{ form.detail_societe }}
+                                {% if form.detail_societe.errors %}<small class="text-danger">{{ form.detail_societe.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Plafond (TND) *</label>
+                                {{ form.plafond }}
+                                {% if form.plafond.errors %}<small class="text-danger">{{ form.plafond.errors.0 }}</small>{% endif %}
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Statut initial</label>
+                                <input class="form-control-mod" type="text" value="pending" disabled>
+                                <small class="d-block">Votre demande sera revue par l’admin.</small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="payment-method mt-40 md-mt-20">
+                        <div class="bottom-area">
+                          <p class="mt-15">En soumettant, vous acceptez notre politique de confidentialité.</p>
+                          <button class="add-btn rts-btn btn-primary" type="submit">Soumettre la demande</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pl-lg-5 col-md-4">
+                    <h3>Rappel</h3>
+                    <div class="woocommerce-checkout-review-order">
+                      <p>• Le statut sera <b>pending</b> jusqu’à validation.</p>
+                      <p>• Un e-mail sera envoyé lors de l’acceptation/refus.</p>
+                      <p>• Le plafond sert au contrôle des futurs marchés.</p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock content %}

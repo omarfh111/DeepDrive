@@ -1,0 +1,185 @@
+{% extends "base.html" %} 
+{% load static %} 
+
+{% block content %} 
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        {% include "partials/header/header-three.html" %}
+        
+        <main class="ms-main rts-section-gap">
+            <div class="container">
+                <!-- TITRE + FILTRES (sans <form>) -->
+                <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+                    <h2 class="title mb-0">Mes Test Drives</h2>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <input class="form-control" type="search" id="searchInput" value="{{ q }}" placeholder="Rechercher (marque, modèle, test_location)">
+                            <select class="form-select" id="statusSelect">
+                                <option value="">Tous les statuts</option>
+                                <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
+                                <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
+                                <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
+                            </select>
+                            <select class="form-select" id="sortSelect">
+                                <option value="">Tri par date</option>
+                                <option value="date_desc" {% if sort == "date_desc" or not sort %}selected{% endif %}>Récent → Ancien</option>
+                                <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Ancien → Récent</option>
+                            </select>
+                        </div>
+                        <a href="{% url 'TestDrive:TestDrive_creation' %}" class="btn btn-success">
+                            <i class="fa fa-plus"></i> Ajouter un Test Drive
+                        </a>
+                    </div>
+                </div>
+
+                {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="card shadow-sm rounded-3 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="text-center">
+                                    <th>ID</th>
+                                    <th>VOITURE</th>
+                                    <th>Test LOCATION</th>
+                                    <th>DATE DE RÉSERVATION</th>
+                                    <th>STATUT</th>
+                                    <th class="text-end">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in page_obj %}
+                                <tr>
+                                    <td class="text-center fw-bold">#{{ t.id_test_drive }}</td>
+                                    <td>{{ t.car.marque }} {{ t.car.modele }}</td>
+                                    <td>{{ t.test_location }}</td>
+                                    <td class="text-center">
+                                        {{ t.reservation_date|date:"d/m/Y" }} à {{ t.reservation_time|time:"H:i" }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if t.status == "done" %}
+                                        <span class="badge bg-success">Terminé</span>
+                                        {% elif t.status == "not_done" %}
+                                        <span class="badge bg-warning text-dark">En attente</span>
+                                        {% elif t.status == "cancelled" %}
+                                        <span class="badge bg-danger">Annulé</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Inconnu</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{% url 'TestDrive:testdrive_details' t.id_test_drive %}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        {% if t.status == "not_done" %}
+                                        <a href="{% url 'TestDrive:TestDrive_update' t.id_test_drive %}" class="btn btn-sm btn-outline-success ms-1" title="Modifier">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="fa fa-car fa-2x mb-3"></i><br>
+                                        Aucun test drive trouvé.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.paginator.count %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{{ querystring }}">Précédent</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">Précédent</span></li>
+                        {% endif %}
+                        
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{{ querystring }}">Suivant</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">Suivant</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</div>
+
+{% include "partials/footer/footer-three.html" %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchEl = document.getElementById('searchInput');
+        const statusEl = document.getElementById('statusSelect');
+        const sortEl = document.getElementById('sortSelect');
+
+        function updateURL() {
+            const params = new URLSearchParams();
+            
+            if (searchEl && searchEl.value.trim() !== "") {
+                params.set("q", searchEl.value.trim());
+            }
+            if (statusEl && statusEl.value !== "") {
+                params.set("status", statusEl.value);
+            }
+            if (sortEl && sortEl.value !== "") {
+                params.set("sort", sortEl.value);
+            }
+            params.set("page", "1"); // on revient page 1 après un filtre
+            
+            const url = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+            window.location.href = url;
+        }
+
+        if (searchEl) {
+            let timer;
+            searchEl.addEventListener("input", () => {
+                clearTimeout(timer);
+                timer = setTimeout(updateURL, 500);
+            });
+            searchEl.addEventListener("keypress", e => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    updateURL();
+                }
+            });
+        }
+
+        if (statusEl) {
+            statusEl.addEventListener("change", updateURL);
+        }
+
+        if (sortEl) {
+            sortEl.addEventListener("change", updateURL);
+        }
+    });
+</script>
+{% endblock %}
