@@ -73,3 +73,32 @@ def send_marche_creation_email(marche):
     )
     msg.attach_alternative(html_body, "text/html")
     msg.send(fail_silently=False)
+def send_recommendation_email(partenariat, reco_data: dict):
+    """
+    Envoie un email avec la liste des véhicules recommandés.
+    reco_data est le dict retourné par build_recommendations().
+    """
+    if not partenariat.email:
+        return
+
+    context = {
+        "societe": partenariat.nom_societe or "Cher partenaire",
+        "analysis": reco_data.get("analysis") or {},
+        "recommended_vehicles": reco_data.get("recommended_vehicles") or [],
+        "budget_total": reco_data.get("budget_total"),
+        "total_estimated_cost": reco_data.get("total_estimated_cost"),
+        "currency": reco_data.get("currency", "TND"),
+    }
+
+    subject = f"🚗 Recommandations de véhicules pour {context['societe']}"
+    text_body = render_to_string("emails/partner_reco.txt", context)
+    html_body = render_to_string("emails/partner_reco.html", context)
+
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=text_body,
+        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+        to=[partenariat.email],
+    )
+    msg.attach_alternative(html_body, "text/html")
+    msg.send(fail_silently=False)

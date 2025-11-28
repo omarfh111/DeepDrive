@@ -30,11 +30,9 @@ def admin_user_delete(request, pk):
 
     # safety: don't let a user delete himself
     if obj.pk == request.user.pk:
-        messages.error(request, "Vous ne pouvez pas supprimer votre propre compte.")
         return redirect('user_app:admin_user_list')
 
     obj.delete()
-    messages.success(request, "Utilisateur supprimé avec succès.")
     return redirect('admin_user_list')
 
 User = get_user_model()
@@ -52,13 +50,10 @@ def admin_user_edit(request, pk=None):
             if obj and obj.pk == request.user.pk:
                 cleaned = form.cleaned_data
                 if not cleaned.get("is_active", True):
-                    messages.error(request, "Vous ne pouvez pas désactiver votre propre compte.")
                     return render(request, "user_app/admin_user_edit.html", {"form": form, "u": obj})
                 if not cleaned.get("is_staff", True):
-                    messages.error(request, "Vous ne pouvez pas retirer votre accès staff vous-même.")
                     return render(request, "user_app/admin_user_edit.html", {"form": form, "u": obj})
             saved = form.save()
-            messages.success(request, "Utilisateur enregistré avec succès.")
             return redirect("user_app:admin_user_list")
     else:
         form = AdminUserForm(instance=obj)
@@ -75,7 +70,6 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()              
-            messages.success(request, "Account created successfully.")
             return redirect("user_app:login") 
     else:
         form = RegisterForm()

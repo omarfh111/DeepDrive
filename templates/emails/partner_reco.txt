@@ -1,0 +1,35 @@
+Bonjour {{ societe }},
+
+Suite à l’approbation de votre partenariat, nous avons analysé vos besoins
+et préparé une sélection de véhicules adaptée à votre activité et à votre budget.
+
+[Analyse]
+- Secteur : {{ analysis.sector|default:"—" }}
+- Usage principal : {{ analysis.main_use_case|default:"Non précisé" }}
+
+Contraintes prises en compte :
+{% with c=analysis.constraints %}
+{% if c.priority %}Priorités :
+{% for item in c.priority %}- {{ item }}
+{% endfor %}{% endif %}
+{% if c.notes %}Notes : {{ c.notes }}{% endif %}
+{% endwith %}
+
+[Recommandations]
+{% if recommended_vehicles %}
+{% for v in recommended_vehicles %}
+- {{ v.brand }} {{ v.modele }}
+  Prix : {{ v.prix_texte }}
+  Score : {{ v.score }}/10
+  Lien : {{ v.url_modele }}
+
+{% endfor %}
+{% else %}
+Aucune recommandation n’est disponible dans le budget actuel.
+Contactez-nous si vous souhaitez revoir vos besoins ou votre plafond.
+{% endif %}
+
+Budget total pris en compte : {{ budget_total }} {{ currency }}
+
+Merci pour votre confiance,
+Équipe DeepDrive

@@ -7,9 +7,9 @@ Détails du marché :
 - Quantité : {{ quantite }}
 - Prix unitaire : {{ prix_unitaire }} DT
 - Total : {{ total_prix }} DT
-- Taux de rentabilité : {{ taux_rentabilite }} %
+- Rentabilité : {{ taux_rentabilite }} %
 - Rentabilité estimée : {{ rentabilite_estime }} DT
 - État : {{ etat }}
 
 Merci pour votre confiance,
-L’équipe DeepDrive
+Équipe DeepDrive

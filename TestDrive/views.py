@@ -138,7 +138,6 @@ def admin_testdrive_add(request):
             testdrive = form.save(commit=False)
             testdrive.user = request.user 
             testdrive.save()
-            messages.success(request, "Le test drive a été ajouté avec succès.")
             return redirect("TestDrive:admin_testdrive_list")
         else:
             messages.error(request, "Veuillez corriger les erreurs dans le formulaire.")

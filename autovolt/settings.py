@@ -168,3 +168,5 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
 EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
 DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"
+
+OPENAI_API_KEY = "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"

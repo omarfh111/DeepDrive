@@ -26,7 +26,6 @@ def partenariat_create_view(request):
             p.user = request.user
             p.status = Partenariat.Statut.PENDING
             p.save()
-            messages.success(request, "Votre demande de partenariat a été envoyée avec succès.")
             return redirect("deals:partenariat_create")  # recharge la page (maintenant en mode "fiche")
     else:
         form = PartenariatCreateForm()
@@ -63,7 +62,6 @@ def admin_partenariats_list(request):
 def admin_partenariat_approve(request, pk):
     p = get_object_or_404(Partenariat, pk=pk)
     p.approve()
-    messages.success(request, f"Partenariat #{p.id_partenariat} approuvé.")
     return redirect("deals:admin_partenariats_list")
 
 @staff_member_required
@@ -71,7 +69,6 @@ def admin_partenariat_approve(request, pk):
 def admin_partenariat_reject(request, pk):
     p = get_object_or_404(Partenariat, pk=pk)
     p.reject()
-    messages.info(request, f"Partenariat #{p.id_partenariat} rejeté.")
     return redirect("deals:admin_partenariats_list")
 @staff_member_required
 def admin_partenariat_update(request, pk):
@@ -80,7 +77,6 @@ def admin_partenariat_update(request, pk):
         form = PartenariatAdminForm(request.POST, instance=p)
         if form.is_valid():
             form.save()
-            messages.success(request, f"Partenariat #{p.id_partenariat} mis à jour.")
             return redirect("deals:admin_partenariats_list")
     else:
         form = PartenariatAdminForm(instance=p)
@@ -91,7 +87,6 @@ def admin_partenariat_update(request, pk):
 def admin_partenariat_delete(request, pk):
     p = get_object_or_404(Partenariat, pk=pk)
     p.delete()
-    messages.success(request, f"Partenariat #{pk} supprimé.")
     return redirect("deals:admin_partenariats_list")
 @staff_member_required
 def admin_hub(request):
@@ -127,7 +122,6 @@ def marche_create(request, voiture_id):
             messages.error(request, "Votre partenariat doit être approuvé pour créer un marché.")
         elif form.is_valid():
             marche = form.save()
-            messages.success(request, "Marché créé avec succès.")
             try:
                 send_marche_creation_email(marche)
             except Exception as e:
@@ -216,7 +210,6 @@ def admin_marche_delete(request, pk):
     marche = get_object_or_404(Marche, pk=pk)
     if request.method == "POST":
         marche.delete()
-        messages.success(request, "Marché supprimé.")
     return redirect("deals:admin_marches")
 
 @staff_member_required
@@ -225,7 +218,6 @@ def admin_marche_confirm(request, pk):
     if request.method == "POST":
         marche.etat = "valide"
         marche.save(update_fields=["etat"])
-        messages.success(request, "Marché confirmé.")
     return redirect("deals:admin_marches")
 
 @staff_member_required
@@ -234,7 +226,6 @@ def admin_marche_cancel(request, pk):
     if request.method == "POST":
         marche.etat = "annule"
         marche.save(update_fields=["etat"])
-        messages.success(request, "Marché annulé.")
     return redirect("deals:admin_marches")
 
 # (optionnel) édition basique via ModelForm
@@ -257,7 +248,6 @@ def admin_marche_update(request, pk):
             obj = form.save(commit=False)
             # Les recalculs (total_prix, rentabilite_estime) sont faits dans model.save()
             obj.save()
-            messages.success(request, f"Marché #{obj.id} mis à jour.")
             return redirect("deals:admin_marches")
     else:
         form = AdminMarcheForm(instance=marche)
