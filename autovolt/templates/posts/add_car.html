@@ -18,6 +18,19 @@
                         <h2 class="title">Add a New Car</h2>
                     </div>
                     <div class="ms-default-page container entry-content">
+                        
+                        <!-- Display Messages -->
+                        {% if messages %}
+                        <div class="container mb-4">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
                         <div class="woocommerce">
                             <form method="POST" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
                                 {% csrf_token %}
@@ -33,10 +46,45 @@
                                                         {% for field in form %}
                                                         <div class="col-md-6 col-sm-12 col-xs-12">
                                                             <div class="form-group">
-                                                                <label class="form-label fw-semibold">{{ field.label }}</label>
-                                                                {{ field }}
+                                                                <label class="form-label fw-semibold">
+                                                                    {{ field.label }}
+                                                                    {% if field.field.required %}
+                                                                        <span class="text-danger">*</span>
+                                                                    {% endif %}
+                                                                </label>
+                                                                
+                                                                <!-- Special handling for dashboard_image field -->
+                                                                {% if field.name == 'dashboard_image' %}
+                                                                    {{ field }}
+                                                                    <small class="form-text text-muted d-block mt-1">
+                                                                        📸 Optionnel: Téléchargez une photo claire du tableau de bord pour extraire automatiquement le kilométrage
+                                                                    </small>
+                                                                    <div id="dashboard-preview" class="mt-2" style="display:none;">
+                                                                        <img src="" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
+                                                                    </div>
+                                                                {% elif field.name == 'kilometrage' %}
+                                                                    {{ field }}
+                                                                    <small class="form-text text-muted d-block mt-1">
+                                                                        💡 Sera rempli automatiquement si vous téléchargez une photo du tableau de bord
+                                                                    </small>
+                                                                {% elif field.name == 'image' %}
+                                                                    {{ field }}
+                                                                    <small class="form-text text-muted d-block mt-1">
+                                                                        Photo principale de la voiture
+                                                                    </small>
+                                                                    <div id="car-image-preview" class="mt-2" style="display:none;">
+                                                                        <img src="" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
+                                                                    </div>
+                                                                {% else %}
+                                                                    {{ field }}
+                                                                {% endif %}
+                                                                
                                                                 {% if field.errors %}
-                                                                    <div class="text-danger small">{{ field.errors }}</div>
+                                                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                                                                {% endif %}
+                                                                
+                                                                {% if field.help_text %}
+                                                                    <small class="form-text text-muted d-block mt-1">{{ field.help_text }}</small>
                                                                 {% endif %}
                                                             </div>
                                                         </div>
@@ -48,13 +96,13 @@
                                             <div class="payment-method mt-40 md-mt-20">
                                                 <div class="bottom-area">
                                                     <p class="mt-15">
-                                                        Please verify all car details before submission.
+                                                        <strong>Note:</strong> Veuillez vérifier tous les détails de la voiture avant de soumettre le formulaire.
                                                     </p>
                                                     <button type="submit" class="add-btn rts-btn btn-primary">
-                                                        Save Car
+                                                        💾 Save Car
                                                     </button>
-                                                    <a href="{% url 'portfolio' %}" class="rts-btn btn-border ms-2">
-                                                        Cancel
+                                                    <a href="{% url 'posts:portfolio' %}" class="rts-btn btn-border ms-2">
+                                                        ❌ Cancel
                                                     </a>
                                                 </div>
                                             </div>
@@ -63,9 +111,29 @@
 
                                     <div class="col-md-4">
                                         <div class="ms-checkout-review-order p-3 border rounded">
-                                            <h3>Preview Info</h3>
-                                            <p>After saving, your car will appear on the main store page automatically.</p>
-                                            <img src="{% static 'images/portfolio/04.webp' %}" class="w-100 rounded" alt="">
+                                            <h3>ℹ️ Information</h3>
+                                            <div class="mb-3">
+                                                <h5>📊 Extraction Automatique</h5>
+                                                <p class="small">
+                                                    Notre système utilise l'IA pour extraire automatiquement le kilométrage depuis la photo du tableau de bord.
+                                                </p>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h5>📋 Conseils pour de meilleurs résultats:</h5>
+                                                <ul class="small">
+                                                    <li>✓ Photo claire et bien éclairée</li>
+                                                    <li>✓ Cadrage centré sur le compteur kilométrique</li>
+                                                    <li>✓ Éviter les reflets et l'éblouissement</li>
+                                                    <li>✓ Image nette (pas floue)</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="alert alert-info small">
+                                                <strong>💡 Astuce:</strong> Après la soumission, votre voiture apparaîtra automatiquement sur la page du magasin.
+                                            </div>
+                                            
+                                            <img src="{% static 'images/portfolio/04.webp' %}" class="w-100 rounded mt-3" alt="Example car">
                                         </div>
                                     </div>
                                 </div>
@@ -79,5 +147,47 @@
         </main>
     </div>
 </div>
+
+<!-- Image Preview Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Preview for dashboard image
+    const dashboardInput = document.querySelector('input[name="dashboard_image"]');
+    if (dashboardInput) {
+        dashboardInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('dashboard-preview');
+                    const img = preview.querySelector('img');
+                    img.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    // Preview for main car image
+    const carImageInput = document.querySelector('input[name="image"]');
+    if (carImageInput) {
+        carImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('car-image-preview');
+                    const img = preview.querySelector('img');
+                    img.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+
 {% include 'partials/footer/footer-three.html' %}
 {% endblock content %}

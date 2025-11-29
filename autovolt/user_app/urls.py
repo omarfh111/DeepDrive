@@ -10,4 +10,5 @@ urlpatterns = [
     path('back/users/delete/<int:pk>/', views.admin_user_delete, name='admin_user_delete'),
     path("auth/register/", views.register, name="register"),
     path("auth/login/", RoleBasedLoginView.as_view(), name="login"),
+    path("auth/password-reset/", views.password_reset, name="password_reset"),
 ]

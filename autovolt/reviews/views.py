@@ -154,23 +154,18 @@ def edit_review(request, pk):
 
 
 @login_required
-def delete_review(request, pk):
+def delete_review_ajax(request, pk):
     """
-    Delete review (User Story 8.3 - Could have)
+    Delete review via AJAX (User Story 8.3 - Could have)
     Only the review author can delete
+    Returns JSON response
     """
-    review = get_object_or_404(Review, pk=pk, user=request.user)
-    
     if request.method == 'POST':
+        review = get_object_or_404(Review, pk=pk, user=request.user)
         review.delete()
-        return redirect('reviews:list')
-    
-    context = {
-        'title': 'Supprimer l\'avis',
-        'review': review,
-    }
-    
-    return render(request, 'reviews/delete_review.html', context)
+        return JsonResponse({'success': True, 'message': 'Review deleted successfully'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 
 @login_required

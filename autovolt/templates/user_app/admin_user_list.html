@@ -13,9 +13,16 @@
         <div class="d-flex align-items-center justify-content-between w-100">
           <h5 class="card-title text-dark mb-0">Liste des utilisateurs</h5>
           
-          <form class="d-flex" method="get">
-            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (nom, email)">
-            <button class="btn btn-sm btn-primary">Filtrer</button>
+          <form class="d-flex" method="get" id="user-filter-form">
+            <input
+              class="form-control form-control-sm me-2"
+              type="search"
+              name="q"
+              value="{{ q }}"
+              placeholder="Rechercher par email"
+              id="user-filter-input"
+            >
+            <button class="btn btn-sm btn-primary" type="submit">Filtrer</button>
           </form>
         </div>
       </div>
@@ -86,5 +93,21 @@
 <script>
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
+<script>
+  (function() {
+    const input = document.getElementById("user-filter-input");
+    const form  = document.getElementById("user-filter-form");
+    if (!input || !form) return;
+
+    let timeoutId = null;
+
+    input.addEventListener("input", function () {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(function () {
+        form.submit();  // auto-filter after user stops typing (~400ms)
+      }, 400);
+    });
+  })();
 </script>
 {% endblock %}

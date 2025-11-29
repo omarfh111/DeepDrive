@@ -47,7 +47,7 @@ class Post(models.Model):
     gouvernerat = models.CharField(max_length=100)
     price = models.FloatField()
     image = models.ImageField(upload_to='posts/', default='default_car.jpg')
-    
+    dashboard_image = models.ImageField(upload_to='posts/', blank=True, null=True)
     owner = models.ForeignKey(
         'user_app.User',            
         on_delete=models.CASCADE,

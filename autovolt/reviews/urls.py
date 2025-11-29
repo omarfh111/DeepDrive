@@ -9,7 +9,7 @@ urlpatterns = [
     path('add/', views.add_review, name='add'),
     path('<int:pk>/', views.review_detail, name='detail'),
     path('<int:pk>/edit/', views.edit_review, name='edit'),
-    path('<int:pk>/delete/', views.delete_review, name='delete'),
+    path('<int:pk>/delete-ajax/', views.delete_review_ajax, name='delete_ajax'),
     path('my-reviews/', views.my_reviews, name='my_reviews'),
     
     # Comment URLs
