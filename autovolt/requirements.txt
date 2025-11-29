@@ -12,3 +12,4 @@ torch==2.3.1+cpu
 torchvision==0.18.1+cpu
 openai==2.8.1
 numpy==1.26.4
+twilio

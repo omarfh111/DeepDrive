@@ -15,17 +15,30 @@
           <h5 class="card-title text-dark mb-0">Liste des Test Drives</h5>
 
           <div class="d-flex align-items-center flex-wrap gap-2">
-            <form class="d-flex" method="get">
-              <select class="form-select form-select-sm me-2" name="status">
-                <option value="">— Statut (tous) —</option>
-                <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
-                <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
-                <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
-              </select>
-              <button class="btn btn-sm btn-primary me-2">
-                <i class="mdi mdi-filter"></i> Filtrer
-              </button>
+            <form id="searchForm" class="d-flex" method="get">
+            <input 
+            id="searchInput"
+            class="form-control form-control-sm me-2" 
+            type="search" 
+            name="q" 
+            value="{{ q }}" 
+            placeholder="Rechercher (voiture, utilisateur)"
+            >
+<select class="form-select form-select-sm me-2" name="status" id="statusSelect">
+  <option value="">— Statut (tous) —</option>
+  <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
+  <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
+  <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
+</select>
+              <select class="form-select form-select-sm me-2" name="sort" id="sortSelect">
+  <option value="">— Tri (défaut) —</option>
+  <option value="date_desc" {% if sort == "date_desc" %}selected{% endif %}>Date ↓ (récent → ancien)</option>
+  <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Date ↑ (ancien → récent)</option>
+</select>
             </form>
+            <a href="{% url 'TestDrive:admin_testdrive_add' %}" class="btn btn-sm btn-success">
+              <i class="mdi mdi-plus-circle-outline me-1"></i> Nouveau Test Drive
+            </a>
           </div>
         </div>
       </div>
@@ -48,7 +61,7 @@
               <tr>
                 <td class="ps-3">#{{ t.id_test_drive }}</td>
                 <td>{{ t.car.marque }} {{ t.car.modele }}</td>
-                <td>{{ t.user.first_name }} {{ t.user.last_name }}</td>
+                <td>{{ t.user.first_name }}</td>
                 <td>{{ t.reservation_date|date:"d/m/Y" }} {{ t.reservation_time|time:"H:i" }}</td>
                 <td>
                   {% if t.status == "done" %}
@@ -120,7 +133,25 @@
 
 {% block extra_js %}
 <script>
+const searchForm = document.getElementById("searchForm");
+const statusSelect = document.getElementById("statusSelect");
+const sortSelect = document.getElementById("sortSelect");
+
+  let searchTimer;
+searchInput.addEventListener("input", function () {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchForm.submit();
+  }, 1000);
+});
+
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+  sortSelect.addEventListener("change", () => {
+    searchForm.submit();
+});
+statusSelect.addEventListener("change", () => {
+    searchForm.submit();
+});
 </script>
 {% endblock %}

@@ -1,9 +1,11 @@
 Bonjour {{ societe }},
 
-Bonne nouvelle ! Votre demande de partenariat a été approuvée.
+Votre demande de partenariat a été approuvée avec succès.
 
-Vous pouvez désormais créer des marchés depuis votre espace.
-Plafond accordé : {{ plafond|default:"—" }}
+Plafond accordé :
+- {{ plafond|default:"—" }}
 
-Merci de votre confiance.
-L’équipe DeepDrive
+Vous pouvez maintenant créer vos marchés depuis votre espace partenaire.
+
+Merci pour votre confiance,
+Équipe DeepDrive

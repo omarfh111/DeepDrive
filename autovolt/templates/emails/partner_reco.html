@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommandations de véhicules - DeepDrive</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f6fb; font-family:'Segoe UI', Arial, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6fb; padding:30px 0;">
+    <tr>
+        <td align="center">
+            <!-- Conteneur principal -->
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.08);">
+                <!-- Header -->
+                <tr>
+                    <td style="background:linear-gradient(135deg,#1b1f3b,#3b82f6); padding:20px 30px; color:#ffffff;">
+                        <table width="100%">
+                            <tr>
+                                <td align="left" style="font-size:20px; font-weight:600;">
+                                    DeepDrive • Recommandations
+                                </td>
+                                <td align="right" style="font-size:12px; opacity:0.8;">
+                                    Partenariat n° {{ id_partenariat|default:"—" }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Bonjour -->
+                <tr>
+                    <td style="padding:24px 30px 10px 30px; font-size:15px; color:#111827;">
+                        <p style="margin:0 0 8px 0;">Bonjour <strong>{{ societe }}</strong>,</p>
+                        <p style="margin:0;">
+                            Suite à l’approbation de votre partenariat, nous avons analysé vos besoins
+                            et préparé une sélection de véhicules adaptée à votre activité et à votre budget.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Bloc analyse -->
+                <tr>
+                    <td style="padding:10px 30px 5px 30px;">
+                        <div style="border-radius:10px; background-color:#f9fafb; border:1px solid #e5e7eb; padding:14px 16px;">
+                            <h3 style="margin:0 0 8px 0; font-size:15px; color:#111827;">
+                                📝 Analyse de votre entreprise
+                            </h3>
+                            <p style="margin:0 0 4px 0; font-size:13px; color:#4b5563;">
+                                <strong>Secteur :</strong>
+                                {{ analysis.sector|default:"—" }}
+                            </p>
+                            <p style="margin:0 0 4px 0; font-size:13px; color:#4b5563;">
+                                <strong>Usage principal :</strong>
+                                {{ analysis.main_use_case|default:"Non précisé" }}
+                            </p>
+
+                            {% if analysis.usage_tags %}
+                                <p style="margin:6px 0 0 0; font-size:13px; color:#4b5563;">
+                                    <strong>Mots-clés :</strong>
+                                    {% for tag in analysis.usage_tags %}
+                                        <span style="display:inline-block; background-color:#e5f0ff; color:#1d4ed8; border-radius:999px; padding:2px 10px; margin:2px; font-size:11px;">
+                                            {{ tag }}
+                                        </span>
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Bloc contraintes -->
+                <tr>
+                    <td style="padding:5px 30px 5px 30px;">
+                        <div style="border-radius:10px; background-color:#fefce8; border:1px solid #facc15; padding:12px 16px;">
+                            <h3 style="margin:0 0 6px 0; font-size:14px; color:#854d0e;">
+                                ⚙️ Contraintes prises en compte
+                            </h3>
+                            {% with c=analysis.constraints %}
+                                {% if c.priority %}
+                                    <p style="margin:0 0 4px 0; font-size:12px; color:#713f12;">
+                                        <strong>Priorités :</strong>
+                                    </p>
+                                    <ul style="margin:0 0 6px 18px; padding:0; font-size:12px; color:#713f12;">
+                                        {% for item in c.priority %}
+                                            <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if c.notes %}
+                                    <p style="margin:0; font-size:12px; color:#713f12;">
+                                        <strong>Notes :</strong> {{ c.notes }}
+                                    </p>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Bloc recommandations -->
+                <tr>
+                    <td style="padding:10px 30px 10px 30px;">
+                        <h3 style="margin:0 0 10px 0; font-size:15px; color:#111827;">
+                            🚗 Notre sélection de véhicules
+                        </h3>
+
+                        {% if recommended_vehicles %}
+                            {% for v in recommended_vehicles %}
+                                <div style="border-radius:10px; border:1px solid #e5e7eb; padding:12px 14px; margin-bottom:8px; background-color:#ffffff;">
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="vertical-align:top;">
+                                                <p style="margin:0 0 4px 0; font-size:14px; color:#111827;">
+                                                    <strong>{{ v.brand }} {{ v.modele }}</strong>
+                                                </p>
+                                                <p style="margin:0; font-size:12px; color:#4b5563;">
+                                                    Prix : <strong>{{ v.prix_texte }}</strong><br>
+                                                    Score : <strong>{{ v.score }}</strong> / 10
+                                                </p>
+                                            </td>
+                                            <td align="right" style="vertical-align:middle; white-space:nowrap;">
+                                                <a href="{{ v.url_modele }}"
+                                                   style="display:inline-block; padding:8px 14px; border-radius:999px;
+                                                          background:linear-gradient(135deg,#3b82f6,#2563eb);
+                                                          color:#ffffff; text-decoration:none; font-size:12px; font-weight:500;">
+                                                    Voir le modèle
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="margin:0; font-size:13px; color:#6b7280;">
+                                Aucune recommandation n’est disponible dans votre budget actuel.  
+                                N’hésitez pas à nous contacter pour ajuster vos besoins ou votre plafond.
+                            </p>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- Budget -->
+                <tr>
+                    <td style="padding:0 30px 10px 30px;">
+                        <p style="margin:0; font-size:13px; color:#4b5563;">
+                            <strong>Budget total pris en compte :</strong>
+                            {{ budget_total }} {{ currency }}
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="padding:16px 30px 20px 30px; font-size:12px; color:#9ca3af; border-top:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px 0;">
+                            Merci pour votre confiance,<br>
+                            L’équipe <strong>DeepDrive</strong>.
+                        </p>
+                        <p style="margin:6px 0 0 0; font-size:11px; color:#9ca3af;">
+                            Ce message est généré automatiquement suite à l’approbation de votre partenariat et à l’analyse de vos besoins.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

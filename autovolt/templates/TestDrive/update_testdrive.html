@@ -16,19 +16,15 @@
     background-color: #fff;
   }
 
-  /* Menus déroulants élargis */
   form select {
-    width: 135%; /* encore plus large */
-    max-width: 135%;
-    transform: translateX(-15%);
     cursor: pointer;
   }
 
   form input:focus,
   form select:focus,
   form textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+    border-color: #dc3545; /* Rouge au focus */
+    box-shadow: 0 0 6px rgba(220, 53, 69, 0.4);
     outline: none;
   }
 
@@ -47,7 +43,6 @@
   .form-col {
     flex: 1 1 calc(50% - 20px);
     min-width: 280px;
-    position: relative;
   }
 
   textarea {
@@ -58,37 +53,59 @@
     border-radius: 15px;
   }
 
+  /* TITRE */
+  h2.text-primary {
+    color: #dc3545 !important; /* Rouge */
+    font-family: 'Arial Black', Arial, sans-serif; /* Police plus marquée */
+    font-size: 2.2rem;
+    text-transform: uppercase;
+  }
+
+  /* BOUTON */
   .btn-primary {
-    background-color: #007bff;
+    background-color: #dc3545;
     border: none;
-    transition: background-color 0.3s ease;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 25px; /* réduit largeur */
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
   }
 
   .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #b02a37;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
 
   .btn-outline-secondary:hover {
     background-color: #f8f9fa;
+    color: #495057;
   }
 
   .text-danger {
     font-size: 0.875rem;
   }
 
-  /* Alignement pour le champ "Statut" */
   .status-field {
     margin-top: 25px;
   }
 
-  /* Responsive */
   @media (max-width: 768px) {
+    .form-col {
+      flex: 1 1 100%;
+    }
     form select {
       width: 100%;
       transform: none;
-    }
-    .form-col {
-      flex: 1 1 100%;
     }
   }
 </style>
@@ -103,7 +120,7 @@
 
     <div class="container mt-5 mb-5">
       <div class="card shadow-lg border-0 p-4">
-        <h2 class="mb-4 text-center text-primary">Modifier un Test Drive</h2>
+        <h2 class="mb-4 text-center text-primary">Modification du Test Drive</h2>
 
         <form method="post" novalidate>
           {% csrf_token %}
@@ -129,22 +146,21 @@
           <div class="status-field">
             <label class="form-label fw-semibold">Statut du test drive</label>
             {% if object.status == "not_done" %}
-              <select name="status">
-                <option value="not_done" {% if object.status == "not_done" %}selected{% endif %}>Not done</option>
-                <option value="cancelled" {% if object.status == "cancelled" %}selected{% endif %}>Cancelled</option>
-                <option value="done" {% if object.status == "done" %}selected{% endif %}>Done</option>
+              <select name="status" class="form-select">
+                <option value="not_done" selected>En attente</option>
+                <option value="cancelled">Annulé</option>
               </select>
             {% else %}
-              <input type="text" value="{{ object.get_status_display }}" readonly>
+              <input type="text" value="{{ object.get_status_display }}" readonly class="form-control">
             {% endif %}
           </div>
 
           <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill me-2">
-              <i class="fas fa-save me-2"></i> Enregistrer les modifications
+            <button type="submit" class="btn btn-primary">
+              Mettre à jour
             </button>
-            <a href="{% url 'TestDrive:liste_testdrive' %}" class="btn btn-outline-secondary px-5 py-2 rounded-pill">
-              <i class="fas fa-arrow-left me-2"></i> Annuler
+            <a href="{% url 'TestDrive:liste_testdrive' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+              Annuler
             </a>
           </div>
         </form>

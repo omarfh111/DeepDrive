@@ -1,16 +1,61 @@
-<p>Bonjour <strong>{{ societe }}</strong>,</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Marché créé - DeepDrive</title>
+</head>
 
-<p>Votre marché a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.</p>
+<body style="margin:0; padding:0; background-color:#f4f6fb; font-family:'Segoe UI', Arial, sans-serif;">
 
-<h3>Détails du marché :</h3>
-<ul>
-  <li><strong>Voiture :</strong> {{ voiture }}</li>
-  <li><strong>Quantité :</strong> {{ quantite }}</li>
-  <li><strong>Prix unitaire :</strong> {{ prix_unitaire }} DT</li>
-  <li><strong>Total :</strong> {{ total_prix }} DT</li>
-  <li><strong>Taux de rentabilité :</strong> {{ taux_rentabilite }} %</li>
-  <li><strong>Rentabilité estimée :</strong> {{ rentabilite_estime }} DT</li>
-  <li><strong>État :</strong> {{ etat }}</li>
-</ul>
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+    <tr>
+        <td align="center">
 
-<p>Merci pour votre confiance,<br>L’équipe <strong>DeepDrive</strong>.</p>
+            <table width="600" style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.08);">
+
+                <!-- Header -->
+                <tr>
+                    <td style="background:linear-gradient(135deg,#0f172a,#3b82f6); padding:20px 30px; color:white;">
+                        <h2 style="margin:0;">Votre marché a été créé 🧾</h2>
+                    </td>
+                </tr>
+
+                <!-- Content -->
+                <tr>
+                    <td style="padding:24px 30px; color:#111827; font-size:14px;">
+
+                        <p>Bonjour <strong>{{ societe }}</strong>,</p>
+                        <p>Votre marché a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.</p>
+
+                        <div style="background:#f8fafc; border:1px solid #e5e7eb; padding:16px; border-radius:8px; margin-top:12px;">
+                            <h3 style="margin:0 0 8px 0; font-size:15px;">Détails du marché :</h3>
+                            <p style="margin:0; font-size:13px;">
+                                <strong>Voiture :</strong> {{ voiture }}<br>
+                                <strong>Quantité :</strong> {{ quantite }}<br>
+                                <strong>Prix unitaire :</strong> {{ prix_unitaire }} DT<br>
+                                <strong>Total :</strong> {{ total_prix }} DT<br>
+                                <strong>Rentabilité :</strong> {{ taux_rentabilite }} %<br>
+                                <strong>Rentabilité estimée :</strong> {{ rentabilite_estime }} DT<br>
+                                <strong>État :</strong> {{ etat }}
+                            </p>
+                        </div>
+
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="padding:16px 30px 20px 30px; border-top:1px solid #e5e7eb; font-size:12px; color:#6b7280;">
+                        Merci pour votre confiance,<br>
+                        <strong>Équipe DeepDrive</strong>
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
