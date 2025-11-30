@@ -1,11 +1,12 @@
 from django import forms
 from .models import Review, Commentaire
+from .content_validator import validate_content   # ← updated import (LLM validator)
 
 
+# ============================
+# Review Form
+# ============================
 class ReviewForm(forms.ModelForm):
-    """
-    Form for creating and editing reviews
-    """
     class Meta:
         model = Review
         fields = ['titre', 'note', 'description', 'image']
@@ -25,7 +26,7 @@ class ReviewForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 6,
-                'placeholder': 'Décrivez votre expérience...',
+                'placeholder': 'Décrivez votre expérience (positivement et avec bienveillance)...',
                 'required': True
             }),
             'image': forms.FileInput(attrs={
@@ -36,43 +37,58 @@ class ReviewForm(forms.ModelForm):
         labels = {
             'titre': 'Titre de l\'avis',
             'note': 'Note (0-5 étoiles)',
-            'description': 'Votre avis détaillé',
-            'image': 'Image'
+            'description': 'Votre avis positif',
+            'image': 'Image (facultative)'
         }
         help_texts = {
-            'note': 'Donnez une note entre 0 et 5 étoiles',
-            'description': 'Partagez votre expérience en détail (minimum 50 caractères)'
+            'note': 'Donnez une note entre 0 et 5 étoiles.',
+            'description': 'Votre message doit être positif et constructif.',
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make image optional when editing an existing review
         if self.instance and self.instance.pk:
             self.fields['image'].required = False
-    
+
+
+    # --- POSITIVE-ONLY VALIDATION USING LLM ---
     def clean_description(self):
-        """Validate that description is at least 50 characters"""
-        description = self.cleaned_data.get('description')
-        if len(description) < 50:
-            raise forms.ValidationError(
-                'Votre avis doit contenir au moins 50 caractères.'
-            )
-        return description
-    
+        text = self.cleaned_data.get('description')
+
+        if len(text) < 50:
+            raise forms.ValidationError("Votre avis doit contenir au moins 50 caractères.")
+
+        allowed, msg = validate_content(text)
+        if not allowed:
+            raise forms.ValidationError(msg)
+
+        return text
+
+
+    def clean_titre(self):
+        titre = self.cleaned_data.get('titre')
+
+        allowed, msg = validate_content(titre)
+        if not allowed:
+            raise forms.ValidationError(msg)
+
+        return titre
+
+
     def clean_note(self):
-        """Validate note is between 0 and 5"""
         note = self.cleaned_data.get('note')
+
         if note < 0 or note > 5:
-            raise forms.ValidationError(
-                'La note doit être entre 0 et 5.'
-            )
+            raise forms.ValidationError("La note doit être entre 0 et 5.")
+
         return note
 
 
+
+# ============================
+# Comment Form
+# ============================
 class CommentaireForm(forms.ModelForm):
-    """
-    Form for creating and editing comments
-    """
     class Meta:
         model = Commentaire
         fields = ['commentaire']
@@ -80,69 +96,50 @@ class CommentaireForm(forms.ModelForm):
             'commentaire': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Ajoutez votre commentaire...',
+                'placeholder': 'Ajoutez un commentaire positif...',
                 'required': True
             })
         }
-        labels = {
-            'commentaire': 'Votre commentaire'
-        }
-    
+
     def clean_commentaire(self):
-        """Validate that comment is at least 10 characters"""
         commentaire = self.cleaned_data.get('commentaire')
+
         if len(commentaire) < 10:
-            raise forms.ValidationError(
-                'Votre commentaire doit contenir au moins 10 caractères.'
-            )
+            raise forms.ValidationError("Votre commentaire doit contenir au moins 10 caractères.")
+
+        allowed, msg = validate_content(commentaire)
+        if not allowed:
+            raise forms.ValidationError(msg)
+
         return commentaire
 
 
+
+# ============================
+# Review Filter Form
+# ============================
 class ReviewFilterForm(forms.Form):
-    """
-    Form for filtering reviews (User Story 8.6)
-    """
     SORT_CHOICES = [
         ('-date_review', 'Plus récents'),
         ('date_review', 'Plus anciens'),
         ('-note', 'Meilleures notes'),
         ('note', 'Notes les plus basses'),
     ]
-    
+
     search = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Rechercher...'
-        })
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Rechercher...'})
     )
-    
     min_note = forms.FloatField(
         required=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'min': '0',
-            'max': '5',
-            'step': '0.5',
-            'placeholder': 'Note min'
-        })
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'max': '5', 'step': '0.5'})
     )
-    
     max_note = forms.FloatField(
         required=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'min': '0',
-            'max': '5',
-            'step': '0.5',
-            'placeholder': 'Note max'
-        })
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'max': '5', 'step': '0.5'})
     )
-    
     sort_by = forms.ChoiceField(
         required=False,
         choices=SORT_CHOICES,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        })
+        widget=forms.Select(attrs={'class': 'form-control'})
     )

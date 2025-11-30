@@ -13,8 +13,8 @@ urlpatterns = [
     path('my-reviews/', views.my_reviews, name='my_reviews'),
     
     # Comment URLs
-    path('comment/<int:pk>/edit/', views.edit_comment, name='edit_comment'),
-    path('comment/<int:pk>/delete/', views.delete_comment, name='delete_comment'),
+    path('comment/<int:pk>/edit-ajax/', views.edit_comment_ajax, name='edit_comment_ajax'),
+    path('comment/<int:pk>/delete-ajax/', views.delete_comment_ajax, name='delete_comment_ajax'),
     
     # Backoffice URLs (Admin only)
     path('backoffice/', views.backoffice_dashboard, name='reviews_dashboard'),

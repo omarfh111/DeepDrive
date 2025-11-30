@@ -38,7 +38,7 @@
     
     /* Card borders enhancement */
     .card {
-        border: 1px solid #e5e5e5 !important;
+        border: 1px solid #e5e5e5  ;
     }
     
     /* Side box borders */
@@ -166,54 +166,66 @@
         font-size: 14px;
     }
     
-    /* Enhanced Review Action Buttons */
+    /* Compact Review Action Buttons */
     .review-actions {
         display: flex;
-        gap: 12px;
-        margin-bottom: 40px;
+        gap: 8px;
+        margin-bottom: 20px;
     }
-    
+
     .btn-review-action {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 12px 164px;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: 400;
+        font-size: 13px;
+        font-family: inherit;
+        line-height: 1.5;
+        transition: all 0.2s ease;
         text-decoration: none;
-        border: 2px solid;
+        border: 1px solid;
+        cursor: pointer;
+        background: #fff;
+        /* Reset button defaults */
+        appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
+        /* Prevent stretching */
+        width: auto;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
-    
     .btn-review-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        transform: none;
+        box-shadow: none;
     }
-    
+
     .btn-review-edit {
-        background: #fff;
         color: #0d6efd;
-        border-color: #0d6efd;
+        border-color: #dee2e6;
     }
-    
+
     .btn-review-edit:hover {
-        background: #0d6efd;
-        color: #fff;
+        background: #f8f9fa;
+        border-color: #0d6efd;
+        color: #0d6efd !important;
     }
-    
+
     .btn-review-delete {
-        background: #fff;
         color: #dc3545;
-        border-color: #dc3545;
+        border-color: #dee2e6;
     }
-    
+
     .btn-review-delete:hover {
-      background: rgba(220,53,69,0.08);
-      color: #dc3545;
+        background: #f8f9fa;
+        border-color: #dc3545;
+        color: #dc3545 !important;
     }
-    
+
     .btn-review-action i {
-        font-size: 16px;
+        font-size: 13px;
     }
     
     /* Blog wrapper cards */
@@ -286,6 +298,27 @@
       color: #d91d13;
     }
     
+    /* Content Validation Warnings */
+    .content-warning {
+        padding: 12px 15px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-top: 8px;
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        color: #856404;
+    }
+    
+    .is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+    
+    .is-invalid:focus {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+    
     /* Comment Count Badge */
     .comment-count-badge {
         display: inline-flex;
@@ -313,6 +346,250 @@
         color: #ccc;
         margin-bottom: 15px;
     }
+    
+    /* Unified Review Section - Contains all review elements */
+    /* Main container */
+    .unified-review-section {
+        background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%)  ;
+        border: 2px solid #e0e0e0  ;
+        border-radius: 24px  ;
+        padding: 0  ;
+        margin-bottom: 50px  ;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12)  ;
+        overflow: hidden  ;
+    }
+
+    /* Client Info Header */
+    .client-info-wrapper {
+        display: flex  ;
+        align-items: center  ;
+        gap: 30px  ;
+        width: 100%  ;
+        padding: 40px 40px 30px 40px  ;
+        margin-bottom: 0  ;
+        background: #ffffff  ;
+        border-bottom: 3px solid #f5f5f5  ;
+    }
+
+    .client-avatar {
+        width: 100px  ;
+        height: 100px  ;
+        border-radius: 50%  ;
+        overflow: hidden  ;
+        border: 5px solid #831414  ;
+        flex-shrink: 0  ;
+        box-shadow: 0 8px 20px rgba(131, 20, 20, 0.3)  ;
+        background: #fff  ;
+    }
+
+    .client-avatar img {
+        width: 100%  ;
+        height: 100%  ;
+        object-fit: cover  ;
+    }
+
+    .client-details {
+        flex: 1  ;
+    }
+
+    .client-name {
+        font-size: 32px  ;
+        font-weight: 800  ;
+        color: #1a1a1a  ;
+        margin: 0 0 15px 0  ;
+        letter-spacing: -0.8px  ;
+    }
+
+    .client-meta {
+        display: flex  ;
+        align-items: center  ;
+        gap: 16px  ;
+        flex-wrap: wrap  ;
+    }
+
+    .client-meta-item {
+        display: flex  ;
+        align-items: center  ;
+        gap: 10px  ;
+        padding: 10px 20px  ;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)  ;
+        border-radius: 12px  ;
+        border: 1px solid #dee2e6  ;
+        font-size: 15px  ;
+        font-weight: 500  ;
+        color: #495057  ;
+    }
+
+    .client-meta-item i {
+        color: #831414  ;
+        font-size: 16px  ;
+    }
+
+    /* Review Description Section */
+    .review-description-content {
+        padding: 45px 40px !important;
+        background: #ffffff !important;
+        /* Force text to wrap and break long words */
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        /* Prevent horizontal overflow */
+        overflow: hidden !important;
+        max-width: 100% !important;
+    }
+    .review-description-content h3 {
+        font-size: 26px  ;
+        font-weight: 800  ;
+        color: #1a1a1a  ;
+        margin-bottom: 25px  ;
+        display: flex  ;
+        align-items: center  ;
+        gap: 15px  ;
+        padding-bottom: 20px  ;
+        border-bottom: 4px solid #831414  ;
+        position: relative  ;
+    }
+
+    .review-description-content h3 i {
+        color: #831414  ;
+        font-size: 24px  ;
+    }
+
+    .review-description-content p {
+        margin-bottom: 18px  ;
+        text-align: justify  ;
+    }
+
+    /* Review Image Section */
+    .review-image-container {
+        position: relative  ;
+        margin: 0  ;
+        overflow: hidden  ;
+        background: #000  ;
+    }
+
+    .review-image-container img {
+        width: 100%  ;
+        height: 500px  ;
+        object-fit: cover  ;
+        border: none  ;
+        display: block  ;
+    }
+
+    /* Rating Badge Overlay */
+    .rating-badge-overlay {
+        position: absolute  ;
+        top: 30px  ;
+        right: 30px  ;
+        background: rgba(255, 255, 255, 0.98)  ;
+        backdrop-filter: blur(15px)  ;
+        padding: 18px 30px  ;
+        border-radius: 16px  ;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3)  ;
+        display: flex  ;
+        align-items: center  ;
+        gap: 12px  ;
+        border: 3px solid rgba(255, 193, 7, 0.3)  ;
+    }
+
+    .rating-badge-overlay .text-warning {
+        color: #ffc107  ;
+        font-size: 22px  ;
+    }
+
+    .rating-badge-overlay .fw-semibold {
+        font-weight: 800  ;
+        color: #1a1a1a  ;
+        font-size: 20px  ;
+    }
+    /* Review Description within the unified block */
+    .review-description-content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+    }
+    
+    .review-description-content h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .review-description-content h3 i {
+        color: #831414;
+    }
+    #toggleCommentsBtn {
+    background: #831414;
+    transition: all 0.3s ease;
+   }
+
+   #toggleCommentsBtn:hover {
+      background: #535353;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+
+    /* Back to Reviews Button Hover */
+    .search-area .rts-btn.btn-primary {
+        background: #831414;
+        transition: all 0.3s ease;
+    }
+
+    .search-area .rts-btn.btn-primary:hover {
+        background: #535353;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px hwb(0 15% 80% / 0.3);
+    }
+
+    /* Leave a Comment Heading */
+    /* Compact Leave a Comment Heading */
+    .comment-form h5 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .comment-form h5 i.icon-primary {
+        color: #831414;
+        font-size: 14px;
+        margin-right: 8px;
+    }
+        /* Submit Comment Button - Match Hide Comments Style */
+    .comment-form .rts-btn.btn-primary {
+        background: #831414;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .comment-form .rts-btn.btn-primary:hover {
+        background: #535353;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(147, 96, 96, 0.3);
+    }
+
+    .comment-form .rts-btn.btn-primary i {
+        font-size: 14px;
+    }
+    /* Legacy class names for backward compatibility */
+    .client-info-section,
+    .review-description-section,
+    .review-image-section {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
 </style>
 
 <div class="rts-wrapper">
@@ -326,30 +603,6 @@
           <div class="left">
             <p>Customer Review</p>
             <h1 class="title">{{ review.titre }}</h1>
-            <div class="author-area">
-              <div class="image">
-                <img
-                  src="{% static 'images/testimonials/author-01.svg' %}"
-                  alt=""
-                />
-              </div>
-              <ul>
-                <li>{{ review.user.username }}</li>
-                <li>{{ review.date_review|date:"F d, Y" }}</li>
-                <li>
-                  <span class="text-warning">
-                    {% for _ in "12345"|make_list %}
-                      {% if forloop.counter <= review.note %}
-                        <i class="fas fa-star"></i>
-                      {% else %}
-                        <i class="far fa-star"></i>
-                      {% endif %}
-                    {% endfor %}
-                    <strong class="ms-1 text-dark">{{ review.note|floatformat:0 }}/5</strong>
-                  </span>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -362,82 +615,65 @@
           <!-- MAIN -->
           <div class="col-lg-8">
             <div class="portfolio-details-area">
-              <!-- Cover image -->
-              <div class="image mb--40 position-relative">
-                {% if review.image %}
-                <img
-                  src="{{ review.image.url }}"
-                  alt="{{ review.titre }}"
-                  style="
-                    width: 100%;
-                    height: 420px;
-                    object-fit: cover;
-                    border-radius: 16px;
-                    border: 1px solid #e5e5e5;
-                  "
-                />
-                {% else %}
-                <img
-                  src="{% static 'images/placeholders/review-hero.webp' %}"
-                  alt="{{ review.titre }}"
-                  style="
-                    width: 100%;
-                    height: 420px;
-                    object-fit: cover;
-                    border-radius: 16px;
-                    border: 1px solid #e5e5e5;
-                  "
-                />
-                {% endif %}
-                <!-- rating badge overlay -->
-                <div
-                  class="position-absolute top-0 end-0 m-3 px-3 py-2 bg-white rounded-3 shadow-sm d-flex align-items-center gap-2"
-                  style="border: 1px solid #e5e5e5;"
-                >
-                  <span class="text-warning"><i class="fas fa-star"></i></span>
-                  <span class="fw-semibold">{{ review.note|floatformat:0 }}/5</span>
-                </div>
-              </div>
 
-              <!-- Body -->
-              <div class="card border-0 shadow-sm mb-5">
-                <div class="card-body p-4 p-md-5">
-                  <h2 class="mb-4">
-                    <i class="fas fa-comment-dots icon-primary me-2"></i>Review Details
-                  </h2>
-                  <div class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">
-                    {{ review.description|linebreaks }}
+          <!-- UNIFIED REVIEW BLOCK - All in one card -->
+          <div class="unified-review-section">
+            <!-- Client Info -->
+            <div class="client-info-wrapper">
+              <div class="client-avatar">
+                <img
+                  src="{% static 'images/testimonials/author-01.svg' %}"
+                  alt="{% with full_name=review.user.first_name|add:' '|add:review.user.last_name %}{{ full_name }}{% endwith %}"
+                />
+              </div>
+              <div class="client-details">
+                <h2 class="client-name">
+                  {% with full_name=review.user.first_name|add:" "|add:review.user.last_name %}
+                    {% if full_name.strip %}
+                      {{ full_name }}
+                    {% else %}
+                      {{ review.user.username }}
+                    {% endif %}
+                  {% endwith %}
+                </h2>
+                <div class="client-meta">
+                  <div class="client-meta-item">
+                    <i class="far fa-calendar"></i>
+                    <span>{{ review.date_review|date:"F d, Y" }}</span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Quick facts (optional meta) -->
-              <div class="row g-3 mb--40">
-                <div class="col-md-6">
-                  <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center gap-2 mb-2">
-                        <i class="fa-regular fa-user"></i><strong>Author</strong>
-                      </div>
-                      <div>
-                          {% with full_name=review.user.first_name|add:" "|add:review.user.last_name %}
-                              {{ full_name }}
-                          {% endwith %}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center gap-2 mb-2">
-                        <i class="fa-regular fa-calendar"></i><strong>Date</strong>
-                      </div>
-                      <div>{{ review.date_review|date:"M d, Y" }}</div>
-                    </div>
-                  </div>
-                </div>
+            <!-- Review Description -->
+            <div class="review-description-content">
+              {{ review.description|linebreaks }}
+            </div>
+
+            <!-- Review Image with Rating Badge -->
+            <div class="review-image-container">
+              {% if review.image %}
+              <img
+                src="{{ review.image.url }}"
+                alt="{{ review.titre }}"
+              />
+              {% else %}
+              <img
+                src="{% static 'images/placeholders/review-hero.webp' %}"
+                alt="{{ review.titre }}"
+              />
+              {% endif %}
+              <!-- Rating badge overlay -->
+              <div class="rating-badge-overlay">
+                <span class="text-warning">
+                  <i class="fas fa-star"></i>
+                </span>
+                <span class="fw-semibold">{{ review.note|floatformat:0 }}/5</span>
               </div>
+            </div>
+
+          </div>
+          <!-- END UNIFIED REVIEW BLOCK -->
 
               {% if user == review.user %}
               <div class="review-actions">
@@ -445,7 +681,7 @@
                   <i class="fas fa-edit"></i>
                   <span>Edit Review</span>
                 </a>
-                <button type="button" onclick="openDeleteModal({{ review.pk }})" class="btn-review-action btn-review-delete" aria-label="Delete review">
+                    <button type="button" onclick="openDeleteModal({{ review.pk }})" class="btn-review-action btn-review-delete" aria-label="Delete review">
                   <i class="fas fa-trash-alt"></i>
                   <span>Delete Review</span>
                 </button>
@@ -561,20 +797,22 @@
                             </div>
                             {% if user == comment.user %}
                             <div class="action-buttons">
-                              <a
-                                href="{% url 'reviews:edit_comment' comment.pk %}"
+                              <button
+                                type="button"
+                                onclick="openEditCommentModal({{ comment.pk }})"
                                 class="btn-action btn-edit"
                                 title="Edit comment"
                               >
                                 <i class="fas fa-edit"></i>
-                              </a>
-                              <a
-                                href="{% url 'reviews:delete_comment' comment.pk %}"
+                              </button>
+                              <button
+                                type="button"
+                                onclick="openDeleteCommentModal({{ comment.pk }})"
                                 class="btn-action btn-delete"
                                 title="Delete comment"
                               >
                                 <i class="fas fa-trash-alt"></i>
-                              </a>
+                              </button>
                             </div>
                             {% endif %}
                           </div>
@@ -819,6 +1057,55 @@
   </div>
 </div>
 
+<!-- Edit Comment Modal -->
+<div id="editCommentModal" class="modal" style="display: none;">
+  <div class="modal-overlay" onclick="closeEditCommentModal()"></div>
+  <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3>Edit Comment</h3>
+      <button type="button" class="modal-close" onclick="closeEditCommentModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="editCommentForm">
+        <div class="mb-3">
+          <label for="editCommentText" class="form-label">Your Comment</label>
+          <textarea 
+            id="editCommentText" 
+            name="commentaire" 
+            class="form-control" 
+            rows="4" 
+            required
+            style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"
+          ></textarea>
+          <div id="editCommentError" class="text-danger mt-2" style="display: none;"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeEditCommentModal()">Cancel</button>
+      <button type="button" class="btn btn-primary" onclick="confirmEditComment()" style="background-color: #0d6efd; color: white;">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Comment Modal -->
+<div id="deleteCommentModal" class="modal" style="display: none;">
+  <div class="modal-overlay" onclick="closeDeleteCommentModal()"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Delete Comment</h3>
+      <button type="button" class="modal-close" onclick="closeDeleteCommentModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this comment? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeDeleteCommentModal()">Cancel</button>
+      <button type="button" class="btn btn-danger" onclick="confirmDeleteComment()">Delete</button>
+    </div>
+  </div>
+</div>
+
 <style>
   .modal {
     position: fixed;
@@ -927,6 +1214,42 @@
     background-color: #601010;
   }
 
+  .btn-primary {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+  }
+
+  .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .text-danger {
+    color: #dc3545;
+    font-size: 14px;
+  }
+
   .modal.active {
     display: flex;
   }
@@ -1006,6 +1329,314 @@
     const overlay = modal.querySelector('.modal-overlay');
     overlay.addEventListener('click', closeDeleteModal);
   });
+
+  // Edit Comment Modal Functions
+  let currentEditCommentId = null;
+
+  function openEditCommentModal(commentId) {
+    currentEditCommentId = commentId;
+    const modal = document.getElementById('editCommentModal');
+    const errorDiv = document.getElementById('editCommentError');
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+    
+    // Fetch current comment data
+    fetch(`/reviews/comment/${commentId}/edit-ajax/`, {
+      method: 'GET',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('editCommentText').value = data.commentaire;
+        modal.style.display = 'flex';
+      } else {
+        alert('Error loading comment: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while loading the comment');
+    });
+  }
+
+  function closeEditCommentModal() {
+    const modal = document.getElementById('editCommentModal');
+    modal.style.display = 'none';
+    currentEditCommentId = null;
+    document.getElementById('editCommentText').value = '';
+    const errorDiv = document.getElementById('editCommentError');
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+  }
+
+  function confirmEditComment() {
+    if (!currentEditCommentId) return;
+
+    const commentText = document.getElementById('editCommentText').value.trim();
+    const errorDiv = document.getElementById('editCommentError');
+    
+    // Content validation (spam/bad words check)
+    const validationResult = window.validateCommentContent ? window.validateCommentContent(commentText) : null;
+    if (validationResult && !validationResult.isValid) {
+      errorDiv.textContent = validationResult.message;
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    // Basic validation
+    if (commentText.length < 10) {
+      errorDiv.textContent = 'Your comment must contain at least 10 characters.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    // Show loading state
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = 'Saving...';
+    button.disabled = true;
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+
+    // Send AJAX request
+    const formData = new FormData();
+    formData.append('commentaire', commentText);
+    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+
+    fetch(`/reviews/comment/${currentEditCommentId}/edit-ajax/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Reload the page to show updated comment
+        window.location.reload();
+      } else {
+        // Show validation errors
+        if (data.errors && data.errors.commentaire) {
+          errorDiv.textContent = data.errors.commentaire[0];
+        } else {
+          errorDiv.textContent = data.message || 'Error updating comment';
+        }
+        errorDiv.style.display = 'block';
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      errorDiv.textContent = 'An error occurred while updating the comment';
+      errorDiv.style.display = 'block';
+      button.textContent = originalText;
+      button.disabled = false;
+    });
+  }
+
+  // Delete Comment Modal Functions
+  let currentCommentId = null;
+
+  function openDeleteCommentModal(commentId) {
+    currentCommentId = commentId;
+    const modal = document.getElementById('deleteCommentModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeDeleteCommentModal() {
+    const modal = document.getElementById('deleteCommentModal');
+    modal.style.display = 'none';
+    currentCommentId = null;
+  }
+
+  function confirmDeleteComment() {
+    if (!currentCommentId) return;
+
+    // Show loading state
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = 'Deleting...';
+    button.disabled = true;
+
+    // Send AJAX request
+    fetch(`/reviews/comment/${currentCommentId}/delete-ajax/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Reload the page to show updated comments
+        window.location.reload();
+      } else {
+        alert('Error: ' + data.message);
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while deleting the comment');
+      button.textContent = originalText;
+      button.disabled = false;
+    });
+  }
+
+  // Close modals when clicking outside
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteCommentModal');
+    if (deleteModal) {
+      const overlay = deleteModal.querySelector('.modal-overlay');
+      overlay.addEventListener('click', closeDeleteCommentModal);
+    }
+    
+    const editModal = document.getElementById('editCommentModal');
+    if (editModal) {
+      const overlay = editModal.querySelector('.modal-overlay');
+      overlay.addEventListener('click', closeEditCommentModal);
+    }
+  });
+
+  // Content Validation for Comments (Spam and Bad Words Detection)
+  (function() {
+    // Bad words list (should match server-side)
+    const badWords = ['spam', 'scam', 'fake', 'fraud'];
+    
+    // Spam patterns
+    const spamPatterns = [
+      /http[s]?:\/\/[^\s]+/gi,  // URLs
+      /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi,  // Email addresses
+      /\b\d{10,}\b/g,  // Long number sequences
+      /(.)\1{4,}/g,  // Repeated characters
+      /[A-Z]{10,}/g,  // All caps words
+      /\b(buy|sell|cheap|discount|offer|deal|click|here|now)\b/gi,  // Spam keywords
+    ];
+
+    function containsBadWords(text) {
+      if (!text) return false;
+      const textLower = text.toLowerCase();
+      return badWords.some(word => {
+        const regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+        return regex.test(textLower);
+      });
+    }
+
+    function containsSpamPatterns(text) {
+      if (!text) return false;
+      return spamPatterns.some(pattern => pattern.test(text));
+    }
+
+    function isRepetitive(text) {
+      if (!text) return false;
+      const words = text.toLowerCase().split();
+      const wordCounts = {};
+      for (const word of words) {
+        if (word.length > 3) {
+          wordCounts[word] = (wordCounts[word] || 0) + 1;
+          if (wordCounts[word] >= 3) return true;
+        }
+      }
+      return false;
+    }
+
+    function validateContent(text) {
+      if (containsBadWords(text)) {
+        return {
+          isValid: false,
+          message: 'Your comment contains inappropriate words. Please revise your text and try again.'
+        };
+      }
+      if (containsSpamPatterns(text)) {
+        return {
+          isValid: false,
+          message: 'Your comment appears to contain spam. Please remove links, email addresses, or promotional content and try again.'
+        };
+      }
+      if (isRepetitive(text)) {
+        return {
+          isValid: false,
+          message: 'Your comment appears to be repetitive or spam-like. Please provide more meaningful content and try again.'
+        };
+      }
+      return { isValid: true, message: '' };
+    }
+
+    function showWarning(element, message) {
+      // Remove existing warning
+      const existingWarning = element.parentElement.querySelector('.content-warning');
+      if (existingWarning) {
+        existingWarning.remove();
+      }
+
+      // Create warning element
+      const warning = document.createElement('div');
+      warning.className = 'content-warning alert alert-warning mt-2';
+      warning.style.display = 'block';
+      warning.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + message;
+      element.parentElement.appendChild(warning);
+      element.classList.add('is-invalid');
+    }
+
+    function removeWarning(element) {
+      const warning = element.parentElement.querySelector('.content-warning');
+      if (warning) {
+        warning.remove();
+      }
+      element.classList.remove('is-invalid');
+    }
+
+    // Validate comment field
+    const commentField = document.querySelector('textarea[name="commentaire"]');
+    if (commentField) {
+      commentField.addEventListener('blur', function() {
+        const validation = validateContent(this.value);
+        if (!validation.isValid) {
+          showWarning(this, validation.message);
+        } else {
+          removeWarning(this);
+        }
+      });
+    }
+
+    // Validate on form submission
+    const commentForm = document.querySelector('.comment-form form');
+    if (commentForm) {
+      commentForm.addEventListener('submit', function(e) {
+        if (commentField && commentField.value) {
+          const validation = validateContent(commentField.value);
+          if (!validation.isValid) {
+            e.preventDefault();
+            showWarning(commentField, validation.message);
+            alert('Please fix the issues highlighted in red before submitting your comment.');
+            return false;
+          }
+        }
+      });
+    }
+
+    // Validate edit comment modal
+    const editCommentText = document.getElementById('editCommentText');
+    if (editCommentText) {
+      editCommentText.addEventListener('blur', function() {
+        const validation = validateContent(this.value);
+        if (!validation.isValid) {
+          showWarning(this, validation.message);
+        } else {
+          removeWarning(this);
+        }
+      });
+    }
+
+    // Make validation function available globally for confirmEditComment
+    window.validateCommentContent = validateContent;
+  })();
 </script>
 {% endblock content %}
-

@@ -164,7 +164,7 @@ def delete_review_ajax(request, pk):
         review = get_object_or_404(Review, pk=pk, user=request.user)
         review.delete()
         return JsonResponse({'success': True, 'message': 'Review deleted successfully'})
-
+    
     return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 
@@ -184,9 +184,11 @@ def my_reviews(request):
 
 
 @login_required
-def edit_comment(request, pk):
+def edit_comment_ajax(request, pk):
     """
-    Edit comment (User Story 9.2 - Could have)
+    Edit comment via AJAX (User Story 9.2 - Could have)
+    Only the comment author can edit
+    Returns JSON response
     """
     commentaire = get_object_or_404(Commentaire, pk=pk, user=request.user)
     
@@ -194,37 +196,43 @@ def edit_comment(request, pk):
         form = CommentaireForm(request.POST, instance=commentaire)
         if form.is_valid():
             form.save()
-            return redirect('reviews:detail', pk=commentaire.review.pk)
-    else:
-        form = CommentaireForm(instance=commentaire)
+            return JsonResponse({
+                'success': True, 
+                'message': 'Comment updated successfully',
+                'commentaire': commentaire.commentaire,
+                'review_pk': commentaire.review.pk
+            })
+        else:
+            return JsonResponse({
+                'success': False, 
+                'message': 'Validation error',
+                'errors': form.errors
+            }, status=400)
     
-    context = {
-        'title': 'Modifier le commentaire',
-        'form': form,
-        'commentaire': commentaire,
-    }
+    # GET request - return comment data for the form
+    if request.method == 'GET':
+        return JsonResponse({
+            'success': True,
+            'commentaire': commentaire.commentaire
+        })
     
-    return render(request, 'reviews/edit_comment.html', context)
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 
 @login_required
-def delete_comment(request, pk):
+def delete_comment_ajax(request, pk):
     """
-    Delete comment (User Story 9.3 - Could have)
+    Delete comment via AJAX (User Story 9.3 - Could have)
+    Only the comment author can delete
+    Returns JSON response
     """
-    commentaire = get_object_or_404(Commentaire, pk=pk, user=request.user)
-    review_pk = commentaire.review.pk
-    
     if request.method == 'POST':
+        commentaire = get_object_or_404(Commentaire, pk=pk, user=request.user)
+        review_pk = commentaire.review.pk
         commentaire.delete()
-        return redirect('reviews:detail', pk=review_pk)
+        return JsonResponse({'success': True, 'message': 'Comment deleted successfully', 'review_pk': review_pk})
     
-    context = {
-        'title': 'Supprimer le commentaire',
-        'commentaire': commentaire,
-    }
-    
-    return render(request, 'reviews/delete_comment.html', context)
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 
 # ==================== BACKOFFICE VIEWS (ADMIN ONLY) ====================
