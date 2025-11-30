@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        {% include 'partials/header/header-three.html' %}
+        
+        {% with class="service" current="Update Car" title="Update Car Details" %}
+            {% include 'partials/elements/breadcrumb.html' %}
+        {% endwith %}
+        
+        <main class="ms-main rts-section-gap">
+            <div class="ms-page-content">
+
+                <!--================= Update Car Form =================-->
+                <article class="page checkout-area type-page status-publish hentry">
+                    <div class="ms-sp--header container">
+                        <h2 class="title">Update {{ post.marque }} {{ post.modele }}</h2>
+                    </div>
+                    <div class="ms-default-page container entry-content">
+                        <div class="woocommerce">
+                            <form method="POST" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="full-grid">
+                                            <div class="billing-fields">
+                                                <div class="checkout-title">
+                                                    <h3>Car Details</h3>
+                                                </div>
+                                                <div class="form-content-box">
+                                                    <div class="row">
+                                                        {% for field in form %}
+                                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-semibold">{{ field.label }}</label>
+                                                                {{ field }}
+                                                                {% if field.errors %}
+                                                                    <div class="text-danger small">{{ field.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="payment-method mt-40 md-mt-20">
+                                                <div class="bottom-area">
+                                                    <p class="mt-15">
+                                                        Update car details below and save your changes.
+                                                    </p>
+                                                    <button type="submit" class="add-btn rts-btn btn-primary">
+                                                        Save Changes
+                                                    </button>
+                                                    <a href="{% url 'posts:portfolio' %}" class="rts-btn btn-border ms-2">
+                                                        Cancel
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="ms-checkout-review-order p-3 border rounded">
+                                            <h3>Current Image</h3>
+                                            {% if post.image %}
+                                                <img src="{{ post.image.url }}" class="w-100 rounded mb-3" alt="{{ post.modele }}">
+                                            {% else %}
+                                                <img src="{% static 'images/portfolio/04.webp' %}" class="w-100 rounded mb-3" alt="">
+                                            {% endif %}
+                                            <p>
+                                                You can upload a new image to replace the current one.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                <!--================= End Update Car Form =================-->
+
+            </div>
+        </main>
+    </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

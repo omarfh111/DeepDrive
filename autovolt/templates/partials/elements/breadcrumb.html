@@ -1,0 +1,14 @@
+{% load static %}
+<!-- rts breadcrumb area start -->
+<div class="rts-breadcrumb-area {{class}} jarallax">
+    <div class="container">
+        <div class="breadcrumb-area-wrapper">
+            <h1 class="title">{{title}}</h1>
+            <div class="nav-bread-crumb">
+                <a href="{% url 'index' %}">Home</a>
+                <a href="#" class="current">{{current}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- rts breadcrumb area end -->

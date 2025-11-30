@@ -1,0 +1,609 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        <!-- header area start -->
+        {% include 'partials/header/header-three.html' %}
+        <!-- header area end -->
+
+        <!-- Breadcrumb area start -->
+        {% with class="portfolio" current="My Reviews" title="My Reviews" %}
+            {% include 'partials/elements/breadcrumb.html' %}   
+        {% endwith %}
+        <!-- Breadcrumb area end -->
+        
+        <!-- My Reviews Area Start -->
+        <section class="rts-faq-area inner rts-section-gap">
+            <div class="container">
+                <div class="section-title-area2 text-center mb-5">
+                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s" data-wow-duration="1s">My Reviews</p>
+                    <h2 class="section-title wow move-right mb-3">Your <span>Reviews</span></h2>
+                    <p class="text-muted">Manage and track all your reviews in one place</p>
+                </div>
+
+                <div class="section-inner mt--80">
+                    <div class="row g-4">
+                        {% if reviews %}
+                            {% for review in reviews %}
+                            <div class="col-lg-6 col-xl-4">
+                                <div class="review-card h-100">
+                                    {% if review.image %}
+                                    <div class="review-card-image">
+                                        <img src="{{ review.image.url }}" alt="{{ review.titre }}">
+                                        <div class="review-card-badge">
+                                            <span class="badge-status badge-{% if review.is_approved %}approved{% else %}pending{% endif %}">
+                                                {% if review.is_approved %}
+                                                    <i class="fas fa-check-circle"></i> Approved
+                                                {% else %}
+                                                    <i class="fas fa-clock"></i> Pending
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="review-card-body">
+                                        <div class="review-card-header">
+                                            <h5 class="review-card-title">
+                                                <a href="{% url 'reviews:detail' review.pk %}">
+                                                    {{ review.titre }}
+                                                </a>
+                                            </h5>
+                                            <div class="review-rating">
+                                                <div class="stars">
+                                                    {% for i in "12345" %}
+                                                        {% if forloop.counter <= review.note %}
+                                                            <i class="fas fa-star"></i>
+                                                        {% elif forloop.counter|add:"-0.5" <= review.note %}
+                                                            <i class="fas fa-star-half-alt"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <span class="rating-number">{{ review.note }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="review-card-text">
+                                            {{ review.description|truncatewords:25 }}
+                                        </p>
+                                        
+                                        <div class="review-card-meta">
+                                            <span class="meta-item">
+                                                <i class="far fa-calendar-alt"></i>
+                                                {{ review.date_review|date:"M d, Y" }}
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="review-card-actions">
+                                            <a href="{% url 'reviews:detail' review.pk %}" class="btn-action btn-view">
+                                                <i class="fas fa-eye"></i>
+                                                <span>View</span>
+                                            </a>
+                                            <a href="{% url 'reviews:edit' review.pk %}" class="btn-action btn-edit">
+                                                <i class="fas fa-edit"></i>
+                                                <span>Edit</span>
+                                            </a>
+                                            <button
+                                                type="button"
+                                                onclick="openDeleteModal({{ review.pk }})"
+                                                class="btn-action btn-delete"
+                                                aria-label="Delete review"
+                                            >
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h3>No Reviews Yet</h3>
+                                    <p>Start sharing your experiences by writing your first review</p>
+                                    <a href="{% url 'reviews:add' %}" class="btn-primary-custom">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Write Your First Review
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- My Reviews Area End -->
+    </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+
+<!-- Delete Review Modal -->
+<div id="deleteReviewModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-content-custom">
+            <div class="modal-icon-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="modal-title">Delete Review?</h3>
+            <p class="modal-description">
+                This action cannot be undone. Your review will be permanently removed from the system.
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal btn-cancel" onclick="closeDeleteModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn-modal btn-confirm-delete" onclick="confirmDeleteReview()">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Review
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Review Cards */
+    .review-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .review-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .review-card-image {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .review-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .review-card:hover .review-card-image img {
+        transform: scale(1.08);
+    }
+
+    .review-card-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+
+    .badge-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge-approved {
+        background: rgba(34, 197, 94, 0.95);
+        color: white;
+    }
+
+    .badge-pending {
+        background: rgba(251, 191, 36, 0.95);
+        color: white;
+    }
+
+    .review-card-body {
+        padding: 24px;
+    }
+
+    .review-card-header {
+        margin-bottom: 16px;
+    }
+
+    .review-card-title {
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .review-card-title a {
+        color: #1f2937;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .review-card-title a:hover {
+        color: #831414;
+    }
+
+    .review-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stars {
+        display: flex;
+        gap: 4px;
+        color: #fbbf24;
+        font-size: 16px;
+    }
+
+    .rating-number {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .review-card-text {
+        color: #6b7280;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        min-height: 60px;
+    }
+
+    .review-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 20px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .meta-item i {
+        color: #d1d5db;
+    }
+
+    .review-card-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-action {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+    }
+
+    .btn-view {
+        background: #831414;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #601010;
+        transform: translateY(-2px);
+    }
+
+    .btn-edit {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .btn-edit:hover {
+        background: #e5e7eb;
+        color: #1f2937;
+    }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .btn-delete:hover {
+        background: #fecaca;
+        color: #b91c1c;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
+    }
+
+    .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+        opacity: 0.9;
+    }
+
+    .empty-state h3 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .empty-state p {
+        font-size: 18px;
+        margin-bottom: 32px;
+        opacity: 0.9;
+    }
+
+    .btn-primary-custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        background: white;
+        color: #831414;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary-custom:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-container {
+        width: 90%;
+        max-width: 440px;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-content-custom {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-icon-danger {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        color: #dc2626;
+    }
+
+    .modal-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .modal-description {
+        font-size: 16px;
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 32px;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-modal {
+        flex: 1;
+        padding: 14px 24px;
+        border-radius: 12px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .btn-cancel:hover {
+        background: #e5e7eb;
+        color: #1f2937;
+    }
+
+    .btn-confirm-delete {
+        background: #dc2626;
+        color: white;
+    }
+
+    .btn-confirm-delete:hover {
+        background: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .review-card-actions {
+            flex-direction: column;
+        }
+
+        .btn-action span {
+            display: inline;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        .modal-content-custom {
+            padding: 32px 24px;
+        }
+
+        .modal-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<script>
+    let currentReviewId = null;
+
+    function openDeleteModal(reviewId) {
+        currentReviewId = reviewId;
+        const modal = document.getElementById('deleteReviewModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteReviewModal');
+        modal.style.display = 'none';
+        currentReviewId = null;
+        document.body.style.overflow = 'auto';
+    }
+
+    function confirmDeleteReview() {
+        if (!currentReviewId) return;
+
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        button.disabled = true;
+
+        fetch(`/reviews/${currentReviewId}/delete-ajax/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.innerHTML = '<i class="fas fa-check"></i> Deleted!';
+                setTimeout(() => {
+                    window.location.reload();
+                }, 800);
+            } else {
+                alert('Error: ' + data.message);
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the review');
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,57 @@
+// Newsletter Area
+.rts-newsletter-area{
+    .newsletter-inner{
+        padding: 67px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 63px;
+        background: #252525;
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        form{
+            max-width: 511px;
+            width: 100%;
+        }
+        .input-wrapper{
+            position: relative;
+            z-index: 1;
+            input{
+                width: 100%;
+                padding: 15px 140px 15px 24px;
+                background: #121212;
+                border: 1px solid var(--color-primary);
+                color: var(--color-white);
+                &::placeholder{
+                    color: var(--color-white);
+                    line-height: 1 !important;
+                }
+            }
+            button{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 8px;
+            }
+        }
+        .shape{
+            position: absolute;
+            z-index: -1;
+            &.one{
+                top: 0;
+                left: 0;
+            }
+            &.two{
+                bottom: 0;
+                left: 55%;
+                transform: translateX(-55%);
+            }
+            &.three{
+                top: 0;
+                right: 0;
+            }
+        }
+    }
+}

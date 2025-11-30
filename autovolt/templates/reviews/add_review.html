@@ -1,0 +1,570 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+  .form-control-wrapper input,
+  .form-control-wrapper select,
+  .form-control-wrapper textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+  }
+
+  .form-control-wrapper input:focus,
+  .form-control-wrapper select:focus,
+  .form-control-wrapper textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .form-control-wrapper textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .billing-fields {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .ms-checkout-review-order {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5 !important;
+  }
+
+  /* Star Rating Styles */
+  .star-rating {
+    display: flex;
+    gap: 8px;
+    font-size: 32px;
+    padding: 10px 0;
+  }
+
+  .star-rating i {
+    color: #ffc107;
+    opacity: 0.3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .star-rating i:hover {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+
+  .star-rating i.active {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .star-rating i.active:hover {
+    transform: scale(1.15);
+  }
+
+  /* Content Validation Warnings */
+  .content-warning {
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+  }
+
+  .is-invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+  }
+</style>
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    <!-- header area start -->
+    {% include 'partials/header/header-three.html' %}
+    <!-- header area end -->
+
+    <main class="ms-main rts-section-gap">
+      <div class="ms-page-content">
+        <!--================= Add Review Form (styled like Checkout) =================-->
+        <article class="page checkout-area type-page status-publish hentry">
+          <div class="ms-sp--header container">
+            <h2 class="title">Add New Review</h2>
+          </div>
+          <div class="ms-default-page container entry-content">
+            <div class="woocommerce">
+              <form
+                method="post"
+                enctype="multipart/form-data"
+                class="checkout woocommerce-checkout ms-woocommerce-checkout"
+              >
+                {% csrf_token %} {% if form.errors %}
+                <div class="alert alert-danger mb-4">
+                  <strong>Please correct the errors below:</strong>
+                  {{ form.errors }}
+                </div>
+                {% endif %}
+
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="full-grid">
+                      <div class="billing-fields">
+                        <div class="checkout-title">
+                          <h3>Review Details</h3>
+                        </div>
+                        <div class="form-content-box">
+                          <div class="row">
+                            <!-- Title Field -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.titre.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.titre }}
+                                </div>
+                                {% if form.titre.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.titre.help_text }}</small
+                                >
+                                {% endif %} {% if form.titre.errors %}
+                                <div class="text-danger small">
+                                  {{ form.titre.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+
+                            <!-- Rating Field -->
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.note.label }}</label
+                                >
+                                <div class="star-rating-wrapper">
+                                  <div class="star-rating" id="starRating">
+                                    <i class="fas fa-star" data-rating="1"></i>
+                                    <i class="fas fa-star" data-rating="2"></i>
+                                    <i class="fas fa-star" data-rating="3"></i>
+                                    <i class="fas fa-star" data-rating="4"></i>
+                                    <i class="fas fa-star" data-rating="5"></i>
+                                  </div>
+                                  <div
+                                    class="form-control-wrapper"
+                                    style="display: none"
+                                  >
+                                    {{ form.note }}
+                                  </div>
+                                </div>
+                                <small class="form-text text-muted d-block mt-2"
+                                  >Click on a star to rate</small
+                                >
+                                {% if form.note.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.note.help_text }}</small
+                                >
+                                {% endif %} {% if form.note.errors %}
+                                <div class="text-danger small">
+                                  {{ form.note.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+
+                            <!-- Image Field -->
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.image.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.image }}
+                                </div>
+                                {% if form.image.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.image.help_text }}</small
+                                >
+                                {% endif %} {% if form.image.errors %}
+                                <div class="text-danger small">
+                                  {{ form.image.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.description.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.description }}
+                                </div>
+                                {% if form.description.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.description.help_text }}</small
+                                >
+                                {% endif %} {% if form.description.errors %}
+                                <div class="text-danger small">
+                                  {{ form.description.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="payment-method mt-40 md-mt-20">
+                        <div class="bottom-area">
+                          <p class="mt-15">
+                            Please verify all review details before submission.
+                          </p>
+                          <button
+                            type="submit"
+                            class="add-btn rts-btn btn-primary"
+                          >
+                            <i class="fas fa-check"></i> Submit Review
+                          </button>
+                          <a
+                            href="{% url 'reviews:list' %}"
+                            class="rts-btn btn-border ms-2"
+                          >
+                            <i class="fas fa-times"></i> Cancel
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="ms-checkout-review-order p-3 border rounded">
+                      <h3>Preview Info</h3>
+                      <p>
+                        After saving, your review will appear on the reviews
+                        page.
+                      </p>
+                      <div class="preview-placeholder">
+                        <i
+                          class="fas fa-star text-warning"
+                          style="font-size: 3rem"
+                        ></i>
+                        <p class="mt-3 text-muted">
+                          Your review rating will be displayed here
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </article>
+        <!--================= End Add Review Form =================-->
+      </div>
+    </main>
+  </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+<script>
+  // Star Rating Functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const stars = document.querySelectorAll(".star-rating i");
+    const ratingInput = document.querySelector(
+      'select[name="note"], input[name="note"]'
+    );
+
+    stars.forEach((star) => {
+      star.addEventListener("click", function () {
+        const rating = this.getAttribute("data-rating");
+
+        // Update hidden input
+        if (ratingInput) {
+          ratingInput.value = rating;
+        }
+
+        // Update star display
+        stars.forEach((s, index) => {
+          if (index < rating) {
+            s.classList.add("active");
+          } else {
+            s.classList.remove("active");
+          }
+        });
+      });
+
+      // Hover effect
+      star.addEventListener("mouseenter", function () {
+        const rating = this.getAttribute("data-rating");
+        stars.forEach((s, index) => {
+          if (index < rating) {
+            s.style.opacity = "0.8";
+          }
+        });
+      });
+
+      star.addEventListener("mouseleave", function () {
+        stars.forEach((s) => {
+          if (!s.classList.contains("active")) {
+            s.style.opacity = "0.3";
+          } else {
+            s.style.opacity = "1";
+          }
+        });
+      });
+    });
+
+    // Set initial rating if exists
+    if (ratingInput && ratingInput.value) {
+      const currentRating = ratingInput.value;
+      stars.forEach((s, index) => {
+        if (index < currentRating) {
+          s.classList.add("active");
+        }
+      });
+    }
+  });
+
+  // Minimal Content Validation - Only catches extreme spam/profanity
+  // WITH DEBUG LOGGING
+  (function () {
+    // Only the most offensive words
+    const badWords = [
+      "fuck",
+      "shit",
+      "bitch",
+      "asshole",
+      "cunt",
+      "whore"
+    ];
+
+    // Only check for truly excessive spam
+    function validateContent(text) {
+      console.log("=== VALIDATION STARTED ===");
+      console.log("Text to validate:", text);
+      
+      if (!text || text.trim().length === 0) {
+        console.log("✓ Empty text - VALID");
+        return { isValid: true, message: "" };
+      }
+
+      const textLower = text.toLowerCase();
+      console.log("Text length:", text.length);
+
+      // Check for standalone bad words only
+      for (let word of badWords) {
+        const regex = new RegExp(`\\b${word}\\b`, "i");
+        if (regex.test(text)) {
+          console.log("❌ FAILED: Found bad word:", word);
+          return {
+            isValid: false,
+            message: "Please remove inappropriate language from your review.",
+          };
+        }
+      }
+      console.log("✓ No bad words found");
+
+      // Check for 5+ URLs
+      const urlMatches = text.match(/(https?:\/\/[^\s]+)/gi) || [];
+      console.log("URLs found:", urlMatches.length);
+      if (urlMatches.length >= 5) {
+        console.log("❌ FAILED: Too many URLs");
+        return {
+          isValid: false,
+          message:
+            "Your content contains too many links. Please reduce the number of URLs.",
+        };
+      }
+      console.log("✓ URL count acceptable");
+
+      // Check for 3+ email addresses
+      const emailMatches =
+        text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi) || [];
+      console.log("Emails found:", emailMatches.length);
+      if (emailMatches.length >= 3) {
+        console.log("❌ FAILED: Too many emails");
+        return {
+          isValid: false,
+          message:
+            "Your content contains multiple email addresses. Please remove them.",
+        };
+      }
+      console.log("✓ Email count acceptable");
+
+      // Check for 15+ repeated characters
+      const repeatedMatch = text.match(/(.)\1{14,}/);
+      if (repeatedMatch) {
+        console.log("❌ FAILED: Repeated characters:", repeatedMatch[0]);
+        return {
+          isValid: false,
+          message: "Your content contains excessive repeated characters.",
+        };
+      }
+      console.log("✓ No excessive repeated characters");
+
+      // Check for repetitive patterns (e.g., "fdsfsfdsfsfdsfsfdsfs", "ddsdsddsds", "kqsdkqs")
+      // Look for 2-10 character patterns repeated 5+ times
+      const patternMatch = text.match(/(.{2,10})\1{4,}/);
+      if (patternMatch) {
+        console.log("❌ FAILED: Repetitive pattern:", patternMatch[0]);
+        return {
+          isValid: false,
+          message: "Your content contains repetitive patterns. Please provide meaningful content.",
+        };
+      }
+      console.log("✓ No repetitive patterns");
+
+      // Check if text is mostly just a few characters repeated
+      if (text.length > 50) {
+        const textNoSpaces = text.replace(/\s/g, '').toLowerCase();
+        const uniqueChars = new Set(textNoSpaces).size;
+        if (textNoSpaces.length > 50 && uniqueChars < 10) {
+          console.log("❌ FAILED: Too few unique characters:", uniqueChars);
+          return {
+            isValid: false,
+            message: "Your content appears to be spam. Please provide meaningful text.",
+          };
+        }
+      }
+      console.log("✓ Sufficient character variety");
+
+      // Additional check: text with very low character diversity ratio
+      if (text.length > 30) {
+        const textClean = text.replace(/\s/g, '').replace(/\n/g, '').toLowerCase();
+        if (textClean.length > 30) {
+          const uniqueRatio = new Set(textClean).size / textClean.length;
+          if (uniqueRatio < 0.3) {  // Less than 30% unique characters
+            console.log("❌ FAILED: Low character diversity ratio:", uniqueRatio.toFixed(2));
+            return {
+              isValid: false,
+              message: "Your content appears to be spam. Please provide meaningful text.",
+            };
+          }
+        }
+      }
+      console.log("✓ Good character diversity");
+
+      console.log("✅ ALL CHECKS PASSED - VALID");
+      return { isValid: true, message: "" };
+    }
+
+    function showWarning(element, message) {
+      removeWarning(element);
+
+      const warning = document.createElement("div");
+      warning.className = "content-warning alert alert-warning mt-2";
+      warning.innerHTML =
+        '<i class="fas fa-exclamation-triangle me-2"></i>' + message;
+      element.parentElement.appendChild(warning);
+      element.classList.add("is-invalid");
+    }
+
+    function removeWarning(element) {
+      const warning = element.parentElement.querySelector(".content-warning");
+      if (warning) {
+        warning.remove();
+      }
+      element.classList.remove("is-invalid");
+    }
+
+    // Validate title field on blur
+    const titreField = document.querySelector('input[name="titre"]');
+    if (titreField) {
+      titreField.addEventListener("blur", function () {
+        const validation = validateContent(this.value);
+        if (!validation.isValid) {
+          showWarning(this, validation.message);
+        } else {
+          removeWarning(this);
+        }
+      });
+
+      // Remove warning on input
+      titreField.addEventListener("input", function () {
+        if (this.classList.contains("is-invalid")) {
+          const validation = validateContent(this.value);
+          if (validation.isValid) {
+            removeWarning(this);
+          }
+        }
+      });
+    }
+
+    // Validate description field on blur
+    const descriptionField = document.querySelector(
+      'textarea[name="description"]'
+    );
+    if (descriptionField) {
+      descriptionField.addEventListener("blur", function () {
+        const validation = validateContent(this.value);
+        if (!validation.isValid) {
+          showWarning(this, validation.message);
+        } else {
+          removeWarning(this);
+        }
+      });
+
+      // Remove warning on input
+      descriptionField.addEventListener("input", function () {
+        if (this.classList.contains("is-invalid")) {
+          const validation = validateContent(this.value);
+          if (validation.isValid) {
+            removeWarning(this);
+          }
+        }
+      });
+    }
+
+    // Validate on form submission
+    const reviewForm = document.querySelector("form.checkout");
+    if (reviewForm) {
+      reviewForm.addEventListener("submit", function (e) {
+        console.log("=== FORM SUBMISSION STARTED ===");
+        let hasError = false;
+
+        // Validate title
+        if (titreField && titreField.value.trim()) {
+          console.log("Validating title field...");
+          const titleValidation = validateContent(titreField.value);
+          if (!titleValidation.isValid) {
+            console.log("Title validation FAILED");
+            showWarning(titreField, titleValidation.message);
+            hasError = true;
+          } else {
+            console.log("Title validation PASSED");
+          }
+        }
+
+        // Validate description
+        if (descriptionField && descriptionField.value.trim()) {
+          console.log("Validating description field...");
+          const descValidation = validateContent(descriptionField.value);
+          if (!descValidation.isValid) {
+            console.log("Description validation FAILED");
+            showWarning(descriptionField, descValidation.message);
+            hasError = true;
+          } else {
+            console.log("Description validation PASSED");
+          }
+        }
+
+        if (hasError) {
+          console.log("❌ FORM BLOCKED BY JAVASCRIPT VALIDATION");
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return false;
+        }
+        
+        console.log("✅ JAVASCRIPT VALIDATION PASSED - Form will submit to Django");
+        console.log("If you see a validation error after this, it's coming from DJANGO backend validation");
+      });
+    }
+  })();
+</script>
+{% endblock content %}
