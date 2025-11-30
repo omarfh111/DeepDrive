@@ -19,6 +19,7 @@
                         <div class="col-lg-4">
                             <div class="sticky-top">
                                 <div class="left-side-bar">
+                                    
                                    <div class="search-area side-box">
     <h2>Cars Search</h2>
 
@@ -333,6 +334,53 @@
                             <path d="M15.5133 6.32373C14.5889 6.32478 13.7027 6.69244 13.0491 7.34605C12.3954 7.99967 12.0277 8.88587 12.0266 9.81024C12.2182 14.4358 18.8091 14.4344 19 9.8102C18.9989 8.88583 18.6312 7.99965 17.9775 7.34604C17.3239 6.69243 16.4377 6.32478 15.5133 6.32373ZM15.5133 12.6183C14.7688 12.6175 14.0551 12.3213 13.5286 11.7949C13.0022 11.2685 12.7061 10.5547 12.7052 9.81024C12.8463 6.09026 18.1808 6.09128 18.3214 9.81026C18.3205 10.5547 18.0244 11.2685 17.498 11.7949C16.9715 12.3214 16.2578 12.6175 15.5133 12.6183Z" fill="white"/>
                         </svg>                                    
                         </a>
+                         <form action="{% url 'posts:portfolio' %}" method="get" class="sort-form d-flex align-items-center">
+                {# keep search #}
+                {% if request.GET.q %}
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                {% endif %}
+
+                {# keep marque filters #}
+                {% for m in selected_marques %}
+                    <input type="hidden" name="marque" value="{{ m }}">
+                {% endfor %}
+
+                {# keep energy filters #}
+                {% for e in selected_energies %}
+                    <input type="hidden" name="energy" value="{{ e }}">
+                {% endfor %}
+
+                {# keep transmission filters #}
+                {% for t in selected_transmissions %}
+                    <input type="hidden" name="transmission" value="{{ t }}">
+                {% endfor %}
+
+                {# keep etat filters #}
+                {% for et in selected_etats %}
+                    <input type="hidden" name="etat_general" value="{{ et }}">
+                {% endfor %}
+
+                {# keep carrosserie filters #}
+                {% for c in selected_carrosseries %}
+                    <input type="hidden" name="carrosserie" value="{{ c }}">
+                {% endfor %}
+
+                {# keep price range #}
+                <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+                <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+
+                <label for="order" class="me-2">Sort by:</label>
+                <select name="order" id="order" onchange="this.form.submit()">
+                    <option value="">Default</option>
+                    <option value="price_asc" {% if selected_order == 'price_asc' %}selected{% endif %}>
+                        Price: Low to High
+                    </option>
+                    <option value="price_desc" {% if selected_order == 'price_desc' %}selected{% endif %}>
+                        Price: High to Low
+                    </option>
+                </select>
+            </form> 
+                                
                                 <div class="row g-5">
                                     
                                 {% for post in posts %}

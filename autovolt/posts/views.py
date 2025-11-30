@@ -156,6 +156,14 @@ def portfolio(request, backoffice=False):
     selected_carrosseries = request.GET.getlist("carrosserie")
     if selected_carrosseries:
         filtered_qs = filtered_qs.filter(carrosserie__in=selected_carrosseries)
+        # --- Sort by price ---
+    order = request.GET.get("order")
+    if order == "price_asc":
+        posts = posts.order_by("price")
+    elif order == "price_desc":
+        posts = posts.order_by("-price")
+    # else: keep default ordering from Meta (by -id) 
+
 
 
     template = 'portfolio-2.html'
@@ -181,6 +189,7 @@ def portfolio(request, backoffice=False):
             "selected_etats": selected_etats,
             "carrosserie_counts": carrosserie_counts,
             "selected_carrosseries": selected_carrosseries,
+            "selected_order": order,
 
         },
         backoffice
