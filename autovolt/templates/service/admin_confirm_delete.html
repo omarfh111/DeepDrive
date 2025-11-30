@@ -1,0 +1,122 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}Supprimer Service | Dusty{% endblock %}
+{% block page_title %}Confirmation de suppression{% endblock %}
+{% block breadcrumb_leaf %}Supprimer Service{% endblock %}
+
+{% block extra_css %}
+<style>
+.delete-card {
+    max-width: 600px;
+    margin: 50px auto;
+    animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.danger-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    animation: shake 0.5s;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card delete-card">
+            <div class="card-body text-center p-5">
+                <!-- Icône d'avertissement -->
+                <div class="danger-icon">
+                    <iconify-icon icon="solar:danger-triangle-bold" class="fs-48 text-danger"></iconify-icon>
+                </div>
+
+                <!-- Titre -->
+                <h3 class="mb-3 fw-bold">Confirmer la suppression</h3>
+                <p class="text-muted mb-4">Êtes-vous sûr de vouloir supprimer ce service ?</p>
+
+                <!-- Détails du service -->
+                <div class="alert alert-danger-subtle mb-4">
+                    <div class="d-flex align-items-start text-start">
+                        {% if service.image %}
+                        <img src="{{ service.image.url }}" class="rounded me-3" width="80" height="80" style="object-fit: cover;">
+                        {% else %}
+                        <div class="avatar-lg bg-danger-subtle rounded me-3 d-flex align-items-center justify-content-center flex-shrink-0">
+                            <iconify-icon icon="solar:wrench-bold-duotone" class="fs-32 text-danger"></iconify-icon>
+                        </div>
+                        {% endif %}
+                        <div class="flex-grow-1">
+                            <h5 class="mb-2 text-danger">{{ service.nom_service }}</h5>
+                            <div class="d-flex flex-column gap-2" style="font-size: 14px;">
+                                <div>
+                                    <iconify-icon icon="solar:wrench-outline" class="align-middle me-2"></iconify-icon>
+                                    <strong>Type:</strong> {{ service.type_service }}
+                                </div>
+                                <div>
+                                    <iconify-icon icon="solar:calendar-outline" class="align-middle me-2"></iconify-icon>
+                                    <strong>Date:</strong> {{ service.date_service|date:"d/m/Y" }}
+                                </div>
+                                <div>
+                                    <iconify-icon icon="solar:chart-outline" class="align-middle me-2"></iconify-icon>
+                                    <strong>Statut:</strong> {{ service.statut }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avertissement -->
+                <div class="alert alert-warning border-warning mb-4">
+                    <iconify-icon icon="solar:danger-circle-bold" class="fs-20 align-middle me-2"></iconify-icon>
+                    <strong>Attention !</strong> Cette action est irréversible.
+                </div>
+
+                <!-- Boutons d'action -->
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="{% url 'services:admin_service_list' %}" class="btn btn-light btn-lg px-5">
+                            <iconify-icon icon="solar:close-circle-bold" class="align-middle me-2"></iconify-icon>
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-danger btn-lg px-5">
+                            <iconify-icon icon="solar:trash-bin-2-bold" class="align-middle me-2"></iconify-icon>
+                            Oui, supprimer
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Lien retour -->
+                <div class="mt-4">
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="text-muted">
+                        <iconify-icon icon="solar:pen-outline" class="align-middle me-1"></iconify-icon>
+                        Ou modifier ce service
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

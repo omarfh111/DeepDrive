@@ -1,0 +1,13 @@
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+{% load l10n %}
+{% include 'partials/style.html' %}
+     <body class="{% block class %}{% if class %}{{ class }}{% else %}default{% endif %}{% endblock %}">
+          {% include 'partials/loader.html' %}
+               {% block content %}
+                    
+               {% endblock %}
+          {% include 'partials/scripts.html' %}
+     </body>
+</html>

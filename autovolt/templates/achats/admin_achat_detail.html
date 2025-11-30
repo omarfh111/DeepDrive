@@ -1,0 +1,74 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Achat #{{ achat.id }} | Dusty{% endblock %}
+{% block page_title %}Achat #{{ achat.id }}{% endblock %}
+{% block breadcrumb_leaf %}Détail de l'achat{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <div class="col-xxl-8 col-lg-7">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Annonce</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex gap-3">
+          {% if achat.post.image %}
+            <img src="{{ achat.post.image.url }}" alt="" class="rounded-2" style="height:120px;width:180px;object-fit:cover;">
+          {% endif %}
+          <div>
+            <div class="fs-5 fw-semibold">{{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})</div>
+            <div class="text-muted">Transmission: {{ achat.post.transmission }} • Boîte: {{ achat.post.boite_vitesse }}</div>
+            <div class="text-muted">Énergie: {{ achat.post.energy }} • Carrosserie: {{ achat.post.carrosserie }}</div>
+            <div class="mt-2">
+              <a class="btn btn-sm btn-primary" href="{% url 'posts:admin_update_post' achat.post.id %}">Modifier l’annonce</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xxl-4 col-lg-5">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Achat</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-2"><strong>Prix:</strong> {{ achat.price }} DT</div>
+        <!-- label can say "buyer", but the value is achat.buyer -->
+<strong>Acheteur:</strong>
+{% firstof achat.buyer.get_full_name achat.buyer.email achat.buyer %}
+
+        <div class="mb-2"><strong>Date:</strong> {{ achat.date_achat|date:"Y-m-d H:i" }}</div>
+        <div class="mb-3">
+          <strong>Statut:</strong>
+{% if achat.statut == 'paid' %}
+  <span class="badge bg-success-subtle text-success">Validé</span>
+{% elif achat.statut == 'canceled' %}
+  <span class="badge bg-danger-subtle text-danger">Annulé</span>
+{% else %}
+  <span class="badge bg-warning-subtle text-warning">En cours</span>
+{% endif %}
+
+        </div>
+
+        <div class="d-grid gap-2">
+          <a class="btn btn-primary" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='validated' %}">Marquer Validé</a>
+          <a class="btn btn-outline-primary" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='pending' %}">Marquer En cours</a>
+          <a class="btn btn-outline-danger" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='cancelled' %}">Marquer Annulé</a>
+        </div>
+
+        <hr>
+        <form method="post" action="{% url 'achats:admin_achat_delete' achat_id=achat.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Supprimer cet achat ?');">
+            Supprimer
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

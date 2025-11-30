@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            
+
+            <div class="rts-portfolio-area inner rts-section-gapNew">
+                <div class="container">
+                    <div class="row g-5">
+                        <div class="col-lg-8">
+                            <div class="portfolio-details-area">
+                                <div class="portfolio-slider-area mb--40">
+                                  <div class="swiper projectSlider4">
+                                    <div class="swiper-wrapper">
+                                      <div class="swiper-slide">
+                                        <div class="image">
+                                          <img src="{{ post.image.url }}" width="662" alt="{{ post.marque }} {{ post.modele }}">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                </div>
+
+                                <h2 class="mb--30">Car Description</h2>
+
+                                <p class="mb--10">
+                                  <strong>{{ post.marque }} {{ post.modele }}</strong> · {{ post.year }} · {{ post.carrosserie }}
+                                </p>
+
+                                <p class="mb--10">
+                                  {{ post.kilometrage|floatformat:0 }} Km • {{ post.energy }} • {{ post.boite_vitesse }} • {{ post.transmission }}
+                                </p>
+
+                                <p class="mb--30">
+                                  État : {{ post.etat_general }} — 
+                                  {{ post.nb_proprietes }} propriétaire{{ post.nb_proprietes|pluralize }} — 
+                                  Gouvernorat : {{ post.gouvernerat }}.
+                                </p>
+
+                               <h2 class="mb--30">Car Features</h2>
+<ul class="feature-list mb--40">
+  <li><i class="fa-regular fa-circle-check"></i> Énergie : {{ post.energy }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Boîte de vitesses : {{ post.boite_vitesse }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Transmission : {{ post.transmission }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Carrosserie : {{ post.carrosserie }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Puissance fiscale : {{ post.puissance_fiscale }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> État général : {{ post.etat_general }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Nombre de propriétaires : {{ post.nb_proprietes }}</li>
+  <li><i class="fa-regular fa-circle-check"></i> Gouvernorat : {{ post.gouvernerat }}</li>
+</ul>
+
+<h2 class="mb--30">Key Specs</h2>
+<ul class="specs-list mb--40">
+  <li>
+    <span class="number">1</span>
+    <div class="text">
+      <h6>Année</h6>
+      <p>{{ post.year }}</p>
+    </div>
+  </li>
+  <li>
+    <span class="number">2</span>
+    <div class="text">
+      <h6>Kilométrage</h6>
+      <p>{{ post.kilometrage|floatformat:0 }} Km</p>
+    </div>
+  </li>
+  <li>
+    <span class="number">3</span>
+    <div class="text">
+      <h6>Énergie</h6>
+      <p>{{ post.energy }}</p>
+    </div>
+  </li>
+  <li>
+    <span class="number">4</span>
+    <div class="text">
+      <h6>Boîte de vitesses</h6>
+      <p>{{ post.boite_vitesse }}</p>
+    </div>
+  </li>
+  <li>
+    <span class="number">5</span>
+    <div class="text">
+      <h6>Transmission</h6>
+      <p>{{ post.transmission }}</p>
+    </div>
+  </li>
+  <li>
+    <span class="number">6</span>
+    <div class="text">
+      <h6>Carrosserie</h6>
+      <p>{{ post.carrosserie }}</p>
+    </div>
+  </li>
+</ul>
+
+                                
+                                <h2 class="mb--30">Car Engine </h2>
+                                <ul class="feature-list2 mb--30">
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Displacement
+                                      </p>
+                                      <p>
+                                        3L
+                                      </p>
+                                    </div> 
+                                  </li>
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Torque
+                                      </p>
+                                      <p>
+                                        350 lb.-ft
+                                      </p>
+                                    </div> 
+                                  </li>
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Horespower
+                                      </p>
+                                      <p>
+                                        210 kW / 286 hp
+                                      </p>
+                                    </div> 
+                                  </li>
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Number of cylinders
+                                      </p>
+                                      <p>
+                                        4
+                                      </p>
+                                    </div> 
+                                  </li>
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Engine Layout
+                                      </p>
+                                      <p>
+                                        First-Engine
+                                      </p>
+                                    </div> 
+                                  </li>
+                                  <li>
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <div class="text">
+                                      <p>
+                                        Engine Configurations
+                                      </p>
+                                      <p>
+                                        V Engine (V6, V8)
+                                      </p>
+                                    </div> 
+                                  </li>
+                                </ul>
+                                <form action="#" class="message-form mb--100">
+                                  <h2>Send Message</h2>
+                                  <div class="form-inner">
+                                    <div class="input-wrapper">
+                                      <input type="text" name="Name" placeholder="Your Name" required>
+                                      <input type="email" name="Email" placeholder="Your Email*" required>
+                                      <input type="text" name="Phone" placeholder="Phone" required>
+                                    </div>
+                                    <textarea name="message" id="message" placeholder="Type a message*"></textarea>
+                                    <div class="form-bottom">
+                                      <label class="checkbox-label">
+                                        <input type="checkbox" />
+                                        <span>I accept The <a href="#">Privacy Policy</a></span>
+                                      </label>
+                                      <button class="rts-btn btn-primary radius-small" type="submit"><img src="{% static 'images/portfolio/send.svg' %}" alt="">Submit Message</button>
+                                    </div>
+                                  </div>
+                                </form>
+                                
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="sticky-top">
+                            <div class="left-side-bar">
+                                <div class="price-area side-box">
+                                    <h5>${{ post.price }}</h5>
+                                    <ul class="price-meta">
+                                      <li><img src="{% static 'images/portfolio/calender.svg' %}" alt=""> Feb 23, 2025</li>
+                                      <li><img src="{% static 'images/portfolio/view.svg' %}" alt=""> View</li>
+                                      <li><img src="{% static 'images/portfolio/heart.svg' %}" alt=""> Favourite</li>
+                                    </ul>
+                                    <div class="price-btn">
+                                      <a class="rts-btn btn-primary radius-small"
+   href="{% url 'achats:start_purchase' post_id=post.id %}">
+   Call For Final Price
+</a>
+
+                                    </div>
+                                </div>
+                                <div class="overview side-box">
+  <h2>Car Overview</h2>
+  <ul class="feature-list2">
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
+      <div class="text">
+        <p>Marque / Modèle</p>
+        <p>{{ post.marque }} {{ post.modele }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
+      <div class="text">
+        <p>Kilométrage</p>
+        <p>{{ post.kilometrage|floatformat:0 }} Km</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/11.svg' %}" alt="">
+      <div class="text">
+        <p>Énergie</p>
+        <p>{{ post.energy }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/12.svg' %}" alt="">
+      <div class="text">
+        <p>Boîte de vitesses</p>
+        <p>{{ post.boite_vitesse }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/14.svg' %}" alt="">
+      <div class="text">
+        <p>Transmission</p>
+        <p>{{ post.transmission }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/15.svg' %}" alt="">
+      <div class="text">
+        <p>Puissance fiscale</p>
+        <p>{{ post.puissance_fiscale }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/16.svg' %}" alt="">
+      <div class="text">
+        <p>Carrosserie</p>
+        <p>{{ post.carrosserie }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/13.svg' %}" alt="">
+      <div class="text">
+        <p>Nombre de propriétaires</p>
+        <p>{{ post.nb_proprietes }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
+      <div class="text">
+        <p>Gouvernorat</p>
+        <p>{{ post.gouvernerat }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
+      <div class="text">
+        <p>État général</p>
+        <p>{{ post.etat_general }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
+      <div class="text">
+        <p>Année</p>
+        <p>{{ post.year }}</p>
+      </div> 
+    </li>
+    <li>
+      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
+      <div class="text">
+        <p>Prix</p>
+        <p>{{ post.price|floatformat:0 }} DT</p>
+      </div> 
+    </li>
+  </ul>
+</div>
+
+                                <div class="map-area side-box">
+                                  <h2>Location</h2>
+                                  <div class="contact-map-area-fluid">
+                                    <iframe class="contact-map" height="250" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14602.288851207937!2d90.47855065!3d23.798243149999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1663151706353!5m2!1sen!2sbd" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                                </div>
+                                <div class="contact side-box">
+                                    <h2>Contacts</h2>
+                                    <div class="contact-inner">
+                                      <div class="author-img">
+                                        <img src="{% static 'images/portfolio/author.webp' %}" alt="">
+                                      </div>
+                                      <h5>Jonathon Doe</h5>
+                                      <p>Car Dealer</p>
+                                      <div class="contact-button-area">
+                                        <a href="#" class="rts-btn radius-small whatsapp"><img src="{% static 'images/portfolio/whatsapp.svg' %}" alt=""> +14844578513</a>
+                                        <a href="#" class="rts-btn radius-small btn-primary phone"><img src="{% static 'images/portfolio/phone.svg' %}" alt=""> +18143511443</a>
+                                        <a href="#" class="rts-btn radius-small telegram"><img src="{% static 'images/portfolio/send.svg' %}" alt=""> Send Message</a>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="social-area side-box">
+                                  <h2>Share</h2>
+                                  <ul>
+                                    <li>
+                                      <i class="fa-brands fa-facebook-f"></i>
+                                    </li>
+                                    <li>
+                                      <i class="fa-brands fa-twitter"></i>
+                                    </li>
+                                    <li>
+                                      <i class="fa-brands fa-instagram"></i>
+                                    </li>
+                                  </ul>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

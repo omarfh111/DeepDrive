@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class="rts-wrapper">
+        <div class="rts-wrapper-inner">
+            <!-- header area start -->
+            {% include 'partials/header/header-three.html' %}
+            <!-- header area end -->
+
+            <!-- Breadcrumb area start -->
+            {% with class="portfolio" current="Cars" title="Cars" %}
+                {% include 'partials/elements/breadcrumb.html' %}   
+            {% endwith %}
+            <!-- Breadcrumb area end -->
+             <div class="rts-select-area inner">
+                <div class="container">
+                    <div class="select-inner">
+                        <div class="select-area-down wow fadeInUp" data-wow-delay=".8s" data-wow-duration="1s">
+                            <form action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select" class="mySelect">
+                                    <option value="2" selected>Car Make</option>
+                                    <option value="10">Mazda</option>
+                                    <option value="1">Citroen</option>
+                                    <option value="13">Honda</option>
+                                    <option value="14">Mitsubishi</option>
+                                    <option value="15">Peugeot</option>
+                                </select>
+                            </form>
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Car Model</option>
+                                    <option value="10">155</option>
+                                    <option value="1">151</option>
+                                    <option value="13">150</option>
+                                    <option value="14">152</option>
+                                    <option value="15">156</option>
+                                </select>
+                            </form>
+                            <form class="select-2" action="#" method="get" accept-charset="utf-8">
+                                <select name="my_select2" class="my_select2">
+                                    <option value="2" selected>Price</option>
+                                    <option value="10">22,000$</option>
+                                    <option value="1">27,000$</option>
+                                    <option value="13">30,000$</option>
+                                    <option value="14">32,000$</option>
+                                    <option value="15">38,000$</option>
+                                </select>
+                            </form>
+                            <button type="submit" class="rts-btn radius-small icon btn-primary">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M10.69 10.69L13 13M12.3333 6.68575C12.3333 9.826 9.796 12.3715 6.667 12.3715C3.53725 12.3715 1 9.826 1 6.6865C1 3.54475 3.53725 1 6.66625 1C9.796 1 12.3333 3.5455 12.3333 6.68575Z"
+                                        stroke="white" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+             </div>
+            <div class="rts-portfolio-area inner rts-section-gapNew">
+                <div class="container">
+                    <div class="row g-5">
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/04.webp' %}" alt=""></a>
+                                    <span class="tag">Stocks</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/04.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        7
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Thunderbolt Car</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}"
+                                            class="rts-btn btn-primary radius-small">View
+                                            Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/05.webp' %}" alt=""></a>
+                                    <span class="tag">New</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/05.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        5
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Mercedes-Benz E-Class</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}" class="rts-btn btn-primary radius-small">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/06.webp' %}" alt=""></a>
+                                    <span class="tag">Trending</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/06.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        5
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Ford Mustang
+                                            Convertible</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}"
+                                            class="rts-btn btn-primary radius-small">View
+                                            Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/07.webp' %}" alt=""></a>
+                                    <span class="tag">Trending</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/07.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        5
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Mazda MX-5 Miata</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}"
+                                            class="rts-btn btn-primary radius-small">View
+                                            Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/08.webp' %}" alt=""></a>
+                                    <span class="tag">Trending</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/08.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        5
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Honda Civic
+                                            Hatchback</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}"
+                                            class="rts-btn btn-primary radius-small">View
+                                            Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="project-wrapper2">
+                                <div class="image-area">
+                                    <a href="{% url 'portfolio-details' %}"><img src="{% static 'images/portfolio/09.webp' %}" alt=""></a>
+                                    <span class="tag">Trending</span>
+                                    <a href="wishlist.html" class="wishlist"><i class="fa-regular fa-heart"></i></a>
+                                    <a href="{% static 'images/portfolio/09.webp' %}" class="gallery-image">
+                                        <img src="{% static 'images/icon/image.svg' %}" alt="">
+                                        5
+                                    </a>
+                                </div>
+                                <span class="price">14,000$</span>
+                                <div class="content-area">
+                                    <h6 class="title "><a href="{% url 'portfolio-details' %}">Hyundai Veloster</a>
+                                    </h6>
+                                    <ul class="feature-area">
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
+                                            100 Miles
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
+                                            Petrol
+                                        </li>
+                                        <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
+                                            Autometic
+                                        </li>
+                                        
+                                    </ul>
+                                    <div class="button-area">
+                                        <p class="">$400</p>
+                                        <a href="{% url 'portfolio-details' %}"
+                                            class="rts-btn btn-primary radius-small">View
+                                            Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="rts-btn load-more-btn btn-border">Load More</a>
+                </div>
+            </div>
+            <div class="rts-cta-area area-2">
+                <div class="container">
+                    <div class="cta-inner">
+                        <h2 class="title">If you have any questions Please Call.</h2>
+                        <div class="contact">
+                            <a href="callto:+16544521505">
+                                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                                +1-654-452-1505</a>
+                        </div>
+                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/footer/footer-three.html' %}
+{% endblock content %}
