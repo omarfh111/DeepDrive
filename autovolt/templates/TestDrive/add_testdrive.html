@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ===============================
+     STYLE GLOBAL DU FORMULAIRE
+  =============================== */
+  .testdrive-form .form-group {
+    margin-bottom: 20px;
+  }
+
+  .testdrive-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  .testdrive-form input,
+  .testdrive-form select,
+  .testdrive-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .testdrive-form input:focus,
+  .testdrive-form select:focus,
+  .testdrive-form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    outline: none;
+  }
+
+  .testdrive-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  /* Champs alignés en grille mais large */
+  .testdrive-form .row {
+    margin-bottom: 15px;
+  }
+
+  /* Bouton principal */
+  .testdrive-form .btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background 0.2s ease;
+    font-weight: 500;
+  }
+
+  .testdrive-form .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  /* Carte générale */
+  .testdrive-card {
+    border-radius: 15px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Titre */
+  .testdrive-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+  }
+
+  /* Erreurs */
+  .text-danger {
+    font-size: 0.9rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .testdrive-card {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+
+    {% include 'partials/header/header-three.html' %}
+    
+    {% with class="service" current="Test-Drive" title="Prendre un rendez-vous" %}
+      {% include 'partials/elements/breadcrumb.html' %}
+    {% endwith %}
+
+    <div class="container mt-5 mb-5">
+      <div class="card shadow-lg border-0 p-4 testdrive-card">
+        <h2 class="testdrive-title">Réserver un test drive</h2>
+
+        <form method="post" class="testdrive-form" novalidate>
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+          
+          <div class="row">
+            {% for field in form %}
+              <div class="col-md-6 form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger">{{ field.errors|striptags }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill">
+              <i class="fas fa-save me-2"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

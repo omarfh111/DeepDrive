@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include "partials/header/header-three.html" %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="container">
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h2 class="title">Mes marchés</h2>
+          <form class="d-flex" method="get">
+            <input class="form-control me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (marque, modèle)">
+            <select class="form-select me-2" name="etat">
+              <option value="">— État (tous) —</option>
+              {% for val, lab in choices %}
+                <option value="{{ val }}" {% if etat == val %}selected{% endif %}>{{ lab }}</option>
+              {% endfor %}
+            </select>
+            <button class="rts-btn btn-primary">Filtrer</button>
+          </form>
+        </div>
+
+        {% if messages %}
+          <div class="mb-3">
+            {% for m in messages %}<div class="alert alert-success">{{ m }}</div>{% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="table-responsive card p-3 shadow-sm rounded-3">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Voiture</th>
+                <th>Qté</th>
+                <th>Prix unitaire (TND)</th>
+                <th>Total (TND)</th>
+                <th>Rentabilité (TND)</th>
+                <th>État</th>
+                <th>Date</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in page_obj %}
+              <tr>
+                <td>#{{ m.id }}</td>
+                <td>{{ m.voiture.marque }} {{ m.voiture.modele }}</td>
+                <td>{{ m.quantite }}</td>
+                <td>{{ m.prix_unitaire|floatformat:3 }}</td>
+                <td>{{ m.total_prix|floatformat:3 }}</td>
+                <td>{{ m.rentabilite_estime|floatformat:3 }}</td>
+                <td>
+                  {% if m.etat == "en_attente" %}
+                    <span class="badge bg-warning text-dark">En attente</span>
+                  {% elif m.etat == "valide" %}
+                    <span class="badge bg-success">Validé</span>
+                  {% else %}
+                    <span class="badge bg-danger">Annulé</span>
+                  {% endif %}
+                </td>
+                <td>{{ m.created_at|date:"d/m/Y H:i" }}</td>
+                <td class="text-end">
+                  <a href="{% url 'deals:marche_detail' m.id %}" class="icon-btn text-primary" title="Détails">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                  <a href="{% url 'deals:marche_invoice' m.id %}" class="icon-btn text-danger ms-2" title="Télécharger facture">
+                    <i class="fa fa-download"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="9" class="text-center py-4">Aucun marché.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <nav class="mt-4">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&etat={{ etat }}&q={{ q }}">«</a>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&etat={{ etat }}&q={{ q }}">»</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+{% include "partials/footer/footer-three.html" %}
+{% endblock %}

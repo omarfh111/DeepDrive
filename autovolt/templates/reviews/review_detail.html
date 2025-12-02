@@ -1,0 +1,766 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<style>
+    /* Form and input borders */
+    .comment-form input,
+    .comment-form textarea,
+    .comment-form select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #fff;
+        margin-bottom: 15px;
+        transition: border-color 0.3s;
+    }
+    
+    .comment-form input:focus,
+    .comment-form textarea:focus,
+    .comment-form select:focus {
+        outline: none;
+        border-color: #831414;
+        box-shadow: 0 0 0 0.2rem rgba(244, 7, 7, 0.25);
+    }
+    
+    .comment-form textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .comment-form label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #333;
+    }
+    
+    /* Card borders enhancement */
+    .card {
+        border: 1px solid #e5e5e5 !important;
+    }
+    
+    /* Side box borders */
+    .side-box {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .side-box h2 {
+        border-bottom: 2px solid #831414;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+    }
+    
+    /* Enhanced Comment Box Styling */
+    .comment-box {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .comment-box:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .comment-box .author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .comment-box .author .image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #831414;
+    }
+    
+    .comment-box .author .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .comment-box .author .content h6 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .comment-box .author .content p {
+        margin: 0;
+        font-size: 13px;
+        color: #999;
+    }
+    
+    .comment-box .comment-text {
+        margin-top: 15px;
+        color: #555;
+        line-height: 1.7;
+        font-size: 15px;
+    }
+    
+    /* Enhanced Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+    }
+    
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        color: #666;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn-action.btn-edit {
+        color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-action.btn-edit:hover {
+        background: #0d6efd;
+        color: #fff;
+    }
+    
+    .btn-action.btn-delete {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-action.btn-delete:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    
+    .btn-action i {
+        font-size: 14px;
+    }
+    
+    /* Enhanced Review Action Buttons */
+    .review-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 40px;
+    }
+    
+    .btn-review-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border: 2px solid;
+    }
+    
+    .btn-review-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    
+    .btn-review-edit {
+        background: #fff;
+        color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-review-edit:hover {
+        background: #0d6efd;
+        color: #fff;
+    }
+    
+    .btn-review-delete {
+        background: #fff;
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-review-delete:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+    
+    .btn-review-action i {
+        font-size: 16px;
+    }
+    
+    /* Blog wrapper cards */
+    .blog-wrapper {
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: box-shadow 0.3s;
+    }
+    
+    .blog-wrapper:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* Checkbox list items */
+    .checkbox-list li {
+        padding: 12px;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        background: #fff;
+        transition: background 0.3s;
+    }
+    
+    .checkbox-list li:hover {
+        background: #f8f9fa;
+    }
+    
+    /* Recent post list */
+    .blog-list li {
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 15px;
+        background: #fff;
+        display: flex;
+        gap: 15px;
+    }
+    
+    /* Tag area */
+    .tag-area ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .tag-area ul li {
+        padding: 8px 16px;
+        border: 1px solid #e5e5e5;
+        border-radius: 20px;
+        background: #fff;
+        transition: all 0.3s;
+    }
+    
+    .tag-area ul li:hover {
+        background: #831414;
+        color: #fff;
+        border-color: #831414;
+    }
+    
+    /* Alert styling */
+    .alert-info {
+        border: 1px solid #bee5eb;
+        background-color: #d1ecf1;
+        border-radius: 6px;
+        padding: 15px;
+    }
+    
+    .icon-primary {
+      color: #d91d13;
+    }
+    
+    /* Comment Count Badge */
+    .comment-count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #831414;
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    /* No Comments State */
+    .no-comments {
+        text-align: center;
+        padding: 40px 20px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        border: 2px dashed #ddd;
+    }
+    
+    .no-comments i {
+        font-size: 48px;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include 'partials/header/header-three.html' %}
+
+    <!-- Hero/Breadcrumb like blog-details -->
+    <div class="rts-breadcrumb-area blog-details jarallax">
+      <div class="container">
+        <div class="breadcrumb-area-wrapper">
+          <div class="left">
+            <p>Customer Review</p>
+            <h1 class="title">{{ review.titre }}</h1>
+            <div class="author-area">
+              <div class="image">
+                <img
+                  src="{% static 'images/testimonials/author-01.svg' %}"
+                  alt=""
+                />
+              </div>
+              <ul>
+                <li>{{ review.user.username }}</li>
+                <li>{{ review.date_review|date:"F d, Y" }}</li>
+                <li>
+                  <span class="text-warning">
+                    {% for _ in "12345"|make_list %}
+                      {% if forloop.counter <= review.note %}
+                        <i class="fas fa-star"></i>
+                      {% else %}
+                        <i class="far fa-star"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <strong class="ms-1 text-dark">{{ review.note|floatformat:0 }}/5</strong>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details area -->
+    <div class="rts-portfolio-area inner rts-section-gapTop">
+      <div class="container">
+        <div class="row g-5">
+          <!-- MAIN -->
+          <div class="col-lg-8">
+            <div class="portfolio-details-area">
+              <!-- Cover image -->
+              <div class="image mb--40 position-relative">
+                {% if review.image %}
+                <img
+                  src="{{ review.image.url }}"
+                  alt="{{ review.titre }}"
+                  style="
+                    width: 100%;
+                    height: 420px;
+                    object-fit: cover;
+                    border-radius: 16px;
+                    border: 1px solid #e5e5e5;
+                  "
+                />
+                {% else %}
+                <img
+                  src="{% static 'images/placeholders/review-hero.webp' %}"
+                  alt="{{ review.titre }}"
+                  style="
+                    width: 100%;
+                    height: 420px;
+                    object-fit: cover;
+                    border-radius: 16px;
+                    border: 1px solid #e5e5e5;
+                  "
+                />
+                {% endif %}
+                <!-- rating badge overlay -->
+                <div
+                  class="position-absolute top-0 end-0 m-3 px-3 py-2 bg-white rounded-3 shadow-sm d-flex align-items-center gap-2"
+                  style="border: 1px solid #e5e5e5;"
+                >
+                  <span class="text-warning"><i class="fas fa-star"></i></span>
+                  <span class="fw-semibold">{{ review.note|floatformat:0 }}/5</span>
+                </div>
+              </div>
+
+              <!-- Body -->
+              <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-4 p-md-5">
+                  <h2 class="mb-4">
+                    <i class="fas fa-comment-dots icon-primary me-2"></i>Review Details
+                  </h2>
+                  <div class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">
+                    {{ review.description|linebreaks }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick facts (optional meta) -->
+              <div class="row g-3 mb--40">
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-regular fa-user"></i><strong>Author</strong>
+                      </div>
+                      <div>
+                          {% with full_name=review.user.first_name|add:" "|add:review.user.last_name %}
+                              {{ full_name }}
+                          {% endwith %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-regular fa-calendar"></i><strong>Date</strong>
+                      </div>
+                      <div>{{ review.date_review|date:"M d, Y" }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {% if user == review.user %}
+              <div class="review-actions">
+                <a href="{% url 'reviews:edit' review.pk %}" class="btn-review-action btn-review-edit">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit Review</span>
+                </a>
+                <a href="{% url 'reviews:delete' review.pk %}" class="btn-review-action btn-review-delete">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Delete Review</span>
+                </a>
+              </div>
+              {% endif %}
+
+              <!-- Share & Tags -->
+              <h2 class="mb--20">Share</h2>
+              <div class="share-link mb--40">
+                <ul>
+                  <!-- Facebook -->
+                  <li>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/f-3.svg' %}" alt="Share on Facebook" />
+                    </a>
+                  </li>
+
+                  <!-- X (Twitter) -->
+                  <li>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ blog.title|urlencode }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/x-3.svg' %}" alt="Share on X" />
+                    </a>
+                  </li>
+
+                  <!-- Instagram (no direct share link, so use profile or copy link) -->
+                  <li>
+                    <a href="https://www.instagram.com/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      title="Copy the link and share it on Instagram">
+                      <img src="{% static 'images/icon/insta-3.svg' %}" alt="Share on Instagram" />
+                    </a>
+                  </li>
+
+                  <!-- LinkedIn -->
+                  <li>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ blog.title|urlencode }}" 
+                      target="_blank" 
+                      rel="noopener noreferrer">
+                      <img src="{% static 'images/icon/in-3.svg' %}" alt="Share on LinkedIn" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+
+              <!-- Comments -->
+              <div class="comment-area mb--40">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <h2 class="mb-0">Comments</h2>
+                  <span class="comment-count-badge">
+                    <i class="fas fa-comments"></i>
+                    {{ commentaires.count }}
+                  </span>
+                </div>
+
+                {% if user.is_authenticated %}
+                <div class="comment-form mb--30" style="background: #f9f9f9; padding: 25px; border-radius: 12px; border: 1px solid #e5e5e5;">
+                  <h5 class="mb-3"><i class="fas fa-pencil-alt me-2 icon-primary"></i>Leave a Comment</h5>
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button class="rts-btn radius-small btn-primary">
+                      <i class="fas fa-paper-plane me-2"></i>Submit Comment
+                    </button>
+                  </form>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Please <a href="{% url 'account' %}">login</a> to add a comment.
+                </div>
+                {% endif %}
+                
+                {% if commentaires %}
+                  {% for comment in commentaires %}
+                  <div class="comment-box">
+                    <div class="author">
+                      <div class="image">
+                        <img
+                          src="{% static 'images/testimonials/author-02.svg' %}"
+                          alt="{{ comment.user.first_name }} {{ comment.user.last_name }}"
+                        />
+                      </div>
+                      <div class="content">
+                        <h6>{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
+                        <p>
+                          <i class="far fa-clock me-1"></i>
+                          {{ comment.date_commentaire|date:"M d, Y" }} • {{ comment.date_commentaire|timesince }} ago
+                        </p>
+                      </div>
+                      {% if user == comment.user %}
+                      <div class="action-buttons">
+                        <a
+                          href="{% url 'reviews:edit_comment' comment.pk %}"
+                          class="btn-action btn-edit"
+                          title="Edit comment"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a
+                          href="{% url 'reviews:delete_comment' comment.pk %}"
+                          class="btn-action btn-delete"
+                          title="Delete comment"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </a>
+                      </div>
+                      {% endif %}
+                    </div>
+                    <div class="comment-text">
+                      {{ comment.commentaire|linebreaks }}
+                    </div>
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="no-comments">
+                    <i class="fas fa-comments"></i>
+                    <p class="text-muted mb-0">
+                      <strong>No comments yet.</strong><br>
+                      Be the first to share your thoughts!
+                    </p>
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Related reviews (uses same blog card style) -->
+              {% if related_reviews %}
+              <div class="rts-blog-area inner">
+                <h3 class="mb--40 text-center">Related Reviews</h3>
+                <div class="row g-5">
+                  {% for r in related_reviews %}
+                  <div class="col-lg-6">
+                    <div class="blog-wrapper">
+                      <div class="image-area">
+                        <a href="{% url 'reviews:detail' r.pk %}">
+                          {% if r.image %}
+                          <img src="{{ r.image.url }}" alt="{{ r.titre }}" />
+                          {% else %}
+                          <img
+                            src="{% static 'images/placeholders/review.webp' %}"
+                            alt="{{ r.titre }}"
+                          />
+                          {% endif %}
+                        </a>
+                      </div>
+                      <div class="content">
+                        <p class="blog-meta">
+                          {{ r.date_review|date:"M d, Y" }}
+                        </p>
+                        <h6>
+                          <a href="{% url 'reviews:detail' r.pk %}"
+                            >{{ r.titre }}</a
+                          >
+                        </h6>
+                        <div class="author-date">
+                          <div class="person">
+                            <img
+                              src="{% static 'images/blog/author-02.svg' %}"
+                              alt=""
+                            />{{ r.user.username }}
+                          </div>
+                          <div class="date">{{ r.note|floatformat:0 }}/5</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- SIDEBAR -->
+          <div class="col-lg-4">
+            <div class="sticky-top">
+              <div class="right-side-bar">
+                <div class="search-area side-box">
+                  <h2>Actions</h2>
+                  <a
+                    href="{% url 'reviews:list' %}"
+                    class="rts-btn btn-primary w-100 mb-2"
+                    ><i class="fas fa-arrow-left me-2"></i>Back to Reviews</a
+                  >
+                  {% if user.is_authenticated %}
+                  <a
+                    href="{% url 'reviews:add' %}"
+                    class="rts-btn btn-border w-100 mb-2"
+                    ><i class="fas fa-plus me-2"></i>Add New Review</a
+                  >
+                  <a
+                    href="{% url 'reviews:my_reviews' %}"
+                    class="rts-btn btn-border w-100"
+                    ><i class="fas fa-user me-2"></i>My Reviews</a
+                  >
+                  {% endif %}
+                </div>
+
+                <div class="car-make side-box">
+                  <h2>Quick Rating</h2>
+                  <ul class="checkbox-list">
+                    <li
+                      class="checkbox-item d-flex justify-content-between align-items-center"
+                    >
+                      <span>5★ Highlights</span
+                      ><i class="fa-regular fa-star"></i>
+                    </li>
+                    <li
+                      class="checkbox-item d-flex justify-content-between align-items-center"
+                    >
+                      <span>With Photos</span
+                      ><i class="fa-regular fa-image"></i>
+                    </li>
+                    <li
+                      class="checkbox-item d-flex justify-content-between align-items-center"
+                    >
+                      <span>Most Discussed</span
+                      ><i class="fa-regular fa-comments"></i>
+                    </li>
+                  </ul>
+                </div>
+
+                {% if recent_reviews %}
+                <div class="recent-post side-box">
+                  <h2>Recent Reviews</h2>
+                  <ul class="blog-list">
+                    {% for r in recent_reviews %}
+                    <li>
+                      <div class="image-area">
+                        <a href="{% url 'reviews:detail' r.pk %}">
+                          {% if r.image %}
+                          <img
+                            src="{{ r.image.url }}"
+                            width="100"
+                            height="80"
+                            style="object-fit: cover; border-radius: 8px"
+                            alt="{{ r.titre }}"
+                          />
+                          {% else %}
+                          <img
+                            src="{% static 'images/placeholders/review-sm.webp' %}"
+                            width="100"
+                            height="80"
+                            style="object-fit: cover; border-radius: 8px"
+                            alt="{{ r.titre }}"
+                          />
+                          {% endif %}
+                        </a>
+                      </div>
+                      <div class="content">
+                        <h6>
+                          <a href="{% url 'reviews:detail' r.pk %}"
+                            >{{ r.titre|truncatechars:60 }}</a
+                          >
+                        </h6>
+                        <p class="blog-meta">
+                          {{ r.date_review|date:"M d, Y" }}
+                        </p>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+
+                <div class="tag-area side-box">
+                  <h2>Tags</h2>
+                  <ul>
+                    <li>Verified buyers</li>
+                    <li>Photos attached</li>
+                    <li>5-star</li>
+                    <li>Popular</li>
+                  </ul>
+                </div>
+
+                <div class="ad-area">
+                  <img src="{% static 'images/blog/ad.webp' %}" alt="" style="border: 1px solid #e5e5e5; border-radius: 8px;" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /SIDEBAR -->
+        </div>
+      </div>
+    </div>
+
+    <div class="rts-cta-area area-2">
+      <div class="container">
+        <div class="cta-inner">
+          <h2 class="title">If you have any questions Please Call.</h2>
+          <div class="contact">
+            <a href="callto:+16544521505">
+              <img src="{% static 'images/cta/call.svg' %}" alt="" />
+              +1-654-452-1505
+            </a>
+          </div>
+          <img
+            class="shape one"
+            src="{% static 'images/cta/round.svg' %}"
+            alt=""
+          />
+          <img
+            class="shape two"
+            src="{% static 'images/cta/line.svg' %}"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

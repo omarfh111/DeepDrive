@@ -1,0 +1,30 @@
+.nav-area {
+    ul {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+            margin: 0;
+            padding: 0;
+
+            a {
+                color: #111032;
+            }
+        }
+    }
+}
+
+.nav-area ul li.main-nav a:first-child{
+    padding: 34px 20px;
+    display: block;
+    cursor: pointer;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+}
+.nav-area ul li.main-nav:first-child a:first-child{
+    padding-left: 0;
+}

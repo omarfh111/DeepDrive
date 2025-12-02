@@ -1,0 +1,138 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Achats | Dusty{% endblock %}
+{% block page_title %}Achats{% endblock %}
+{% block breadcrumb_leaf %}Gestion des achats{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des achats</h5>
+          <form class="d-flex gap-2" method="get">
+            <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Rechercher (marque, modèle, buyer)">
+            <select class="form-select" name="statut" style="max-width:220px;">
+              <option value="">— Statut —</option>
+              <option value="pending"   {% if statut == 'pending' %}selected{% endif %}>En cours</option>
+              <option value="validated" {% if statut == 'validated' %}selected{% endif %}>Validé</option>
+              <option value="cancelled" {% if statut == 'cancelled' %}selected{% endif %}>Annulé</option>
+            </select>
+            <button class="btn btn-primary">Filtrer</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        {% with achats=page_obj %}
+          {% if achats %}
+          <div class="table-responsive table-centered mt-0">
+            <table class="table table-centered table-nowrap table-hover mb-0">
+              <thead>
+                <tr>
+                  <th class="ps-3">#</th>
+                  <th>Annonce</th>
+                  <th>buyer</th>
+                  <th>Prix</th>
+                  <th>Statut</th>
+                  <th>Date</th>
+                  <th class="text-end pe-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in achats %}
+                <tr>
+                  <td class="ps-3">#{{ a.id }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      {% if a.post.image %}
+                        <img src="{{ a.post.image.url }}" alt="" class="rounded-2" style="height:46px;width:72px;object-fit:cover;">
+                      {% endif %}
+                      <div>
+                        <div class="fw-semibold">{{ a.post.marque }} {{ a.post.modele }}</div>
+                        <small class="text-muted">{{ a.post.year }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ a.buyer.first_name }} {{ a.buyer.last_name }}</td>
+                  <td>{{ a.price }}&nbsp;DT</td>
+                  <td>
+                    {% if a.statut == 'paid' %}
+                      <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">Validé</span>
+                    {% elif a.statut == 'canceled' %}
+                      <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">Annulé</span>
+                    {% else %}
+                      <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">En cours</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ a.date_achat|date:"Y-m-d H:i" }}</td>
+                  <td class="text-end align-middle pe-3">
+                    <div class="d-inline-flex align-items-center gap-1">
+                      <a href="{% url 'achats:admin_achat_detail' achat_id=a.id %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Voir">
+                        <i class="mdi mdi-eye-outline text-primary fs-14"></i>
+                      </a>
+                      <a href="{% url 'achats:admin_achat_delete' achat_id=a.id %}" class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer" onclick="return confirm('Supprimer cet achat ?');">
+                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">Aucun achat trouvé.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          {% if achats.paginator.num_pages > 1 %}
+          <div class="card-footer">
+            <nav aria-label="Pagination">
+              <ul class="pagination mb-0 justify-content-end">
+                {% if achats.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ achats.previous_page_number }}&q={{ q }}&statut={{ statut }}">«</a>
+                </li>
+                {% endif %}
+                <li class="page-item disabled">
+                  <span class="page-link">Page {{ achats.number }} / {{ achats.paginator.num_pages }}</span>
+                </li>
+                {% if achats.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ achats.next_page_number }}&q={{ q }}&statut={{ statut }}">»</a>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+          {% endif %}
+
+          {% else %}
+          <div class="p-4">
+            <div class="alert alert-warning text-center mb-0">
+              Aucun achat pour le moment.
+            </div>
+          </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.bootstrap) {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    }
+  });
+</script>
+{% endblock %}

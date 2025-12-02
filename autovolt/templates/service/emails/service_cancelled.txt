@@ -1,0 +1,22 @@
+Bonjour {{ client_name }},
+
+Nous regrettons de vous informer que votre service a été annulé.
+
+📋 DÉTAILS DU SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Service : {{ nom_service }}
+Type : {{ type_service }}
+Date prévue : {{ date_service|date:"d/m/Y" }}
+Garantie : {{ garantie }}
+Statut : ❌ {{ statut }}
+
+📝 DESCRIPTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{{ description }}
+
+Si vous avez des questions ou souhaitez reprogrammer ce service, n'hésitez pas à nous contacter.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Deep Drive - Système de Gestion des Services
+📧 Contact : fkihomar06122003@gmail.com
+🌐 www.deepdrive.tn
