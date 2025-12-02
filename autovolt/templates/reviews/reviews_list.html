@@ -2,6 +2,327 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
+
+<!-- Add custom styles for the slider -->
+<style>
+  .view-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .view-controls label {
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+  }
+  
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+  }
+  
+  .column-slider {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd;
+    outline: none;
+    border-radius: 3px;
+  }
+  
+  .column-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  
+  .column-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+  }
+  
+  .column-value {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    color: #007bff;
+    min-width: 80px;
+  }
+  
+  .grid-icon {
+    display: flex;
+    gap: 2px;
+  }
+  
+  .grid-icon span {
+    width: 6px;
+    height: 6px;
+    background: #007bff;
+    border-radius: 1px;
+  }
+  
+  /* Dynamic column classes */
+  .review-grid {
+    transition: all 0.3s ease;
+  }
+  
+  .review-grid.cols-2 .review-item {
+    width: 50%;
+  }
+  
+  .review-grid.cols-3 .review-item {
+    width: 33.333%;
+  }
+  
+  .review-grid.cols-4 .review-item {
+    width: 25%;
+  }
+  
+  .review-grid.cols-5 .review-item {
+    width: 20%;
+  }
+  
+  .review-grid.cols-6 .review-item {
+    width: 16.666%;
+  }
+  
+  .review-grid.cols-7 .review-item {
+    width: 14.285%;
+  }
+  
+  .review-grid.cols-8 .review-item {
+    width: 12.5%;
+  }
+  
+  .review-grid.cols-9 .review-item {
+    width: 11.111%;
+  }
+  
+  .review-grid.cols-10 .review-item {
+    width: 10%;
+  }
+  
+  .review-item {
+    padding: 0 10px;
+    margin-bottom: 20px;
+    transition: width 0.3s ease;
+  }
+  
+  .blog-wrapper {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .blog-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .blog-wrapper .content {
+    padding: 15px;
+  }
+  
+  .blog-wrapper h6 {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  
+  .blog-wrapper .text-muted {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* Responsive content visibility based on columns */
+  
+  /* 2-3 columns: Show everything */
+  .review-grid.cols-2 .blog-wrapper .content,
+  .review-grid.cols-3 .blog-wrapper .content {
+    padding: 15px;
+  }
+  
+  /* 4 columns: Hide comment count, smaller padding */
+  .review-grid.cols-4 .review-comment-count {
+    display: none;
+  }
+  
+  .review-grid.cols-4 .blog-wrapper .content {
+    padding: 12px;
+  }
+  
+  .review-grid.cols-4 .blog-wrapper h6 {
+    font-size: 15px;
+  }
+  
+  /* 5-6 columns: Compact view - hide description and author full name */
+  .review-grid.cols-5 .review-description,
+  .review-grid.cols-6 .review-description,
+  .review-grid.cols-5 .author-date .date,
+  .review-grid.cols-6 .author-date .date,
+  .review-grid.cols-5 .review-comment-count,
+  .review-grid.cols-6 .review-comment-count {
+    display: none;
+  }
+  
+  .review-grid.cols-5 .blog-wrapper .content,
+  .review-grid.cols-6 .blog-wrapper .content {
+    padding: 10px;
+  }
+  
+  .review-grid.cols-5 .blog-wrapper h6,
+  .review-grid.cols-6 .blog-wrapper h6 {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .review-grid.cols-5 .image-area img,
+  .review-grid.cols-6 .image-area img {
+    height: 180px !important;
+  }
+  
+  .review-grid.cols-5 .author-date,
+  .review-grid.cols-6 .author-date {
+    margin-top: 8px;
+  }
+  
+  /* 7-10 columns: Minimal view - only image, title, rating, and username */
+  .review-grid.cols-7 .review-description,
+  .review-grid.cols-8 .review-description,
+  .review-grid.cols-9 .review-description,
+  .review-grid.cols-10 .review-description,
+  .review-grid.cols-7 .author-date,
+  .review-grid.cols-8 .author-date,
+  .review-grid.cols-9 .author-date,
+  .review-grid.cols-10 .author-date,
+  .review-grid.cols-7 .review-comment-count,
+  .review-grid.cols-8 .review-comment-count,
+  .review-grid.cols-9 .review-comment-count,
+  .review-grid.cols-10 .review-comment-count {
+    display: none;
+  }
+  
+  .review-grid.cols-7 .blog-wrapper .content,
+  .review-grid.cols-8 .blog-wrapper .content,
+  .review-grid.cols-9 .blog-wrapper .content,
+  .review-grid.cols-10 .blog-wrapper .content {
+    padding: 8px;
+  }
+  
+  .review-grid.cols-7 .blog-wrapper h6,
+  .review-grid.cols-8 .blog-wrapper h6,
+  .review-grid.cols-9 .blog-wrapper h6,
+  .review-grid.cols-10 .blog-wrapper h6 {
+    font-size: 13px;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  
+  .review-grid.cols-7 .image-area img,
+  .review-grid.cols-8 .image-area img,
+  .review-grid.cols-9 .image-area img,
+  .review-grid.cols-10 .image-area img {
+    height: 150px !important;
+  }
+  
+  .review-grid.cols-7 .blog-meta,
+  .review-grid.cols-8 .blog-meta,
+  .review-grid.cols-9 .blog-meta,
+  .review-grid.cols-10 .blog-meta {
+    font-size: 12px;
+    gap: 5px !important;
+  }
+  
+  .review-grid.cols-7 .blog-meta .badge,
+  .review-grid.cols-8 .blog-meta .badge,
+  .review-grid.cols-9 .blog-meta .badge,
+  .review-grid.cols-10 .blog-meta .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  
+  .review-grid.cols-7 .blog-meta .fa-star,
+  .review-grid.cols-8 .blog-meta .fa-star,
+  .review-grid.cols-9 .blog-meta .fa-star,
+  .review-grid.cols-10 .blog-meta .fa-star {
+    font-size: 11px;
+  }
+  
+  /* Compact sidebar */
+  .compact-sidebar {
+    position: sticky;
+    top: 20px;
+  }
+  
+  .compact-sidebar .side-box {
+    margin-bottom: 20px;
+  }
+  
+  .compact-sidebar .side-box h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 1400px) {
+    .review-grid.cols-2 .review-item,
+    .review-grid.cols-3 .review-item,
+    .review-grid.cols-4 .review-item,
+    .review-grid.cols-5 .review-item {
+      width: 33.333%;
+    }
+    
+    .review-grid.cols-6 .review-item,
+    .review-grid.cols-7 .review-item,
+    .review-grid.cols-8 .review-item,
+    .review-grid.cols-9 .review-item,
+    .review-grid.cols-10 .review-item {
+      width: 25%;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .review-grid.cols-2 .review-item,
+    .review-grid.cols-3 .review-item,
+    .review-grid.cols-4 .review-item,
+    .review-grid.cols-5 .review-item {
+      width: 50%;
+    }
+    
+    .review-grid.cols-6 .review-item,
+    .review-grid.cols-7 .review-item,
+    .review-grid.cols-8 .review-item,
+    .review-grid.cols-9 .review-item,
+    .review-grid.cols-10 .review-item {
+      width: 33.333%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .review-grid .review-item {
+      width: 100% !important;
+    }
+  }
+</style>
+
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
     {% include 'partials/header/header-three.html' %}
@@ -11,11 +332,11 @@
     {% endwith %}
 
     <div class="rts-blog-area inner rts-section-gapTop">
-      <div class="container">
-        <div class="row g-5">
+      <div class="container-fluid px-4">
+        <div class="row g-4">
 
-          <!-- MAIN LIST -->
-          <div class="col-lg-8">
+          <!-- MAIN LIST - Now wider -->
+          <div class="col-lg-10 col-xl-10">
             <!-- Average rating card (optional) -->
             {% if avg_rating %}
             <div class="card p-4 mb-4 shadow-sm border-0">
@@ -44,11 +365,27 @@
             </div>
             {% endif %}
 
+            <!-- Column Slider Control -->
+            {% if page_obj and page_obj|length > 1 %}
+            <div class="view-controls">
+              <label for="columnSlider">VUE</label>
+              <div class="slider-container">
+                <input type="range" id="columnSlider" class="column-slider" min="2" max="{{ page_obj|length|default:4 }}" value="3" step="1" data-max-cols="{{ page_obj|length|default:4 }}">
+                <div class="column-value">
+                  <div class="grid-icon" id="gridIcon">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span id="columnCount">3</span> Colonnes
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
             <div class="left">
-              <div class="row g-5">
+              <div class="row g-0 review-grid cols-3" id="reviewGrid">
                 {% if page_obj %}
                   {% for review in page_obj %}
-                    <div class="col-lg-6">
+                    <div class="review-item">
                       <div class="blog-wrapper h-100">
                         <div class="image-area">
                           {% if review.image %}
@@ -80,7 +417,7 @@
                           <h6 class="mt-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <a href="{% url 'reviews:detail' review.pk %}">{{ review.titre|truncatechars:50 }}</a>
                           </h6>
-                          <p class="text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                          <p class="text-muted review-description" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                             {{ review.description|truncatewords:20 }}
                           </p>
                           <div class="author-date">
@@ -95,7 +432,7 @@
                             </div>
                           </div>
                           {% if review.comment_count > 0 %}
-                          <div class="mt-2 small text-muted">
+                          <div class="mt-2 small text-muted review-comment-count">
                             <i class="far fa-comments"></i> {{ review.comment_count }} comment{{ review.comment_count|pluralize }}
                           </div>
                           {% endif %}
@@ -158,36 +495,37 @@
             {% endif %}
           </div>
 
-          <!-- SIDEBAR -->
-          <div class="col-lg-4">
-            <div class="sticky-top">
+          <!-- SIDEBAR - Now narrower and compact -->
+          <div class="col-lg-2 col-xl-2">
+            <div class="compact-sidebar">
               <div class="right-side-bar">
 
-                <!-- Search & Filters (moved to sidebar like blog template) -->
+                <!-- Search & Filters -->
                 <div class="search-area side-box">
-                  <h2>Search Reviews</h2>
+                  <h2>Search</h2>
                   <form method="get" action="{% url 'reviews:list' %}">
                     <div class="input-wrapper mb-3">
-                      <input type="text" name="q" placeholder="Search reviews" value="{{ search_query }}">
+                      <input type="text" name="q" placeholder="Search..." value="{{ search_query }}">
                       <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
                     </div>
                     <div class="row g-2">
                       <div class="col-6">
-                        <input class="form-control" type="number" name="min_note" placeholder="Min 0–5" min="0" max="5" step="0.1" value="{{ request.GET.min_note }}">
+                        <input class="form-control form-control-sm" type="number" name="min_note" placeholder="Min" min="0" max="5" step="0.1" value="{{ request.GET.min_note }}">
                       </div>
                       <div class="col-6">
-                        <input class="form-control" type="number" name="max_note" placeholder="Max 0–5" min="0" max="5" step="0.1" value="{{ request.GET.max_note }}">
+                        <input class="form-control form-control-sm" type="number" name="max_note" placeholder="Max" min="0" max="5" step="0.1" value="{{ request.GET.max_note }}">
                       </div>
                       <div class="col-12">
-                        <select name="sort" class="form-select">
-                          <option value="-date_joined" {% if request.GET.sort == '-date_joined' %}selected{% endif %}>Newest First</option>
-                          <option value="date_joined" {% if request.GET.sort == 'date_joined' %}selected{% endif %}>Oldest First</option>
-                          <option value="-note" {% if request.GET.sort == '-note' %}selected{% endif %}>Highest Rating</option>
-                          <option value="note" {% if request.GET.sort == 'note' %}selected{% endif %}>Lowest Rating</option>
+                        <select name="sort" class="form-select form-select-sm">
+                          <option value="-date_joined" {% if request.GET.sort == '-date_joined' %}selected{% endif %}>Newest</option>
+                          <option value="date_joined" {% if request.GET.sort == 'date_joined' %}selected{% endif %}>Oldest</option>
+                          <option value="-note" {% if request.GET.sort == '-note' %}selected{% endif %}>Top Rated</option>
+                          <option value="note" {% if request.GET.sort == 'note' %}selected{% endif %}>Low Rated</option>
                         </select>
                       </div>
-                      <div class="col-12 d-grid">
-                        <button class="rts-btn btn-primary" type="submit">Filter</button>
+                      <div class="col-12 d-grid gap-2">
+                        <button class="rts-btn btn-primary btn-sm" type="submit">Filter</button>
+                        <a href="{% url 'reviews:list' %}" class="rts-btn btn-secondary btn-sm">Clear</a>
                       </div>
                     </div>
                   </form>
@@ -195,65 +533,34 @@
 
                 <!-- Quick rating filters -->
                 <div class="car-make side-box">
-                  <h2>Quick Rating</h2>
+                  <h2>Rating</h2>
                   <ul class="checkbox-list">
                     <li class="checkbox-item d-flex justify-content-between align-items-center">
                       <a class="text-decoration-none" href="?min_note=4&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
                         <span>4★ & Up</span>
                       </a>
-                      <i class="fa-regular fa-star"></i>
                     </li>
                     <li class="checkbox-item d-flex justify-content-between align-items-center">
                       <a class="text-decoration-none" href="?min_note=3&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
                         <span>3★ & Up</span>
                       </a>
-                      <i class="fa-regular fa-star"></i>
                     </li>
                     <li class="checkbox-item d-flex justify-content-between align-items-center">
                       <a class="text-decoration-none" href="?min_note=2&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
                         <span>2★ & Up</span>
                       </a>
-                      <i class="fa-regular fa-star"></i>
                     </li>
                   </ul>
                 </div>
-
-                <!-- Recent Reviews (mini list) -->
-                {% if recent_reviews %}
-                <div class="recent-post side-box">
-                  <h2>Recent Reviews</h2>
-                  <ul class="blog-list">
-                    {% for r in recent_reviews %}
-                    <li>
-                      <div class="image-area">
-                        <a href="{% url 'reviews:detail' r.pk %}">
-                          {% if r.image %}
-                            <img src="{{ r.image.url }}" width="100" height="80" style="object-fit:cover;border-radius:8px;" alt="{{ r.titre }}">
-                          {% else %}
-                            <img src="{% static 'images/placeholders/review-sm.webp' %}" width="100" height="80" style="object-fit:cover;border-radius:8px;" alt="{{ r.titre }}">
-                          {% endif %}
-                        </a>
-                      </div>
-                      <div class="content" style="overflow: hidden;">
-                        <h6 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                          <a href="{% url 'reviews:detail' r.pk %}">{{ r.titre|truncatechars:40 }}</a>
-                        </h6>
-                        <p class="blog-meta">{{ r.date_review|date:"M d, Y" }}</p>
-                      </div>
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </div>
-                {% endif %}
 
                 <!-- Tag-like section: useful meta -->
                 <div class="tag-area side-box">
                   <h2>Tips</h2>
                   <ul>
-                    <li>Verified buyers</li>
-                    <li>Photos attached</li>
-                    <li>5-star highlights</li>
-                    <li>Most discussed</li>
+                    <li>Verified</li>
+                    <li>With Photos</li>
+                    <li>5-star</li>
+                    <li>Discussed</li>
                   </ul>
                 </div>
 
@@ -284,4 +591,55 @@
   </div>
 </div>
 {% include 'partials/footer/footer-three.html' %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slider = document.getElementById('columnSlider');
+  if (!slider) return; // Exit if no slider (less than 2 reviews)
+  
+  const reviewGrid = document.getElementById('reviewGrid');
+  const columnCount = document.getElementById('columnCount');
+  const gridIcon = document.getElementById('gridIcon');
+  
+  // Get max columns from data attribute or count reviews
+  const maxCols = parseInt(slider.getAttribute('data-max-cols')) || 4;
+  const reviewCount = document.querySelectorAll('.review-item').length;
+  const effectiveMax = Math.min(maxCols, reviewCount, 10); // Now cap at 10
+  
+  // Update slider max
+  slider.max = effectiveMax;
+  
+  // Load saved preference, but don't exceed current max
+  const savedColumns = Math.min(parseInt(localStorage.getItem('reviewColumns') || '3'), effectiveMax);
+  slider.value = savedColumns;
+  updateGrid(savedColumns);
+  
+  slider.addEventListener('input', function() {
+    updateGrid(this.value);
+    localStorage.setItem('reviewColumns', this.value);
+  });
+  
+  function updateGrid(cols) {
+    // Remove all column classes
+    for (let i = 2; i <= 10; i++) {
+      reviewGrid.classList.remove('cols-' + i);
+    }
+    // Add new column class
+    reviewGrid.classList.add('cols-' + cols);
+    // Update text
+    columnCount.textContent = cols;
+    // Update grid icon
+    updateGridIcon(cols);
+  }
+  
+  function updateGridIcon(cols) {
+    gridIcon.innerHTML = '';
+    const displayCols = Math.min(parseInt(cols), 6); // Show max 6 boxes in icon
+    for (let i = 0; i < displayCols; i++) {
+      gridIcon.innerHTML += '<span></span>';
+    }
+  }
+});
+</script>
+
 {% endblock content %}

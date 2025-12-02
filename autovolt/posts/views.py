@@ -10,6 +10,7 @@ from django.db.models import Exists, OuterRef
 from posts.models import Post
 from achats.models import Achat
 from .ml_model import *
+from django.db.models import Exists, OuterRef, Q, Count, Min, Max
 
 # --- Helpers d'accès ---
 def is_admin(user):
@@ -29,13 +30,172 @@ def render_template(request, template_name, context=None, backoffice=False):
 
 # --- Liste / Portfolio ---
 def portfolio(request, backoffice=False):
-    posts = Post.objects.annotate(
+    # Base queryset: only posts without PAID achat
+    base_qs = Post.objects.annotate(
         has_paid_achat=Exists(
             Achat.objects.filter(post_id=OuterRef('pk'), statut=Achat.Status.PAID)
         )
     ).filter(has_paid_achat=False)
+
+    # --- Global min/max price from DB ---
+    price_agg = base_qs.aggregate(
+        min_price=Min('price'),
+        max_price=Max('price'),
+    )
+    price_min = price_agg['min_price'] or 0
+    price_max = price_agg['max_price'] or 0
+
+    # --- Search text ---
+    q = request.GET.get("q", "").strip()
+
+    # --- Selected price (from GET) ---
+    min_price_param = request.GET.get("min_price")
+    max_price_param = request.GET.get("max_price")
+
+    min_price_sel = price_min
+    max_price_sel = price_max
+    try:
+        if min_price_param is not None:
+            min_price_sel = float(min_price_param)
+        if max_price_param is not None:
+            max_price_sel = float(max_price_param)
+    except ValueError:
+        min_price_sel = price_min
+        max_price_sel = price_max
+
+    # Clamp to global range
+    if min_price_sel < price_min:
+        min_price_sel = price_min
+    if max_price_sel > price_max:
+        max_price_sel = price_max
+    if min_price_sel > max_price_sel:
+        min_price_sel, max_price_sel = max_price_sel, min_price_sel
+
+    # Start from base_qs and apply filters in layers
+    filtered_qs = base_qs
+
+    # 1) search filter
+    if q:
+        filtered_qs = filtered_qs.filter(
+            Q(marque__icontains=q) |
+            Q(modele__icontains=q) |
+            Q(gouvernerat__icontains=q) |
+            Q(energy__icontains=q)
+        )
+
+    # 2) price filter
+    if price_min != price_max:
+        filtered_qs = filtered_qs.filter(
+            price__gte=min_price_sel,
+            price__lte=max_price_sel,
+        )
+
+    # 3) fuel / energy filter (counts before filtering, so you see all options)
+    energy_counts = (
+        filtered_qs
+        .values("energy")
+        .annotate(count=Count("id"))
+        .order_by("energy")
+    )
+
+    selected_energies = request.GET.getlist("energy")
+    if selected_energies:
+        filtered_qs = filtered_qs.filter(energy__in=selected_energies)
+
+    # 4) marque filter + counts
+    marque_counts = (
+        filtered_qs
+        .values("marque")
+        .annotate(count=Count("id"))
+        .order_by("marque")
+    )
+
+    selected_marques = request.GET.getlist("marque")
+    if selected_marques:
+        posts = filtered_qs.filter(marque__in=selected_marques)
+    else:
+        posts = filtered_qs
+
+    # Slider positions (0–100)
+    if price_max != price_min:
+        min_percent = (min_price_sel - price_min) / (price_max - price_min) * 100
+        max_percent = (max_price_sel - price_min) / (price_max - price_min) * 100
+    else:
+        min_percent = 0
+        max_percent = 100
+        # --- Transmission filter ---
+    transmission_counts = (
+        filtered_qs
+        .values("transmission")
+        .annotate(count=Count("id"))
+        .order_by("transmission")
+    )
+
+    selected_transmissions = request.GET.getlist("transmission")
+    if selected_transmissions:
+        filtered_qs = filtered_qs.filter(transmission__in=selected_transmissions)
+
+    # --- Etat Général filter ---
+    etat_counts = (
+        filtered_qs
+        .values("etat_general")
+        .annotate(count=Count("id"))
+        .order_by("etat_general")
+    )
+
+    selected_etats = request.GET.getlist("etat_general")
+    if selected_etats:
+        filtered_qs = filtered_qs.filter(etat_general__in=selected_etats)
+
+    # --- Carrosserie filter ---
+    carrosserie_counts = (
+        filtered_qs
+        .values("carrosserie")
+        .annotate(count=Count("id"))
+        .order_by("carrosserie")
+    )
+
+    selected_carrosseries = request.GET.getlist("carrosserie")
+    if selected_carrosseries:
+        filtered_qs = filtered_qs.filter(carrosserie__in=selected_carrosseries)
+        # --- Sort by price ---
+    order = request.GET.get("order")
+    if order == "price_asc":
+        posts = posts.order_by("price")
+    elif order == "price_desc":
+        posts = posts.order_by("-price")
+    # else: keep default ordering from Meta (by -id) 
+
+
+
     template = 'portfolio-2.html'
-    return render_template(request, template, {'posts': posts}, backoffice)
+    return render_template(
+        request,
+        template,
+        {
+            "posts": posts,
+            "marque_counts": marque_counts,
+            "selected_marques": selected_marques,
+            "energy_counts": energy_counts,
+            "selected_energies": selected_energies,
+            "q": q,
+            "price_min": price_min,
+            "price_max": price_max,
+            "min_price_sel": min_price_sel,
+            "max_price_sel": max_price_sel,
+            "min_percent": min_percent,
+            "max_percent": max_percent,
+            "transmission_counts": transmission_counts,
+            "selected_transmissions": selected_transmissions,
+            "etat_counts": etat_counts,
+            "selected_etats": selected_etats,
+            "carrosserie_counts": carrosserie_counts,
+            "selected_carrosseries": selected_carrosseries,
+            "selected_order": order,
+
+        },
+        backoffice
+    )
 
 
 # --- Create ---

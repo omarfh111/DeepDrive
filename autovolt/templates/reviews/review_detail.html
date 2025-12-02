@@ -792,7 +792,7 @@
                               <h6>{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
                               <p>
                                 <i class="far fa-clock me-1"></i>
-                                {{ comment.date_commentaire|date:"M d, Y" }} • {{ comment.date_commentaire|timesince }} ago
+                                {{ comment.date_commentaire|naturaltime }}
                               </p>
                             </div>
                             {% if user == comment.user %}

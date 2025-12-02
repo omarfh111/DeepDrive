@@ -19,241 +19,305 @@
                         <div class="col-lg-4">
                             <div class="sticky-top">
                                 <div class="left-side-bar">
-                                    <div class="search-area side-box">
-                                        <h2>Cars Search</h2>
-                                        <form action="#">
-                                            <div class="input-wrapper">
-                                                <input type="text" placeholder="Search Vehicles" required>
-                                                <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
-                                            </div>
-                                        </form>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
+                                    
+                                   <div class="search-area side-box">
+    <h2>Cars Search</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+        <div class="input-wrapper">
+            <input 
+                type="text" 
+                name="q"
+                placeholder="Search Vehicles"
+                value="{{ request.GET.q }}"
+                
+            >
+            <button type="submit">
+                <i class="fa-regular fa-magnifying-glass"></i>
+            </button>
+        </div>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+
+                                    
                                     <div class="car-make side-box">
-                                        <h2>Car Make</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Mercedes-Benz</span>
-                                              </label>
-                                              <span>(130)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Volkswagen</span>
-                                              </label>
-                                              <span>(80)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Mitsubishi</span>
-                                              </label>
-                                              <span>(199)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Honda</span>
-                                              </label>
-                                              <span>(70)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Lamborghini</span>
-                                              </label>
-                                              <span>(160)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Model</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Chevrolet</span>
-                                              </label>
-                                              <span>(64)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Ford</span>
-                                              </label>
-                                              <span>(199)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Tesla</span>
-                                              </label>
-                                              <span>(59)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>BMW</span>
-                                              </label>
-                                              <span>(230)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Audi</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
+    <h2>Car Model</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+        {# keep search text when using model filters #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        <ul class="checkbox-list" style="max-height: 220px; overflow-y: auto;">
+            {% for item in marque_counts %}
+                <li class="checkbox-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="marque"
+                               value="{{ item.marque }}"
+                               {% if item.marque in selected_marques %}checked{% endif %}>
+                        <span>{{ item.marque }}</span>
+                    </label>
+                    <span>({{ item.count }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {# invisible submit, used by JS on change #}
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+
                                     <div class="price-box side-box">
-                                        <h2>Price</h2>
-                                        <div class="slider-container">
-                                            <!-- Histogram -->
-                                            <div class="histogram">
-                                              <!-- Create bars dynamically -->
-                                              <div class="histogram-bar" style="height: 67px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 52px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 99px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 99px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 98px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 107px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 102px;"></div>
-                                              <div class="histogram-bar" style="height: 52px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 94px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                            </div>
-                                        
-                                            <!-- Range Slider -->
-                                            <div class="range-slider">
-                                              <div class="track"></div>
-                                              <div class="range" id="range"></div>
-                                              <input type="range" id="minRange" min="0" max="100" value="20">
-                                              <input type="range" id="maxRange" min="0" max="100" value="80">
-                                            </div>
-                                        
-                                            <!-- Price Labels -->
-                                            <div class="price-labels">
-                                              <span id="minPrice">$500</span>
-                                              <span id="maxPrice">$5000</span>
-                                            </div>
-                                        </div>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
+    <h2>Price</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get" id="priceFilterForm">
+        {# keep search term when changing price #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        {# keep selected marques when changing price #}
+        {% for m in selected_marques %}
+            <input type="hidden" name="marque" value="{{ m }}">
+        {% endfor %}
+
+        <div class="slider-container"
+             data-price-min="{{ price_min|default:0 }}"
+             data-price-max="{{ price_max|default:0 }}">
+            <!-- Histogram -->
+            <div class="histogram">
+              <!-- (keep your bars as-is) -->
+              <div class="histogram-bar" style="height: 67px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 52px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 99px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 75px;"></div>
+              <div class="histogram-bar" style="height: 93px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 99px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 75px;"></div>
+              <div class="histogram-bar" style="height: 93px;"></div>
+              <div class="histogram-bar" style="height: 93px;"></div>
+              <div class="histogram-bar" style="height: 75px;"></div>
+              <div class="histogram-bar" style="height: 98px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 107px;"></div>
+              <div class="histogram-bar" style="height: 75px;"></div>
+              <div class="histogram-bar" style="height: 93px;"></div>
+              <div class="histogram-bar" style="height: 102px;"></div>
+              <div class="histogram-bar" style="height: 52px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+              <div class="histogram-bar" style="height: 94px;"></div>
+              <div class="histogram-bar" style="height: 75px;"></div>
+              <div class="histogram-bar" style="height: 86px;"></div>
+            </div>
+
+            <!-- Range Slider -->
+            <div class="range-slider">
+              <div class="track"></div>
+              <div class="range" id="range"></div>
+              <input type="range"
+                     id="minRange"
+                     min="0"
+                     max="100"
+                     value="{{ min_percent|default:0|floatformat:0 }}">
+              <input type="range"
+                     id="maxRange"
+                     min="0"
+                     max="100"
+                     value="{{ max_percent|default:100|floatformat:0 }}">
+            </div>
+
+            <!-- Hidden real price values to send to backend -->
+            <input type="hidden"
+                   id="minPriceInput"
+                   name="min_price"
+                   value="{{ min_price_sel|default:price_min }}">
+            <input type="hidden"
+                   id="maxPriceInput"
+                   name="max_price"
+                   value="{{ max_price_sel|default:price_max }}">
+
+            <!-- Price Labels -->
+            <div class="price-labels">
+              <span id="minPrice">
+                {{ min_price_sel|default:price_min|floatformat:0 }} TND
+              </span>
+              <span id="maxPrice">
+                {{ max_price_sel|default:price_max|floatformat:0 }} TND
+              </span>
+            </div>
+        </div>
+
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+
                                     <div class="car-make side-box">
-                                        <h2>Car Seats</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>2 seats</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>3 seats</span>
-                                              </label>
-                                              <span>(23)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>4 seats</span>
-                                              </label>
-                                              <span>(179)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>5 seats</span>
-                                              </label>
-                                              <span>(40)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>6 seats</span>
-                                              </label>
-                                              <span>(120)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Color</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Matte Black</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Orange</span>
-                                              </label>
-                                              <span>(23)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Black</span>
-                                              </label>
-                                              <span>(179)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Yellow</span>
-                                              </label>
-                                              <span>(40)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Neon Colors</span>
-                                              </label>
-                                              <span>(120)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
+    <h2>Transmission</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+
+        {# keep search bar #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        {# keep other filters #}
+        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+        <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+        <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+        {% for et in selected_etats %}<input type="hidden" name="etat_general" value="{{ et }}">{% endfor %}
+        {% for c in selected_carrosseries %}<input type="hidden" name="carrosserie" value="{{ c }}">{% endfor %}
+
+        <ul class="checkbox-list" style="max-height: 200px; overflow-y:auto;">
+            {% for item in transmission_counts %}
+                <li class="checkbox-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="transmission"
+                               value="{{ item.transmission }}"
+                               {% if item.transmission in selected_transmissions %}checked{% endif %}>
+                        <span>{{ item.transmission }}</span>
+                    </label>
+                    <span>({{ item.count }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+<div class="car-make side-box">
+    <h2>État Général</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+
+        {# keep search #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        {# keep others #}
+        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+        <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+        <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+        {% for t in selected_transmissions %}<input type="hidden" name="transmission" value="{{ t }}">{% endfor %}
+        {% for c in selected_carrosseries %}<input type="hidden" name="carrosserie" value="{{ c }}">{% endfor %}
+
+        <ul class="checkbox-list" style="max-height: 200px; overflow-y:auto;">
+            {% for item in etat_counts %}
+                <li class="checkbox-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="etat_general"
+                               value="{{ item.etat_general }}"
+                               {% if item.etat_general in selected_etats %}checked{% endif %}>
+                        <span>{{ item.etat_general }}</span>
+                    </label>
+                    <span>({{ item.count }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+<div class="car-make side-box">
+    <h2>Carrosserie</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+
+        {# keep search #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        {# keep other filters #}
+        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+        <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+        <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+        {% for t in selected_transmissions %}<input type="hidden" name="transmission" value="{{ t }}">{% endfor %}
+        {% for et in selected_etats %}<input type="hidden" name="etat_general" value="{{ et }}">{% endfor %}
+
+        <ul class="checkbox-list" style="max-height: 250px; overflow-y:auto;">
+            {% for item in carrosserie_counts %}
+                <li class="checkbox-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="carrosserie"
+                               value="{{ item.carrosserie }}"
+                               {% if item.carrosserie in selected_carrosseries %}checked{% endif %}>
+                        <span>{{ item.carrosserie }}</span>
+                    </label>
+                    <span>({{ item.count }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+
                                     <div class="tag-area side-box">
-                                        <h2>Fuel</h2>
-                                        <ul>
-                                            <li>Gasoline</li>
-                                            <li>Diesel</li>
-                                            <li>Plug-in Hybrid</li>
-                                            <li>Hybrid</li>
-                                            <li>Electric</li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
+    <h2>Fuel</h2>
+
+    <form action="{% url 'posts:portfolio' %}" method="get">
+        {# keep search when changing fuel #}
+        {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% endif %}
+
+        {# keep marque filters #}
+        {% for m in selected_marques %}
+            <input type="hidden" name="marque" value="{{ m }}">
+        {% endfor %}
+
+        {# keep price filters #}
+        <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+        <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+
+        <ul class="checkbox-list">
+            {% for item in energy_counts %}
+                <li class="checkbox-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox"
+                               name="energy"
+                               value="{{ item.energy }}"
+                               {% if item.energy in selected_energies %}checked{% endif %}>
+                        <span>{{ item.energy }}</span>
+                    </label>
+                    <span>({{ item.count }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit" style="display:none;"></button>
+    </form>
+
+    <span class="cross"><i class="fa-light fa-xmark"></i></span>
+</div>
+
                                 </div>
                             </div>
                         </div>
@@ -270,6 +334,53 @@
                             <path d="M15.5133 6.32373C14.5889 6.32478 13.7027 6.69244 13.0491 7.34605C12.3954 7.99967 12.0277 8.88587 12.0266 9.81024C12.2182 14.4358 18.8091 14.4344 19 9.8102C18.9989 8.88583 18.6312 7.99965 17.9775 7.34604C17.3239 6.69243 16.4377 6.32478 15.5133 6.32373ZM15.5133 12.6183C14.7688 12.6175 14.0551 12.3213 13.5286 11.7949C13.0022 11.2685 12.7061 10.5547 12.7052 9.81024C12.8463 6.09026 18.1808 6.09128 18.3214 9.81026C18.3205 10.5547 18.0244 11.2685 17.498 11.7949C16.9715 12.3214 16.2578 12.6175 15.5133 12.6183Z" fill="white"/>
                         </svg>                                    
                         </a>
+                         <form action="{% url 'posts:portfolio' %}" method="get" class="sort-form d-flex align-items-center">
+                {# keep search #}
+                {% if request.GET.q %}
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                {% endif %}
+
+                {# keep marque filters #}
+                {% for m in selected_marques %}
+                    <input type="hidden" name="marque" value="{{ m }}">
+                {% endfor %}
+
+                {# keep energy filters #}
+                {% for e in selected_energies %}
+                    <input type="hidden" name="energy" value="{{ e }}">
+                {% endfor %}
+
+                {# keep transmission filters #}
+                {% for t in selected_transmissions %}
+                    <input type="hidden" name="transmission" value="{{ t }}">
+                {% endfor %}
+
+                {# keep etat filters #}
+                {% for et in selected_etats %}
+                    <input type="hidden" name="etat_general" value="{{ et }}">
+                {% endfor %}
+
+                {# keep carrosserie filters #}
+                {% for c in selected_carrosseries %}
+                    <input type="hidden" name="carrosserie" value="{{ c }}">
+                {% endfor %}
+
+                {# keep price range #}
+                <input type="hidden" name="min_price" value="{{ min_price_sel }}">
+                <input type="hidden" name="max_price" value="{{ max_price_sel }}">
+
+                <label for="order" class="me-2">Sort by:</label>
+                <select name="order" id="order" onchange="this.form.submit()">
+                    <option value="">Default</option>
+                    <option value="price_asc" {% if selected_order == 'price_asc' %}selected{% endif %}>
+                        Price: Low to High
+                    </option>
+                    <option value="price_desc" {% if selected_order == 'price_desc' %}selected{% endif %}>
+                        Price: High to Low
+                    </option>
+                </select>
+            </form> 
+                                
                                 <div class="row g-5">
                                     
                                 {% for post in posts %}
@@ -347,56 +458,114 @@
         </div>
     </div>
 
-    <script>
+ <script>
+    const sliderContainer = document.querySelector('.price-box .slider-container');
+    if (sliderContainer) {
         const minRange = document.getElementById('minRange');
         const maxRange = document.getElementById('maxRange');
         const range = document.getElementById('range');
         const histogramBars = document.querySelectorAll('.histogram-bar');
-        const minPrice = document.getElementById('minPrice');
-        const maxPrice = document.getElementById('maxPrice');
-    
-        function updateRange() {
-          const minValue = parseInt(minRange.value);
-          const maxValue = parseInt(maxRange.value);
-    
-          // Update the range highlight
-          range.style.left = `${minValue}%`;
-          range.style.right = `${100 - maxValue}%`;
-    
-          // Update the active bars
-          histogramBars.forEach((bar, index) => {
-            const barValue = (index / (histogramBars.length - 1)) * 100;
-            if (barValue >= minValue && barValue <= maxValue) {
-              bar.classList.add('active');
-            } else {
-              bar.classList.remove('active');
-            }
-          });
-    
-          // Update price labels (example: mapping 0-100 to $500-$5000)
-          const minPriceValue = Math.round((minValue / 100) * (5000 - 500) + 500);
-          const maxPriceValue = Math.round((maxValue / 100) * (5000 - 500) + 500);
-          minPrice.textContent = `$${minPriceValue}`;
-          maxPrice.textContent = `$${maxPriceValue}`;
+        const minPriceLabel = document.getElementById('minPrice');
+        const maxPriceLabel = document.getElementById('maxPrice');
+        const minPriceInput = document.getElementById('minPriceInput');
+        const maxPriceInput = document.getElementById('maxPriceInput');
+
+        const priceMin = parseFloat(sliderContainer.dataset.priceMin || '0');
+        const priceMax = parseFloat(sliderContainer.dataset.priceMax || '0');
+
+        function percentToPrice(percent) {
+            if (priceMax === priceMin) return priceMin;
+            return Math.round(priceMin + (percent / 100) * (priceMax - priceMin));
         }
-    
-        // Add event listeners
-        minRange.addEventListener('input', () => {
-          if (parseInt(minRange.value) > parseInt(maxRange.value) - 10) {
-            minRange.value = maxRange.value - 10;
-          }
-          updateRange();
+
+        function updateRange() {
+            const minValue = parseInt(minRange.value);
+            const maxValue = parseInt(maxRange.value);
+
+            // Keep handles apart
+            if (minValue > maxValue - 5) {
+                minRange.value = maxValue - 5;
+            }
+            if (maxValue < minValue + 5) {
+                maxRange.value = minValue + 5;
+            }
+
+            const correctedMin = parseInt(minRange.value);
+            const correctedMax = parseInt(maxRange.value);
+
+            // Update the range highlight
+            range.style.left = correctedMin + '%';
+            range.style.right = (100 - correctedMax) + '%';
+
+            // Update active bars
+            histogramBars.forEach((bar, index) => {
+                const barValue = (index / (histogramBars.length - 1)) * 100;
+                if (barValue >= correctedMin && barValue <= correctedMax) {
+                    bar.classList.add('active');
+                } else {
+                    bar.classList.remove('active');
+                }
+            });
+
+            // Convert to real price
+            const minPriceValue = percentToPrice(correctedMin);
+            const maxPriceValue = percentToPrice(correctedMax);
+
+            // Update labels (you can add currency symbol)
+            minPriceLabel.textContent = minPriceValue.toLocaleString() + ' TND';
+            maxPriceLabel.textContent = maxPriceValue.toLocaleString() + ' TND';
+
+            // Update hidden inputs sent to backend
+            minPriceInput.value = minPriceValue;
+            maxPriceInput.value = maxPriceValue;
+        }
+
+        // Update on slide
+        minRange.addEventListener('input', updateRange);
+        maxRange.addEventListener('input', updateRange);
+
+        // Auto-submit when user finishes sliding
+        minRange.addEventListener('change', function () {
+            minRange.form.submit();
         });
-    
-        maxRange.addEventListener('input', () => {
-          if (parseInt(maxRange.value) < parseInt(minRange.value) + 10) {
-            maxRange.value = parseInt(minRange.value) + 10;
-          }
-          updateRange();
+        maxRange.addEventListener('change', function () {
+            maxRange.form.submit();
         });
-    
+
         // Initialize
         updateRange();
-    </script>
+    }
+
+    // (keep your existing auto-submit for marque checkboxes, if you added it earlier)
+    document.querySelectorAll('.car-make.side-box input[type="checkbox"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            cb.form.submit();
+        });
+    });
+</script>
+
+    <script>
+  // Auto-submit marque filters when checkbox changes
+  // Auto-submit marque filters
+    document.querySelectorAll('.car-make.side-box input[type="checkbox"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            cb.form.submit();
+        });
+    });
+
+    // Auto-submit fuel filters
+    document.querySelectorAll('.tag-area.side-box input[type="checkbox"]').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+            cb.form.submit();
+        });
+    });
+    
+document.querySelectorAll('.side-box input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => cb.form.submit());
+});
+
+
+</script>
+
     {% include 'partials/footer/footer-three.html' %}
         {% endblock content %}

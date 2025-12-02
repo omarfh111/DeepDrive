@@ -5,13 +5,91 @@ from django.utils.html import format_html
 
 class Post(models.Model):
     MARQUE_CHOICES = [
-        ('Mercedes-Benz', 'Mercedes-Benz'),
-        ('BMW', 'BMW'),
-        ('Audi', 'Audi'),
-        ('Volkswagen', 'Volkswagen'),
-        ('Toyota', 'Toyota'),
-        ('Other', 'Other'),
-    ]
+    # German
+    ('Audi', 'Audi'),
+    ('BMW', 'BMW'),
+    ('Mercedes-Benz', 'Mercedes-Benz'),
+    ('Volkswagen', 'Volkswagen'),
+    ('Porsche', 'Porsche'),
+    ('Opel', 'Opel'),
+    ('Maybach', 'Maybach'),
+
+    # Japanese
+    ('Toyota', 'Toyota'),
+    ('Honda', 'Honda'),
+    ('Nissan', 'Nissan'),
+    ('Mazda', 'Mazda'),
+    ('Mitsubishi', 'Mitsubishi'),
+    ('Subaru', 'Subaru'),
+    ('Suzuki', 'Suzuki'),
+    ('Lexus', 'Lexus'),
+    ('Infiniti', 'Infiniti'),
+
+    # American
+    ('Ford', 'Ford'),
+    ('Chevrolet', 'Chevrolet'),
+    ('Dodge', 'Dodge'),
+    ('Tesla', 'Tesla'),
+    ('GMC', 'GMC'),
+    ('Jeep', 'Jeep'),
+    ('Cadillac', 'Cadillac'),
+    ('Chrysler', 'Chrysler'),
+    ('Lincoln', 'Lincoln'),
+    ('Buick', 'Buick'),
+
+    # British
+    ('Land Rover', 'Land Rover'),
+    ('Range Rover', 'Range Rover'),
+    ('Jaguar', 'Jaguar'),
+    ('Mini', 'Mini'),
+    ('Bentley', 'Bentley'),
+    ('Rolls-Royce', 'Rolls-Royce'),
+    ('Aston Martin', 'Aston Martin'),
+    ('Lotus', 'Lotus'),
+    ('McLaren', 'McLaren'),
+
+    # Italian
+    ('Ferrari', 'Ferrari'),
+    ('Lamborghini', 'Lamborghini'),
+    ('Maserati', 'Maserati'),
+    ('Alfa Romeo', 'Alfa Romeo'),
+    ('Fiat', 'Fiat'),
+
+    # French
+    ('Peugeot', 'Peugeot'),
+    ('Renault', 'Renault'),
+    ('Citroën', 'Citroën'),
+    ('DS Automobiles', 'DS Automobiles'),
+
+    # Korean
+    ('Hyundai', 'Hyundai'),
+    ('Kia', 'Kia'),
+    ('Genesis', 'Genesis'),
+
+    # Swedish
+    ('Volvo', 'Volvo'),
+    ('Koenigsegg', 'Koenigsegg'),
+
+    # Chinese
+    ('BYD', 'BYD'),
+    ('Geely', 'Geely'),
+    ('NIO', 'NIO'),
+    ('Great Wall', 'Great Wall'),
+    ('Changan', 'Changan'),
+
+    # Other / Miscellaneous
+    ('Skoda', 'Skoda'),
+    ('SEAT', 'SEAT'),
+    ('Dacia', 'Dacia'),
+    ('Tata', 'Tata'),
+    ('Mahindra', 'Mahindra'),
+    ('Proton', 'Proton'),
+    ('Perodua', 'Perodua'),
+    ('Smart', 'Smart'),
+    ('Other', 'Other'),
+]
+
+    
 
     ENERGY_CHOICES = [
         ('Essence', 'Essence'),
@@ -32,6 +110,23 @@ class Post(models.Model):
         ('Moyen', 'Moyen'),
         ('Mauvais', 'Mauvais'),
     ]
+    CARROSSERIE_CHOICES = [
+    ('Berline', 'Berline / Sedan'),
+    ('Hatchback', 'Hatchback'),
+    ('Break', 'Break / Station Wagon'),
+    ('Coupé', 'Coupé'),
+    ('Cabriolet', 'Cabriolet / Convertible'),
+    ('SUV', 'SUV / 4x4 / Crossover'),
+    ('Monospace', 'Monospace / Minivan'),
+    ('Pick-up', 'Pick-up / Truck'),
+    ('Utilitaire', 'Utilitaire / Van'),
+    ('Sport', 'Sport'),
+    ('Compacte', 'Compacte'),
+    ('Roadster', 'Roadster'),
+    ('Limousine', 'Limousine'),
+    ('Autres', 'Autres'),
+]
+
 
     marque = models.CharField(max_length=100, choices=MARQUE_CHOICES)
     modele = models.CharField(max_length=100)
@@ -42,7 +137,12 @@ class Post(models.Model):
     puissance_fiscale = models.IntegerField()
     transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
     etat_general = models.CharField(max_length=20, choices=ETAT_CHOICES)
-    carrosserie = models.CharField(max_length=50)
+    carrosserie = models.CharField(
+    max_length=50,
+    choices=CARROSSERIE_CHOICES,
+    default='Berline',
+)
+
     nb_proprietes = models.IntegerField()
     gouvernerat = models.CharField(max_length=100)
     price = models.FloatField()
@@ -53,6 +153,7 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name='posts'
     )
+    
     def __str__(self):
         return f"{self.marque} {self.modele} ({self.year})"
     
