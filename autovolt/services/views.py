@@ -12,14 +12,10 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.pdfgen import canvas
 from datetime import datetime
 from .models import Service
-from .forms import ServiceForm
+from .forms import ServiceForm , AdminServiceForm 
 
-
-
-# ============================================
-# FRONTEND VIEWS - CRUD COMPLET
-# ============================================
-
+ 
+ 
 def service_list(request):
     """Vue principale frontend"""
     if request.method == "POST":
@@ -96,6 +92,14 @@ def service_delete(request, pk):
     return redirect("services:service_list")
 
 
+
+
+
+
+
+
+
+
 # ============================================
 # BACKOFFICE VIEWS
 # ============================================
@@ -142,16 +146,39 @@ def admin_service_list(request):
     })
 
 
+# @staff_member_required
+# def admin_service_create(request):
+#     """Créer un service (backoffice)"""
+#     if request.method == "POST":
+#         form = ServiceForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             service = form.save()
+#             return redirect("services:admin_service_list")
+#     else:
+#         form = ServiceForm()
+    
+#     return render(request, "service/admin_form.html", {
+#         "form": form,
+#         "title": "Ajouter un service",
+#         "action": "create"
+#     })
+
+
+
+
 @staff_member_required
 def admin_service_create(request):
     """Créer un service (backoffice)"""
     if request.method == "POST":
-        form = ServiceForm(request.POST, request.FILES)
+        form = AdminServiceForm(request.POST, request.FILES)
         if form.is_valid():
             service = form.save()
+            messages.success(request, f"✅ Service '{service.nom_service}' créé avec succès!")
             return redirect("services:admin_service_list")
+        else:
+            messages.error(request, "❌ Erreur lors de la création du service. Vérifiez les champs.")
     else:
-        form = ServiceForm()
+        form = AdminServiceForm()
     
     return render(request, "service/admin_form.html", {
         "form": form,
@@ -159,19 +186,20 @@ def admin_service_create(request):
         "action": "create"
     })
 
-
 @staff_member_required
 def admin_service_update(request, pk):
     """Modifier un service (backoffice)"""
     service = get_object_or_404(Service, pk=pk)
     
     if request.method == "POST":
-        form = ServiceForm(request.POST, request.FILES, instance=service)
+        # form = ServiceForm(request.POST, request.FILES, instance=service)
+        form = AdminServiceForm(request.POST, request.FILES, instance=service)
         if form.is_valid():
             form.save()
             return redirect("services:admin_service_list")
     else:
-        form = ServiceForm(instance=service)
+        # form = ServiceForm(instance=service)
+        form = AdminServiceForm(instance=service)
     
     return render(request, "service/admin_form.html", {
         "form": form,

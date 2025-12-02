@@ -175,3 +175,19 @@ TWILIO_ACCOUNT_SID = "ACadf25df9983d77211a47692c31ec6485"
 TWILIO_AUTH_TOKEN = "01707a8a4245e2d0794a6eedb848a054"
 TWILIO_MESSAGING_SERVICE_SID = "MG48761413776d2391644be162c582092f"
 
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
+EMAIL_BACKEND = "deals.backends.UnverifiedTLSBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = "emnakarray61@gmail.com"
+EMAIL_HOST_PASSWORD = "uwve gotm jysk hobm"
+DEFAULT_FROM_EMAIL = "DeepDrive <emnakarray61@gmail.com>"
+
+ADMIN_NOTIFICATION_EMAILS = [
+    "emnakarray61@gmail.com",
+    "fkihomar06122003@gmail.com",
+]
+

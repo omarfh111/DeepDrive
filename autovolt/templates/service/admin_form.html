@@ -42,6 +42,13 @@
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
+.client-info-box {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
 </style>
 {% endblock %}
 
@@ -93,6 +100,45 @@
                     {% csrf_token %}
                     
                     <div class="row g-4">
+                        
+                        <!-- CHAMP CLIENT - NOUVEAU -->
+                        <div class="col-12">
+                            <div class="alert alert-info border-info mb-0">
+                                <iconify-icon icon="solar:info-circle-bold" class="fs-20 align-middle me-2"></iconify-icon>
+                                <strong>Information :</strong> Sélectionnez d'abord le client pour qui vous créez ce service
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:user-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Client <span class="required">*</span>
+                            </label>
+                            {{ form.client }}
+                            {% if form.client.help_text %}
+                            <small class="form-text text-muted d-block mt-1">
+                                <iconify-icon icon="solar:info-circle-outline" class="align-middle"></iconify-icon>
+                                {{ form.client.help_text }}
+                            </small>
+                            {% endif %}
+                            {% if form.client.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.client.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Séparateur -->
+                        <div class="col-12">
+                            <hr class="my-2">
+                            <h6 class="text-muted mb-0">
+                                <iconify-icon icon="solar:document-bold" class="align-middle me-1"></iconify-icon>
+                                Détails du service
+                            </h6>
+                        </div>
+
                         <!-- Nom du service -->
                         <div class="col-md-6">
                             <label class="form-label">
@@ -270,6 +316,20 @@ document.addEventListener('DOMContentLoaded', function() {
             charCount.style.color = this.value.length < 10 ? '#ef4444' : '#10b981';
         });
         charCount.textContent = desc.value.length;
+    }
+    
+    // Highlight du champ client
+    const clientSelect = document.querySelector('select[name="client"]');
+    if (clientSelect) {
+        clientSelect.addEventListener('change', function() {
+            if (this.value) {
+                this.style.borderColor = '#10b981';
+                this.style.backgroundColor = '#f0fdf4';
+            } else {
+                this.style.borderColor = '';
+                this.style.backgroundColor = '';
+            }
+        });
     }
     
     // Upload image
