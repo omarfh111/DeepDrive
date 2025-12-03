@@ -1,0 +1,111 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}DeepDrive Research Engine{% endblock %}
+{% block page_title %}DeepDrive Research Engine{% endblock %}
+{% block breadcrumb_leaf %}DeepDrive Research Engine{% endblock %}
+
+{% block content %}
+
+<!-- Search Section -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="mb-3">DeepDrive Research Engine</h4>
+
+        <form method="post" action="{% url 'ai_agent:deep_research_dashboard' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Enter your research query</label>
+            <input
+              type="text"
+              name="query"
+              class="form-control"
+              placeholder="e.g. tell me about Chevrolet Camaro SS and compare it to other models"
+              value="{{ query }}"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            Run Deep Research
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search History -->
+{% if history %}
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="mb-3">Your Recent Research Queries</h4>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>Query</th>
+                <th class="text-nowrap">Date</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in history %}
+              <tr>
+                <td>{{ item.query|truncatechars:80 }}</td>
+                <td class="text-nowrap">{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                <td class="text-end">
+                  <a
+                    href="{% url 'ai_agent:download_research_html' item.id %}"
+                    class="btn btn-outline-secondary btn-sm"
+                    title="Download HTML Report"
+                  >
+                    <iconify-icon icon="mdi:download-circle-outline" width="22" height="22"></iconify-icon>
+
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Generated Report -->
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="mb-3">Generated Report</h4>
+
+        {% if html_report %}
+          <div id="deepdrive-report">
+            {{ html_report|safe }}
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">
+            No report generated yet. Enter a query above and click “Run Deep Research”.
+          </p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+{% endblock %}

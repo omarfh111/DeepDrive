@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'TestDrive',
     'achats',
     'services',
+    'ai_agent',
     'widget_tweaks',
 ]
 
