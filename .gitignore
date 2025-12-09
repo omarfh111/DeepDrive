@@ -2,6 +2,8 @@
 .venv/
 venv/
 .env
+.venv1/
+venv1/
 
 db.sqlite3
 
@@ -12,3 +14,4 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+*.pth

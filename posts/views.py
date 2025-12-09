@@ -9,6 +9,9 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Exists, OuterRef
 from posts.models import Post
 from achats.models import Achat
+from .ml_model import *
+from django.db.models import Exists, OuterRef, Q, Count, Min, Max
+
 # --- Helpers d'accès ---
 def is_admin(user):
     # Adaptez selon votre app "user": ex. user.profile.role == 'admin'
@@ -27,33 +30,261 @@ def render_template(request, template_name, context=None, backoffice=False):
 
 # --- Liste / Portfolio ---
 def portfolio(request, backoffice=False):
-    posts = Post.objects.annotate(
+    # Base queryset: only posts without PAID achat
+    base_qs = Post.objects.annotate(
         has_paid_achat=Exists(
             Achat.objects.filter(post_id=OuterRef('pk'), statut=Achat.Status.PAID)
         )
     ).filter(has_paid_achat=False)
+
+    # --- Global min/max price from DB ---
+    price_agg = base_qs.aggregate(
+        min_price=Min('price'),
+        max_price=Max('price'),
+    )
+    price_min = price_agg['min_price'] or 0
+    price_max = price_agg['max_price'] or 0
+
+    # --- Search text ---
+    q = request.GET.get("q", "").strip()
+
+    # --- Selected price (from GET) ---
+    min_price_param = request.GET.get("min_price")
+    max_price_param = request.GET.get("max_price")
+
+    min_price_sel = price_min
+    max_price_sel = price_max
+    try:
+        if min_price_param is not None:
+            min_price_sel = float(min_price_param)
+        if max_price_param is not None:
+            max_price_sel = float(max_price_param)
+    except ValueError:
+        min_price_sel = price_min
+        max_price_sel = price_max
+
+    # Clamp to global range
+    if min_price_sel < price_min:
+        min_price_sel = price_min
+    if max_price_sel > price_max:
+        max_price_sel = price_max
+    if min_price_sel > max_price_sel:
+        min_price_sel, max_price_sel = max_price_sel, min_price_sel
+
+    # Start from base_qs and apply filters in layers
+    filtered_qs = base_qs
+
+    # 1) search filter
+    if q:
+        filtered_qs = filtered_qs.filter(
+            Q(marque__icontains=q) |
+            Q(modele__icontains=q) |
+            Q(gouvernerat__icontains=q) |
+            Q(energy__icontains=q)
+        )
+
+    # 2) price filter
+    if price_min != price_max:
+        filtered_qs = filtered_qs.filter(
+            price__gte=min_price_sel,
+            price__lte=max_price_sel,
+        )
+
+    # 3) fuel / energy filter (counts before filtering, so you see all options)
+    energy_counts = (
+        filtered_qs
+        .values("energy")
+        .annotate(count=Count("id"))
+        .order_by("energy")
+    )
+
+    selected_energies = request.GET.getlist("energy")
+    if selected_energies:
+        filtered_qs = filtered_qs.filter(energy__in=selected_energies)
+
+    # 4) marque filter + counts
+    marque_counts = (
+        filtered_qs
+        .values("marque")
+        .annotate(count=Count("id"))
+        .order_by("marque")
+    )
+
+    selected_marques = request.GET.getlist("marque")
+    if selected_marques:
+        posts = filtered_qs.filter(marque__in=selected_marques)
+    else:
+        posts = filtered_qs
+
+    # Slider positions (0–100)
+    if price_max != price_min:
+        min_percent = (min_price_sel - price_min) / (price_max - price_min) * 100
+        max_percent = (max_price_sel - price_min) / (price_max - price_min) * 100
+    else:
+        min_percent = 0
+        max_percent = 100
+        # --- Transmission filter ---
+    transmission_counts = (
+        filtered_qs
+        .values("transmission")
+        .annotate(count=Count("id"))
+        .order_by("transmission")
+    )
+
+    selected_transmissions = request.GET.getlist("transmission")
+    if selected_transmissions:
+        filtered_qs = filtered_qs.filter(transmission__in=selected_transmissions)
+
+    # --- Etat Général filter ---
+    etat_counts = (
+        filtered_qs
+        .values("etat_general")
+        .annotate(count=Count("id"))
+        .order_by("etat_general")
+    )
+
+    selected_etats = request.GET.getlist("etat_general")
+    if selected_etats:
+        filtered_qs = filtered_qs.filter(etat_general__in=selected_etats)
+
+    # --- Carrosserie filter ---
+    carrosserie_counts = (
+        filtered_qs
+        .values("carrosserie")
+        .annotate(count=Count("id"))
+        .order_by("carrosserie")
+    )
+
+    selected_carrosseries = request.GET.getlist("carrosserie")
+    if selected_carrosseries:
+        filtered_qs = filtered_qs.filter(carrosserie__in=selected_carrosseries)
+        # --- Sort by price ---
+    order = request.GET.get("order")
+    if order == "price_asc":
+        posts = posts.order_by("price")
+    elif order == "price_desc":
+        posts = posts.order_by("-price")
+    # else: keep default ordering from Meta (by -id) 
+
+
+
     template = 'portfolio-2.html'
-    return render_template(request, template, {'posts': posts}, backoffice)
+    return render_template(
+        request,
+        template,
+        {
+            "posts": posts,
+            "marque_counts": marque_counts,
+            "selected_marques": selected_marques,
+            "energy_counts": energy_counts,
+            "selected_energies": selected_energies,
+            "q": q,
+            "price_min": price_min,
+            "price_max": price_max,
+            "min_price_sel": min_price_sel,
+            "max_price_sel": max_price_sel,
+            "min_percent": min_percent,
+            "max_percent": max_percent,
+            "transmission_counts": transmission_counts,
+            "selected_transmissions": selected_transmissions,
+            "etat_counts": etat_counts,
+            "selected_etats": selected_etats,
+            "carrosserie_counts": carrosserie_counts,
+            "selected_carrosseries": selected_carrosseries,
+            "selected_order": order,
+
+        },
+        backoffice
+    )
 
 
 # --- Create ---
 @login_required
 def add_car(request, backoffice=False):
     template = 'add_car.html'
+
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+        dashboard_image = request.FILES.get('dashboard_image')
+        car_image       = request.FILES.get('image')
+
+        extracted_km = None
+        ocr_error = False
+        car_error = False
+
+        # ---- 1) Verify that the main car image really contains a car ----
+        if car_image:
+            try:
+                is_car = verify_car_image(car_image)
+                if not is_car:
+                    messages.error(
+                        request,
+                        "❌ L'image principale ne semble pas contenir une vraie voiture. "
+                        "Veuillez téléverser une photo claire de la voiture réelle."
+                    )
+                    car_error = True
+            except Exception as e:
+                # We already log inside verify_car_image; here we warn but do not block hard
+                messages.warning(
+                    request,
+                    "⚠ Impossible de vérifier que l'image est bien une voiture. "
+                    "Veuillez vérifier manuellement."
+                )
+
+       
+        if dashboard_image and not car_error:
+            try:
+                result = extract_kilometrage_from_image(dashboard_image)
+                extracted_km = result["kilometrage"]
+            except ValueError as e:
+                messages.error(request, f"❌ {e}")
+                ocr_error = True
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Erreur technique lors de l'extraction du kilométrage: {str(e)}"
+                )
+                ocr_error = True
+        else:
+            if not dashboard_image:
+                messages.error(
+                    request,
+                    "❌ L'image du tableau de bord est obligatoire pour extraire le kilométrage."
+                )
+                ocr_error = True
+
+        # ---- 3) Recréer les données du formulaire (en intégrant le km extrait) ----
+        post_data = request.POST.copy()
+        if extracted_km is not None:
+            post_data["kilometrage"] = str(extracted_km)
+
+        form = PostForm(post_data, request.FILES)
+
+        # Si problème de voiture ou d'odomètre → ne pas sauvegarder
+        if car_error or ocr_error:
+            return render_template(request, template, {"form": form}, backoffice)
+
+        # ---- 4) Validation finale du formulaire ----
         if form.is_valid():
             obj = form.save(commit=False)
             obj.owner = request.user
             obj.save()
+
+
             if backoffice:
                 return redirect('posts:admin_portfolio')
             return redirect('posts:portfolio')
+        else:
+            messages.error(request, "❌ Veuillez corriger les erreurs dans le formulaire.")
     else:
         form = PostForm()
+
     return render_template(request, template, {'form': form}, backoffice)
 
-# --- Update ---
+
+
+
+
+
 @login_required
 def update_post(request, post_id, backoffice=False):
     template = 'update_post.html'
@@ -61,17 +292,88 @@ def update_post(request, post_id, backoffice=False):
 
     if not (request.user.is_staff or request.user == post.owner):
         raise PermissionDenied
-    
+
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
+        dashboard_image = request.FILES.get('dashboard_image')
+        car_image       = request.FILES.get('image')  # only set if user uploads a new one
+        extracted_km = None
+        car_error = False
+
+        # ---- 1) If a new main image is provided, verify it is a real car ----
+        if car_image:
+            try:
+                is_car = verify_car_image(car_image)
+                if not is_car:
+                    messages.error(
+                        request,
+                        "❌ La nouvelle image ne semble pas contenir une vraie voiture. "
+                        "Veuillez téléverser une photo claire de la voiture réelle."
+                    )
+                    car_error = True
+            except Exception as e:
+                messages.warning(
+                    request,
+                    "⚠ Impossible de vérifier que l'image est bien une voiture. "
+                    "Veuillez vérifier manuellement."
+                )
+
+        # ---- 2) Optional odometer OCR on update (if new dashboard_image) ----
+        if dashboard_image and not car_error:
+            try:
+                result = extract_kilometrage_from_image(dashboard_image)
+                if result and result.get('kilometrage') is not None:
+                    extracted_km = result['kilometrage']
+            except ValueError as e:
+                messages.warning(
+                    request,
+                    f"⚠ Impossible de détecter le compteur sur l'image: {str(e)}. "
+                    "Veuillez vérifier la photo ou saisir le kilométrage manuellement."
+                )
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Erreur lors de l'extraction du kilométrage: {str(e)}"
+                )
+
+        # ---- 3) Recréer POST data (en remplaçant éventuellement le kilométrage) ----
+        post_data = request.POST.copy()
+
+        if extracted_km is not None:
+            post_data['kilometrage'] = str(int(extracted_km))
+
+        form = PostForm(post_data, request.FILES, instance=post)
+
+        # Si l'image n'est pas une vraie voiture → ne pas sauvegarder
+        if car_error:
+            return render_template(request, template, {'form': form, 'post': post}, backoffice)
+
+        # ---- 4) Validation et sauvegarde ----
         if form.is_valid():
-            form.save()
+            updated_post = form.save(commit=False)
+            updated_post.owner = post.owner
+            updated_post.save()
+
+            messages.success(request, "✓ Voiture mise à jour avec succès.")
+
             if backoffice:
                 return redirect('posts:admin_portfolio')
             return redirect('posts:portfolio')
+        else:
+            messages.error(request, "❌ Veuillez corriger les erreurs dans le formulaire.")
     else:
         form = PostForm(instance=post)
+
     return render_template(request, template, {'form': form, 'post': post}, backoffice)
+
+
+
+
+
+
+
+
+
+
 
 # --- Delete ---
 @login_required

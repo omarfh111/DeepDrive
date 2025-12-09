@@ -1,10 +1,11 @@
 from django import forms
 from .models import Review, Commentaire
+from .content_validator import validate_content
 
 
 class ReviewForm(forms.ModelForm):
     """
-    Form for creating and editing reviews
+    Form for creating and editing reviews with enhanced content validation
     """
     class Meta:
         model = Review
@@ -51,13 +52,44 @@ class ReviewForm(forms.ModelForm):
             self.fields['image'].required = False
     
     def clean_description(self):
-        """Validate that description is at least 50 characters"""
+        """
+        Validate description with enhanced checks:
+        - Minimum 50 characters
+        - No profanity (from bad_words.txt)
+        - No AI-generated content
+        - No spam patterns
+        - No gibberish
+        """
         description = self.cleaned_data.get('description')
+        
         if len(description) < 50:
             raise forms.ValidationError(
                 'Votre avis doit contenir au moins 50 caractères.'
             )
+        
+        # Enhanced validation with AI detection and spam filtering
+        is_valid, error_message = validate_content(description, is_title=False)
+        if not is_valid:
+            raise forms.ValidationError(error_message)
+        
         return description
+    
+    def clean_titre(self):
+        """
+        Validate title with enhanced checks:
+        - No profanity (from bad_words.txt)
+        - No AI-generated content patterns
+        - No spam
+        - No gibberish
+        """
+        titre = self.cleaned_data.get('titre')
+        
+        # Enhanced validation
+        is_valid, error_message = validate_content(titre, is_title=True)
+        if not is_valid:
+            raise forms.ValidationError(error_message)
+        
+        return titre
     
     def clean_note(self):
         """Validate note is between 0 and 5"""
@@ -71,7 +103,7 @@ class ReviewForm(forms.ModelForm):
 
 class CommentaireForm(forms.ModelForm):
     """
-    Form for creating and editing comments
+    Form for creating and editing comments with enhanced content validation
     """
     class Meta:
         model = Commentaire
@@ -89,12 +121,26 @@ class CommentaireForm(forms.ModelForm):
         }
     
     def clean_commentaire(self):
-        """Validate that comment is at least 10 characters"""
+        """
+        Validate comment with enhanced checks:
+        - Minimum 10 characters
+        - No profanity (from bad_words.txt)
+        - No AI-generated content
+        - No spam patterns
+        - No gibberish
+        """
         commentaire = self.cleaned_data.get('commentaire')
+        
         if len(commentaire) < 10:
             raise forms.ValidationError(
                 'Votre commentaire doit contenir au moins 10 caractères.'
             )
+        
+        # Enhanced validation with AI detection and spam filtering
+        is_valid, error_message = validate_content(commentaire, is_title=False)
+        if not is_valid:
+            raise forms.ValidationError(error_message)
+        
         return commentaire
 
 

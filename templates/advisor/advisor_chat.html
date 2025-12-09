@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Advisor Auto IA</title>
+    <style>
+        :root {
+            --bg-main: #020617;
+            --bg-elevated: #020617;
+            --bg-card: #020617;
+            --border-subtle: #1f2937;
+            --accent: #22c55e;
+            --accent-soft: rgba(34, 197, 94, .12);
+            --accent-warn: #eab308;
+            --accent-warn-soft: rgba(234, 179, 8, .14);
+            --accent-danger: #ef4444;
+            --accent-danger-soft: rgba(239, 68, 68, .14);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 35%, #000 100%);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 30%;
+            background: linear-gradient(to bottom, #020617 0, #020617 60%, #000 100%);
+            border-right: 1px solid var(--border-subtle);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin: 0 0 .5rem 0;
+        }
+
+        .subtitle {
+            font-size: .9rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .55);
+        }
+
+        .preview {
+            width: 100%;
+            border-radius: .75rem;
+            background: #0b1120;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-title {
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+        }
+
+        .small-inputs {
+            display: flex;
+            gap: .5rem;
+            margin-top: .5rem;
+        }
+
+        .small-inputs input {
+            flex: 1;
+            border-radius: .75rem;
+            border: 1px solid #374151;
+            background: #020617;
+            color: var(--text-main);
+            padding: .45rem .6rem;
+            font-size: .85rem;
+            outline: none;
+        }
+
+        .small-inputs input::placeholder {
+            color: #4b5563;
+        }
+
+        .stat-row {
+            margin-bottom: .75rem;
+        }
+
+        .stat-main {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+            border-radius: 999px;
+            padding: .2rem .65rem;
+            font-size: .75rem;
+            margin-top: .15rem;
+        }
+
+        .badge.ok {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .badge.warn {
+            background: var(--accent-warn-soft);
+            color: var(--accent-warn);
+        }
+
+        .badge.danger {
+            background: var(--accent-danger-soft);
+            color: var(--accent-danger);
+        }
+
+        .badge-dot {
+            width: .4rem;
+            height: .4rem;
+            border-radius: 999px;
+            background: currentColor;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, .9);
+            backdrop-filter: blur(18px);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .chat-header-left strong {
+            font-size: 1.05rem;
+        }
+
+        .chat-header-left span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .9rem;
+        }
+
+        .status-pill {
+            border-radius: 999px;
+            padding: .2rem .75rem;
+            border: 1px solid #1d4ed8;
+            font-size: .8rem;
+            color: #93c5fd;
+            background: rgba(37, 99, 235, .08);
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 1rem 1.5rem 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+        }
+
+        .msg {
+            max-width: min(70%, 760px);
+            padding: .75rem 1rem;
+            border-radius: 1.1rem;
+            font-size: .95rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            animation: fadeIn .18s ease-out;
+        }
+
+        .msg.user {
+            margin-left: auto;
+            background: #2563eb;
+            color: #e5f0ff;
+            border-bottom-right-radius: .35rem;
+        }
+
+        .msg.bot {
+            margin-right: auto;
+            background: #020617;
+            border: 1px solid var(--border-subtle);
+            border-bottom-left-radius: .35rem;
+        }
+
+        .msg.bot h2,
+        .msg.bot h3 {
+            margin: .2rem 0 .35rem;
+            font-size: .95rem;
+        }
+
+        .msg.bot h3 {
+            color: #93c5fd;
+        }
+
+        .msg.bot ul {
+            margin: .35rem 0 .2rem 1.1rem;
+            padding: 0;
+        }
+
+        .msg.bot li {
+            margin-bottom: .15rem;
+        }
+
+        .chat-input {
+            padding: .75rem 1.5rem 1.1rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: .5rem;
+            background: radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            border-radius: 999px;
+            border: 1px solid #374151;
+            background: #020617;
+            color: var(--text-main);
+            padding: .6rem 1.1rem;
+            outline: none;
+            font-size: .93rem;
+        }
+
+        .chat-input input::placeholder {
+            color: #4b5563;
+        }
+
+        .chat-input button {
+            border-radius: 999px;
+            border: none;
+            padding: .55rem 1.3rem;
+            background: var(--accent);
+            color: #020617;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: .93rem;
+            box-shadow: 0 8px 22px rgba(34, 197, 94, .4);
+        }
+
+        .chat-input button:disabled {
+            opacity: .65;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .highlight-flash {
+            animation: flash 0.7s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes flash {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .5); }
+            100% { box-shadow: 0 0 0 16px rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h1>Advisor Auto IA</h1>
+        <div class="subtitle">
+            Envoie une photo de véhicule, complète quelques infos et discute avec ton assistant.
+        </div>
+    </div>
+
+    <!-- 🔹 Carte photos -->
+    <div class="card">
+        <div class="section-title">Photos du véhicule</div>
+
+        <!-- Vue principale -->
+        <div class="label">Vue principale (extérieur)</div>
+        <img id="imagePreviewMain" class="preview" src="" alt="Aperçu extérieur">
+        <input type="file" id="imageInputMain" accept="image/*" style="margin-top:.6rem;width:100%">
+
+        <!-- séparateur -->
+        <div style="height:1px;background:#111827;margin:0.9rem 0;"></div>
+
+        <!-- Vues optionnelles -->
+        <div class="label">Tableau de bord (optionnel)</div>
+        <input type="file" id="imageInputDashboard" accept="image/*" style="width:100%;margin-bottom:.4rem">
+
+        <div class="label">Moteur (optionnel)</div>
+        <input type="file" id="imageInputEngine" accept="image/*" style="width:100%;margin-bottom:.4rem">
+
+        <div class="label">Intérieur / sièges (optionnel)</div>
+        <input type="file" id="imageInputInterior" accept="image/*" style="width:100%;">
+    </div>
+
+    <!-- Infos vendeur -->
+    <div class="card">
+        <div class="section-title">Informations vendeur</div>
+        <div class="small-inputs">
+            <input type="number" id="yearInput" placeholder="Année (ex: 2015)">
+            <input type="number" id="mileageInput" placeholder="Kilométrage (km)">
+        </div>
+        <div class="small-inputs" style="margin-top:.4rem">
+            <input type="number" id="priceInput" placeholder="Prix vendeur (TND)">
+        </div>
+    </div>
+
+    <!-- Analyse auto -->
+    <div class="card">
+        <div class="section-title">Analyse automatique</div>
+
+        <div class="stat-row">
+            <div class="label">Marque estimée</div>
+            <div class="stat-main" id="brandValue">—</div>
+            <div id="brandConf" class="badge warn" style="display:none;">
+                <span class="badge-dot"></span>
+                <span>Confiance: 0.00</span>
+            </div>
+        </div>
+
+        <div class="stat-row">
+            <div class="label">État carrosserie</div>
+            <div class="stat-main" id="damageValue">—</div>
+            <div id="damageConf" class="badge ok" style="display:none;">
+                <span class="badge-dot"></span>
+                <span>Confiance: 0.00</span>
+            </div>
+        </div>
+
+        <!-- 🔹 Kilométrage détecté par l'IA -->
+        <div class="stat-row">
+            <div class="label">Kilométrage détecté (IA)</div>
+            <div class="stat-main" id="mileageAiValue">—</div>
+            <div id="mileageAiConf" class="badge warn" style="display:none;">
+                <span class="badge-dot"></span>
+                <span id="mileageAiConfText">Confiance: —</span>
+            </div>
+        </div>
+
+        <!-- 🔹 Voyants tableau de bord (Roboflow) -->
+        <div class="stat-row">
+            <div class="label">Voyants tableau de bord</div>
+            <div class="stat-main" id="iconsValue">—</div>
+            <div id="iconsConf" class="badge warn" style="display:none;">
+                <span class="badge-dot"></span>
+                <span id="iconsSummary">En attente</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="chat-header">
+        <div class="chat-header-left">
+            <strong>Conversation</strong>
+            <span>Discute avec ton conseiller automobile IA</span>
+        </div>
+        <div class="status-pill" id="statusLabel">Prêt</div>
+    </div>
+
+    <div id="chatWindow" class="chat-window">
+        <div class="msg bot">
+            Salut 👋 Envoie une photo de la voiture (vue extérieure), remplis l'année / km / prix,
+            puis pose ta question (ex: « Est-ce une bonne affaire ? »).
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Écris ta question ici...">
+        <button id="sendBtn">Envoyer</button>
+    </div>
+</div>
+
+<script>
+    const API_URL = "/api/advisor/chat/";
+    const ICONS_URL = "/api/advisor/icons/";
+
+    const chatWindow = document.getElementById("chatWindow");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const imageInputMain = document.getElementById("imageInputMain");
+    const imagePreviewMain = document.getElementById("imagePreviewMain");
+    const imageInputDashboard = document.getElementById("imageInputDashboard");
+    const imageInputEngine = document.getElementById("imageInputEngine");
+    const imageInputInterior = document.getElementById("imageInputInterior");
+
+    const yearInput = document.getElementById("yearInput");
+    const mileageInput = document.getElementById("mileageInput");
+    const priceInput = document.getElementById("priceInput");
+    const statusLabel = document.getElementById("statusLabel");
+
+    const brandValue = document.getElementById("brandValue");
+    const brandConf = document.getElementById("brandConf");
+    const damageValue = document.getElementById("damageValue");
+    const damageConf = document.getElementById("damageConf");
+
+    const iconsValue = document.getElementById("iconsValue");
+    const iconsConf = document.getElementById("iconsConf");
+    const iconsSummary = document.getElementById("iconsSummary");
+
+    // 🔹 éléments pour le kilométrage IA
+    const mileageAiValue = document.getElementById("mileageAiValue");
+    const mileageAiConf = document.getElementById("mileageAiConf");
+    const mileageAiConfText = document.getElementById("mileageAiConfText");
+
+    let fileMain = null;
+    let fileDashboard = null;
+    let fileEngine = null;
+    let fileInterior = null;
+
+    let messages = [];
+
+    // Preview vue principale
+    imageInputMain.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        fileMain = file;
+        const url = URL.createObjectURL(file);
+        imagePreviewMain.src = url;
+    });
+
+    // Tableau de bord : on déclenche l’analyse Roboflow
+    imageInputDashboard.addEventListener("change", (e) => {
+        fileDashboard = e.target.files[0] || null;
+
+        if (fileDashboard) {
+            analyzeDashboardIcons();
+        } else {
+            iconsValue.textContent = "—";
+            iconsConf.style.display = "none";
+            iconsSummary.textContent = "En attente";
+        }
+    });
+
+    imageInputEngine.addEventListener("change", (e) => {
+        fileEngine = e.target.files[0] || null;
+    });
+
+    imageInputInterior.addEventListener("change", (e) => {
+        fileInterior = e.target.files[0] || null;
+    });
+
+    function renderMarkdown(text) {
+        if (!text) return "";
+        let html = text;
+
+        html = html.replace(/(?:^|\n)### (.+)/g, "<h3>$1</h3>");
+        html = html.replace(/(?:^|\n)## (.+)/g, "<h2>$1</h2>");
+        html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+        html = html.replace(/(?:^|\n)- (.+)/g, "<li>$1</li>");
+        if (html.includes("<li>")) {
+            html = html.replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>");
+        }
+
+        html = html.replace(/\n{2,}/g, "<br><br>");
+        return html;
+    }
+
+    function addMessage(text, role) {
+        const div = document.createElement("div");
+        div.className = "msg " + (role === "user" ? "user" : "bot");
+
+        if (role === "bot") {
+            div.innerHTML = renderMarkdown(text);
+        } else {
+            div.textContent = text;
+        }
+
+        chatWindow.appendChild(div);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function updateBadges(brandInfo, damageInfo, mileageAi, mileageAiConfLevel) {
+        if (brandInfo) {
+            brandValue.textContent = brandInfo.brand || "Analyse indisponible";
+            brandConf.style.display = "inline-flex";
+            brandConf.querySelector("span:last-child").textContent =
+                "Confiance: " + (brandInfo.confidence || 0).toFixed(2);
+
+            brandConf.className = "badge " +
+                (brandInfo.status === "confiant" ? "ok" : "warn");
+            brandConf.classList.add("highlight-flash");
+            setTimeout(() => brandConf.classList.remove("highlight-flash"), 700);
+        }
+
+        if (damageInfo) {
+            damageValue.textContent = damageInfo.label_fr || "Analyse indisponible";
+            damageConf.style.display = "inline-flex";
+            damageConf.querySelector("span:last-child").textContent =
+                "Confiance: " + (damageInfo.confidence || 0).toFixed(2);
+
+            const raw = damageInfo.label_raw || "";
+            let cls = "ok";
+            if (raw === "02-moderate") cls = "warn";
+            if (raw === "03-severe") cls = "danger";
+            damageConf.className = "badge " + cls;
+            damageConf.classList.add("highlight-flash");
+            setTimeout(() => damageConf.classList.remove("highlight-flash"), 700);
+        }
+
+        // 🔹 MàJ du kilométrage détecté par l'IA
+        if (mileageAi !== null && mileageAi !== undefined && mileageAi !== "") {
+            let km = typeof mileageAi === "number" ? mileageAi : parseFloat(mileageAi);
+            if (!isNaN(km)) {
+                mileageAiValue.textContent = km.toLocaleString("fr-FR") + " km";
+            } else {
+                mileageAiValue.textContent = mileageAi + " km";
+            }
+
+            mileageAiConf.style.display = "inline-flex";
+
+            let level = (mileageAiConfLevel || "").toLowerCase();
+            let badgeClass = "warn";
+            if (level === "high") badgeClass = "ok";
+            else if (level === "low") badgeClass = "danger";
+
+            mileageAiConf.className = "badge " + badgeClass;
+            mileageAiConfText.textContent = "Confiance: " + (mileageAiConfLevel || "—");
+
+            mileageAiConf.classList.add("highlight-flash");
+            setTimeout(() => mileageAiConf.classList.remove("highlight-flash"), 700);
+        } else {
+            mileageAiValue.textContent = "—";
+            mileageAiConf.style.display = "none";
+        }
+    }
+
+    async function analyzeDashboardIcons() {
+        if (!fileDashboard) return;
+
+        statusLabel.textContent = "Analyse voyants…";
+
+        const fd = new FormData();
+        fd.append("image", fileDashboard);
+
+        try {
+            const resp = await fetch(ICONS_URL, {
+                method: "POST",
+                body: fd,
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                console.error(data);
+                iconsValue.textContent = "Erreur détection";
+                iconsConf.style.display = "inline-flex";
+                iconsSummary.textContent = data.error || "Erreur API";
+                return;
+            }
+
+            const lights = data.lights || [];
+
+            if (!lights.length) {
+                iconsValue.textContent = "Aucun voyant détecté";
+                iconsConf.style.display = "inline-flex";
+                iconsSummary.textContent = "0 voyant";
+            } else {
+                const labels = lights.map(l => l.label);
+                iconsValue.textContent = labels.join(", ");
+
+                iconsConf.style.display = "inline-flex";
+                iconsSummary.textContent = `${lights.length} voyant(s) détecté(s)`;
+
+                iconsConf.classList.add("highlight-flash");
+                setTimeout(() => iconsConf.classList.remove("highlight-flash"), 700);
+            }
+
+        } catch (e) {
+            console.error(e);
+            iconsValue.textContent = "Erreur réseau";
+            iconsConf.style.display = "inline-flex";
+            iconsSummary.textContent = String(e);
+        } finally {
+            statusLabel.textContent = "Prêt";
+        }
+    }
+
+    async function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        if (!fileMain) {
+            alert("Tu dois d'abord choisir une photo principale de la voiture (vue extérieure).");
+            return;
+        }
+
+        addMessage(text, "user");
+        messages.push({ role: "user", content: text });
+        messageInput.value = "";
+        sendBtn.disabled = true;
+        statusLabel.textContent = "Analyse en cours…";
+
+        const extra = {
+            year: yearInput.value ? parseInt(yearInput.value) : null,
+            mileage: mileageInput.value ? parseInt(mileageInput.value) : null,
+            seller_price: priceInput.value ? parseFloat(priceInput.value) : null,
+        };
+
+        const formData = new FormData();
+        formData.append("image", fileMain);
+
+        if (fileDashboard) formData.append("image_dashboard", fileDashboard);
+        if (fileEngine)    formData.append("image_engine", fileEngine);
+        if (fileInterior)  formData.append("image_interior", fileInterior);
+
+        formData.append("messages", JSON.stringify(messages));
+        formData.append("extra", JSON.stringify(extra));
+
+        try {
+            const resp = await fetch(API_URL, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                console.error(data);
+                addMessage("Erreur serveur : " + (data.error || "inconnue."), "bot");
+            } else {
+                const aiText = data.answer || "(pas de réponse)";
+                addMessage(aiText, "bot");
+                messages.push({ role: "assistant", content: aiText });
+
+                updateBadges(
+                    data.brand,
+                    data.damage,
+                    data.mileage_ai,
+                    data.mileage_ai_confidence
+                );
+            }
+        } catch (e) {
+            console.error(e);
+            addMessage("Erreur réseau / JavaScript : " + e, "bot");
+        } finally {
+            sendBtn.disabled = false;
+            statusLabel.textContent = "Prêt";
+        }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>

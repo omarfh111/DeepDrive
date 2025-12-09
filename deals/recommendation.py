@@ -12,6 +12,7 @@ from .emails import send_recommendation_email
 from openai import OpenAI
 
 # ⚙️ Client OpenAI (clé dans settings.OPENAI_API_KEY)
+
 client = OpenAI(
     api_key=getattr(settings, "OPENAI_API_KEY", None)
 )

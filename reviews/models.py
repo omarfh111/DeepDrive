@@ -1,12 +1,12 @@
 # reviews/models.py
 from django.db import models
-from django.conf import settings                        # ✅ use the swapped user model
+from django.conf import settings                        
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
 
 
 class Review(models.Model):
-    user = models.ForeignKey(                           # ✅ point to AUTH_USER_MODEL
+    user = models.ForeignKey(                           
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='reviews',
@@ -63,7 +63,7 @@ class Commentaire(models.Model):
         verbose_name="Utilisateur"
     )
     commentaire = models.TextField(verbose_name="Commentaire")
-    date_commentaire = models.DateField(auto_now_add=True, verbose_name="DateCommentaire")
+    date_commentaire = models.DateTimeField(auto_now_add=True, verbose_name="DateCommentaire")
     is_approved = models.BooleanField(default=True, verbose_name="Approuvé")
 
     class Meta:

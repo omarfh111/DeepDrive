@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import certifi
 load_dotenv()
 
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,7 +52,10 @@ INSTALLED_APPS = [
     'TestDrive',
     'achats',
     'services',
+    'ai_agent',
     'widget_tweaks',
+    'rest_framework',
+    'advisor',
 ]
 
 MIDDLEWARE = [
@@ -169,4 +173,26 @@ EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
 EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
 DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"
 
-OPENAI_API_KEY = "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"
+
+TWILIO_ACCOUNT_SID = "ACadf25df9983d77211a47692c31ec6485"
+TWILIO_AUTH_TOKEN = "01707a8a4245e2d0794a6eedb848a054"
+TWILIO_MESSAGING_SERVICE_SID = "MG48761413776d2391644be162c582092f"
+
+os.environ["SSL_CERT_FILE"] = certifi.where()
+
+EMAIL_BACKEND = "deals.backends.UnverifiedTLSBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = "emnakarray61@gmail.com"
+EMAIL_HOST_PASSWORD = "uwve gotm jysk hobm"
+DEFAULT_FROM_EMAIL = "DeepDrive <emnakarray61@gmail.com>"
+
+ADMIN_NOTIFICATION_EMAILS = [
+    "emnakarray61@gmail.com",
+    "fkihomar06122003@gmail.com",
+]
+ROBOFLOW_API_KEY = "Q2zZzhyNB8MtmjfNTNrR"
+ROBOFLOW_MODEL_ID = "car-dashboard-icons/3"
+

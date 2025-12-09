@@ -1,0 +1,22 @@
+Bonjour {{ client_name }},
+
+Nous sommes heureux de vous informer que votre service a été terminé avec succès !
+
+📋 DÉTAILS DU SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Service : {{ nom_service }}
+Type : {{ type_service }}
+Date prévue : {{ date_service|date:"d/m/Y" }}
+Garantie : {{ garantie }}
+Statut : ✅ {{ statut }}
+
+📝 DESCRIPTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{{ description }}
+
+Merci de votre confiance !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Deep Drive - Système de Gestion des Services
+📧 Contact : fkihomar06122003@gmail.com
+🌐 www.deepdrive.tn

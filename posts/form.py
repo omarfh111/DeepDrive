@@ -71,13 +71,22 @@ class PostForm(DustyFormMixin, forms.ModelForm):
         model = Post
         exclude = ['owner','sold']
         fields = "__all__"
-        # Widgets explicites pour forcer le rendering voulu
+        
         widgets = {
             "year": forms.NumberInput(),
             "kilometrage": forms.NumberInput(),
             "puissance_fiscale": forms.NumberInput(),
             "nb_proprietes": forms.NumberInput(),
             "price": forms.NumberInput(attrs={"step": "0.01", "min": "0"}),
-            # Utiliser FileInput (et non ClearableFileInput) pour éviter "Currently / Change"
-            "image": forms.FileInput(attrs={"accept": "image/png",'required': True}),
+            "image": forms.FileInput(attrs={"accept": "image/*",'required': True}),
+            "dashboard_image": forms.FileInput(attrs={"accept": "image/*",'required': True}),
         }
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+
+        if not image:
+            raise forms.ValidationError("Une image est obligatoire.")
+
+        
+        return image
+    

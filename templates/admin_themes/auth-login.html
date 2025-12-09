@@ -222,7 +222,7 @@
               <input type="checkbox" class="form-check-input" id="checkbox-signin" name="remember">
               <label class="form-check-label" for="checkbox-signin">Remember me</label>
             </div>
-            <a class="text-muted fs-14" href="#">Forgot password?</a>
+            <a class="text-muted fs-14" href="{% url 'user_app:password_reset' %}">Forgot password?</a>
           </div>
 
           <button class="btn btn-primary w-100" type="submit">SIGN IN</button>
