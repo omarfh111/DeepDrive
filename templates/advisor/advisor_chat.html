@@ -354,6 +354,16 @@
                 <span>Confiance: 0.00</span>
             </div>
         </div>
+        <!-- Correction manuelle marque/modèle -->
+        <div class="stat-row">
+            <div class="label">Correction marque / modèle (optionnel)</div>
+            <input type="text"
+                id="brandOverrideInput"
+                placeholder="Ex : Mercedes Classe C 2018"
+                style="width:100%;border-radius:.75rem;border:1px solid #374151;
+                        background:#020617;color:var(--text-main);padding:.45rem .6rem;
+                        font-size:.85rem;outline:none;">
+        </div>
 
         <div class="stat-row">
             <div class="label">État carrosserie</div>
@@ -440,6 +450,8 @@
     const mileageAiValue = document.getElementById("mileageAiValue");
     const mileageAiConf = document.getElementById("mileageAiConf");
     const mileageAiConfText = document.getElementById("mileageAiConfText");
+    const brandOverrideInput = document.getElementById("brandOverrideInput");
+
 
     let fileMain = null;
     let fileDashboard = null;
@@ -634,7 +646,11 @@
             year: yearInput.value ? parseInt(yearInput.value) : null,
             mileage: mileageInput.value ? parseInt(mileageInput.value) : null,
             seller_price: priceInput.value ? parseFloat(priceInput.value) : null,
+
+            // 🔹 nouvelle clé : correction marque/modèle par l'utilisateur
+            brand_override: brandOverrideInput.value ? brandOverrideInput.value.trim() : null,
         };
+
 
         const formData = new FormData();
         formData.append("image", fileMain);

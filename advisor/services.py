@@ -82,10 +82,7 @@ CONTRAINTES :
 - Toujours redire marque, état, km IA, voyants.
 - Style premium, lisible, structuré, coloré.
 - Adapter la réponse au marché tunisien.
-
-
 """
-
 
 
 def analyze_image_and_chat(
@@ -121,10 +118,42 @@ def analyze_image_and_chat(
         is_car = True  # on ne bloque pas si l'IA plante
 
     # ==========================
-    # 3) Prédictions vision (état + marque)
+    # 3) Prédictions vision (état + marque + modèle/année)
     # ==========================
     damage_info = predict_damage(pil_image)
     brand_info = predict_brand(pil_image)
+
+    # 🔹 3.bis — override par l'utilisateur si correction envoyée
+    # extra_data["brand_override"] doit contenir la marque/modèle corrigé
+    brand_override = extra_data.get("brand_override")
+    if brand_override:
+        # On remplace la marque par ce qu'a saisi l'utilisateur
+        brand_info["brand"] = brand_override
+        # On force aussi le label complet = correction utilisateur
+        brand_info["full_label"] = brand_override
+        # On peut vider les champs modèle/année si tu veux
+        brand_info["model_name"] = None
+        brand_info["year"] = None
+        # On indique que cette valeur vient de l'utilisateur
+        brand_info["status"] = "corrigé_par_utilisateur"
+        brand_info["confidence"] = 1.0
+
+    # Construire une ligne pour le modèle / année
+    modele_line = ""
+    model_name = brand_info.get("model_name")
+    year = brand_info.get("year")
+    full_label = brand_info.get("full_label")
+
+    if model_name or year is not None:
+        parts = []
+        if model_name:
+            parts.append(model_name)
+        if year is not None:
+            parts.append(str(year))
+        modele_line = f"- Modèle estimé : {' '.join(parts)}\n"
+    elif full_label:
+        # au pire, on affiche le label complet (ou la correction utilisateur)
+        modele_line = f"- Modèle estimé (label complet) : {full_label}\n"
 
     # ==========================
     # 4) Lecture du kilométrage via modèle odomètre (optionnel)
@@ -165,7 +194,7 @@ def analyze_image_and_chat(
 Analyse automatique (vue principale) :
 - Image reconnue comme voiture : {"oui" if is_car else "non (l'IA a un doute, à confirmer)"}
 - Marque prédite : {brand_info['brand']} (confiance = {brand_info['confidence']:.2f}, statut = {brand_info['status']})
-- État estimé (dommages) : {damage_info['label_fr']} (confiance = {damage_info['confidence']:.2f})
+{modele_line}- État estimé (dommages) : {damage_info['label_fr']} (confiance = {damage_info['confidence']:.2f})
 {km_block_text}
 """
 
