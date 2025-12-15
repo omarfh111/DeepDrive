@@ -16,26 +16,22 @@
 
           <div class="d-flex align-items-center flex-wrap gap-2">
             <form id="searchForm" class="d-flex" method="get">
-            <input 
-            id="searchInput"
-            class="form-control form-control-sm me-2" 
-            type="search" 
-            name="q" 
-            value="{{ q }}" 
-            placeholder="Rechercher (voiture, utilisateur)"
-            >
-<select class="form-select form-select-sm me-2" name="status" id="statusSelect">
-  <option value="">— Statut (tous) —</option>
-  <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
-  <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
-  <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
-</select>
+              <input id="searchInput" class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (voiture, utilisateur)">
+              
+              <select class="form-select form-select-sm me-2" name="status" id="statusSelect">
+                <option value="">— Statut (tous) —</option>
+                <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
+                <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
+                <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
+              </select>
+
               <select class="form-select form-select-sm me-2" name="sort" id="sortSelect">
-  <option value="">— Tri (défaut) —</option>
-  <option value="date_desc" {% if sort == "date_desc" %}selected{% endif %}>Date ↓ (récent → ancien)</option>
-  <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Date ↑ (ancien → récent)</option>
-</select>
+                <option value="">— Tri (défaut) —</option>
+                <option value="date_desc" {% if sort == "date_desc" %}selected{% endif %}>Date ↓</option>
+                <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Date ↑</option>
+              </select>
             </form>
+
             <a href="{% url 'TestDrive:admin_testdrive_add' %}" class="btn btn-sm btn-success">
               <i class="mdi mdi-plus-circle-outline me-1"></i> Nouveau Test Drive
             </a>
@@ -51,81 +47,72 @@
                 <th class="ps-3">ID</th>
                 <th>Voiture</th>
                 <th>Utilisateur</th>
-                <th>Date de réservation</th>
+                <th>Date</th>
                 <th>Statut</th>
+                <th>Prédiction du no_show</th>
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for t in page_obj %}
-              <tr>
+              <tr id="row-{{ t.id_test_drive }}">
                 <td class="ps-3">#{{ t.id_test_drive }}</td>
                 <td>{{ t.car.marque }} {{ t.car.modele }}</td>
                 <td>{{ t.user.first_name }}</td>
                 <td>{{ t.reservation_date|date:"d/m/Y" }} {{ t.reservation_time|time:"H:i" }}</td>
                 <td>
                   {% if t.status == "done" %}
-                    <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">Terminé</span>
+                    <span class="badge bg-success-subtle text-success">Terminé</span>
                   {% elif t.status == "not_done" %}
-                    <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">En attente</span>
+                    <span class="badge bg-warning-subtle text-warning">En attente</span>
                   {% elif t.status == "cancelled" %}
-                    <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">Annulé</span>
+                    <span class="badge bg-danger-subtle text-danger">Annulé</span>
                   {% else %}
-                    <span class="badge bg-secondary-subtle text-secondary fw-medium px-3 py-1 rounded-4">{{ t.status }}</span>
+                    <span class="badge bg-secondary-subtle text-secondary">{{ t.status }}</span>
                   {% endif %}
                 </td>
 
+<td>
+  {% if t.status == "not_done" %}
+    <button class="btn btn-sm btn-outline-primary predict-btn"
+            data-id="{{ t.id_test_drive }}">
+      Prédire
+    </button>
+  {% endif %}
+
+  <span id="pred-result-{{ t.id_test_drive }}" class="ms-2 text-primary fw-bold">
+    {% if t.prediction is not None %}
+      {% if t.prediction == 1 %}
+        ⚠️ No-Show probable ({{ t.probability|floatformat:1 }}%)
+      {% else %}
+        ✅ Client fiable ({{ t.probability|floatformat:1 }}%)
+      {% endif %}
+    {% endif %}
+  </span>
+</td>
+
+
                 <td class="text-end align-middle">
                   <div class="d-inline-flex align-items-center gap-1">
-                    <a href="{% url 'TestDrive:testdrive_detail' t.id_test_drive %}" 
-                       class="btn btn-icon btn-sm bg-info-subtle" 
-                       data-bs-toggle="tooltip" 
-                       data-bs-title="Détails">
-                      <i class="mdi mdi-eye-outline text-info fs-14"></i>
-                    </a>
-                    <a href="{% url 'TestDrive:testdrive_edit' t.id_test_drive %}" 
-                       class="btn btn-icon btn-sm bg-primary-subtle" 
-                       data-bs-toggle="tooltip" 
-                       data-bs-title="Modifier">
-                      <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
-                    </a>
-                    <form method="post" 
-                          action="{% url 'TestDrive:testdrive_delete' t.id_test_drive %}" 
-                          class="d-inline m-0" 
-                          onsubmit="return confirm('Confirmer la suppression de ce test drive ?');">
+                    <a href="{% url 'TestDrive:testdrive_detail' t.id_test_drive %}" class="btn btn-icon btn-sm bg-info-subtle"><i class="mdi mdi-eye-outline text-info"></i></a>
+
+                    <a href="{% url 'TestDrive:testdrive_edit' t.id_test_drive %}" class="btn btn-icon btn-sm bg-primary-subtle"><i class="mdi mdi-pencil-outline text-primary"></i></a>
+
+                    <form method="post" action="{% url 'TestDrive:testdrive_delete' t.id_test_drive %}" class="d-inline m-0" onsubmit="return confirm('Confirmer la suppression ?');">
                       {% csrf_token %}
-                      <button class="btn btn-icon btn-sm bg-danger-subtle" 
-                              data-bs-toggle="tooltip" 
-                              data-bs-title="Supprimer">
-                        <i class="mdi mdi-delete text-danger fs-14"></i>
-                      </button>
+                      <button class="btn btn-icon btn-sm bg-danger-subtle"><i class="mdi mdi-delete text-danger"></i></button>
                     </form>
                   </div>
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="6" class="text-center py-4 text-muted">Aucun test drive trouvé.</td></tr>
+              <tr><td colspan="7" class="text-center py-4 text-muted">Aucun test drive trouvé.</td></tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
 
-      {% if page_obj.paginator.num_pages > 1 %}
-      <div class="card-footer">
-        <nav aria-label="Pagination">
-          <ul class="pagination mb-0 justify-content-end">
-            {% if page_obj.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
-            {% endif %}
-            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
-            {% if page_obj.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
-            {% endif %}
-          </ul>
-        </nav>
-      </div>
-      {% endif %}
     </div>
   </div>
 </div>
@@ -137,21 +124,38 @@ const searchForm = document.getElementById("searchForm");
 const statusSelect = document.getElementById("statusSelect");
 const sortSelect = document.getElementById("sortSelect");
 
-  let searchTimer;
+let searchTimer;
 searchInput.addEventListener("input", function () {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    searchForm.submit();
-  }, 1000);
+  searchTimer = setTimeout(() => searchForm.submit(), 1000);
 });
 
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
-  sortSelect.addEventListener("change", () => {
-    searchForm.submit();
-});
-statusSelect.addEventListener("change", () => {
-    searchForm.submit();
+statusSelect.addEventListener("change", () => searchForm.submit());
+sortSelect.addEventListener("change", () => searchForm.submit());
+
+document.querySelectorAll(".predict-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const id = this.dataset.id;
+    const resultSpan = document.getElementById("pred-result-" + id);
+
+    resultSpan.innerHTML = "⏳…";
+
+  fetch("{% url 'TestDrive:testdrive_predict' 0 %}".replace("0", id), {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": "{{ csrf_token }}"
+    }
+  })
+
+
+    .then(res => res.json())
+    .then(data => {
+      resultSpan.innerHTML = data.result ?? "Erreur";
+    })
+    .catch(() => {
+      resultSpan.innerHTML = "⚠️ Erreur";
+    });
+  });
 });
 </script>
 {% endblock %}
