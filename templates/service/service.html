@@ -1,0 +1,940 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        <!-- Header -->
+        {% include 'partials/header/header-three.html' %}
+        
+        <!-- Breadcrumb -->
+        {% with class="service" current="Service" title="Service" %}
+            {% include 'partials/elements/breadcrumb.html' %}   
+        {% endwith %}
+
+        <!-- Service Hero Section -->
+        <section class="rts-service-area inner two rts-section-gap">
+            <div class="container">
+                <div class="section-inner">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="service-image-wrapper">
+                                <img src="{% static 'images/service/service-07.webp' %}" width="616" alt="">
+                                <img src="{% static 'images/service/service-08.webp' %}" width="616" alt="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="service-content-area">
+                                <div class="section-title-area">
+                                    <p class="sub-title wow fadeInUp" data-wow-delay=".1s">Car Dealer Service</p>
+                                    <h2 class="section-title wow move-right">Deep Drive <span>Service</span> Center</h2>
+                                </div>
+                                <p class="desc wow fadeInUp" data-wow-delay=".4s">Welcome to Deep Drive where innovation drives every journey. Discover a range of designed to elevate your driving experience.</p>
+                                <div class="button-area">
+                                    <a href="#add-service-form" class="rts-btn btn-primary radius-small smooth-scroll">
+                                        <i class="fa-solid fa-plus-circle"></i> Add New Service
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages avec animation -->
+        {% if messages %}
+        <div class="container" style="margin-bottom: 40px;">
+            {% for message in messages %}
+            <div class="alert-modern alert-{{ message.tags }} wow fadeInDown" data-wow-delay=".2s" style="display: flex; align-items: center; gap: 20px; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-left: 5px solid; animation: slideInDown 0.5s ease;">
+                <div class="alert-icon" style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                    <i class="fa-solid {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                </div>
+                <div style="flex: 1;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 16px;">{% if message.tags == 'success' %}Succès !{% else %}Attention !{% endif %}</strong>
+                    <span style="font-size: 14px;">{{ message }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background: rgba(0,0,0,0.1); border: none; color: inherit; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.3s; font-size: 18px;">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- LISTE DES SERVICES -->
+        <section class="rts-service-area rts-section-gapBottom">
+            <div class="container">
+                <div class="section-title-area2 text-center">
+                    <p class="sub-title wow fadeInUp">Our Services</p>
+                    <h2 class="section-title wow move-right">All Available <span>Services</span></h2>
+                    <div class="stats-badge wow fadeInUp" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff; border-radius: 50px; font-weight: 600; box-shadow: 0 5px 20px rgba(220, 38, 38, 0.3);">
+                        <i class="fa-solid fa-check-double"></i>{{ user.services.count }} Service{{ user.services.count|pluralize }}
+                                
+
+                    </div>
+                </div>
+
+                <div class="section-inner mt--60">
+                    <div class="row g-4">
+                        {% for service in services %}
+                        {% if service.client == user %}
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".{{ forloop.counter }}s">
+                            <div class="service-card-premium" style="background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; display: flex; flex-direction: column; border: 1px solid #f0f0f0;">
+                                <!-- Image avec overlay -->
+                                <div class="image-container" style="position: relative; height: 260px; overflow: hidden;">
+                                    {% if service.image %}
+                                        <img src="{{ service.image.url }}" alt="{{ service.nom_service }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;">
+                                    {% else %}
+                                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); display: flex; align-items: center; justify-content: center; position: relative;">
+                                            <i class="fa-solid fa-wrench" style="font-size: 70px; color: rgba(255,255,255,0.2); position: absolute;"></i>
+                                            <i class="fa-solid fa-tools" style="font-size: 50px; color: #fff; z-index: 1;"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Badge statut animé -->
+                                    <div class="status-badge" style="position: absolute; top: 20px; right: 20px; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 700; backdrop-filter: blur(15px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; animation: pulse 2s infinite;">
+                                        <span class="status-dot" style="width: 8px; height: 8px; border-radius: 50%; 
+                                            {% if service.statut == 'Terminé' %}background: #10b981;
+                                            {% elif service.statut == 'En cours' %}background: #f59e0b;
+                                            {% elif service.statut == 'En attente' %}background: #6b7280;
+                                            {% else %}background: #ef4444;{% endif %}">
+                                        </span>
+                                        <span style="
+                                            {% if service.statut == 'Terminé' %}background: rgba(16, 185, 129, 0.95); color: #fff;
+                                            {% elif service.statut == 'En cours' %}background: rgba(245, 158, 11, 0.95); color: #fff;
+                                            {% elif service.statut == 'En attente' %}background: rgba(107, 114, 128, 0.95); color: #fff;
+                                            {% else %}background: rgba(239, 68, 68, 0.95); color: #fff;{% endif %}
+                                            padding: 0 10px; border-radius: 50px;">
+                                            {{ service.statut }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Overlay hover -->
+                                    <div class="hover-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%); opacity: 0; transition: opacity 0.4s;"></div>
+                                </div>
+
+                                <!-- Contenu -->
+                                <div class="card-content" style="padding: 30px; flex: 1; display: flex; flex-direction: column;">
+                                    <h5 class="service-title" style="color: #1a1a1a; font-weight: 700; margin-bottom: 15px; font-size: 22px; line-height: 1.3; min-height: 60px;">
+                                        {{ service.nom_service }}
+                                    </h5>
+                                    <p class="service-description" style="color: #666; font-size: 15px; line-height: 1.7; margin-bottom: 25px; flex: 1;">
+                                        {{ service.description|truncatewords:18 }}
+                                    </p>
+                                    
+                                    <!-- Infos Meta stylisées -->
+                                    <div class="meta-info" style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb;">
+                                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fa-solid fa-wrench" style="color: #fff; font-size: 18px;"></i>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <small style="color: #9ca3af; font-size: 11px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Type</small>
+                                                <strong style="color: #1a1a1a; font-size: 14px;">{{ service.type_service }}</strong>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb;">
+                                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fa-solid fa-calendar" style="color: #fff; font-size: 18px;"></i>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <small style="color: #9ca3af; font-size: 11px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Date</small>
+                                                <strong style="color: #1a1a1a; font-size: 14px;">{{ service.date_service|date:"d/m/Y" }}</strong>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fa-solid fa-shield-halved" style="color: #fff; font-size: 18px;"></i>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <small style="color: #9ca3af; font-size: 11px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Garantie</small>
+                                                <strong style="color: #1a1a1a; font-size: 14px;">{{ service.garantie }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--  
+                                    <div class="action-buttons" style="display: flex; gap: 12px;">
+                                        <button onclick="openEditModal({{ service.id }})" class="btn-action btn-edit" style="flex: 1; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #fff; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <span>Modifier</span>
+                                        </button>
+                                        <button onclick="openDeleteModal({{ service.id }}, '{{ service.nom_service|escapejs }}')" class="btn-action btn-delete" style="flex: 1; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            <span>Supprimer</span>
+                                        </button>
+                                    </div>
+                                    -->
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% empty %}
+                        <div class="col-12">
+                            <div class="empty-state" style="text-align: center; padding: 100px 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 20px; border: 2px dashed #dee2e6;">
+                                <div style="width: 120px; height: 120px; background: #fff; border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                    <i class="fa-solid fa-inbox" style="font-size: 60px; color: #DC2626;"></i>
+                                </div>
+                                <h3 style="color: #1a1a1a; margin-bottom: 15px; font-weight: 700;">Aucun service disponible</h3>
+                                <p style="color: #666; margin-bottom: 30px; font-size: 16px;">Commencez par ajouter votre premier service automobile</p>
+                                <a href="#add-service-form" class="rts-btn btn-primary radius-small smooth-scroll">
+                                    <i class="fa-solid fa-plus-circle"></i> Ajouter un service
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORMULAIRE D'AJOUT ULTRA STYLISÉ -->
+        <section id="add-service-form" class="rts-service-form-area rts-section-gap" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 100px 0; position: relative; overflow: hidden;">
+            <!-- Pattern animé -->
+            <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+            
+            <div class="container" style="position: relative; z-index: 1;">
+                <div class="section-title-area2 text-center mb--80 wow fadeInUp">
+                    <div style="display: inline-block; padding: 10px 25px; background: rgba(220, 38, 38, 0.1); border-radius: 50px; margin-bottom: 20px;">
+                        <p class="sub-title" style="color: #DC2626; margin: 0; font-weight: 700; letter-spacing: 2px;">ADD YOUR SERVICE</p>
+                    </div>
+                    <h2 class="section-title cw" style="color: #fff; font-size: 48px; font-weight: 800; margin-bottom: 20px;">
+                        Submit a <span style="background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Service</span>
+                    </h2>
+                    <p style="color: #a0a0a0; max-width: 650px; margin: 0 auto; font-size: 17px; line-height: 1.7;">
+                        Fill out the form below with detailed information about your automotive service
+                    </p>
+                </div>
+                
+                <div class="form-card-premium wow fadeInUp" data-wow-delay=".2s" style="background: #fff; border-radius: 25px; padding: 60px; max-width: 1200px; margin: 0 auto; box-shadow: 0 25px 80px rgba(0,0,0,0.6); position: relative; overflow: hidden;">
+                    <!-- Décoration -->
+                    <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); border-radius: 50%; opacity: 0.05;"></div>
+                    
+                    <!-- Affichage amélioré des erreurs -->
+                    {% if form.errors %}
+                    <div class="error-container wow shake" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 6px solid #ef4444; padding: 25px 30px; margin-bottom: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(239, 68, 68, 0.2);">
+                        <div style="display: flex; align-items: start; gap: 20px;">
+                            <div style="width: 50px; height: 50px; background: #ef4444; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fa-solid fa-exclamation-triangle" style="color: #fff; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h5 style="color: #991b1b; margin-bottom: 15px; font-weight: 700; font-size: 18px;">
+                                    <i class="fa-solid fa-circle-xmark"></i> Erreurs détectées dans le formulaire
+                                </h5>
+                                <ul style="margin: 0; padding-left: 0; list-style: none;">
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                        <li style="padding: 10px 0; color: #991b1b; font-weight: 500; border-bottom: 1px solid rgba(153, 27, 27, 0.1); display: flex; align-items: center; gap: 10px;">
+                                            <i class="fa-solid fa-chevron-right" style="color: #ef4444; font-size: 12px;"></i>
+                                            <strong style="color: #7f1d1d;">{{ field.label }}:</strong> {{ error }}
+                                        </li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'services:service_list' %}" enctype="multipart/form-data" id="serviceForm" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            
+                            <!-- Nom du service -->
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-tag"></i> Nom du service <span style="color: #ef4444;">*</span>
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <input type="text" name="nom_service" id="nom" class="form-control-premium" required pattern="[a-zA-ZÀ-ÿ\s]+" placeholder="Ex: Révision complète moteur" autocomplete="off">
+                                        <span class="input-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                    </div>
+                                    <small class="error-message" style="display: none; color: #ef4444; font-size: 13px; margin-top: 8px;">
+                                        <i class="fa-solid fa-circle-exclamation"></i> Lettres et espaces uniquement
+                                    </small>
+                                    <small class="help-text"><i class="fa-solid fa-info-circle"></i> Utilisez un nom descriptif</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Type de service -->
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-wrench"></i> Type de service <span style="color: #ef4444;">*</span>
+                                    </label>
+                                    <select name="type_service" id="typeService" class="form-control-premium" required>
+                                        <option value="">-- Sélectionnez un type --</option>
+                                        <option value="Entretien">🔧 Entretien</option>
+                                        <option value="Réparation">🛠️ Réparation</option>
+                                        <option value="Diagnostic">🔍 Diagnostic</option>
+                                        <option value="Vidange">🛢️ Vidange</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-calendar-days"></i> Date du service <span style="color: #ef4444;">*</span>
+                                    </label>
+                                    <input type="date" name="date_service" id="dateInput" class="form-control-premium" required>
+                                    <small class="help-text"><i class="fa-solid fa-clock"></i> Date future uniquement (à partir de demain)</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-signal"></i> Statut
+                                    </label>
+                                    <input type="text" value="⏳ En attente" class="form-control-premium" disabled style="background: #f3f4f6; color: #6b7280; font-weight: 600;">
+                                    <input type="hidden" name="statut" value="En attente">
+                                    <small class="help-text"><i class="fa-solid fa-info-circle"></i> Automatiquement défini à "En attente"</small>
+                                </div>
+                            </div>                            
+     
+                            
+                            <!-- Garantie -->
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-shield-halved"></i> Garantie <span style="color: #ef4444;">*</span>
+                                    </label>
+                                    <select name="garantie" class="form-control-premium" required>
+                                        <option value="">-- Sélectionnez --</option>
+                                        <option value="Sous garantie">🛡️ Sous garantie</option>
+                                        <option value="Hors garantie">⚠️ Hors garantie</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Type vidange -->
+                            <div class="col-md-6">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-oil-can"></i> Type de vidange
+                                    </label>
+                                    <select name="type_vidange" class="form-control-premium">
+                                        <option value="">-- Optionnel --</option>
+                                        <option value="Huile moteur">🛢️ Huile moteur</option>
+                                        <option value="Boîte de vitesse">⚙️ Boîte de vitesse</option>
+                                    </select>
+                                    <small class="help-text"><i class="fa-solid fa-lightbulb"></i> Si type = Vidange</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="col-12">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-align-left"></i> Description détaillée <span style="color: #ef4444;">*</span>
+                                    </label>
+                                    <textarea name="description" id="desc" class="form-control-premium" required minlength="10" maxlength="500" rows="5" placeholder="Décrivez le service en détail (minimum 10 caractères)..."></textarea>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                        <small class="help-text"><i class="fa-solid fa-keyboard"></i> Minimum 10 caractères</small>
+                                        <small id="charCounter" style="font-weight: 600; color: #6b7280;">
+                                            <span id="charCount">0</span>/500
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upload image moderne -->
+                            <div class="col-12">
+                                <div class="form-group-premium">
+                                    <label class="form-label-premium">
+                                        <i class="fa-solid fa-image"></i> Image du service
+                                    </label>
+                                    <div id="dropZone" class="drop-zone-premium" style="border: 3px dashed #DC2626; border-radius: 15px; padding: 50px 30px; text-align: center; background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%); cursor: pointer; transition: all 0.4s; position: relative; overflow: hidden;">
+                                        <input type="file" name="image" id="imageInput" accept="image/*" style="display: none;">
+                                        <div id="uploadContent">
+                                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; animation: bounce 2s infinite;">
+                                                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 40px; color: #fff;"></i>
+                                            </div>
+                                            <strong style="display: block; color: #1a1a1a; font-size: 18px; margin-bottom: 10px;">Glissez votre image ici</strong>
+                                            <p style="color: #6b7280; margin-bottom: 15px; font-size: 15px;">ou cliquez pour parcourir vos fichiers</p>
+                                            <span style="display: inline-block; padding: 8px 20px; background: #fff; border-radius: 8px; color: #DC2626; font-weight: 600; font-size: 13px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                                <i class="fa-solid fa-folder-open"></i> PNG, JPG, JPEG (Max. 5MB)
+                                            </span>
+                                        </div>
+                                        <div id="previewContainer" style="display: none;">
+                                            <img id="imagePreview" style="max-width: 100%; max-height: 300px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                                            <p style="color: #1a1a1a; font-weight: 600; margin-bottom: 15px;"><i class="fa-solid fa-check-circle" style="color: #10b981;"></i> <span id="fileName"></span></p>
+                                            <button type="button" id="removeImage" class="rts-btn btn-border" style="background: #fff; color: #ef4444; border: 2px solid #ef4444;">
+                                                <i class="fa-solid fa-trash"></i> Supprimer l'image
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bouton de soumission -->
+                            <div class="col-12 text-center mt-5">
+                                <button type="submit" class="rts-btn btn-primary-custom radius-small" style="padding: 20px 70px; font-size: 18px; font-weight: 700; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border: none; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4); position: relative; overflow: hidden; transition: all 0.4s;">
+                                    <span style="position: relative; z-index: 1; display: flex; align-items: center; gap: 12px;">
+                                        <i class="fa-solid fa-check-circle"></i> AJOUTER LE SERVICE
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL MODIFICATION PREMIUM -->
+        <div id="editModal" class="modal-premium" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; overflow-y: auto; backdrop-filter: blur(8px);">
+            <div style="max-width: 900px; margin: 60px auto; padding: 30px;">
+                <div class="modal-content-premium" style="background: #fff; border-radius: 25px; padding: 50px; position: relative; box-shadow: 0 25px 80px rgba(0,0,0,0.5); animation: modalSlideIn 0.4s ease;">
+                    <button onclick="closeEditModal()" class="modal-close-btn" style="position: absolute; top: 25px; right: 25px; background: #f3f4f6; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 22px; color: #1a1a1a; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    
+                    <div class="modal-header-premium" style="margin-bottom: 40px; text-align: center;">
+                        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);">
+                            <i class="fa-solid fa-pen-to-square" style="color: #fff; font-size: 32px;"></i>
+                        </div>
+                        <h3 style="color: #1a1a1a; font-weight: 800; font-size: 28px; margin: 0;">Modifier le service</h3>
+                    </div>
+                    
+                    <form method="post" id="editForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-tag"></i> Nom *</label>
+                                <input type="text" name="nom_service" id="edit_nom" class="form-control-premium" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-wrench"></i> Type *</label>
+                                <select name="type_service" id="edit_type" class="form-control-premium" required>
+                                    <option value="Entretien">Entretien</option>
+                                    <option value="Réparation">Réparation</option>
+                                    <option value="Diagnostic">Diagnostic</option>
+                                    <option value="Vidange">Vidange</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-calendar"></i> Date *</label>
+                                <input type="date" name="date_service" id="edit_date" class="form-control-premium" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-signal"></i> Statut *</label>
+                                <select name="statut" id="edit_statut" class="form-control-premium" required>
+                                    <option value="En attente">En attente</option>
+                                    <option value="En cours">En cours</option>
+                                    <option value="Terminé">Terminé</option>
+                                    <option value="Annulé">Annulé</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-shield"></i> Garantie *</label>
+                                <select name="garantie" id="edit_garantie" class="form-control-premium" required>
+                                    <option value="Sous garantie">Sous garantie</option>
+                                    <option value="Hors garantie">Hors garantie</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium"><i class="fa-solid fa-oil-can"></i> Type vidange</label>
+                                <select name="type_vidange" id="edit_vidange" class="form-control-premium">
+                                    <option value="">--</option>
+                                    <option value="Huile moteur">Huile moteur</option>
+                                    <option value="Boîte de vitesse">Boîte de vitesse</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-premium"><i class="fa-solid fa-align-left"></i> Description *</label>
+                                <textarea name="description" id="edit_desc" class="form-control-premium" rows="4" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-premium"><i class="fa-solid fa-image"></i> Nouvelle image</label>
+                                <input type="file" name="image" class="form-control-premium" accept="image/*">
+                                <small class="help-text"><i class="fa-solid fa-info-circle"></i> Laissez vide pour conserver l'image actuelle</small>
+                            </div>
+                        </div>
+                        <div class="text-center mt-5" style="display: flex; gap: 15px; justify-content: center;">
+                            <button type="button" onclick="closeEditModal()" class="rts-btn btn-border" style="min-width: 180px; padding: 15px;">
+                                <i class="fa-solid fa-xmark"></i> Annuler
+                            </button>
+                            <button type="submit" class="rts-btn btn-primary radius-small" style="min-width: 180px; padding: 15px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);">
+                                <i class="fa-solid fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL SUPPRESSION PREMIUM -->
+        <div id="deleteModal" class="modal-premium" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; backdrop-filter: blur(8px);">
+            <div style="max-width: 550px; margin: 180px auto; padding: 30px;">
+                <div class="modal-content-premium" style="background: #fff; border-radius: 25px; padding: 50px; text-align: center; box-shadow: 0 25px 80px rgba(0,0,0,0.5); animation: modalSlideIn 0.4s ease;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; animation: shake 0.5s;">
+                        <i class="fa-solid fa-exclamation-triangle" style="font-size: 50px; color: #ef4444;"></i>
+                    </div>
+                    <h3 style="color: #1a1a1a; margin-bottom: 20px; font-weight: 800; font-size: 26px;">Confirmer la suppression</h3>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 17px; line-height: 1.6;">
+                        Voulez-vous vraiment supprimer le service<br>
+                        <strong style="color: #1a1a1a; font-size: 20px; display: block; margin-top: 15px;" id="delete_name"></strong> ?
+                    </p>
+                    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px; margin: 25px 0;">
+                        <p style="color: #991b1b; margin: 0; font-weight: 600; font-size: 14px;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Cette action est irréversible
+                        </p>
+                    </div>
+                    <form method="post" id="deleteForm">
+                        {% csrf_token %}
+                        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                            <button type="button" onclick="closeDeleteModal()" class="rts-btn btn-border" style="min-width: 150px; padding: 15px;">
+                                <i class="fa-solid fa-ban"></i> Annuler
+                            </button>
+                            <button type="submit" class="rts-btn" style="min-width: 150px; padding: 15px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); border: none;">
+                                <i class="fa-solid fa-trash-can"></i> Supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* Form Controls Premium */
+.form-control-premium {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    width: 100%;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f9fafb;
+    font-family: inherit;
+}
+
+.form-control-premium:focus {
+    border-color: #DC2626;
+    outline: none;
+    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.1);
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+.form-control-premium:hover {
+    border-color: #DC2626;
+    background: #fff;
+}
+
+.form-control-premium:valid:not(:placeholder-shown) {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.form-control-premium:invalid:not(:placeholder-shown):not(:focus) {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+/* Labels Premium */
+.form-label-premium {
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+}
+
+.form-label-premium i {
+    color: #DC2626;
+    margin-right: 8px;
+}
+
+/* Texte d'aide */
+.help-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 8px;
+    display: block;
+    font-style: italic;
+}
+
+/* Input avec icône de validation */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #10b981;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.form-control-premium:valid:not(:placeholder-shown) ~ .input-icon {
+    opacity: 1;
+}
+
+/* Drop Zone */
+.drop-zone-premium:hover {
+    border-color: #991B1B;
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+}
+
+/* Cards Services */
+.service-card-premium:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.service-card-premium:hover .image-container img {
+    transform: scale(1.15) rotate(2deg);
+}
+
+.service-card-premium:hover .hover-overlay {
+    opacity: 1;
+}
+
+/* Boutons d'action */
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.btn-action:active {
+    transform: translateY(-1px);
+}
+
+/* Bouton principal submit */
+.btn-primary-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(220, 38, 38, 0.5);
+}
+
+.btn-primary-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-primary-custom:hover::before {
+    left: 100%;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Alerts Premium */
+.alert-modern {
+    animation: slideInDown 0.5s ease;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-left-color: #10b981;
+    color: #065f46;
+}
+
+.alert-success .alert-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-left-color: #ef4444;
+    color: #991b1b;
+}
+
+.alert-error .alert-icon {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #fff;
+}
+
+/* Modal Close Button */
+.modal-close-btn:hover {
+    background: #e5e7eb;
+    transform: rotate(90deg);
+}
+
+/* Smooth Scroll */
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-card-premium {
+        padding: 35px 25px !important;
+    }
+    
+    .service-card-premium .card-content {
+        padding: 20px !important;
+    }
+    
+    .section-title {
+        font-size: 32px !important;
+    }
+    
+    .modal-content-premium {
+        padding: 30px !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validation nom (lettres uniquement)
+    const nomInput = document.getElementById('nom');
+    if (nomInput) {
+        nomInput.addEventListener('input', function() {
+            const errorMsg = this.parentElement.parentElement.querySelector('.error-message');
+            const pattern = /^[a-zA-ZÀ-ÿ\s]*$/;
+            if (!pattern.test(this.value) && this.value !== '') {
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+                errorMsg.style.display = 'block';
+            } else {
+                this.style.borderColor = this.value ? '#10b981' : '#e5e7eb';
+                this.style.background = this.value ? '#f0fdf4' : '#f9fafb';
+                errorMsg.style.display = 'none';
+            }
+        });
+    }
+    
+    // Date max = aujourd'hui
+    const dateInput = document.getElementById('dateInput');
+    if (dateInput) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        dateInput.min = tomorrowStr;
+
+        dateInput.addEventListener('change', function() {
+            const selected = new Date(this.value);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            if (selected <= today) {
+                alert('⚠️ La date du service doit être dans le futur !\n\nVeuillez choisir une date à partir de demain.');
+                this.value = '';
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+            } else {
+                this.style.borderColor = '#10b981';
+                this.style.background = '#f0fdf4';
+            }
+        });
+    }
+    
+    // Compteur de caractères avec animation
+    const desc = document.getElementById('desc');
+    const charCount = document.getElementById('charCount');
+    const charCounter = document.getElementById('charCounter');
+    
+    if (desc && charCount) {
+        desc.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            if (count < 10) {
+                charCounter.style.color = '#ef4444';
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+            } else if (count >= 500) {
+                charCounter.style.color = '#f59e0b';
+                this.style.borderColor = '#f59e0b';
+            } else {
+                charCounter.style.color = '#10b981';
+                this.style.borderColor = '#10b981';
+                this.style.background = '#f0fdf4';
+            }
+        });
+    }
+    
+    // Upload image avec drag & drop
+    const fileInput = document.getElementById('imageInput');
+    const dropZone = document.getElementById('dropZone');
+    const uploadContent = document.getElementById('uploadContent');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const fileName = document.getElementById('fileName');
+    const removeBtn = document.getElementById('removeImage');
+    
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#991B1B';
+            dropZone.style.transform = 'scale(1.02)';
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = '#DC2626';
+            dropZone.style.transform = 'scale(1)';
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#DC2626';
+            dropZone.style.transform = 'scale(1)';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+        
+        function handleFileSelect(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    fileName.textContent = file.name;
+                    uploadContent.style.display = 'none';
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('⚠️ Veuillez sélectionner une image valide (PNG, JPG, JPEG)');
+            }
+        }
+        
+        if (removeBtn) {
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileInput.value = '';
+                uploadContent.style.display = 'block';
+                previewContainer.style.display = 'none';
+            });
+        }
+    }
+    
+    // Smooth scroll
+    document.querySelectorAll('.smooth-scroll').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+
+// Modal Edit
+function openEditModal(id) {
+    fetch(`/service/${id}/update/`, {
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('edit_nom').value = d.nom_service;
+        document.getElementById('edit_type').value = d.type_service;
+        document.getElementById('edit_date').value = d.date_service;
+        document.getElementById('edit_statut').value = d.statut;
+        document.getElementById('edit_garantie').value = d.garantie;
+        document.getElementById('edit_vidange').value = d.type_vidange || '';
+        document.getElementById('edit_desc').value = d.description;
+        document.getElementById('editForm').action = `/service/${id}/update/`;
+        document.getElementById('editModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    })
+    .catch(err => {
+        console.error('Erreur:', err);
+        alert('❌ Erreur lors du chargement des données');
+    });
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Modal Delete
+function openDeleteModal(id, name) {
+    document.getElementById('delete_name').textContent = name;
+    document.getElementById('deleteForm').action = `/service/${id}/delete/`;
+    document.getElementById('deleteModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Fermer modals avec Escape
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        closeEditModal();
+        closeDeleteModal();
+    }
+});
+
+// Clic en dehors du modal pour fermer
+window.onclick = function(event) {
+    const editModal = document.getElementById('editModal');
+    const deleteModal = document.getElementById('deleteModal');
+    if (event.target == editModal) closeEditModal();
+    if (event.target == deleteModal) closeDeleteModal();
+}
+</script>
+
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

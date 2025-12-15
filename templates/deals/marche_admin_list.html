@@ -1,0 +1,124 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Marchés | Dusty{% endblock %}
+{% block page_title %}Marchés{% endblock %}
+{% block breadcrumb_leaf %}Marchés{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card overflow-hidden">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h5 class="card-title text-dark mb-0">Liste des marchés</h5>
+          <form class="d-flex" method="get">
+            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (marque, modèle, société)">
+            <select class="form-select form-select-sm me-2" name="etat">
+              <option value="">— État (tous) —</option>
+              {% for val, lab in choices %}
+                <option value="{{ val }}" {% if etat == val %}selected{% endif %}>{{ lab }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-primary">Filtrer</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive table-centered mt-0">
+          <table class="table table-centered table-nowrap table-hover mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">ID</th>
+                <th>Partenaire</th>
+                <th>Voiture</th>
+                <th>Qté</th>
+                <th>PU (TND)</th>
+                <th>Total (TND)</th>
+                <th>Rent. (TND)</th>
+                <th>État</th>
+                <th>Date</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in page_obj %}
+              <tr>
+                <td class="ps-3">#{{ m.id }}</td>
+                <td>{{ m.partenaire.nom_societe|default:"—" }}</td>
+                <td>{{ m.voiture.marque }} {{ m.voiture.modele }}</td>
+                <td>{{ m.quantite }}</td>
+                <td>{{ m.prix_unitaire|floatformat:3 }}</td>
+                <td>{{ m.total_prix|floatformat:3 }}</td>
+                <td>{{ m.rentabilite_estime|floatformat:3 }}</td>
+                <td>
+                  {% if m.etat == "en_attente" %}
+                    <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">en attente</span>
+                  {% elif m.etat == "valide" %}
+                    <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">validé</span>
+                  {% else %}
+                    <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">annulé</span>
+                  {% endif %}
+                </td>
+                <td>{{ m.created_at|date:"d/m/Y H:i" }}</td>
+                <td class="text-end align-middle">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    <a href="{% url 'deals:admin_marche_update' m.id %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
+                      <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
+                    </a>
+                    <form method="post" action="{% url 'deals:admin_marche_delete' m.id %}" class="d-inline m-0" onsubmit="return confirm('Supprimer ce marché ?');">
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer">
+                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'deals:admin_marche_confirm' m.id %}" class="d-inline m-0">
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-success-subtle" {% if m.etat == 'valide' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Confirmer">
+                        <i class="mdi mdi-check text-success fs-14"></i>
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'deals:admin_marche_cancel' m.id %}" class="d-inline m-0">
+                      {% csrf_token %}
+                      <button class="btn btn-icon btn-sm bg-warning-subtle" {% if m.etat == 'annule' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Annuler">
+                        <i class="mdi mdi-close text-warning fs-14"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="10" class="text-center py-4 text-muted">Aucun marché.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="card-footer">
+        <nav aria-label="Pagination">
+          <ul class="pagination mb-0 justify-content-end">
+            {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&etat={{ etat }}&q={{ q }}">«</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&etat={{ etat }}&q={{ q }}">»</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}

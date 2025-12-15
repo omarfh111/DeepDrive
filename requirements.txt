@@ -1,0 +1,9 @@
+django==5.2.*
+django-htmlmin==0.11.0
+Pillow
+stripe
+python-dotenv
+certifi
+xhtml2pdf==0.2.16
+django-widget-tweaks==1.4.12
+setuptools

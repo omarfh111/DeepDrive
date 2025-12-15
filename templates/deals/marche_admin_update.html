@@ -1,0 +1,151 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Éditer marché #{{ marche.id }} | Dusty{% endblock %}
+{% block page_title %}Marchés{% endblock %}
+{% block breadcrumb_leaf %}Modifier{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+    <div class="flex-grow-1">
+      <h4 class="fs-18 fw-semibold m-0">Modifier marché #{{ marche.id }}</h4>
+    </div>
+    <div class="text-end">
+      <ol class="breadcrumb m-0 py-0">
+        <li class="breadcrumb-item"><a href="{% url 'deals:admin_marches' %}">Marchés</a></li>
+        <li class="breadcrumb-item active">Modifier</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Colonne infos (read-only) -->
+    <div class="col-xl-5">
+      <div class="card">
+        <div class="card-header"><h5 class="card-title mb-0">Informations</h5></div>
+        <div class="card-body">
+          <div class="mb-2"><strong>Partenaire : </strong>{{ marche.partenaire.nom_societe|default:"—" }}</div>
+          <div class="mb-2"><strong>Voiture : </strong>{{ marche.voiture.marque }} {{ marche.voiture.modele }}</div>
+          <div class="mb-2"><strong>Prix unitaire : </strong>{{ marche.prix_unitaire|floatformat:3 }} TND</div>
+          <div class="mb-2"><strong>Créé le : </strong>{{ marche.created_at|date:"d/m/Y H:i" }}</div>
+          <div class="mb-2"><strong>Dernière MAJ : </strong>{{ marche.updated_at|date:"d/m/Y H:i" }}</div>
+          <div class="mb-2">
+            <strong>État actuel : </strong>
+            {% if marche.etat == "en_attente" %}
+              <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">en attente</span>
+            {% elif marche.etat == "valide" %}
+              <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">validé</span>
+            {% else %}
+              <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">annulé</span>
+            {% endif %}
+          </div>
+          <hr>
+          <div class="d-flex flex-column gap-1">
+            <div><strong>Total actuel : </strong>{{ marche.total_prix|floatformat:3 }} TND</div>
+            <div><strong>Rentabilité estimée : </strong>{{ marche.rentabilite_estime|floatformat:3 }} TND</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne formulaire -->
+    <div class="col-xl-7">
+      <div class="card">
+        <div class="card-header"><h5 class="card-title mb-0">Modifier</h5></div>
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.quantite.id_for_label }}">Quantité</label>
+                  {{ form.quantite }}
+                  <div class="text-danger small">{{ form.quantite.errors }}</div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.taux_rentabilite.id_for_label }}">Taux de rentabilité (%)</label>
+                  {{ form.taux_rentabilite }}
+                  <div class="text-danger small">{{ form.taux_rentabilite.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.etat.id_for_label }}">État</label>
+              {{ form.etat }}
+              <div class="text-danger small">{{ form.etat.errors }}</div>
+            </div>
+
+            <!-- Aperçu live -->
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label">Total recalculé (TND)</label>
+                  <input id="totalPreview" class="form-control" value="{{ marche.total_prix|floatformat:3 }}" disabled>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label">Rentabilité recalculée (TND)</label>
+                  <input id="rentPreview" class="form-control" value="{{ marche.rentabilite_estime|floatformat:3 }}" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <a href="{% url 'deals:admin_marches' %}" class="btn btn-outline-secondary">Annuler</a>
+              <button class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  function toNum(v) {
+    var n = parseFloat(String(v ?? "").replace(",", "."));
+    return isNaN(n) ? 0 : n;
+  }
+
+  const q  = document.getElementById("id_quantite");
+  const t  = document.getElementById("id_taux_rentabilite");
+
+  // prix unitaire injecté par Django → converti de manière sûre en nombre
+  const pu = Number('{{ marche.prix_unitaire|default_if_none:0|floatformat:3 }}'.replace(',', '.'));
+
+  const totalEl = document.getElementById("totalPreview");
+  const rentEl  = document.getElementById("rentPreview");
+
+  function update() {                 // <-- plus de parenthèse en trop ici
+    const quant = toNum(q.value);
+    const taux  = toNum(t.value);
+    const total = pu * quant;
+    const rent  = total * (taux / 100.0);
+    totalEl.value = total.toFixed(3);
+    rentEl.value  = rent.toFixed(3);
+  }
+
+  document.addEventListener("input", function (e) {
+    if (e.target === q || e.target === t) update();
+  });
+
+  update();
+})();
+</script>
+{% endblock %}
+

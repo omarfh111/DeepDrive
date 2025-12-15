@@ -1,0 +1,15 @@
+Bonjour {{ societe }},
+
+Votre marché a été créé avec succès le {{ date|date:"d/m/Y H:i" }}.
+
+Détails du marché :
+- Voiture : {{ voiture }}
+- Quantité : {{ quantite }}
+- Prix unitaire : {{ prix_unitaire }} DT
+- Total : {{ total_prix }} DT
+- Taux de rentabilité : {{ taux_rentabilite }} %
+- Rentabilité estimée : {{ rentabilite_estime }} DT
+- État : {{ etat }}
+
+Merci pour votre confiance,
+L’équipe DeepDrive

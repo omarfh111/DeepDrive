@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ===============================
+     STYLE GLOBAL DU FORMULAIRE
+  =============================== */
+  .testdrive-card {
+    border-radius: 15px;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background-color: #fff;
+  }
+
+  .testdrive-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #dc3545; /* couleur rouge élégante */
+    margin-bottom: 25px;
+  }
+
+  .testdrive-form .form-group {
+    margin-bottom: 18px;
+  }
+
+  .testdrive-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  .testdrive-form input,
+  .testdrive-form select,
+  .testdrive-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .testdrive-form input:focus,
+  .testdrive-form select:focus,
+  .testdrive-form textarea:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 6px rgba(220,53,69,0.3);
+    outline: none;
+  }
+
+  .testdrive-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  /* Champs alignés en grille */
+  .testdrive-form .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .testdrive-form .col-md-6 {
+    flex: 1 1 48%;
+  }
+
+  /* Bouton principal épuré */
+  .testdrive-form .btn-primary {
+    background-color: #dc3545;
+    border: none;
+    font-weight: 600;
+    padding: 10px 30px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+
+  .testdrive-form .btn-primary:hover {
+    background-color: #a71d2a;
+  }
+
+  .text-danger {
+    font-size: 0.875rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .testdrive-card {
+      padding: 20px;
+    }
+
+    .testdrive-form .col-md-6 {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+
+    {% include 'partials/header/header-three.html' %}
+    
+    {% with class="service" current="Test-Drive" title="Prendre un rendez-vous" %}
+      {% include 'partials/elements/breadcrumb.html' %}
+    {% endwith %}
+
+    <div class="container">
+      <div class="card testdrive-card">
+        <h2 class="testdrive-title">Réserver votre Test Drive</h2>
+
+        <form method="post" class="testdrive-form" novalidate>
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+          
+          <div class="row">
+            {% for field in form %}
+              <div class="col-md-6 form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger">{{ field.errors|striptags }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary rounded-pill">
+              Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
