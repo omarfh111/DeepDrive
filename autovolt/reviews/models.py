@@ -1,8 +1,9 @@
 # reviews/models.py
 from django.db import models
-from django.conf import settings                        
+from django.conf import settings                      
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
+from django.db.models import Avg, Count, Q
 
 
 class Review(models.Model):
@@ -47,6 +48,56 @@ class Review(models.Model):
     @property
     def id_Review(self):
         return self.id
+    def get_sentiment_score(self):
+        """
+        Calculate average sentiment score from approved comments
+        Returns: float between -1 (negative) and 1 (positive), or None if no comments
+        """
+        approved_comments = self.commentaires.filter(is_approved=True)
+        
+        if not approved_comments.exists():
+            return None
+        
+        # Map sentiment labels to scores
+        sentiment_map = {
+            'Positive': 1,
+            'Neutral': 0,
+            'Negative': -1
+        }
+        
+        scores = []
+        for comment in approved_comments:
+            if comment.sentiment_label in sentiment_map:
+                # Weight by confidence
+                weighted_score = sentiment_map[comment.sentiment_label] * comment.sentiment_confidence
+                scores.append(weighted_score)
+        
+        if not scores:
+            return None
+        
+        return sum(scores) / len(scores)   
+    
+    def get_sentiment_stats(self):
+        """
+        Returns counts of positive, neutral, and negative comments
+        """
+        approved_comments = self.commentaires.filter(is_approved=True)
+        
+        return {
+            'positive': approved_comments.filter(sentiment_label='Positive').count(),
+            'neutral': approved_comments.filter(sentiment_label='Neutral').count(),
+            'negative': approved_comments.filter(sentiment_label='Negative').count(),
+            'total': approved_comments.count()
+        }
+    @property
+    def sentiment_percentage(self):
+        """
+        Returns positive sentiment percentage for display
+        """
+        stats = self.get_sentiment_stats()
+        if stats['total'] == 0:
+            return None
+        return round((stats['positive'] / stats['total']) * 100, 1)
 
 
 class Commentaire(models.Model):
@@ -66,6 +117,29 @@ class Commentaire(models.Model):
     date_commentaire = models.DateTimeField(auto_now_add=True, verbose_name="DateCommentaire")
     is_approved = models.BooleanField(default=True, verbose_name="Approuvé")
 
+    sentiment_label = models.CharField(
+        max_length=20,
+        choices=[
+            ('Positive', 'Positive'),
+            ('Neutral', 'Neutral'),
+            ('Negative', 'Negative'),
+        ],
+        null=True,
+        blank=True,
+        verbose_name="Sentiment"
+    )
+    sentiment_confidence = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Sentiment Confidence",
+        help_text="Confidence score from 0 to 1"
+    )
+    sentiment_analyzed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Sentiment Analyzed At"
+    )
+
     class Meta:
         ordering = ['date_commentaire']
         verbose_name = "Commentaire"
@@ -81,3 +155,18 @@ class Commentaire(models.Model):
     @property
     def id_Commentaire(self):
         return self.id
+    def analyze_sentiment(self):
+        """
+        Analyze the sentiment of this comment using the Twitter-RoBERTa model
+        """
+        from .utils import analyze_comment_sentiment
+        from django.utils import timezone
+        
+        result = analyze_comment_sentiment(self.commentaire)
+        
+        self.sentiment_label = result['sentiment']
+        self.sentiment_confidence = result['confidence']
+        self.sentiment_analyzed_at = timezone.now()
+        self.save(update_fields=['sentiment_label', 'sentiment_confidence', 'sentiment_analyzed_at'])
+        
+        return result
