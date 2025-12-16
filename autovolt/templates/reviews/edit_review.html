@@ -1,317 +1,874 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <style>
-    .form-control-wrapper input,
-    .form-control-wrapper select,
-    .form-control-wrapper textarea {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        background-color: #fff;
-        transition: border-color 0.3s;
-    }
-    
-    .form-control-wrapper input:focus,
-    .form-control-wrapper select:focus,
-    .form-control-wrapper textarea:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-    
-    .form-control-wrapper textarea {
-        min-height: 120px;
-        resize: vertical;
-    }
-    
-    .billing-fields {
-        background: #f9f9f9;
-        padding: 30px;
-        border-radius: 8px;
-        border: 1px solid #e5e5e5;
-    }
-    
-    .ms-checkout-review-order {
-        background: #f9f9f9;
-        border: 1px solid #e5e5e5 !important;
-    }
-    
-    /* Star Rating Styles */
-    .star-rating {
-        display: flex;
-        gap: 8px;
-        font-size: 32px;
-        padding: 10px 0;
-    }
-    
-    .star-rating i {
-        color: #ffc107;
-        opacity: 0.3;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .star-rating i:hover {
-        opacity: 0.6;
-        transform: scale(1.1);
-    }
-    
-    .star-rating i.active {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-    
-    .star-rating i.active:hover {
-        transform: scale(1.15);
-    }
-    
-    /* Current Image Preview */
-    .current-image-preview {
-        margin-top: 15px;
-        padding: 15px;
-        background: #fff;
-        border-radius: 8px;
-        border: 2px dashed #ddd;
-        text-align: center;
-    }
-    
-    .current-image-preview img {
-        max-height: 200px;
-        border-radius: 4px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .current-image-preview label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #333;
-    }
+  .form-control-wrapper input,
+  .form-control-wrapper select,
+  .form-control-wrapper textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+  }
+
+  .form-control-wrapper input:focus,
+  .form-control-wrapper select:focus,
+  .form-control-wrapper textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .form-control-wrapper textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .billing-fields {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .ms-checkout-review-order {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5 !important;
+  }
+
+  /* Star Rating Styles */
+  .star-rating {
+    display: flex;
+    gap: 8px;
+    font-size: 32px;
+    padding: 10px 0;
+  }
+
+  .star-rating i {
+    color: #ffc107;
+    opacity: 0.3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .star-rating i:hover {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+
+  .star-rating i.active {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .star-rating i.active:hover {
+    transform: scale(1.15);
+  }
+
+  /* Current Image Preview */
+  .current-image-preview {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+    text-align: center;
+  }
+
+  .current-image-preview img {
+    max-height: 200px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .current-image-preview label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* Image Editor Styles */
+  .current-image-preview {
+    position: relative;
+  }
+
+  .image-edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .image-edit-btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Image Editor Modal */
+  .image-editor-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-editor-modal.active {
+    display: flex;
+  }
+
+  .image-editor-content {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .image-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e5e5e5;
+  }
+
+  .image-editor-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+  }
+
+  .image-editor-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .image-editor-close:hover {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .image-editor-body {
+    margin-bottom: 20px;
+  }
+
+  #imageEditorCanvas {
+    max-width: 100%;
+    max-height: 60vh;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .image-editor-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .editor-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .editor-btn-primary {
+    background: #007bff;
+    color: white;
+  }
+
+  .editor-btn-primary:hover {
+    background: #0056b3;
+  }
+
+  .editor-btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+
+  .editor-btn-secondary:hover {
+    background: #5a6268;
+  }
+
+  .editor-btn-success {
+    background: #28a745;
+    color: white;
+  }
+
+  .editor-btn-success:hover {
+    background: #218838;
+  }
+
+  .editor-btn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .editor-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .editor-input-group label {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  .editor-input-group input {
+    width: 80px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .image-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 2px solid #e5e5e5;
+  }
 </style>
 <div class="rts-wrapper">
-    <div class="rts-wrapper-inner">
-        <!-- header area start -->
-        {% include 'partials/header/header-three.html' %}
-        <!-- header area end -->
+  <div class="rts-wrapper-inner">
+    <!-- header area start -->
+    {% include 'partials/header/header-three.html' %}
+    <!-- header area end -->
 
-        <!-- Breadcrumb area start -->
-        {% with class="portfolio" current="Edit Review" title="Edit Review" %}
-            {% include 'partials/elements/breadcrumb.html' %}   
-        {% endwith %}
-        <!-- Breadcrumb area end -->
-        
-        <main class="ms-main rts-section-gap">
-            <div class="ms-page-content">
+    <!-- Breadcrumb area end -->
 
-                <!--================= Edit Review Form (styled like Checkout) =================-->
-                <article class="page checkout-area type-page status-publish hentry">
-                    <div class="ms-sp--header container">
-                        <h2 class="title">Edit Review</h2>
-                    </div>
-                    <div class="ms-default-page container entry-content">
-                        <div class="woocommerce">
-                            <form method="post" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
-                                {% csrf_token %}
-                                
-                                {% if form.errors %}
-                                    <div class="alert alert-danger mb-4">
-                                        <strong>Please correct the errors below:</strong>
-                                        {{ form.errors }}
-                                    </div>
-                                {% endif %}
-                                
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="full-grid">
-                                            <div class="billing-fields">
-                                                <div class="checkout-title">
-                                                    <h3>Review Details</h3>
-                                                </div>
-                                                <div class="form-content-box">
-                                                    <div class="row">
-                                                        <!-- Title Field -->
-                                                        <div class="col-md-12 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">{{ form.titre.label }}</label>
-                                                                <div class="form-control-wrapper">
-                                                                    {{ form.titre }}
-                                                                </div>
-                                                                {% if form.titre.help_text %}
-                                                                    <small class="form-text text-muted">{{ form.titre.help_text }}</small>
-                                                                {% endif %}
-                                                                {% if form.titre.errors %}
-                                                                    <div class="text-danger small">{{ form.titre.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <!-- Rating Field -->
-                                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">{{ form.note.label }}</label>
-                                                                <div class="star-rating-wrapper">
-                                                                    <div class="star-rating" id="starRating">
-                                                                        <i class="fas fa-star" data-rating="1"></i>
-                                                                        <i class="fas fa-star" data-rating="2"></i>
-                                                                        <i class="fas fa-star" data-rating="3"></i>
-                                                                        <i class="fas fa-star" data-rating="4"></i>
-                                                                        <i class="fas fa-star" data-rating="5"></i>
-                                                                    </div>
-                                                                    <div class="form-control-wrapper" style="display: none;">
-                                                                        {{ form.note }}
-                                                                    </div>
-                                                                </div>
-                                                                <small class="form-text text-muted d-block mt-2">Click on a star to update rating</small>
-                                                                {% if form.note.help_text %}
-                                                                    <small class="form-text text-muted">{{ form.note.help_text }}</small>
-                                                                {% endif %}
-                                                                {% if form.note.errors %}
-                                                                    <div class="text-danger small">{{ form.note.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <!-- Image Field -->
-                                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">{{ form.image.label }}</label>
-                                                                <div class="form-control-wrapper">
-                                                                    {{ form.image }}
-                                                                </div>
-                                                                {% if form.image.help_text %}
-                                                                    <small class="form-text text-muted">{{ form.image.help_text }}</small>
-                                                                {% endif %}
-                                                                {% if review.image %}
-                                                                    <small class="form-text text-muted d-block mt-1">Leave empty to keep current image</small>
-                                                                {% endif %}
-                                                                {% if form.image.errors %}
-                                                                    <div class="text-danger small">{{ form.image.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <!-- Description Field -->
-                                                        <div class="col-md-12 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">{{ form.description.label }}</label>
-                                                                <div class="form-control-wrapper">
-                                                                    {{ form.description }}
-                                                                </div>
-                                                                {% if form.description.help_text %}
-                                                                    <small class="form-text text-muted">{{ form.description.help_text }}</small>
-                                                                {% endif %}
-                                                                {% if form.description.errors %}
-                                                                    <div class="text-danger small">{{ form.description.errors }}</div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="payment-method mt-40 md-mt-20">
-                                                <div class="bottom-area">
-                                                    <p class="mt-15">
-                                                        Please verify all review details before updating.
-                                                    </p>
-                                                    <button type="submit" class="add-btn rts-btn btn-primary">
-                                                        <i class="fas fa-save"></i> Save Changes
-                                                    </button>
-                                                    <a href="{% url 'reviews:detail' review.pk %}" class="rts-btn btn-border ms-2">
-                                                        <i class="fas fa-times"></i> Cancel
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+    <main class="ms-main rts-section-gap">
+      <div class="ms-page-content">
+        <!--================= Edit Review Form (styled like Checkout) =================-->
+        <article class="page checkout-area type-page status-publish hentry">
+          <div class="ms-sp--header container">
+            <h2 class="title">Edit Review</h2>
+          </div>
+          <div class="ms-default-page container entry-content">
+            <div class="woocommerce">
+              <form
+                method="post"
+                enctype="multipart/form-data"
+                class="checkout woocommerce-checkout ms-woocommerce-checkout"
+              >
+                {% csrf_token %} {% if form.errors %}
+                <div class="alert alert-danger mb-4">
+                  <strong>Please correct the errors below:</strong>
+                  {{ form.errors }}
+                </div>
+                {% endif %}
 
-                                    <div class="col-md-4">
-                                        <div class="ms-checkout-review-order p-3 border rounded">
-                                            <h3>Current Review</h3>
-                                            <p>Update your review details and save changes.</p>
-                                            
-                                            {% if review.image %}
-                                            <div class="current-image-preview">
-                                                <label>Current Image</label>
-                                                <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="img-fluid">
-                                            </div>
-                                            {% else %}
-                                            <div class="preview-placeholder text-center mt-3">
-                                                <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
-                                                <p class="mt-3 text-muted">No image uploaded yet</p>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="full-grid">
+                      <div class="billing-fields">
+                        <div class="checkout-title">
+                          <h3>Review Details</h3>
                         </div>
-                    </div>
-                </article>
-                <!--================= End Edit Review Form =================-->
+                        <div class="form-content-box">
+                          <div class="row">
+                            <!-- Title Field -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.titre.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.titre }}
+                                </div>
+                                {% if form.titre.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.titre.help_text }}</small
+                                >
+                                {% endif %} {% if form.titre.errors %}
+                                <div class="text-danger small">
+                                  {{ form.titre.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
 
+                            <!-- Rating Field -->
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.note.label }}</label
+                                >
+                                <div class="star-rating-wrapper">
+                                  <div class="star-rating" id="starRating">
+                                    <i class="fas fa-star" data-rating="1"></i>
+                                    <i class="fas fa-star" data-rating="2"></i>
+                                    <i class="fas fa-star" data-rating="3"></i>
+                                    <i class="fas fa-star" data-rating="4"></i>
+                                    <i class="fas fa-star" data-rating="5"></i>
+                                  </div>
+                                  <div
+                                    class="form-control-wrapper"
+                                    style="display: none"
+                                  >
+                                    {{ form.note }}
+                                  </div>
+                                </div>
+                                <small class="form-text text-muted d-block mt-2"
+                                  >Click on a star to update rating</small
+                                >
+                                {% if form.note.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.note.help_text }}</small
+                                >
+                                {% endif %} {% if form.note.errors %}
+                                <div class="text-danger small">
+                                  {{ form.note.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+
+                            <!-- Image Field -->
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.image.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.image }}
+                                </div>
+                                {% if form.image.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.image.help_text }}</small
+                                >
+                                {% endif %} {% if review.image %}
+                                <div
+                                  class="alert alert-info mt-2 mb-0"
+                                  style="font-size: 0.875rem; padding: 8px 12px"
+                                >
+                                  <i class="fas fa-info-circle me-1"></i>
+                                  <strong>Current image will be kept</strong> if
+                                  you don't select a new one.
+                                </div>
+                                {% endif %} {% if form.image.errors %}
+                                <div class="text-danger small">
+                                  {{ form.image.errors }}
+                                </div>
+                                {% endif %}
+                                <!-- Preview of newly selected image -->
+                                <div
+                                  id="imagePreview"
+                                  class="mt-2"
+                                  style="display: none"
+                                >
+                                  <label class="form-label fw-semibold"
+                                    >New Image Preview:</label
+                                  >
+                                  <img
+                                    id="previewImg"
+                                    src="#"
+                                    alt="Preview"
+                                    style="
+                                      max-height: 150px;
+                                      border-radius: 4px;
+                                      border: 2px solid #ddd;
+                                      padding: 5px;
+                                      background: #fff;
+                                    "
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                <label class="form-label fw-semibold"
+                                  >{{ form.description.label }}</label
+                                >
+                                <div class="form-control-wrapper">
+                                  {{ form.description }}
+                                </div>
+                                {% if form.description.help_text %}
+                                <small class="form-text text-muted"
+                                  >{{ form.description.help_text }}</small
+                                >
+                                {% endif %} {% if form.description.errors %}
+                                <div class="text-danger small">
+                                  {{ form.description.errors }}
+                                </div>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="payment-method mt-40 md-mt-20">
+                        <div class="d-flex align-items-center gap-3">
+                          <button
+                            type="submit"
+                            class="add-btn rts-btn btn-primary"
+                          >
+                            <i class="fas fa-save"></i> Save Changes
+                          </button>
+
+                          <a
+                            href="{% url 'reviews:detail' review.pk %}"
+                            class="rts-btn btn-border"
+                          >
+                            <i class="fas fa-times"></i> Cancel
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="ms-checkout-review-order p-3 border rounded">
+                      <h3>Current Review</h3>
+                      <p>Update your review details and save changes.</p>
+
+                      {% if review.image %}
+                      <div class="current-image-preview">
+                        <label>Current Image</label>
+                        <button
+                          type="button"
+                          class="image-edit-btn"
+                          onclick="openImageEditor('{{ review.image.url }}')"
+                          title="Edit Image"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <img
+                          src="{{ review.image.url }}"
+                          alt="{{ review.titre }}"
+                          class="img-fluid"
+                          id="currentReviewImage"
+                        />
+                      </div>
+                      {% else %}
+                      <div class="preview-placeholder text-center mt-3">
+                        <i
+                          class="fas fa-image text-muted"
+                          style="font-size: 3rem"
+                        ></i>
+                        <p class="mt-3 text-muted">No image uploaded yet</p>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
-        </main>
-    </div>
+          </div>
+        </article>
+        <!--================= End Edit Review Form =================-->
+      </div>
+    </main>
+  </div>
 </div>
 {% include 'partials/footer/footer-three.html' %}
+
+<!-- Image Editor Modal -->
+<div id="imageEditorModal" class="image-editor-modal">
+  <div class="image-editor-content">
+    <div class="image-editor-header">
+      <h3><i class="fas fa-image me-2"></i>Edit Image</h3>
+      <button
+        type="button"
+        class="image-editor-close"
+        onclick="closeImageEditor()"
+      >
+        &times;
+      </button>
+    </div>
+    <div class="image-editor-body">
+      <img id="imageEditorCanvas" alt="Image to edit" />
+    </div>
+    <div class="image-editor-controls">
+      <div class="editor-btn-group">
+        <button
+          type="button"
+          class="editor-btn editor-btn-primary"
+          onclick="resetImage()"
+        >
+          <i class="fas fa-undo"></i> Reset
+        </button>
+        <button
+          type="button"
+          class="editor-btn editor-btn-primary"
+          onclick="rotateImage(90)"
+        >
+          <i class="fas fa-redo"></i> Rotate 90°
+        </button>
+        <button
+          type="button"
+          class="editor-btn editor-btn-primary"
+          onclick="flipImage('horizontal')"
+        >
+          <i class="fas fa-arrows-alt-h"></i> Flip H
+        </button>
+        <button
+          type="button"
+          class="editor-btn editor-btn-primary"
+          onclick="flipImage('vertical')"
+        >
+          <i class="fas fa-arrows-alt-v"></i> Flip V
+        </button>
+      </div>
+      <div class="editor-input-group">
+        <label>Width:</label>
+        <input type="number" id="resizeWidth" placeholder="Auto" min="1" />
+        <label>Height:</label>
+        <input type="number" id="resizeHeight" placeholder="Auto" min="1" />
+        <button
+          type="button"
+          class="editor-btn editor-btn-success"
+          onclick="applyResize()"
+        >
+          <i class="fas fa-expand"></i> Resize
+        </button>
+      </div>
+    </div>
+    <div class="image-editor-footer">
+      <button
+        type="button"
+        class="editor-btn editor-btn-secondary"
+        onclick="closeImageEditor()"
+      >
+        <i class="fas fa-times"></i> Cancel
+      </button>
+      <button
+        type="button"
+        class="editor-btn editor-btn-success"
+        onclick="applyImageEdit()"
+      >
+        <i class="fas fa-check"></i> Apply Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cropper.js CSS and JS -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 <script>
-    // Star Rating Functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const stars = document.querySelectorAll('.star-rating i');
-        const ratingInput = document.querySelector('select[name="note"], input[name="note"]');
-        
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = this.getAttribute('data-rating');
-                
-                // Update hidden input
-                if (ratingInput) {
-                    ratingInput.value = rating;
-                }
-                
-                // Update star display
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Hover effect
-            star.addEventListener('mouseenter', function() {
-                const rating = this.getAttribute('data-rating');
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.style.opacity = '0.8';
-                    }
-                });
-            });
-            
-            star.addEventListener('mouseleave', function() {
-                stars.forEach(s => {
-                    if (!s.classList.contains('active')) {
-                        s.style.opacity = '0.3';
-                    } else {
-                        s.style.opacity = '1';
-                    }
-                });
-            });
-        });
-        
-        // Set initial rating from existing review
-        if (ratingInput && ratingInput.value) {
-            const currentRating = ratingInput.value;
-            stars.forEach((s, index) => {
-                if (index < currentRating) {
-                    s.classList.add('active');
-                }
-            });
+  // Star Rating Functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const stars = document.querySelectorAll(".star-rating i");
+    const ratingInput = document.querySelector(
+      'select[name="note"], input[name="note"]'
+    );
+
+    stars.forEach((star) => {
+      star.addEventListener("click", function () {
+        const rating = this.getAttribute("data-rating");
+
+        // Update hidden input
+        if (ratingInput) {
+          ratingInput.value = rating;
         }
+
+        // Update star display
+        stars.forEach((s, index) => {
+          if (index < rating) {
+            s.classList.add("active");
+          } else {
+            s.classList.remove("active");
+          }
+        });
+      });
+
+      // Hover effect
+      star.addEventListener("mouseenter", function () {
+        const rating = this.getAttribute("data-rating");
+        stars.forEach((s, index) => {
+          if (index < rating) {
+            s.style.opacity = "0.8";
+          }
+        });
+      });
+
+      star.addEventListener("mouseleave", function () {
+        stars.forEach((s) => {
+          if (!s.classList.contains("active")) {
+            s.style.opacity = "0.3";
+          } else {
+            s.style.opacity = "1";
+          }
+        });
+      });
     });
+
+    // Set initial rating from existing review
+    if (ratingInput && ratingInput.value) {
+      const currentRating = ratingInput.value;
+      stars.forEach((s, index) => {
+        if (index < currentRating) {
+          s.classList.add("active");
+        }
+      });
+    }
+
+    // Image preview functionality
+    const imageInput = document.querySelector(
+      'input[type="file"][name="image"]'
+    );
+    const imagePreview = document.getElementById("imagePreview");
+    const previewImg = document.getElementById("previewImg");
+
+    if (imageInput && imagePreview && previewImg) {
+      imageInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            imagePreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          imagePreview.style.display = "none";
+        }
+      });
+    }
+  });
+
+  // Image Editor Functionality
+  let cropper = null;
+  let originalImageSrc = null;
+
+  function openImageEditor(imageUrl) {
+    originalImageSrc = imageUrl;
+    const modal = document.getElementById("imageEditorModal");
+    const canvas = document.getElementById("imageEditorCanvas");
+
+    modal.classList.add("active");
+    canvas.src = imageUrl;
+
+    // Initialize Cropper.js after image loads
+    canvas.onload = function () {
+      if (cropper) {
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(canvas, {
+        aspectRatio: NaN, // Free aspect ratio
+        viewMode: 1,
+        dragMode: "move",
+        autoCropArea: 0.8,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+        responsive: true,
+        minContainerWidth: 300,
+        minContainerHeight: 300,
+      });
+    };
+  }
+
+  function closeImageEditor() {
+    const modal = document.getElementById("imageEditorModal");
+    modal.classList.remove("active");
+
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    // Reset resize inputs
+    document.getElementById("resizeWidth").value = "";
+    document.getElementById("resizeHeight").value = "";
+  }
+
+  function resetImage() {
+    if (cropper && originalImageSrc) {
+      cropper.reset();
+      const canvas = document.getElementById("imageEditorCanvas");
+      canvas.src = originalImageSrc;
+    }
+  }
+
+  function rotateImage(degrees) {
+    if (cropper) {
+      cropper.rotate(degrees);
+    }
+  }
+
+  function flipImage(direction) {
+    if (cropper) {
+      if (direction === "horizontal") {
+        const imageData = cropper.getImageData();
+        cropper.scaleX(-imageData.scaleX || -1);
+      } else if (direction === "vertical") {
+        const imageData = cropper.getImageData();
+        cropper.scaleY(-imageData.scaleY || -1);
+      }
+    }
+  }
+
+  function applyResize() {
+    if (!cropper) return;
+
+    const width = parseInt(document.getElementById("resizeWidth").value);
+    const height = parseInt(document.getElementById("resizeHeight").value);
+
+    if (width && height) {
+      cropper.setCanvasData({
+        width: width,
+        height: height,
+      });
+    } else if (width) {
+      const imageData = cropper.getImageData();
+      const aspectRatio = imageData.naturalHeight / imageData.naturalWidth;
+      cropper.setCanvasData({
+        width: width,
+        height: Math.round(width * aspectRatio),
+      });
+    } else if (height) {
+      const imageData = cropper.getImageData();
+      const aspectRatio = imageData.naturalWidth / imageData.naturalHeight;
+      cropper.setCanvasData({
+        width: Math.round(height * aspectRatio),
+        height: height,
+      });
+    }
+  }
+
+  function applyImageEdit() {
+    if (!cropper) {
+      alert("Please wait for the image to load.");
+      return;
+    }
+
+    // Get cropped canvas
+    const canvas = cropper.getCroppedCanvas({
+      width: 800,
+      height: 600,
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: "high",
+    });
+
+    if (!canvas) {
+      alert("Error creating cropped image.");
+      return;
+    }
+
+    // Convert canvas to blob
+    canvas.toBlob(
+      function (blob) {
+        if (!blob) {
+          alert("Error processing image.");
+          return;
+        }
+
+        // Create a File object from the blob
+        const file = new File([blob], "edited-image.jpg", {
+          type: "image/jpeg",
+          lastModified: Date.now(),
+        });
+
+        // Create a DataTransfer object to simulate file input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+
+        // Update the file input
+        const imageInput = document.querySelector(
+          'input[type="file"][name="image"]'
+        );
+        if (imageInput) {
+          imageInput.files = dataTransfer.files;
+
+          // Trigger change event to update preview
+          const event = new Event("change", { bubbles: true });
+          imageInput.dispatchEvent(event);
+        }
+
+        // Update the current image preview
+        const currentImage = document.getElementById("currentReviewImage");
+        if (currentImage) {
+          currentImage.src = canvas.toDataURL("image/jpeg", 0.9);
+        }
+
+        // Close the editor
+        closeImageEditor();
+
+        // Show success message
+        alert("Image edited successfully! Don't forget to save your changes.");
+      },
+      "image/jpeg",
+      0.9
+    );
+  }
+
+  // Close modal when clicking outside
+  document
+    .getElementById("imageEditorModal")
+    .addEventListener("click", function (e) {
+      if (e.target === this) {
+        closeImageEditor();
+      }
+    });
+
+  // Close modal on Escape key
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      const modal = document.getElementById("imageEditorModal");
+      if (modal.classList.contains("active")) {
+        closeImageEditor();
+      }
+    }
+  });
 </script>
 {% endblock content %}

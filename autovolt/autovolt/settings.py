@@ -168,3 +168,6 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
 EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
 DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"
+
+# OpenAI API Configuration for Content Moderation
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")

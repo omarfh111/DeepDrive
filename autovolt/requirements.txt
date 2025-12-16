@@ -7,3 +7,4 @@ certifi
 xhtml2pdf==0.2.16
 django-widget-tweaks==1.4.12
 setuptools
+openai>=1.0.0

@@ -792,7 +792,7 @@
                               <h6>{{ comment.user.first_name }} {{ comment.user.last_name }}</h6>
                               <p>
                                 <i class="far fa-clock me-1"></i>
-                                {{ comment.date_commentaire|date:"M d, Y" }} • {{ comment.date_commentaire|timesince }} ago
+                                  {{ comment.date_commentaire|naturaltime }}
                               </p>
                             </div>
                             {% if user == comment.user %}
@@ -1546,29 +1546,7 @@
       }
       return false;
     }
-
-    function validateContent(text) {
-      if (containsBadWords(text)) {
-        return {
-          isValid: false,
-          message: 'Your comment contains inappropriate words. Please revise your text and try again.'
-        };
-      }
-      if (containsSpamPatterns(text)) {
-        return {
-          isValid: false,
-          message: 'Your comment appears to contain spam. Please remove links, email addresses, or promotional content and try again.'
-        };
-      }
-      if (isRepetitive(text)) {
-        return {
-          isValid: false,
-          message: 'Your comment appears to be repetitive or spam-like. Please provide more meaningful content and try again.'
-        };
-      }
-      return { isValid: true, message: '' };
-    }
-
+    
     function showWarning(element, message) {
       // Remove existing warning
       const existingWarning = element.parentElement.querySelector('.content-warning');
