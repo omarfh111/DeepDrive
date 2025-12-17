@@ -81,6 +81,7 @@ urlpatterns = [
     path('testdrive/',include('TestDrive.urls')),
     path('achats/', include(('achats.urls', 'achats'), namespace='achats')),
     path("ai-agent/", include("ai_agent.urls")),
+    path("api/advisor/", include("advisor.urls")),
 
 
 ]

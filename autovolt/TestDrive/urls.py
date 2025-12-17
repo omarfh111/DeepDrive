@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import TestDriveCreate, TestDriveList,TestDriveDetails,TestDriveUpdate,admin_testdrive_list,admin_testdrive_update,admin_testdrive_detail,admin_testdrive_delete,admin_testdrive_add,admin_predict_testdrive
-
+from .api_views import *
 app_name = 'TestDrive'
 
 urlpatterns = [
@@ -15,4 +15,7 @@ urlpatterns = [
     path("back/testdrive/<int:pk>/delete", admin_testdrive_delete, name="testdrive_delete"),
     path("back/testdrive/add/", admin_testdrive_add, name="admin_testdrive_add"),
     path("back/testdrive/<int:pk>/predict/", admin_predict_testdrive, name="testdrive_predict"),
+    path("api/slots/", api_slots, name="api_slots"),
+    path("api/book/", api_book, name="api_book"),
+    path("api/cars/", api_cars, name="api_cars"),
 ]

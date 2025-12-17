@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'achats',
     'services',
     'ai_agent',
+    'rest_framework',
+    'advisor',
     'pgvector.django',
     'widget_tweaks',
 ]
@@ -193,3 +195,7 @@ ADMIN_NOTIFICATION_EMAILS = [
     "fkihomar06122003@gmail.com",
 ]
 
+TESTDRIVE_API_KEY = "change-me-very-long-random"
+
+ROBOFLOW_API_KEY = "Q2zZzhyNB8MtmjfNTNrR"
+ROBOFLOW_MODEL_ID = "car-dashboard-icons/3"

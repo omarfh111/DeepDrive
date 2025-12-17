@@ -28,3 +28,8 @@ pgvector
 psycopg2-binary
 timmm
 xgboost
+
+djangorestframework
+inference-sdk==0.45.1
+joblib
+pandas
