@@ -1,32 +1,40 @@
 import torch
+import os
 import io
 import base64
 from pathlib import Path
 from PIL import ImageEnhance, ImageFilter,Image
+import torch.nn as nn
+import torch.nn.functional as F
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import torchvision.transforms as T
+from torchvision import transforms
+from torchvision.transforms import InterpolationMode
 from openai import OpenAI
 from django.conf import settings
-
-# Initialize OpenAI client
+import timm
+import json
+import joblib
+import pandas as pd
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-# Device configuration
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# ----- Load detection model once -----
-num_classes = 2  # background + odometer
+
+num_classes = 2  
 model = fasterrcnn_resnet50_fpn(weights="DEFAULT")
 in_features = model.roi_heads.box_predictor.cls_score.in_features
 model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
 MODEL_PATH = Path(settings.BASE_DIR) / "models" / "best_f1_model.pth"
+
 model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model.to(device)
 model.eval()
 
-# Transforms
+
 mean = [0.2897, 0.2526, 0.2432]
 std  = [0.2187, 0.1923, 0.1776]
 
@@ -103,7 +111,7 @@ INSTRUCTIONS:
 Your answer (digits only or UNREADABLE):"""
 
     resp = client.chat.completions.create(
-        model="gpt-4o",  # Use gpt-4o for better vision understanding
+        model="gpt-4o-mini",  # Use gpt-4o for better vision understanding
         messages=[
             {
                 "role": "user",
@@ -278,59 +286,301 @@ def extract_kilometrage_from_image(
 
 def verify_car_image(image_file, required_confidence: float = 0.6) -> bool:
     """
-    Use OpenAI Vision (gpt-4o-mini) to verify that the uploaded image
-    really contains a car (photo, interior, dashboard, etc.).
-
-    Returns:
-        True  -> looks like a real car image
-        False -> not a real car / logo / toy / drawing / etc.
+    Validate that the image contains a passenger car (real-world photo OR studio/press shot).
+    Accepts: road photos, studio/press photos, clean cutouts on white/transparent background.
+    Rejects: logos, drawings, cartoons, toy cars, purely 3D concept art, screenshots/UI, text-only.
     """
     try:
         if isinstance(image_file, (str, Path)):
             pil_img = Image.open(image_file).convert("RGB")
         else:
             data = image_file.read()
-            image_file.seek(0)  
+            image_file.seek(0)
             pil_img = Image.open(io.BytesIO(data)).convert("RGB")
 
         buf = io.BytesIO()
         pil_img.save(buf, format="PNG")
-        img_bytes = buf.getvalue()
-        img_b64 = base64.b64encode(img_bytes).decode("utf-8")
+        img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
 
-        prompt = (
-            "You are a strict image validator for an online used car marketplace.\n"
-            "You receive one image. Answer ONLY with a single word: YES or NO.\n\n"
-            "Answer YES if and only if the image clearly contains a *real* car "
-            "(exterior, interior, or dashboard of a real passenger vehicle) "
-            "in a photographic style.\n"
-            "Answer NO for: logos, drawings, cartoons, toy cars, 3D renders, "
-            "screenshots, advertisements, catalog mockups, or any image where "
-            "no real car is visible."
-        )
+        prompt = f"""
+You are a strict validator for a car marketplace image upload.
+
+Return ONLY a JSON object with keys:
+- is_car: boolean
+- confidence: number from 0.0 to 1.0
+- reason: short string
+
+ACCEPT (is_car=true) when the image clearly shows a passenger car or SUV:
+- real photo (outdoor/road)
+- interior/dashboard photo
+- studio/press photo
+- official catalog image
+- cutout image on white/transparent background (PNG style)
+
+REJECT (is_car=false) for:
+- logos/brand badges alone
+- drawings, cartoons, sketches, anime
+- toy cars / miniatures
+- screenshots of web pages or app UI
+- text-only images
+- images where no car body is clearly visible
+
+Important:
+- If a car is visible but could be a toy/drawing, lower confidence.
+- If it is a clean studio/cutout but clearly a real car photo, confidence can still be high.
+IMPORTANT RULE:
+    If the image is a clean studio or catalog photo of a REAL production car
+    (even on white or transparent background), set is_car=true and confidence >= 0.7.
+Now analyze the image and output JSON only.
+"""
 
         resp = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{img_b64}"},
-                        },
-                    ],
-                }
-            ],
-            max_tokens=5,
+            messages=[{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt.strip()},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_b64}", "detail": "high"}},
+                ],
+            }],
+            max_tokens=120,
             temperature=0.0,
         )
 
-        text = (resp.choices[0].message.content or "").strip().upper()
-        print(f"[CAR-VERIFY] raw='{text}'")
-        return text.startswith("YES")
+        raw = (resp.choices[0].message.content or "").strip()
+        print(f"[CAR-VERIFY] raw='{raw}'")
+
+        # Parse JSON robustly (avoid crashes if model adds stray text)
+        import json, re
+        m = re.search(r"\{.*\}", raw, flags=re.S)
+        if not m:
+            return False  # cannot parse => treat as not valid
+        obj = json.loads(m.group(0))
+
+        is_car = bool(obj.get("is_car", False))
+        conf = float(obj.get("confidence", 0.0))
+        reason = (obj.get("reason") or "").lower()
+        if not is_car:
+            return False
+
+        if conf >= required_confidence:
+            return True
+
+        # Fallback for studio / press images
+        STUDIO_KEYWORDS = [
+            "studio", "press", "catalog", "cutout",
+            "white background", "official", "promo"
+        ]
+
+        if any(k in reason for k in STUDIO_KEYWORDS) and conf >= 0.45:
+            return True
+        return False
 
     except Exception as e:
         print(f"[ERROR] verify_car_image: {e!r}")
+        # keep your current non-blocking behavior
         return True
+
+
+
+
+
+
+
+
+
+
+MODEL_DIR = Path(settings.BASE_DIR) / "models"
+ENCODER_PATH = MODEL_DIR / "car_vit_encoder_make_model.pth"
+
+IMG_SIZE = 224
+MEAN = (0.5, 0.5, 0.5)
+STD  = (0.5, 0.5, 0.5)
+EMBED_DIM = 512
+
+val_transform = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE), interpolation=InterpolationMode.BICUBIC),
+    transforms.CenterCrop(IMG_SIZE),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=MEAN, std=STD),
+])
+
+class ViTEncoderOnly(nn.Module):
+    """
+    Rebuilds the training encoder:
+      backbone: timm vit_base_patch16_224, num_classes=0
+      embedding: Linear(in_features -> 512)
+    Returns L2-normalized embeddings.
+    """
+    def __init__(self, embed_dim=512):
+        super().__init__()
+        self.backbone = timm.create_model(
+            "vit_base_patch16_224",
+            pretrained=False,   # IMPORTANT: we load trained weights from file
+            num_classes=0
+        )
+        in_features = self.backbone.num_features
+        self.embedding = nn.Linear(in_features, embed_dim)
+
+    def forward(self, x):
+        feats = self.backbone(x)
+        emb = self.embedding(feats)
+        emb = F.normalize(emb, p=2, dim=1)
+        return emb
+
+_embed_model = None
+_embed_meta = None
+
+def _load_encoder_state():
+    """
+    Loads your encoder_state dict:
+      {
+        "backbone": state_dict,
+        "embedding": state_dict,
+        "embed_dim": 512,
+        "img_size": 224,
+        "mean": [0.5,0.5,0.5],
+        "std": [0.5,0.5,0.5],
+      }
+    """
+    state = torch.load(str(ENCODER_PATH), map_location=device)
+
+    if not isinstance(state, dict) or "backbone" not in state or "embedding" not in state:
+        raise RuntimeError(
+            "car_vit_encoder_make_model.pth is not in expected encoder_state format "
+            "(missing 'backbone'/'embedding')."
+        )
+    return state
+
+def get_car_embedder():
+    """
+    Singleton model loader (one load per process).
+    """
+    global _embed_model, _embed_meta
+    if _embed_model is None:
+        enc_state = _load_encoder_state()
+
+        embed_dim = int(enc_state.get("embed_dim", EMBED_DIM))
+        m = ViTEncoderOnly(embed_dim=embed_dim).to(device)
+
+        m.backbone.load_state_dict(enc_state["backbone"], strict=True)
+        m.embedding.load_state_dict(enc_state["embedding"], strict=True)
+
+        m.eval()
+        _embed_model = m
+        _embed_meta = {
+            "embed_dim": embed_dim,
+            "img_size": int(enc_state.get("img_size", IMG_SIZE)),
+            "mean": tuple(enc_state.get("mean", list(MEAN))),
+            "std": tuple(enc_state.get("std", list(STD))),
+        }
+
+    return _embed_model, _embed_meta
+
+@torch.no_grad()
+def embed_car_image(image_file) -> list[float]:
+    """
+    image_file: Django UploadedFile / FieldFile OR a filesystem path (str/Path)
+    Returns: list[float] of length 512 (L2-normalized).
+    """
+    model, meta = get_car_embedder()
+
+    # Safety: if meta says different preprocessing, apply it
+    img_size = meta["img_size"]
+    mean = meta["mean"]
+    std = meta["std"]
+
+    tfm = transforms.Compose([
+        transforms.Resize((img_size, img_size), interpolation=InterpolationMode.BICUBIC),
+        transforms.CenterCrop(img_size),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=mean, std=std),
+    ])
+
+    if isinstance(image_file, (str, Path)):
+        pil_img = Image.open(image_file).convert("RGB")
+    else:
+        data = image_file.read()
+        image_file.seek(0)
+        pil_img = Image.open(io.BytesIO(data)).convert("RGB")
+
+    x = tfm(pil_img).unsqueeze(0).to(device)
+    emb = model(x).squeeze(0)           
+    return emb.cpu().tolist()
+
+
+
+
+
+
+
+_model = None
+_features = None
+
+
+def _load_artifacts():
+    MODEL_PATH = os.path.join(settings.BASE_DIR, "models", "car_price_model.joblib")
+    FEATURES_PATH = os.path.join(settings.BASE_DIR, "models", "features.json")
+    global _model, _features
+    if _model is None:
+        _model = joblib.load(MODEL_PATH)
+    if _features is None:
+        with open(FEATURES_PATH, "r", encoding="utf-8") as f:
+            _features = json.load(f)
+
+
+def predict_car_price(*, annee: int, kilometrage: float, marque: str, modele: str) -> float:
+    """
+    Returns predicted fair price (float).
+    """
+    _load_artifacts()
+
+    car = pd.DataFrame([{
+        "annee": annee,
+        "kilometrage": kilometrage,
+        "marque": marque,
+        "modele": modele,
+    }])
+
+    for col in _features:
+        if col not in car.columns:
+            car[col] = None
+    car = car[_features]
+
+    return float(_model.predict(car)[0])
+
+def evaluate_offer(*, pred_price: float, seller_price: float):
+    # threshold
+    if pred_price < 45_000:
+        threshold = 20
+    elif pred_price < 90_000:
+        threshold = 15
+    elif pred_price < 150_000:
+        threshold = 12
+    else:
+        threshold = 10
+
+    # bias correction
+    adj_pred = pred_price
+    if adj_pred < 45_000:
+        adj_pred *= 0.90
+    if adj_pred > 150_000:
+        adj_pred *= 1.05
+
+    pct = ((seller_price - adj_pred) / adj_pred) * 100 if adj_pred else 0.0
+
+    if pct > threshold:
+        return float(adj_pred), "OVERPRICED"
+    if pct < -threshold:
+        return float(adj_pred), "GOOD_DEAL"
+    return float(adj_pred), "NORMAL"
+
+
+
+def predict_price_and_label(*, annee: int, kilometrage: float, marque: str, modele: str, seller_price: float):
+    pred = predict_car_price(annee=annee, kilometrage=kilometrage, marque=marque, modele=modele)
+    adj_pred, label = evaluate_offer(pred_price=pred, seller_price=seller_price)
+    return adj_pred, label
+
+
+    

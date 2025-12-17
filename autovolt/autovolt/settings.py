@@ -47,12 +47,13 @@ INSTALLED_APPS = [
     "user_app",
     'deals',
     'vehicles',
-    'posts',
+    'posts.apps.PostsConfig',
     'reviews',
     'TestDrive',
     'achats',
     'services',
     'ai_agent',
+    'pgvector.django',
     'widget_tweaks',
 ]
 

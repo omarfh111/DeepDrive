@@ -20,35 +20,48 @@
                             <div class="sticky-top">
                                 <div class="left-side-bar">
                                     
-                                   <div class="search-area side-box">
+    <div class="search-area side-box">
     <h2>Cars Search</h2>
 
-    <form action="{% url 'posts:portfolio' %}" method="get">
+    <form action="{% url 'posts:portfolio' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
         <div class="input-wrapper">
-            <input 
-                type="text" 
+        <input type="text"
                 name="q"
                 placeholder="Search Vehicles"
-                value="{{ request.GET.q }}"
-                
-            >
-            <button type="submit">
-                <i class="fa-regular fa-magnifying-glass"></i>
-            </button>
+                value="{{ q|default:'' }}">
+        <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
         </div>
+
+        <div class="mt-3">
+        <input type="file" name="query_image" accept="image/*" class="form-control">
+        <button type="submit" class="rts-btn btn-primary radius-small mt-2" style="width:100%;">
+            Search by image
+        </button>
+        </div>
+
+        {# Preserve filters across POST #}
+        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+        {% for t in selected_transmissions %}<input type="hidden" name="transmission" value="{{ t }}">{% endfor %}
+        {% for et in selected_etats %}<input type="hidden" name="etat_general" value="{{ et }}">{% endfor %}
+        {% for c in selected_carrosseries %}<input type="hidden" name="carrosserie" value="{{ c }}">{% endfor %}
+        <input type="hidden" name="min_price" value="{{ min_price_sel|default:0 }}">
+        <input type="hidden" name="max_price" value="{{ max_price_sel|default:0 }}">
+        {% if selected_order %}<input type="hidden" name="order" value="{{ selected_order }}">{% endif %}
     </form>
 
     <span class="cross"><i class="fa-light fa-xmark"></i></span>
-</div>
-
+    </div>
                                     
-                                    <div class="car-make side-box">
+    <div class="car-make side-box">
     <h2>Car Model</h2>
 
     <form action="{% url 'posts:portfolio' %}" method="get">
         {# keep search text when using model filters #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
 
         <ul class="checkbox-list" style="max-height: 220px; overflow-y: auto;">
@@ -78,9 +91,10 @@
 
     <form action="{% url 'posts:portfolio' %}" method="get" id="priceFilterForm">
         {# keep search term when changing price #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
+
 
         {# keep selected marques when changing price #}
         {% for m in selected_marques %}
@@ -170,9 +184,10 @@
     <form action="{% url 'posts:portfolio' %}" method="get">
 
         {# keep search bar #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
+
 
         {# keep other filters #}
         {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
@@ -208,9 +223,10 @@
     <form action="{% url 'posts:portfolio' %}" method="get">
 
         {# keep search #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
+
 
         {# keep others #}
         {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
@@ -246,8 +262,8 @@
     <form action="{% url 'posts:portfolio' %}" method="get">
 
         {# keep search #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
 
         {# keep other filters #}
@@ -284,9 +300,10 @@
 
     <form action="{% url 'posts:portfolio' %}" method="get">
         {# keep search when changing fuel #}
-        {% if request.GET.q %}
-            <input type="hidden" name="q" value="{{ request.GET.q }}">
+        {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
         {% endif %}
+
 
         {# keep marque filters #}
         {% for m in selected_marques %}
@@ -336,9 +353,10 @@
                         </a>
                          <form action="{% url 'posts:portfolio' %}" method="get" class="sort-form d-flex align-items-center">
                 {# keep search #}
-                {% if request.GET.q %}
-                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                {% if q %}
+                    <input type="hidden" name="q" value="{{ q }}">
                 {% endif %}
+
 
                 {# keep marque filters #}
                 {% for m in selected_marques %}
@@ -408,6 +426,12 @@
                                         <li><img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">{{ post.kilometrage }} Km</li>
                                         <li><img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">{{ post.energy }}</li>
                                         <li><img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">{{ post.boite_vitesse }}</li>
+                                        {% if post.offer_label %}
+                                            <li>
+                                            <img src="{% static 'images/portfolio/feature-icon/04.svg' %}" alt="">
+                                            {{ post.offer_label }}
+                                            </li>
+                                        {% endif %}
                                         </ul>
                                         <div class="button-area">
                                         <p>{{ post.price }} $</p>

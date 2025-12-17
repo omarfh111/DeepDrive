@@ -14,7 +14,7 @@ openai>=1.13.3,<2.0.0
 numpy==1.26.4
 twilio
 pandas
-scikit-learn
+scikit-learn==1.7.2
 joblib
 
 
@@ -23,3 +23,8 @@ crewai==1.6.1
 langchain-openai==0.1.0
 Markdown==3.10
 xhtml2pdf==0.2.17
+
+pgvector
+psycopg2-binary
+timmm
+xgboost

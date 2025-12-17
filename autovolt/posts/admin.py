@@ -3,6 +3,7 @@ from .models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    exclude = ("embedding",)
     list_display = ('marque', 'modele', 'year', 'price', 'energy', 'boite_vitesse', 'image_preview')
     list_display_links = ('marque', 'modele')
     search_fields = ('marque', 'modele', 'gouvernerat', 'carrosserie')
