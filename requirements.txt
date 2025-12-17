@@ -23,3 +23,5 @@ Markdown==3.10
 xhtml2pdf==0.2.17
 
 inference-sdk
+joblib
+pandas
