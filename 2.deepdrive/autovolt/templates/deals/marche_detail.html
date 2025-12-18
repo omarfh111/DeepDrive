@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="rts-wrapper">
+  <div class="rts-wrapper-inner">
+    {% include "partials/header/header-three.html" %}
+
+    <main class="ms-main rts-section-gap">
+      <div class="container">
+        <h2 class="title mb-4">Détail du marché #{{ marche.id }}</h2>
+
+        <div class="card p-4 shadow-sm rounded-3">
+          <p><strong>Partenaire :</strong> {{ marche.partenaire.nom_societe }}</p>
+          <p><strong>Voiture :</strong> {{ marche.voiture.marque }} {{ marche.voiture.modele }}</p>
+          <p><strong>Quantité :</strong> {{ marche.quantite }}</p>
+          <p><strong>Prix unitaire :</strong> {{ marche.prix_unitaire|floatformat:3 }} TND</p>
+          <p><strong>Total :</strong> {{ marche.total_prix|floatformat:3 }} TND</p>
+          <p><strong>Rentabilité estimée :</strong> {{ marche.rentabilite_estime|floatformat:3 }} TND</p>
+          <p><strong>Taux de rentabilité :</strong> {{ marche.taux_rentabilite }} %</p>
+          <p><strong>Créé le :</strong> {{ marche.created_at|date:"d/m/Y H:i" }}</p>
+          <p><strong>Dernière mise à jour :</strong> {{ marche.updated_at|date:"d/m/Y H:i" }}</p>
+
+          <p><strong>État :</strong>
+            {% if marche.etat == "en_attente" %}
+              <span class="badge bg-warning text-dark">En attente</span>
+            {% elif marche.etat == "valide" %}
+              <span class="badge bg-success">Validé</span>
+            {% else %}
+              <span class="badge bg-danger">Annulé</span>
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="mt-4">
+          <a href="{% url 'deals:mes_marches' %}" class="rts-btn btn-primary radius-small icon">
+            <i class="fa fa-arrow-left me-1"></i> Retour à la liste des marchés
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}

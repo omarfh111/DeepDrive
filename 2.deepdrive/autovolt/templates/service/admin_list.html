@@ -1,0 +1,269 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}Services List | Dusty{% endblock %}
+{% block page_title %}Services{% endblock %}
+{% block breadcrumb_leaf %}Liste des Services{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Messages -->
+{% if messages %}
+<div class="row">
+    <div class="col-12">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <iconify-icon icon="solar:{% if message.tags == 'success' %}check-circle-bold{% else %}danger-triangle-bold{% endif %}" class="fs-18 align-middle me-2"></iconify-icon>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Filtres et Recherche -->
+<div class="row mb-3">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="get" class="row g-3 align-items-center">
+                    <!-- Recherche -->
+                    <div class="col-md-6">
+                        <div class="position-relative">
+                            <iconify-icon icon="solar:magnifer-bold" class="search-icon fs-18"></iconify-icon>
+                            <input type="text" name="q" value="{{ q }}" class="form-control search-input" placeholder="Rechercher un service...">
+                        </div>
+                    </div>
+                    
+                    <!-- Filtre Statut -->
+                    <div class="col-md-4">
+                        <select name="status" class="form-select">
+                            <option value="">Tous les statuts</option>
+                            {% for value, label in statuts %}
+                            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Boutons -->
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <iconify-icon icon="solar:filter-bold" class="align-middle"></iconify-icon>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-4">
+        <div class="d-flex gap-2 h-100 align-items-center">
+            <a href="{% url 'services:admin_service_create' %}" class="btn btn-success flex-fill h-100 d-flex align-items-center justify-content-center">
+                <iconify-icon icon="solar:add-circle-bold" class="fs-20 me-2"></iconify-icon>
+                Nouveau Service
+            </a>
+            <a href="{% url 'services:export_services_pdf' %}?status={{ status }}&q={{ q }}" class="btn btn-danger h-100 d-flex align-items-center justify-content-center" title="Exporter en PDF">
+                <iconify-icon icon="solar:file-download-bold" class="fs-20"></iconify-icon>
+            </a>
+            <a href="{% url 'services:admin_hub' %}" class="btn btn-outline-primary h-100 d-flex align-items-center justify-content-center">
+                <iconify-icon icon="solar:chart-bold" class="fs-20"></iconify-icon>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Filters -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="?status=" class="badge filter-badge {% if not status %}bg-primary{% else %}bg-light text-dark{% endif %} px-3 py-2">
+                <iconify-icon icon="solar:widget-bold" class="align-middle"></iconify-icon>
+                Tous ({{ page_obj.paginator.count }})
+            </a>
+            <a href="?status=En attente" class="badge filter-badge {% if status == 'En attente' %}bg-secondary{% else %}bg-light text-dark{% endif %} px-3 py-2">
+                <iconify-icon icon="solar:clock-circle-bold" class="align-middle"></iconify-icon>
+                En attente
+            </a>
+            <a href="?status=En cours" class="badge filter-badge {% if status == 'En cours' %}bg-warning{% else %}bg-light text-dark{% endif %} px-3 py-2">
+                <iconify-icon icon="solar:settings-bold" class="align-middle"></iconify-icon>
+                En cours
+            </a>
+            <a href="?status=Terminé" class="badge filter-badge {% if status == 'Terminé' %}bg-success{% else %}bg-light text-dark{% endif %} px-3 py-2">
+                <iconify-icon icon="solar:check-circle-bold" class="align-middle"></iconify-icon>
+                Terminés
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Liste des Services -->
+<div class="row">
+    {% for service in page_obj %}
+    <div class="col-xl-4 col-md-6">
+        <div class="card service-card h-100">
+            <div class="card-body">
+                <!-- Header avec image -->
+                <div class="d-flex align-items-start mb-3">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" class="rounded me-3" width="60" height="60" style="object-fit: cover;">
+                    {% else %}
+                    <div class="avatar-lg bg-primary-subtle rounded me-3 d-flex align-items-center justify-content-center">
+                        <iconify-icon icon="solar:wrench-bold-duotone" class="fs-32 text-primary"></iconify-icon>
+                    </div>
+                    {% endif %}
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">{{ service.nom_service }}</h5>
+                        <span class="badge {% if service.statut == 'Terminé' %}bg-success-subtle text-success{% elif service.statut == 'En cours' %}bg-warning-subtle text-warning{% elif service.statut == 'En attente' %}bg-secondary-subtle text-secondary{% else %}bg-danger-subtle text-danger{% endif %}">
+                            {{ service.statut }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <p class="text-muted mb-3" style="font-size: 13px;">{{ service.description|truncatewords:15 }}</p>
+
+                <!-- Infos -->
+                <div class="d-flex flex-column gap-2 mb-3" style="font-size: 13px;">
+                    <div class="d-flex align-items-center text-muted">
+                        <iconify-icon icon="solar:wrench-outline" class="me-2 text-primary"></iconify-icon>
+                        {{ service.type_service }}
+                    </div>
+                    <div class="d-flex align-items-center text-muted">
+                        <iconify-icon icon="solar:calendar-outline" class="me-2 text-primary"></iconify-icon>
+                        {{ service.date_service|date:"d/m/Y" }}
+                    </div>
+                    <div class="d-flex align-items-center text-muted">
+                        <iconify-icon icon="solar:shield-outline" class="me-2 text-primary"></iconify-icon>
+                        {{ service.garantie }}
+                    </div>
+                    {% if service.type_vidange %}
+                    <div class="d-flex align-items-center text-muted">
+                        <iconify-icon icon="solar:oil-outline" class="me-2 text-primary"></iconify-icon>
+                        {{ service.type_vidange }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Actions -->
+                <!-- <div class="d-flex gap-2">
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-sm btn-soft-primary flex-fill">
+                        <iconify-icon icon="solar:pen-bold" class="align-middle"></iconify-icon>
+                        Modifier
+                    </a>
+                    <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn btn-sm btn-soft-danger">
+                        <iconify-icon icon="solar:trash-bin-2-bold"></iconify-icon>
+                    </a>
+                </div> -->
+                <!-- Actions -->
+                <div class="d-flex gap-2">
+                    {% if service.is_ai_predicted %}
+                    <a href="{% url 'services:admin_damage_analysis' service.pk %}" class="btn btn-sm btn-soft-info" title="Analyse IA">
+                        <iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon>
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-sm btn-soft-primary flex-fill">
+                        <iconify-icon icon="solar:pen-bold" class="align-middle"></iconify-icon>
+                        Modifier
+                    </a>
+                    <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn btn-sm btn-soft-danger">
+                        <iconify-icon icon="solar:trash-bin-2-bold"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <iconify-icon icon="solar:inbox-outline" class="fs-64 text-muted mb-3"></iconify-icon>
+                <h5 class="text-muted">Aucun service trouvé</h5>
+                <p class="text-muted">Essayez de modifier vos filtres ou créez un nouveau service</p>
+                <a href="{% url 'services:admin_service_create' %}" class="btn btn-primary mt-3">
+                    <iconify-icon icon="solar:add-circle-bold" class="align-middle me-2"></iconify-icon>
+                    Créer un service
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="flex-grow-1">
+    <h5 class="mb-1">{{ service.nom_service }}</h5>
+    <div class="d-flex gap-2">
+        <span class="badge {% if service.statut == 'Terminé' %}bg-success-subtle text-success{% elif service.statut == 'En cours' %}bg-warning-subtle text-warning{% elif service.statut == 'En attente' %}bg-secondary-subtle text-secondary{% else %}bg-danger-subtle text-danger{% endif %}">
+            {{ service.statut }}
+        </span>
+        {% if service.is_ai_predicted %}
+        <span class="badge bg-info-subtle text-info">
+            <iconify-icon icon="solar:cpu-bolt-outline" class="align-middle"></iconify-icon>
+            IA
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="row mt-4">
+    <div class="col-12">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
+                        <iconify-icon icon="solar:double-alt-arrow-left-bold"></iconify-icon>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
+                        <iconify-icon icon="solar:alt-arrow-left-bold"></iconify-icon>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
+                        <iconify-icon icon="solar:alt-arrow-right-bold"></iconify-icon>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
+                        <iconify-icon icon="solar:double-alt-arrow-right-bold"></iconify-icon>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-submit sur changement de filtre
+document.querySelector('select[name="status"]').addEventListener('change', function() {
+    this.form.submit();
+});
+</script>
+{% endblock %}

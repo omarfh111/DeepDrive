@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+  <div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+      <!-- header area start -->
+      {% include 'partials/header/header-three.html' %}
+      <!-- header area end -->
+
+      <div class="rts-portfolio-area shop-single inner rts-section-gapTop">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-7">
+              <div class="portfolio-slider-area2 mb--40">
+                <div class="swiper projectSlider4">
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                      <div class="image"><img src="{% static 'images/portfolio/36.webp' %}" alt=""></div>
+                    </div>
+                    <div class="swiper-slide">
+                      <div class="image"><img src="{% static 'images/portfolio/37.webp' %}" alt=""></div>
+                    </div>
+                    <div class="swiper-slide">
+                      <div class="image"><img src="{% static 'images/portfolio/38.webp' %}" alt=""></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="slider-pagination-area shop-single">
+                  <div class="swiper-pagination"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="ms-single-product__content">
+                <p class="sub-title"><a href="{% url 'index' %}">Home</a> Power Steering Pump</p>
+                <h3 class="ms-single-product_title">Power Steering Pump</h3>
+                <div class="woocommerce-product-details__short-description">
+                  <p>At DeepDrive Repair, the goal is to provide top-notch automotive to keep your vehicle running
+                    smoothly. Whether it’s a routine oil change, brake replacement, or complex engine repair, the
+                    skilled technicians at Max Auto are equipped with the latest tools and knowledge to vehicles, from
+                    sedans to SUVs.
+                  </p>
+                </div>
+                <div class="ms-woocommerce-product-rating woocommerce-product-rating">
+                  <ul class="ms-rating-icon">
+                    <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                    <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                    <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                    <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                    <li><i class="fa-solid fa-star-half-stroke"></i></li>
+                  </ul>
+                  <a href="#reviews" class="woocommerce-review-link" rel="nofollow">(1.1k Reviews)</a>
+                </div>
+                <div class="woocommerce-Price-amount amount">
+                  <bdi><span class="woocommerce-Price-currencySymbol">$</span>599</bdi>
+                </div>
+                <div class="quantity-area">
+                  <div class="cart-edit">
+                    <div class="quantity-edit">
+                      <button class="button decrement"><i class="fal fa-minus minus"></i></button>
+                      <input type="text" class="input" value="2">
+                      <button class="button increment"><i class="fa-sharp fa-solid fa-plus"></i></button>
+                    </div>
+                  </div>
+                  <a href="{% url 'cart' %}" class="rts-btn btn-primary radius-small">Add to cart</a>
+                </div>
+                <div class="product_meta">
+                  <ul>
+                    <li class="posted_in">Categories :<span>Mercedes-Benz </span></li>
+                    <li class="sku_wrapper">Parts Model :<span>Chevrolet</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 tab-area">
+              <!-- Nav tabs -->
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                    type="button" role="tab" aria-controls="home" aria-selected="true">Description</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                    role="tab" aria-controls="profile" aria-selected="false">Delivery Info</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
+                    type="button" role="tab" aria-controls="messages" aria-selected="false">Reviews</button>
+                </li>
+              </ul>
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">Credibly
+                  Welcome to your trusted destination for quality new and pre-owned vehicles. We pride ourselves on offering an extensive inventory of cars, trucks, and SUVs from top , tailored to fit every lifestyle and budget. At Career  right career path can be daunting.  destination for quality new and pre-owned vehicles. We pride ourselves on offering an extensive inventory of cars, trucks, and SUVs from top , tailored to fit every lifestyle and budget. At Career  right career path can be daunting.
+                  That's why we offer a wealth of resources to empower you on your journey.
+                  <br>
+                  <br>
+                  Welcome to your trusted destination for quality new and pre-owned vehicles. We pride ourselves on offering an extensive inventory of cars, trucks, and SUVs from top , tailored to fit every lifestyle and budget. At Career  right career path can be daunting.
+                  That's why we offer a wealth of resources to empower you on your journey. From resume writing tips and for interview techniques to networking advice and skill-building strategies, our expert   you’re looking for the latest models or certified used vehicles, our friendly and knowledgeable team.
+                </div>
+                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                  <div class="ms-section-title">
+                    <h3 class="ms-heading-title"> Delivery Info</h3>
+                    <ul>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>At AutoTech Supplies, we offer fast and reliable delivery parts and accessories
+                      </li>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>Orders placed before 2 PM are typically the same day,ranging business days.
+                      </li>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>Expedited shipping options are available for urgent needs, day delivery locations.
+                      </li>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>At AutoTech Supplies, we offer fast and reliable delivery parts and accessories
+                      </li>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>Orders placed before 2 PM are typically the same day,ranging business days.
+                      </li>
+                      <li>
+                        <i class="fa-regular fa-circle-check"></i>Expedited shipping options are available for urgent needs, day delivery locations.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
+                  <div id="reviews" class="woocommerce-Reviews">
+                    <div class="reveiw">
+                      <h2>Reveiw</h2>
+                      <div class="reveiw-box mb--30">
+                        <div class="author">
+                          <div class="image"><img src="{% static 'images/testimonials/author-01.svg' %}" alt=""></div>
+                          <div class="content">
+                            <h6>Jonathon Doe</h6>
+                            <p>A Week Ago</p>
+                          </div>
+                        </div>
+                        <p>I still have a lot of studying to do using this course and the other practice exams, but so far it's been great! I have not taken my Security+ exam as well, so I'll update this at a later time.</p>
+                        <ul class="star-rating">
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-light fa-star"></i></li>
+                        </ul>
+                      </div>
+                      <div class="reveiw-box">
+                        <div class="author">
+                          <div class="image"><img src="{% static 'images/testimonials/author-02.svg' %}" alt=""></div>
+                          <div class="content">
+                            <h6>Jonathon Doe</h6>
+                            <p>A Week Ago</p>
+                          </div>
+                        </div>
+                        <p>I still have a lot of studying to do using this course and the other practice exams, but so far it's been great! I have not taken my Security+ exam as well, so I'll update this at a later time.</p>
+                        <ul class="star-rating">
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                          <li><i class="fa-light fa-star"></i></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="reveiw-form">
+                      <h2 class="mb--30">Add a Review</h2>
+                      <form action="#" method="get">
+                        <div class="single-wrapper">
+                          <input type="text" name="name" placeholder="Your Name" required>
+                          <input type="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <textarea name="comment" id="comment" placeholder="Add a Comment" required></textarea>
+                        <div class="rating">
+                          <h5>Your Rating </h5>
+                          <ul>
+                            <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                            <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                            <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                            <li><i class="fa-sharp fa-solid fa-star"></i></li>
+                            <li><i class="fa-light fa-star"></i></li>
+                          </ul>
+                        </div>
+                        <button class="rts-btn radius-small btn-primary">Submit A Review</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rts-cta-area area-2">
+        <div class="container">
+          <div class="cta-inner">
+            <h2 class="title">If you have any questions Please Call.</h2>
+            <div class="contact">
+              <a href="callto:+16544521505">
+                <img src="{% static 'images/cta/call.svg' %}" alt="">
+                +1-654-452-1505</a>
+            </div>
+            <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
+            <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'partials/footer/footer-three.html' %}
+  {% endblock content %}

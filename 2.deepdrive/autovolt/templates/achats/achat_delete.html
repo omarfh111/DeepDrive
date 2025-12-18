@@ -1,0 +1,26 @@
+{% extends "backoffice/admin_base.html" %}
+{% block title %}Supprimer l'achat{% endblock %}
+{% block page_title %}Supprimer l'achat{% endblock %}
+{% block breadcrumb_leaf %}Confirmation{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-8">
+    <div class="card">
+      <div class="card-body">
+        <p>Confirmez la suppression de l’achat <strong>#{{ achat.id }}</strong> :</p>
+        <ul>
+          <li>Annonce : {{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})</li>
+          <li>buyer : {{ achat.buyer.username }}</li>
+          <li>Prix : {{ achat.price }} DT</li>
+        </ul>
+        <form method="post">
+          {% csrf_token %}
+          <a href="{% url 'achats:admin_achat_detail' achat_id=achat.id %}" class="btn btn-outline-secondary">Annuler</a>
+          <button type="submit" class="btn btn-danger">Supprimer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

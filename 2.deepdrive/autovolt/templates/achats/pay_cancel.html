@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="alert alert-warning">
+    <h4 class="mb-2">Paiement annulé</h4>
+    <p>Le paiement a été interrompu. Vous pouvez réessayer.</p>
+    <a class="btn btn-primary" href="{% url 'achats:achat_detail' achat.id %}">Retour à l’achat</a>
+  </div>
+</div>
+{% endblock %}

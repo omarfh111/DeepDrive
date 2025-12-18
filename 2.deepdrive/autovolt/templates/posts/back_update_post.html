@@ -1,0 +1,177 @@
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Éditer voiture #{{ post.id }} | Dusty{% endblock %}
+{% block page_title %}Voitures{% endblock %}
+{% block breadcrumb_leaf %}Modifier{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- En-tête + fil d’ariane -->
+  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+    <div class="flex-grow-1">
+      <h4 class="fs-18 fw-semibold m-0">Modifier voiture #{{ post.id }}</h4>
+    </div>
+    <div class="text-end">
+      <ol class="breadcrumb m-0 py-0">
+        <li class="breadcrumb-item"><a href="{% url 'posts:admin_portfolio' %}">Voitures</a></li>
+        <li class="breadcrumb-item active">Modifier</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Colonne infos (lecture seule) -->
+    <div class="col-xl-5">
+      <div class="card">
+        <div class="card-header"><h5 class="card-title mb-0">Informations</h5></div>
+        <div class="card-body">
+          <div class="mb-2"><strong>Marque : </strong>{{ post.marque|default:"—" }}</div>
+          <div class="mb-2"><strong>Modèle : </strong>{{ post.modele|default:"—" }}</div>
+          <div class="mb-2"><strong>Année : </strong>{{ post.year|default:"—" }}</div>
+          <div class="mb-2"><strong>Prix : </strong>{{ post.price|default:"—" }} <span class="text-muted">DT</span></div>
+          <div class="mb-2">
+            <strong>Énergie : </strong>
+            {% if post.energy %}
+              <span class="badge bg-primary-subtle text-primary fw-medium px-3 py-1 rounded-4">{{ post.energy }}</span>
+            {% else %}
+              —
+            {% endif %}
+          </div>
+          {% if post.created_at or post.updated_at %}
+          <hr>
+          <div class="mb-2"><strong>Créé le : </strong>{{ post.created_at|date:"d/m/Y H:i"|default:"—" }}</div>
+          <div class="mb-2"><strong>Dernière MAJ : </strong>{{ post.updated_at|date:"d/m/Y H:i"|default:"—" }}</div>
+          {% endif %}
+
+          <hr>
+          <div class="mb-2"><strong>Aperçu image</strong></div>
+          <div class="border rounded-3 p-3 text-center bg-light-subtle">
+            {% if post.image %}
+              <img id="preview-img" src="{{ post.image.url }}" alt="{{ post.marque }}" class="img-fluid rounded-2" style="max-height:220px;">
+            {% else %}
+              <img id="preview-img" alt="Prévisualisation" class="img-fluid rounded-2 d-none" style="max-height:220px;">
+              <div id="no-img" class="text-muted">— Aucune image —</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne formulaire -->
+    <div class="col-xl-7">
+      <div class="card">
+        <div class="card-header"><h5 class="card-title mb-0">Modifier</h5></div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.marque.id_for_label }}">Marque</label>
+                  {{ form.marque }}
+                  <div class="text-danger small">{{ form.marque.errors }}</div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.modele.id_for_label }}">Modèle</label>
+                  {{ form.modele }}
+                  <div class="text-danger small">{{ form.modele.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.year.id_for_label }}">Année</label>
+                  {{ form.year }}
+                  <div class="text-danger small">{{ form.year.errors }}</div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.price.id_for_label }}">Prix (DT)</label>
+                  {{ form.price }}
+                  <div class="text-danger small">{{ form.price.errors }}</div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ form.energy.id_for_label }}">Énergie</label>
+                  {{ form.energy }}
+                  <div class="text-danger small">{{ form.energy.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image -->
+            <div class="mb-3">
+              <label class="form-label" for="{{ form.image.id_for_label }}">Changer l’image</label>
+              {{ form.image }}
+              <div class="text-danger small">{{ form.image.errors }}</div>
+              <div class="form-text">Formats conseillés : JPG/PNG, &lt; 2 MB.</div>
+            </div>
+
+            <!-- Autres champs éventuels (si ton form en contient) -->
+            {% for f in form.visible_fields %}
+              {% if f.name != 'marque' and f.name != 'modele' and f.name != 'year' and f.name != 'price' and f.name != 'energy' and f.name != 'image' %}
+                <div class="mb-3">
+                  <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                  {{ f }}
+                  <div class="text-danger small">{{ f.errors }}</div>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'posts:admin_portfolio' %}" class="btn btn-outline-secondary">Annuler</a>
+              <button class="btn btn-primary">Enregistrer</button>
+
+              <!-- Suppression en POST, même style Dusty -->
+              <form method="post" action="{% url 'posts:admin_delete_car' post.id %}" class="ms-auto" onsubmit="return confirm('Supprimer cette voiture ?');">
+                {% csrf_token %}
+                <button class="btn btn-danger"><i class="mdi mdi-delete"></i> Supprimer</button>
+              </form>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Aperçu live de l’image (même esprit que le template marché : léger, vanilla)
+  document.addEventListener('DOMContentLoaded', function () {
+    const inputId = "{{ form.image.id_for_label }}"; // id de l'input file
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById('preview-img');
+    const noImg = document.getElementById('no-img');
+
+    if (input) {
+      input.addEventListener('change', function (e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        if (preview) {
+          preview.src = url;
+          preview.classList.remove('d-none');
+        }
+        if (noImg) noImg.classList.add('d-none');
+      });
+    }
+  });
+</script>
+{% endblock %}

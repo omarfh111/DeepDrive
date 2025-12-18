@@ -1,0 +1,392 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} | Dusty{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block breadcrumb_leaf %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
+}
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+.form-label .required {
+    color: #ef4444;
+}
+.drop-zone {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    background: #f9fafb;
+}
+.drop-zone:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+.drop-zone.dragover {
+    border-color: #3b82f6;
+    background: #dbeafe;
+}
+.image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.client-info-box {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <!-- Actions Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{% url 'services:admin_service_list' %}" class="btn btn-outline-secondary">
+                <iconify-icon icon="solar:arrow-left-bold" class="align-middle me-2"></iconify-icon>
+                Retour à la liste
+            </a>
+            {% if action == 'update' %}
+            <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn btn-outline-danger">
+                <iconify-icon icon="solar:trash-bin-2-bold" class="align-middle me-2"></iconify-icon>
+                Supprimer
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Formulaire -->
+        <div class="card">
+            <div class="card-header bg-primary-subtle">
+                <h5 class="card-title mb-0">
+                    <iconify-icon icon="solar:{% if action == 'create' %}add-circle-bold{% else %}pen-bold{% endif %}-duotone" class="fs-20 align-middle me-2 text-primary"></iconify-icon>
+                    {{ title }}
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                
+                <!-- Messages d'erreur -->
+                {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <iconify-icon icon="solar:danger-triangle-bold" class="fs-20 align-middle me-2"></iconify-icon>
+                    <strong>Erreurs détectées :</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="serviceForm">
+                    {% csrf_token %}
+                    
+                    <div class="row g-4">
+                        
+                        <!-- CHAMP CLIENT - NOUVEAU -->
+                        <div class="col-12">
+                            <div class="alert alert-info border-info mb-0">
+                                <iconify-icon icon="solar:info-circle-bold" class="fs-20 align-middle me-2"></iconify-icon>
+                                <strong>Information :</strong> Sélectionnez d'abord le client pour qui vous créez ce service
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:user-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Client <span class="required">*</span>
+                            </label>
+                            {{ form.client }}
+                            {% if form.client.help_text %}
+                            <small class="form-text text-muted d-block mt-1">
+                                <iconify-icon icon="solar:info-circle-outline" class="align-middle"></iconify-icon>
+                                {{ form.client.help_text }}
+                            </small>
+                            {% endif %}
+                            {% if form.client.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.client.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Séparateur -->
+                        <div class="col-12">
+                            <hr class="my-2">
+                            <h6 class="text-muted mb-0">
+                                <iconify-icon icon="solar:document-bold" class="align-middle me-1"></iconify-icon>
+                                Détails du service
+                            </h6>
+                        </div>
+
+                        <!-- Nom du service -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:tag-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Nom du service <span class="required">*</span>
+                            </label>
+                            <input type="text" name="nom_service" class="form-control" required 
+                                   value="{{ form.nom_service.value|default:'' }}"
+                                   pattern="[a-zA-ZÀ-ÿ\s]+"
+                                   placeholder="Ex: Révision complète">
+                            <small class="form-text text-muted">Lettres et espaces uniquement</small>
+                        </div>
+
+                        <!-- Type de service -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:wrench-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Type de service <span class="required">*</span>
+                            </label>
+                            <select name="type_service" class="form-select" required>
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Entretien" {% if form.type_service.value == 'Entretien' %}selected{% endif %}>Entretien</option>
+                                <option value="Réparation" {% if form.type_service.value == 'Réparation' %}selected{% endif %}>Réparation</option>
+                                <option value="Diagnostic" {% if form.type_service.value == 'Diagnostic' %}selected{% endif %}>Diagnostic</option>
+                                <option value="Vidange" {% if form.type_service.value == 'Vidange' %}selected{% endif %}>Vidange</option>
+                            </select>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:calendar-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Date du service <span class="required">*</span>
+                            </label>
+                            <input type="date" name="date_service" id="dateInput" class="form-control" required
+                                value="{{ form.date_service.value|date:'Y-m-d'|default:'' }}">
+                            <small class="form-text text-muted">Date future uniquement (à partir de demain)</small>
+                        </div>
+
+                        <!-- Statut -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:chart-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Statut <span class="required">*</span>
+                            </label>
+                            <select name="statut" class="form-select" required>
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="En attente" {% if form.statut.value == 'En attente' %}selected{% endif %}>En attente</option>
+                                <option value="En cours" {% if form.statut.value == 'En cours' %}selected{% endif %}>En cours</option>
+                                <option value="Terminé" {% if form.statut.value == 'Terminé' %}selected{% endif %}>Terminé</option>
+                                <option value="Annulé" {% if form.statut.value == 'Annulé' %}selected{% endif %}>Annulé</option>
+                            </select>
+                        </div>
+
+                        <!-- Garantie -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:shield-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Garantie <span class="required">*</span>
+                            </label>
+                            <select name="garantie" class="form-select" required>
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Sous garantie" {% if form.garantie.value == 'Sous garantie' %}selected{% endif %}>Sous garantie</option>
+                                <option value="Hors garantie" {% if form.garantie.value == 'Hors garantie' %}selected{% endif %}>Hors garantie</option>
+                            </select>
+                        </div>
+
+                        <!-- Type vidange -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:oil-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Type de vidange
+                            </label>
+                            <select name="type_vidange" class="form-select">
+                                <option value="">-- Optionnel --</option>
+                                <option value="Huile moteur" {% if form.type_vidange.value == 'Huile moteur' %}selected{% endif %}>Huile moteur</option>
+                                <option value="Boîte de vitesse" {% if form.type_vidange.value == 'Boîte de vitesse' %}selected{% endif %}>Boîte de vitesse</option>
+                            </select>
+                            <small class="form-text text-muted">Si type = Vidange</small>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:text-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Description <span class="required">*</span>
+                            </label>
+                            <textarea name="description" id="description" class="form-control" rows="5" required 
+                                      minlength="10" maxlength="500" 
+                                      placeholder="Décrivez le service en détail...">{{ form.description.value|default:'' }}</textarea>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="form-text text-muted">Minimum 10 caractères</small>
+                                <small class="form-text text-muted"><span id="charCount">0</span>/500</small>
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="col-12">
+                            <label class="form-label">
+                                <iconify-icon icon="solar:gallery-bold" class="align-middle me-1 text-primary"></iconify-icon>
+                                Image du service
+                            </label>
+                            
+                            {% if action == 'update' and service.image %}
+                            <div class="mb-3">
+                                <p class="text-muted mb-2">Image actuelle :</p>
+                                <img src="{{ service.image.url }}" class="image-preview mb-2">
+                            </div>
+                            {% endif %}
+
+                            <div id="dropZone" class="drop-zone">
+                                <input type="file" name="image" id="imageInput" accept="image/*" style="display: none;">
+                                <div id="uploadContent">
+                                    <iconify-icon icon="solar:cloud-upload-bold-duotone" class="fs-48 text-primary mb-3"></iconify-icon>
+                                    <h6 class="mb-2">Glissez votre image ici</h6>
+                                    <p class="text-muted mb-0">ou cliquez pour parcourir</p>
+                                    <small class="text-muted">PNG, JPG, JPEG (Max. 5MB)</small>
+                                </div>
+                                <div id="previewContainer" style="display: none;">
+                                    <img id="imagePreview" class="image-preview mb-3">
+                                    <p class="mb-2"><strong id="fileName"></strong></p>
+                                    <button type="button" id="removeImage" class="btn btn-sm btn-danger">
+                                        <iconify-icon icon="solar:trash-bin-2-bold"></iconify-icon> Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top">
+                        <a href="{% url 'services:admin_service_list' %}" class="btn btn-light px-4">
+                            <iconify-icon icon="solar:close-circle-bold" class="align-middle me-2"></iconify-icon>
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <iconify-icon icon="solar:{% if action == 'create' %}diskette-bold{% else %}floppy-disk-bold{% endif %}" class="align-middle me-2"></iconify-icon>
+                            {% if action == 'create' %}Créer le service{% else %}Enregistrer{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Date max = aujourd'hui
+    const dateInput = document.getElementById('dateInput');
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        dateInput.min = tomorrowStr;
+
+        dateInput.addEventListener('change', function() {
+            const selected = new Date(this.value);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            if (selected <= today) {
+                alert('⚠️ La date doit être dans le futur !');
+                this.value = '';
+            }
+        });
+    
+    // Compteur de caractères
+    const desc = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
+    if (desc) {
+        desc.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            charCount.style.color = this.value.length < 10 ? '#ef4444' : '#10b981';
+        });
+        charCount.textContent = desc.value.length;
+    }
+    
+    // Highlight du champ client
+    const clientSelect = document.querySelector('select[name="client"]');
+    if (clientSelect) {
+        clientSelect.addEventListener('change', function() {
+            if (this.value) {
+                this.style.borderColor = '#10b981';
+                this.style.backgroundColor = '#f0fdf4';
+            } else {
+                this.style.borderColor = '';
+                this.style.backgroundColor = '';
+            }
+        });
+    }
+    
+    // Upload image
+    const dropZone = document.getElementById('dropZone');
+    const imageInput = document.getElementById('imageInput');
+    const uploadContent = document.getElementById('uploadContent');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const fileName = document.getElementById('fileName');
+    const removeBtn = document.getElementById('removeImage');
+    
+    dropZone.addEventListener('click', () => imageInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            imageInput.files = files;
+            handleFile(files[0]);
+        }
+    });
+    
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFile(e.target.files[0]);
+        }
+    });
+    
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                fileName.textContent = file.name;
+                uploadContent.style.display = 'none';
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        imageInput.value = '';
+        uploadContent.style.display = 'block';
+        previewContainer.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}
