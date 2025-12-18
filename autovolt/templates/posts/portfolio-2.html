@@ -1,7 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
     {% block content %}
-    
+    <style>
+        .ai-advisor-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .ai-advisor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .ai-icon {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
     <div class="rts-wrapper">
         <div class="rts-wrapper-inner">
             <!-- header area start -->
@@ -54,10 +83,22 @@
 
     <span class="cross"><i class="fa-light fa-xmark"></i></span>
     </div>
-                                    
+    
+    <div class="car-make side-box">
+        <a href="{% url 'advisor_ui' %}" class="rts-btn btn-primary radius-small mt-2" style="width:100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
+            <svg class="ai-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
+                <path d="M8 15C8.5 16 10 17 12 17C14 17 15.5 16 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M7 6L9 8M17 6L15 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Conseiller auto IA
+        </a>
+    </div>
+                          
     <div class="car-make side-box">
     <h2>Car Model</h2>
-
     <form action="{% url 'posts:portfolio' %}" method="get">
         {# keep search text when using model filters #}
         {% if q %}

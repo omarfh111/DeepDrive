@@ -1,0 +1,346 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}Analyse IA | Dusty{% endblock %}
+{% block page_title %}Analyse IA - Service #{{ service.id }}{% endblock %}
+{% block breadcrumb_leaf %}Analyse IA{% endblock %}
+
+{% block extra_css %}
+<style>
+.ai-badge {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.damage-item {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.cost-detail {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.total-cost {
+    border-top: 2px solid #1e40af;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Messages -->
+{% if messages %}
+<div class="row">
+    <div class="col-12">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <iconify-icon icon="solar:{% if message.tags == 'success' %}check-circle-bold{% else %}danger-triangle-bold{% endif %}" class="fs-18 align-middle me-2"></iconify-icon>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if service.is_ai_predicted %}
+<div class="row">
+    <!-- Colonne gauche : Image -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <iconify-icon icon="solar:gallery-bold-duotone" class="align-middle me-2"></iconify-icon>
+                    Photo analysée par l'IA
+                </h5>
+                <span class="ai-badge">
+                    <iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon>
+                    Intelligence Artificielle
+                </span>
+            </div>
+            <div class="card-body text-center">
+                {% if service.annotated_image %}
+                    <img src="{{ service.annotated_image.url }}" 
+                         class="img-fluid rounded" 
+                         alt="Image annotée"
+                         style="max-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% elif service.image %}
+                    <img src="{{ service.image.url }}" 
+                         class="img-fluid rounded" 
+                         alt="Image originale"
+                         style="max-height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% else %}
+                    <div class="alert alert-warning">
+                        <iconify-icon icon="solar:danger-triangle-bold" class="fs-20 align-middle me-2"></iconify-icon>
+                        Aucune image disponible
+                    </div>
+                {% endif %}
+                
+                <div class="mt-4 d-flex gap-2 justify-content-center flex-wrap">
+                    <a href="{% url 'services:admin_service_list' %}" class="btn btn-outline-secondary">
+                        <iconify-icon icon="solar:arrow-left-bold" class="align-middle me-2"></iconify-icon>
+                        Retour à la liste
+                    </a>
+                    <a href="{% url 'services:reanalyze_service' service.pk %}" class="btn btn-primary">
+                        <iconify-icon icon="solar:refresh-bold" class="align-middle me-2"></iconify-icon>
+                        Relancer l'analyse
+                    </a>
+                    <button onclick="window.print()" class="btn btn-outline-primary">
+                        <iconify-icon icon="solar:printer-bold" class="align-middle me-2"></iconify-icon>
+                        Imprimer
+                    </button>
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-outline-primary">
+                        <iconify-icon icon="solar:pen-bold" class="align-middle me-2"></iconify-icon>
+                        Modifier le service
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Colonne droite : Résultats -->
+    <div class="col-lg-4">
+        <!-- Résumé -->
+        <div class="card">
+            <div class="card-header {% if analysis.detection.total_damages > 0 %}bg-danger-subtle{% else %}bg-success-subtle{% endif %}">
+                <h5 class="card-title mb-0 {% if analysis.detection.total_damages > 0 %}text-danger{% else %}text-success{% endif %}">
+                    <iconify-icon icon="solar:danger-circle-bold" class="align-middle me-2"></iconify-icon>
+                    Résumé
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="avatar-xl mx-auto mb-3" style="width: 100px; height: 100px; background: {% if analysis.detection.total_damages > 0 %}linear-gradient(135deg, #fee2e2 0%, #fecaca 100%){% else %}linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <h2 class="mb-0 {% if analysis.detection.total_damages > 0 %}text-danger{% else %}text-primary{% endif %}" style="font-weight: 800; font-size: 36px;">
+                            {{ analysis.detection.total_damages }}
+                        </h2>
+                    </div>
+                    <h5 class="mb-0">Dommage{{ analysis.detection.total_damages|pluralize }}</h5>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted text-uppercase">Confiance moyenne</small>
+                        <small class="fw-bold">{{ service.ai_confidence|floatformat:1 }}%</small>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar {% if service.ai_confidence >= 80 %}bg-primary{% elif service.ai_confidence >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ service.ai_confidence }}%"
+                             aria-valuenow="{{ service.ai_confidence }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Liste des dommages -->
+        {% if analysis.detection.damages %}
+        <div class="card">
+            <div class="card-header bg-danger-subtle">
+                <h5 class="card-title mb-0 text-danger">
+                    <iconify-icon icon="solar:checklist-bold" class="align-middle me-2"></iconify-icon>
+                    Dommages détectés
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for damage in analysis.detection.damages %}
+                <div class="damage-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong class="text-dark">{{ damage.type }}</strong>
+                        <span class="badge bg-primary">{{ damage.confidence|floatformat:1 }}%</span>
+                    </div>
+                    <small class="text-muted" style="font-size: 11px;">
+                        <iconify-icon icon="solar:map-point-outline" class="align-middle"></iconify-icon>
+                        Position : ({{ damage.bbox.x1 }}, {{ damage.bbox.y1 }}) → ({{ damage.bbox.x2 }}, {{ damage.bbox.y2 }})
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Estimation des coûts -->
+        {% if analysis.cost_estimation %}
+        <div class="card">
+            <div class="card-header bg-primary-subtle">
+                <h5 class="card-title mb-0 text-primary">
+                    <iconify-icon icon="solar:wallet-money-bold" class="align-middle me-2"></iconify-icon>
+                    Estimation des coûts
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for detail in analysis.cost_estimation.details %}
+                <div class="cost-detail">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted">{{ detail.type }}</span>
+                        <strong class="text-dark">{{ detail.cost_min }}-{{ detail.cost_max }} DT</strong>
+                    </div>
+                    {% if detail.justification %}
+                    <small class="text-muted d-block" style="font-size: 11px;">
+                        {{ detail.justification }}
+                    </small>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div class="total-cost">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-dark">Total estimé :</strong>
+                        <h4 class="mb-0 text-primary fw-bold">
+                            {{ analysis.cost_estimation.total_range }}
+                        </h4>
+                    </div>
+                </div>
+                
+                {% if analysis.cost_estimation.analysis %}
+                <div class="mt-3 p-3 bg-light rounded">
+                    <small class="text-muted d-block mb-2">
+                        <iconify-icon icon="solar:info-circle-bold" class="align-middle me-1"></iconify-icon>
+                        <strong>Analyse :</strong>
+                    </small>
+                    <small class="text-dark">{{ analysis.cost_estimation.analysis }}</small>
+                </div>
+                {% endif %}
+                
+                {% if analysis.cost_estimation.recommendations %}
+                <div class="mt-3 p-3 bg-warning-subtle rounded">
+                    <small class="text-dark d-block mb-2">
+                        <iconify-icon icon="solar:lightbulb-bolt-bold" class="align-middle me-1"></iconify-icon>
+                        <strong>Recommandations :</strong>
+                    </small>
+                    <ul class="mb-0 ps-3">
+                        {% for rec in analysis.cost_estimation.recommendations %}
+                        <li><small>{{ rec }}</small></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <iconify-icon icon="solar:shield-check-bold" class="align-middle"></iconify-icon>
+                        Estimation générée par IA
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+
+<!-- Cas où l'IA n'a pas analysé -->
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <div class="avatar-xl mx-auto mb-4" style="width: 100px; height: 100px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <iconify-icon icon="solar:danger-triangle-bold" class="fs-48 text-danger"></iconify-icon>
+                </div>
+                
+                <h4 class="mb-3">Aucune analyse IA disponible</h4>
+                <p class="text-muted mb-4">Ce service n'a pas encore été analysé par l'intelligence artificielle.</p>
+                
+                {% if service.image %}
+                <p class="text-muted mb-4">Une image est présente. Vous pouvez lancer l'analyse :</p>
+                <a href="{% url 'services:reanalyze_service' service.pk %}" class="btn btn-primary btn-lg">
+                    <iconify-icon icon="solar:cpu-bolt-bold" class="align-middle me-2"></iconify-icon>
+                    Lancer l'analyse IA
+                </a>
+                {% else %}
+                <p class="text-muted mb-4">Aucune image n'a été uploadée pour ce service.</p>
+                <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-primary btn-lg">
+                    <iconify-icon icon="solar:gallery-add-bold" class="align-middle me-2"></iconify-icon>
+                    Ajouter une image
+                </a>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <a href="{% url 'services:admin_service_list' %}" class="btn btn-outline-secondary">
+                        <iconify-icon icon="solar:arrow-left-bold" class="align-middle me-2"></iconify-icon>
+                        Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informations du service -->
+        <div class="card mt-4">
+            <div class="card-header bg-info-subtle">
+                <h5 class="card-title mb-0 text-info">
+                    <iconify-icon icon="solar:info-circle-bold" class="align-middle me-2"></iconify-icon>
+                    Informations du service
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">ID</small>
+                        <strong>#{{ service.id }}</strong>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Nom</small>
+                        <strong>{{ service.nom_service }}</strong>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block mb-1">Description</small>
+                        <p class="mb-0">{{ service.description }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Type</small>
+                        <strong>{{ service.type_service }}</strong>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Statut</small>
+                        <span class="badge {% if service.statut == 'Terminé' %}bg-success{% elif service.statut == 'En cours' %}bg-warning{% else %}bg-secondary{% endif %}">
+                            {{ service.statut }}
+                        </span>
+                    </div>
+                    {% if service.image %}
+                    <div class="col-12">
+                        <small class="text-muted d-block mb-2">Image uploadée</small>
+                        <img src="{{ service.image.url }}" class="img-fluid rounded" style="max-width: 300px;">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Style d'impression
+const style = document.createElement('style');
+style.textContent = `
+    @media print {
+        .btn, .card-header, .breadcrumb { display: none !important; }
+        .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

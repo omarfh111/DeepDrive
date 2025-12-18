@@ -1,32 +1,142 @@
-# advisor/views.py
-
 import json
 import traceback
+import stripe
+from datetime import timedelta
 
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.conf import settings
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
+from .models import AdvisorAccess
+from .guards import require_advisor_access
 
 from .services import analyze_image_and_chat
-from .vision.icons_api import detect_dashboard_icons  # ⚠️ important
-
-# (optionnel) tu peux laisser price_api utiliser predict_car_price
+from .vision.icons_api import detect_dashboard_icons
 from .vision.price_model import predict_car_price
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+@login_required
+def advisor_pay(request):
+    """
+    Pay page (UI shows TND, Stripe charges in STRIPE_CURRENCY).
+    IMPORTANT: this renders advisor/paywall.html (so no more missing pay.html).
+    """
+    return render(request, "advisor/paywall.html", {
+        "price_tnd": settings.ADVISOR_PRICE_TND,
+        "price_usd": getattr(settings, "ADVISOR_PRICE_USD_CENTS", 2500) / 100,
+        "currency": settings.STRIPE_CURRENCY.upper(),
+    })
+
+
+@login_required
+@require_POST
+def advisor_create_checkout(request):
+    """
+    Creates a Stripe Checkout Session for 1h advisor access.
+    Charges in STRIPE_CURRENCY (usd) and shows ADVISOR_PRICE_TND on UI.
+    """
+    currency = settings.STRIPE_CURRENCY  # "usd"
+    unit_amount = int(getattr(settings, "ADVISOR_PRICE_USD_CENTS", 2500))  # cents
+
+    success_url = request.build_absolute_uri(reverse("advisor_checkout_success"))
+    cancel_url = request.build_absolute_uri(reverse("advisor_pay"))
+
+    try:
+        session = stripe.checkout.Session.create(
+            mode="payment",
+            payment_method_types=["card"],
+            line_items=[{
+                "price_data": {
+                    "currency": currency,
+                    "product_data": {"name": "Conseiller auto IA — Accès 1 heure"},
+                    "unit_amount": unit_amount,
+                },
+                "quantity": 1,
+            }],
+            metadata={
+                "user_id": str(request.user.id),
+                "product": "advisor_1h",
+            },
+            success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=cancel_url,
+        )
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
+
+    return redirect(session.url, code=303)
+
+
+@login_required
+def advisor_checkout_success(request):
+    """
+    User returns here after payment. We verify session is paid, then grant 1h.
+    """
+    session_id = request.GET.get("session_id")
+    if not session_id:
+        return redirect("advisor_pay")
+
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        return redirect("advisor_pay")
+
+    if session.payment_status != "paid":
+        return redirect("advisor_pay")
+
+    # Create or extend access to 1 hour from now
+    now = timezone.now()
+    duration = timedelta(seconds=getattr(settings, "ADVISOR_DURATION_SECONDS", 3600))
+    new_until = now + duration
+
+    obj, created = AdvisorAccess.objects.get_or_create(
+        stripe_session_id=session_id,
+        defaults={"user": request.user, "active_until": new_until},
+    )
+    if not created:
+        # If the record exists, ensure it's at least 1h from now
+        if obj.active_until < new_until:
+            obj.active_until = new_until
+            obj.save(update_fields=["active_until"])
+
+    return redirect("advisor_ui")
+
+
+@login_required
+def advisor_ui(request):
+    """
+    Advisor UI is only accessible if the user has an active AdvisorAccess.
+    """
+    ok = AdvisorAccess.objects.filter(
+        user=request.user,
+        active_until__gt=timezone.now()
+    ).exists()
+
+    if not ok:
+        return redirect("advisor_pay")
+
+    return render(request, "advisor/advisor_chat.html")
 
 
 @csrf_exempt
+@require_advisor_access
 def advisor_chat(request):
     """
-    Vue de chat principale : vue extérieure + (optionnel) tableau de bord + (optionnel) compartiment moteur.
+    Chat endpoint used by advisor_chat.html JS (POST FormData).
     """
     if request.method != "POST":
         return JsonResponse({"error": "Méthode non autorisée (POST uniquement)."}, status=405)
 
-    image_file = request.FILES.get("image")  # vue principale
+    image_file = request.FILES.get("image")
     if image_file is None:
         return JsonResponse({"error": "image requise au premier appel"}, status=400)
 
-    # optionnels
     image_dashboard = request.FILES.get("image_dashboard")
     image_engine = request.FILES.get("image_engine")
 
@@ -43,7 +153,6 @@ def advisor_chat(request):
     except json.JSONDecodeError:
         extra = {}
 
-    # 1) voyants (si dashboard fourni)
     icons = None
     if image_dashboard:
         try:
@@ -52,7 +161,6 @@ def advisor_chat(request):
             traceback.print_exc()
             icons = None
 
-    # 2) service principal
     try:
         answer, damage_info, brand_info = analyze_image_and_chat(
             image_file=image_file,
@@ -66,10 +174,8 @@ def advisor_chat(request):
         traceback.print_exc()
         return JsonResponse({"error": f"Error(s) in Vision/LLM: {e}"}, status=500)
 
-    # prix IA (déjà calculé dans services.py)
     price_ai = extra.get("price_ai")
     price_ai_reason = extra.get("price_ai_reason")
-
     try:
         price_ai_rounded = int(round(float(price_ai))) if price_ai is not None else None
     except Exception:
@@ -81,18 +187,15 @@ def advisor_chat(request):
         "brand": brand_info,
         "icons": icons,
 
-        # km IA
         "mileage_ai": extra.get("mileage_ai"),
         "mileage_ai_confidence": extra.get("mileage_ai_confidence"),
 
-        # moteur
         "engine_parts": extra.get("engine_parts"),
         "engine_eval": extra.get("engine_eval"),
 
-        # prix
         "price_ai": price_ai,
         "price_ai_rounded": price_ai_rounded,
-        "price_ai_reason": price_ai_reason,   # ✅ IMPORTANT pour comprendre pourquoi "—"
+        "price_ai_reason": price_ai_reason,
     })
 
 
@@ -100,18 +203,10 @@ def advisor_chat(request):
 def price_api(request):
     """
     Endpoint PRIX uniquement (sans images).
-    POST JSON :
-    {
-      "annee": 2022,
-      "kilometrage": 79000,
-      "marque": "KIA",
-      "modele": "Rio 5p"
-    }
     """
     if request.method != "POST":
         return JsonResponse({"error": "Méthode non autorisée (POST uniquement)."}, status=405)
 
-    # Lecture JSON
     try:
         body = request.body.decode("utf-8") if request.body else "{}"
         data = json.loads(body) if body else {}
@@ -156,8 +251,7 @@ def price_api(request):
 @csrf_exempt
 def dashboard_icons_api(request):
     """
-    Endpoint séparé uniquement pour mettre à jour la carte 'Voyants tableau de bord'
-    quand l'utilisateur choisit la photo.
+    Endpoint séparé pour la détection de voyants (POST FormData image).
     """
     if request.method != "POST":
         return JsonResponse({"error": "Méthode non autorisée (POST uniquement)."}, status=405)
@@ -172,7 +266,3 @@ def dashboard_icons_api(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
-
-
-def advisor_ui(request):
-    return render(request, "advisor/advisor_chat.html")

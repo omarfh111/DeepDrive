@@ -5,6 +5,16 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 
+
+
+
+
+
+
+
+
+
+
 User = get_user_model()
 
 def indexMain(request):

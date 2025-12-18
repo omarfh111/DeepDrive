@@ -4,6 +4,7 @@ import io
 import base64
 from pathlib import Path
 from PIL import ImageEnhance, ImageFilter,Image
+import requests
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
@@ -17,6 +18,9 @@ import timm
 import json
 import joblib
 import pandas as pd
+
+
+
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
@@ -145,6 +149,8 @@ Your answer (digits only or UNREADABLE):"""
     return digits_only
 
 
+
+
 def extract_kilometrage_from_image(
     image_file, 
     score_thr: float = 0.4,
@@ -238,7 +244,8 @@ def extract_kilometrage_from_image(
             crop = enhancer.enhance(1.3)
             
             km_digits = call_openai_vision_for_km(crop)
-            
+     
+
             if km_digits and len(km_digits) >= 1: 
                 km_value = float(km_digits)
                 

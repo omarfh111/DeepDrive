@@ -108,6 +108,28 @@
                                         </span>
                                     </div>
 
+                                    <!-- Badge IA (si analysé) -->
+                                    {% if service.is_ai_predicted %}
+                                    <div style="position: absolute; 
+                                                top: 70px; 
+                                                right: 20px; 
+                                                padding: 8px 16px; 
+                                                border-radius: 50px; 
+                                                font-size: 12px; 
+                                                font-weight: 700; 
+                                                background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); 
+                                                color: white; 
+                                                display: flex; 
+                                                align-items: center; 
+                                                gap: 6px; 
+                                                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+                                                backdrop-filter: blur(10px);
+                                                animation: pulse 2s infinite;">
+                                        <i class="fa-solid fa-brain"></i>
+                                        <span>IA</span>
+                                    </div>
+                                    {% endif %}
+
                                     <!-- Overlay hover -->
                                     <div class="hover-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%); opacity: 0; transition: opacity 0.4s;"></div>
                                 </div>
@@ -164,6 +186,86 @@
                                         </button>
                                     </div>
                                     -->
+                                                                        <!-- Boutons d'action -->
+                                    <div class="action-buttons" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                                
+                                <!-- CAS 1 : Service déjà analysé par l'IA -->
+                                {% if service.is_ai_predicted %}
+                                <a href="/damage-analysis/{{ service.id }}/" 
+                                style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); 
+                                        color: white; 
+                                        text-decoration: none; 
+                                        display: inline-flex; 
+                                        align-items: center; 
+                                        gap: 8px; 
+                                        padding: 12px 24px; 
+                                        border-radius: 10px; 
+                                        font-weight: 600; 
+                                        font-size: 14px;
+                                        transition: all 0.3s; 
+                                        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+                                        border: none;
+                                        cursor: pointer;"
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139, 92, 246, 0.5)';"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139, 92, 246, 0.3)';">
+                                    <i class="fa-solid fa-brain"></i> Analyse IA
+                                </a>
+                                
+                                <!-- CAS 2 : Service avec image mais PAS ENCORE analysé -->
+                                {% elif service.image %}
+                                <a href="/reanalyze/{{ service.id }}/" 
+                                style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+                                        color: white; 
+                                        text-decoration: none; 
+                                        display: inline-flex; 
+                                        align-items: center; 
+                                        gap: 8px; 
+                                        padding: 12px 24px; 
+                                        border-radius: 10px; 
+                                        font-weight: 600; 
+                                        font-size: 14px;
+                                        transition: all 0.3s; 
+                                        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+                                        border: none;
+                                        cursor: pointer;"
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(245, 158, 11, 0.5)';"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(245, 158, 11, 0.3)';">
+                                    <i class="fa-solid fa-robot"></i> Analyser maintenant
+                                </a>
+                                {% endif %}
+                                
+                                <!-- Bouton Modifier -->
+                                <button onclick="openEditModal({{ service.id }})" class="action-btn edit-btn"
+                                        style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+                                            color: white; 
+                                            border: none; 
+                                            padding: 12px 24px; 
+                                            border-radius: 10px; 
+                                            font-weight: 600; 
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            transition: all 0.3s;
+                                            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                                    <i class="fa-solid fa-pen-to-square"></i> Modifier
+                                </button>
+                                
+                                <!-- Bouton Supprimer -->
+                                <button onclick="openDeleteModal({{ service.id }}, '{{ service.nom_service }}')" class="action-btn delete-btn"
+                                        style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+                                            color: white; 
+                                            border: none; 
+                                            padding: 12px 24px; 
+                                            border-radius: 10px; 
+                                            font-weight: 600; 
+                                            font-size: 14px;
+                                            cursor: pointer;
+                                            transition: all 0.3s;
+                                            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
+                                    <i class="fa-solid fa-trash-can"></i> Supprimer
+                                </button>
+                            </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -235,7 +337,8 @@
                     </div>
                     {% endif %}
 
-                    <form method="post" action="{% url 'services:service_list' %}" enctype="multipart/form-data" id="serviceForm" novalidate>
+                    <!-- <form method="post" action="{% url 'services:service_list' %}" enctype="multipart/form-data" id="serviceForm" novalidate> -->
+                    <form method="post" action="{% url 'services:service_create_ai' %}" enctype="multipart/form-data" id="serviceForm" novalidate>
                         {% csrf_token %}
                         <div class="row g-4">
                             
@@ -455,6 +558,10 @@
                             <button type="button" onclick="closeEditModal()" class="rts-btn btn-border" style="min-width: 180px; padding: 15px;">
                                 <i class="fa-solid fa-xmark"></i> Annuler
                             </button>
+
+
+
+                            
                             <button type="submit" class="rts-btn btn-primary radius-small" style="min-width: 180px; padding: 15px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);">
                                 <i class="fa-solid fa-save"></i> Enregistrer
                             </button>

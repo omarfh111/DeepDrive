@@ -150,7 +150,22 @@
                 </div>
 
                 <!-- Actions -->
+                <!-- <div class="d-flex gap-2">
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-sm btn-soft-primary flex-fill">
+                        <iconify-icon icon="solar:pen-bold" class="align-middle"></iconify-icon>
+                        Modifier
+                    </a>
+                    <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn btn-sm btn-soft-danger">
+                        <iconify-icon icon="solar:trash-bin-2-bold"></iconify-icon>
+                    </a>
+                </div> -->
+                <!-- Actions -->
                 <div class="d-flex gap-2">
+                    {% if service.is_ai_predicted %}
+                    <a href="{% url 'services:admin_damage_analysis' service.pk %}" class="btn btn-sm btn-soft-info" title="Analyse IA">
+                        <iconify-icon icon="solar:cpu-bolt-bold"></iconify-icon>
+                    </a>
+                    {% endif %}
                     <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-sm btn-soft-primary flex-fill">
                         <iconify-icon icon="solar:pen-bold" class="align-middle"></iconify-icon>
                         Modifier
@@ -178,6 +193,26 @@
     </div>
     {% endfor %}
 </div>
+<div class="flex-grow-1">
+    <h5 class="mb-1">{{ service.nom_service }}</h5>
+    <div class="d-flex gap-2">
+        <span class="badge {% if service.statut == 'Terminé' %}bg-success-subtle text-success{% elif service.statut == 'En cours' %}bg-warning-subtle text-warning{% elif service.statut == 'En attente' %}bg-secondary-subtle text-secondary{% else %}bg-danger-subtle text-danger{% endif %}">
+            {{ service.statut }}
+        </span>
+        {% if service.is_ai_predicted %}
+        <span class="badge bg-info-subtle text-info">
+            <iconify-icon icon="solar:cpu-bolt-outline" class="align-middle"></iconify-icon>
+            IA
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
 
 <!-- Pagination -->
 {% if page_obj.has_other_pages %}

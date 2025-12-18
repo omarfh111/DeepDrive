@@ -160,8 +160,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STRIPE_SECRET_KEY = "sk_test_51SRag7DU2Akojx7VAI9ZbOLJTHu7KkXUaGgLkLiJtm2FcYrz8HrqbUv1iq20yYCg2hjMm6FSnnTkJBYNN6wriEUo00wYLB6jqX"
 STRIPE_PUBLIC_KEY = "pk_test_51SRag7DU2Akojx7VyG0tPGiKb3JkfS64NmhmArV2ad89sEigE05Ji2JlEXKQGojSmabZDIhp5ZwmIvq2y6wdmh8w007kZLLNmn"
 STRIPE_WEBHOOK_SECRET = ""  # optional until you set webhook
-STRIPE_CURRENCY = "usd"  # Stripe doesn't support TND in Checkout; use usd/eur for tests
-
+STRIPE_CURRENCY = "usd"  
+ADVISOR_PRICE_TND=80
+ADVISOR_DURATION_SECONDS = 3600
+ADVISOR_PRICE_USD_CENTS = 2500
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
 

@@ -13,8 +13,10 @@ from reportlab.pdfgen import canvas
 from datetime import datetime
 from .models import Service
 from .forms import ServiceForm , AdminServiceForm 
-
- 
+from django.contrib.auth.decorators import login_required
+from .ml.damage_detector import DamageDetector
+import os
+from services.ml.cost_estimator import CostEstimator
  
 def service_list(request):
     """Vue principale frontend"""
@@ -289,7 +291,6 @@ def export_services_pdf(request):
     # Création du tableau
     table = Table(data, colWidths=[5*cm, 3*cm, 3*cm, 3*cm, 3*cm])
     
-    # Style du tableau
     table.setStyle(TableStyle([
         # En-tête
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#DC2626')),
@@ -329,3 +330,165 @@ def export_services_pdf(request):
     doc.build(elements)
     
     return response
+
+@login_required
+def service_create_with_ai(request):
+    """Créer un service avec analyse IA"""
+    
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.client = request.user
+            service.save()
+            
+            # Si une image est uploadée, analyser avec l'IA
+            if service.image:
+                try:
+                    detector = DamageDetector()
+                    
+                    image_path = service.image.path
+                    results = detector.detect(image_path, conf_threshold=0.25)
+                    
+                    annotated_filename = f"annotated_{os.path.basename(image_path)}"
+                    annotated_path = os.path.join(
+                        'media',
+                        'damage_analysis',
+                        annotated_filename
+                    )
+                    
+                    os.makedirs(os.path.dirname(annotated_path), exist_ok=True)
+                    
+                    detector.annotate_image(
+                        image_path,
+                        annotated_path,
+                        detection_results=results
+                    )
+                    
+                    cost_estimation = detector.estimate_cost(results['damages'])
+                    
+                    service.ai_analysis = {
+                        'detection': results,
+                        'cost_estimation': cost_estimation
+                    }
+                    service.annotated_image = f"damage_analysis/{annotated_filename}"
+                    service.ai_confidence = results['avg_confidence']
+                    service.is_ai_predicted = True
+                    service.save()
+                    
+                    
+                    
+                    return redirect('services:damage_analysis', pk=service.pk)
+                    
+                except Exception as e:
+                    messages.error(request, f"Erreur IA : {str(e)}")
+                    return redirect('services:service_list')
+            else:
+                messages.success(request, 'Service créé avec succès !')
+                return redirect('services:service_list')
+    else:
+        form = ServiceForm()
+    
+    return render(request, 'service/service.html', {'form': form})
+
+
+@login_required
+def damage_analysis(request, pk):
+    """Affiche les résultats de l'analyse IA"""
+    
+    service = get_object_or_404(Service, pk=pk)
+    if not request.user.is_staff and service.client != request.user:
+        messages.error(request, "Vous n'avez pas accès à ce service.")
+        return redirect('services:service_list')
+    
+    if not service.is_ai_predicted:
+        messages.warning(request, 'Ce service n\'a pas été analysé par l\'IA.')
+        return redirect('service_detail', pk=pk)
+    
+    context = {
+        'service': service,
+        'analysis': service.ai_analysis,
+    }
+    
+    return render(request, 'service/damage_analysis.html', context)
+
+
+@login_required
+def reanalyze_service(request, pk):
+    """Relancer l'analyse IA"""
+    
+    service = get_object_or_404(Service, pk=pk)
+    
+    # Vérifier que l'utilisateur a le droit
+    if not request.user.is_staff and service.client != request.user:
+        messages.error(request, "Vous n'avez pas accès à ce service.")
+        return redirect('services:service_list')
+    
+    if not service.image:
+        messages.error(request, 'Aucune image à analyser.')
+        return redirect('services:damage_analysis', pk=pk)  # ← CHANGE ICI
+    
+    try:
+        detector = DamageDetector()
+        
+        image_path = service.image.path
+        results = detector.detect(image_path, conf_threshold=0.25)
+        
+        annotated_filename = f"annotated_{os.path.basename(image_path)}"
+        annotated_path = os.path.join(
+            'media',
+            'damage_analysis',
+            annotated_filename
+        )
+        
+        os.makedirs(os.path.dirname(annotated_path), exist_ok=True)
+        
+        detector.annotate_image(
+            image_path,
+            annotated_path,
+            detection_results=results
+        )
+        
+        cost_estimation = detector.estimate_cost(results['damages'])
+        
+        service.ai_analysis = {
+            'detection': results,
+            'cost_estimation': cost_estimation
+        }
+        service.annotated_image = f"damage_analysis/{annotated_filename}"
+        service.ai_confidence = results['avg_confidence']
+        service.is_ai_predicted = True
+        service.save()
+        
+        messages.success(
+            request,
+            f"Analyse mise à jour ! {results['total_damages']} dommage(s)."
+        )
+        
+        return redirect('services:damage_analysis', pk=service.pk)
+        
+    except Exception as e:
+        messages.error(request, f"Erreur : {str(e)}")
+        return redirect('services:damage_analysis', pk=pk) 
+    
+
+@staff_member_required
+def admin_damage_analysis(request, pk):
+    """
+    Affiche les résultats de l'analyse IA pour l'admin (backoffice)
+    """
+    service = get_object_or_404(Service, pk=pk)
+    
+    # Extraire les données d'analyse
+    if service.is_ai_predicted and service.ai_analysis:
+        analysis = service.ai_analysis
+    else:
+        analysis = None
+    
+    context = {
+        'service': service,
+        'analysis': analysis
+    }
+    
+    return render(request, 'service/admin_damage_analysis.html', context)

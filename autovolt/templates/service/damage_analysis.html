@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        <!-- Header -->
+        {% include 'partials/header/header-three.html' %}
+        
+        <!-- Breadcrumb -->
+        {% with class="service" current="Analyse IA" title="Analyse IA" %}
+            {% include 'partials/elements/breadcrumb.html' %}   
+        {% endwith %}
+
+        <!-- Messages avec animation -->
+        {% if messages %}
+        <div class="container" style="margin-bottom: 40px; margin-top: 40px;">
+            {% for message in messages %}
+            <div class="alert-modern alert-{{ message.tags }} wow fadeInDown" data-wow-delay=".2s" style="display: flex; align-items: center; gap: 20px; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-left: 5px solid; animation: slideInDown 0.5s ease;">
+                <div class="alert-icon" style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                    <i class="fa-solid {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                </div>
+                <div style="flex: 1;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 16px;">{% if message.tags == 'success' %}Succès !{% else %}Attention !{% endif %}</strong>
+                    <span style="font-size: 14px;">{{ message }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background: rgba(0,0,0,0.1); border: none; color: inherit; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.3s; font-size: 18px;">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if service.is_ai_predicted %}
+        <!-- Section Analyse IA -->
+        <section class="rts-service-area rts-section-gap" style="background: #f8f9fa;">
+            <div class="container">
+                <!-- En-tête de la section -->
+                <div class="section-title-area2 text-center mb-5 wow fadeInUp">
+                    <p class="sub-title" style="color: #DC2626; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Intelligence Artificielle</p>
+                    <h2 class="section-title" style="font-size: 42px; font-weight: 800; color: #1a1a1a;">
+                        Analyse IA - <span style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Service #{{ service.id }}</span>
+                    </h2>
+                    <p style="color: #6b7280; font-size: 17px; max-width: 700px; margin: 20px auto 0;">
+                        Détection automatique des dommages avec estimation des coûts
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Colonne gauche : Image -->
+                    <div class="col-lg-8">
+                        <div class="card wow fadeInLeft" style="background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 1px solid #f0f0f0;">
+                            <div class="card-header" style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); padding: 25px 30px;">
+                                <h5 class="mb-0" style="color: white; font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 12px;">
+                                    <i class="fa-solid fa-image"></i> Photo analysée par l'IA
+                                </h5>
+                            </div>
+                            <div class="card-body text-center" style="padding: 40px;">
+                                {% if service.annotated_image %}
+                                    <img src="{{ service.annotated_image.url }}" 
+                                         class="img-fluid rounded" 
+                                         alt="Image annotée"
+                                         style="max-height: 600px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border-radius: 15px;">
+                                {% elif service.image %}
+                                    <img src="{{ service.image.url }}" 
+                                         class="img-fluid rounded" 
+                                         alt="Image originale"
+                                         style="max-height: 600px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border-radius: 15px;">
+                                {% else %}
+                                    <div class="alert alert-warning" style="border-radius: 12px; padding: 25px;">
+                                        <i class="fa-solid fa-exclamation-triangle" style="font-size: 24px;"></i>
+                                        <p style="margin: 10px 0 0; font-weight: 600;">Aucune image disponible</p>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="mt-4" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                                    <a href="javascript:history.back()" 
+                                       class="btn" 
+                                       style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); 
+                                              color: white; 
+                                              padding: 14px 32px; 
+                                              border-radius: 12px; 
+                                              font-weight: 600; 
+                                              font-size: 15px;
+                                              display: inline-flex;
+                                              align-items: center;
+                                              gap: 10px;
+                                              text-decoration: none;
+                                              transition: all 0.3s;
+                                              box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);">
+                                        <i class="fa-solid fa-arrow-left"></i> Retour
+                                    </a>
+                                    <a href="/reanalyze/{{ service.pk }}/" 
+                                       class="btn"
+                                       style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+                                              color: white; 
+                                              padding: 14px 32px; 
+                                              border-radius: 12px; 
+                                              font-weight: 600; 
+                                              font-size: 15px;
+                                              display: inline-flex;
+                                              align-items: center;
+                                              gap: 10px;
+                                              text-decoration: none;
+                                              transition: all 0.3s;
+                                              box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                                        <i class="fa-solid fa-sync-alt"></i> Relancer l'analyse
+                                    </a>
+                                    <button onclick="window.print()" 
+                                            class="btn"
+                                            style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); 
+                                                   color: white; 
+                                                   padding: 14px 32px; 
+                                                   border-radius: 12px; 
+                                                   font-weight: 600; 
+                                                   font-size: 15px;
+                                                   border: none;
+                                                   cursor: pointer;
+                                                   display: inline-flex;
+                                                   align-items: center;
+                                                   gap: 10px;
+                                                   transition: all 0.3s;
+                                                   box-shadow: 0 4px 15px rgba(55, 65, 81, 0.3);">
+                                        <i class="fa-solid fa-print"></i> Imprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Colonne droite : Résultats -->
+                    <div class="col-lg-4">
+                        <!-- Résumé -->
+                        <div class="card shadow mb-4 wow fadeInRight" style="border-radius: 20px; overflow: hidden; border: 1px solid #f0f0f0;">
+                            <div class="card-header" style="background: {% if analysis.detection.total_damages > 0 %}linear-gradient(135deg, #ef4444 0%, #dc2626 100%){% else %}linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%){% endif %}; padding: 20px 25px;">
+                                <h5 class="mb-0" style="color: white; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-exclamation-circle"></i> Résumé
+                                </h5>
+                            </div>
+                            <div class="card-body" style="padding: 30px;">
+                                <div style="text-align: center; margin-bottom: 25px;">
+                                    <div style="width: 100px; height: 100px; border-radius: 50%; background: {% if analysis.detection.total_damages > 0 %}linear-gradient(135deg, #fee2e2 0%, #fecaca 100%){% else %}linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%){% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                                        <h2 style="margin: 0; color: {% if analysis.detection.total_damages > 0 %}#dc2626{% else %}#1e40af{% endif %}; font-weight: 800; font-size: 36px;">
+                                            {{ analysis.detection.total_damages }}
+                                        </h2>
+                                    </div>
+                                    <p style="font-size: 18px; font-weight: 600; color: #1a1a1a; margin: 0;">
+                                        Dommage{{ analysis.detection.total_damages|pluralize }}
+                                    </p>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <strong style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Confiance moyenne :</strong>
+                                    <div class="progress mt-2" style="height: 12px; border-radius: 10px; background: #e5e7eb;">
+                                        <div class="progress-bar" 
+                                             style="background: {% if service.ai_confidence >= 80 %}linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%){% elif service.ai_confidence >= 60 %}linear-gradient(90deg, #f59e0b 0%, #d97706 100%){% else %}linear-gradient(90deg, #ef4444 0%, #dc2626 100%){% endif %}; border-radius: 10px; font-weight: 700; font-size: 11px;"
+                                             role="progressbar"
+                                             aria-valuenow="{{ service.ai_confidence }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100"
+                                             style="width: {{ service.ai_confidence }}%">
+                                            {{ service.ai_confidence|floatformat:1 }}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Liste des dommages -->
+                        {% if analysis.detection.damages %}
+                        <div class="card shadow mb-4 wow fadeInRight" data-wow-delay=".1s" style="border-radius: 20px; overflow: hidden; border: 1px solid #f0f0f0;">
+                            <div class="card-header" style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); padding: 20px 25px;">
+                                <h5 class="mb-0" style="color: white; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-list"></i> Dommages détectés
+                                </h5>
+                            </div>
+                            <div class="card-body" style="padding: 25px;">
+                                {% for damage in analysis.detection.damages %}
+                                <div class="mb-3 p-3" style="border-left: 4px solid #ef4444; background: #fef2f2; border-radius: 8px;">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong style="color: #1a1a1a; font-size: 15px;">{{ damage.type }}</strong>
+                                        <span style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+                                            {{ damage.confidence|floatformat:1 }}%
+                                        </span>
+                                    </div>
+                                    <small style="color: #6b7280; font-size: 11px;">
+                                        <i class="fa-solid fa-location-dot"></i> 
+                                        Position : ({{ damage.bbox.x1 }}, {{ damage.bbox.y1 }}) → ({{ damage.bbox.x2 }}, {{ damage.bbox.y2 }})
+                                    </small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Estimation des coûts -->
+                        {% if analysis.cost_estimation %}
+                        <div class="card shadow mb-4 wow fadeInRight" data-wow-delay=".2s" style="border-radius: 20px; overflow: hidden; border: 1px solid #f0f0f0;">
+                            <div class="card-header" style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); padding: 20px 25px;">
+                                <h5 class="mb-0" style="color: white; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-money-bill-wave"></i> Estimation des coûts
+                                </h5>
+                            </div>
+                            <div class="card-body" style="padding: 25px;">
+                                {% for detail in analysis.cost_estimation.details %}
+                                <div class="d-flex justify-content-between mb-3 pb-3" style="border-bottom: 1px solid #e5e7eb;">
+                                    <span style="color: #6b7280; font-size: 14px;">{{ detail.type }}</span>
+                                    <strong style="color: #1a1a1a; font-size: 14px;">{{ detail.cost_range }}</strong>
+                                </div>
+                                {% endfor %}
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-4 pt-3" style="border-top: 2px solid #1e40af;">
+                                    <strong style="color: #1a1a1a; font-size: 16px;">Total estimé :</strong>
+                                    <h4 class="mb-0" style="color: #1e40af; font-weight: 800; font-size: 24px;">
+                                        {{ analysis.cost_estimation.total_range }}
+                                    </h4>
+                                </div>
+                                
+                                <small class="text-muted d-block mt-3" style="font-size: 11px; color: #9ca3af;">
+                                    <i class="fa-solid fa-info-circle"></i> * Estimation basée sur l'analyse IA
+                                </small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% else %}
+        
+        <!-- Cas où l'IA n'a pas analysé -->
+        <section class="rts-service-area rts-section-gap">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="alert wow fadeInUp" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 5px solid #DC2626; padding: 30px; border-radius: 15px; box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);">
+                            <div style="display: flex; align-items: start; gap: 20px;">
+                                <div style="width: 60px; height: 60px; background: #DC2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i class="fa-solid fa-exclamation-triangle" style="color: white; font-size: 28px;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4 style="color: #991b1b; font-weight: 700; margin-bottom: 15px;">
+                                        <strong>Attention !</strong> Ce service n'a pas encore été analysé par l'IA.
+                                    </h4>
+                                    
+                                    {% if service.image %}
+                                    <p style="color: #7f1d1d; margin-bottom: 20px;">Une image est présente. Vous pouvez lancer l'analyse :</p>
+                                    <a href="/reanalyze/{{ service.pk }}/" 
+                                       class="btn"
+                                       style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); 
+                                              color: white; 
+                                              padding: 14px 28px; 
+                                              border-radius: 12px; 
+                                              font-weight: 600; 
+                                              display: inline-flex;
+                                              align-items: center;
+                                              gap: 10px;
+                                              text-decoration: none;
+                                              transition: all 0.3s;
+                                              box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">
+                                        <i class="fa-solid fa-robot"></i> Lancer l'analyse IA
+                                    </a>
+                                    {% else %}
+                                    <p style="color: #7f1d1d; margin-bottom: 0;">Aucune image n'a été uploadée pour ce service.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Informations du service -->
+                        <div class="card shadow mt-4 wow fadeInUp" data-wow-delay=".2s" style="border-radius: 20px; overflow: hidden; border: 1px solid #f0f0f0;">
+                            <div class="card-header" style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); padding: 25px 30px;">
+                                <h5 class="mb-0" style="color: white; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-info-circle"></i> Informations du service
+                                </h5>
+                            </div>
+                            <div class="card-body" style="padding: 30px;">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px;">ID</small>
+                                            <strong style="color: #1a1a1a; font-size: 16px;">#{{ service.id }}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px;">Nom</small>
+                                            <strong style="color: #1a1a1a; font-size: 16px;">{{ service.nom_service }}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px;">Description</small>
+                                            <p style="color: #1a1a1a; margin: 0;">{{ service.description }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px;">Type</small>
+                                            <strong style="color: #1a1a1a; font-size: 16px;">{{ service.type_service }}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px;">Analysé par IA</small>
+                                            {% if service.is_ai_predicted %}
+                                                <span class="badge" style="background: #1e40af; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px;">Oui</span>
+                                            {% else %}
+                                                <span class="badge" style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px;">Non</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if service.image %}
+                                    <div class="col-12">
+                                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                                            <small style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 10px;">Image uploadée</small>
+                                            <img src="{{ service.image.url }}" 
+                                                 class="img-fluid rounded" 
+                                                 style="max-width: 300px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="javascript:history.back()" 
+                                       class="btn btn-block"
+                                       style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); 
+                                              color: white; 
+                                              padding: 14px 28px; 
+                                              border-radius: 12px; 
+                                              font-weight: 600; 
+                                              display: inline-flex;
+                                              align-items: center;
+                                              justify-content: center;
+                                              gap: 10px;
+                                              text-decoration: none;
+                                              width: 100%;
+                                              transition: all 0.3s;
+                                              box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);">
+                                        <i class="fa-solid fa-arrow-left"></i> Retour
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        {% endif %}
+
+        {% include 'partials/footer/footer-three.html' %}
+    </div>
+</div>
+
+<style>
+    @media print {
+        .btn, .card-header, .rts-wrapper-inner > *:not(section) { 
+            display: none !important; 
+        }
+        .container { 
+            max-width: 100% !important; 
+        }
+    }
+    
+    /* Animations des boutons */
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* Animation pour les cartes */
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.15) !important;
+    }
+    
+    .service-card-premium:hover .hover-overlay {
+        opacity: 1;
+    }
+    
+    .service-card-premium:hover img {
+        transform: scale(1.05);
+    }
+    
+    @keyframes pulse {
+        0%, 100% { 
+            transform: scale(1); 
+            opacity: 1;
+        }
+        50% { 
+            transform: scale(1.05); 
+            opacity: 0.9;
+        }
+    }
+</style>
+{% endblock %}

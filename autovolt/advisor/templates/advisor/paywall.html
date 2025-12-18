@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Accès Conseiller</title></head>
+<body style="font-family:system-ui;background:#0b1220;color:#e5e7eb;padding:40px;">
+  <h1>Conseiller auto IA</h1>
+  <p>Accès 1 heure : <b>{{ price_tnd }} TND</b> ({{ price_usd }} {{ currency }})</p>
+  <form action="{% url 'advisor_create_checkout' %}" method="post">
+    {% csrf_token %}
+    <button style="padding:12px 18px;border-radius:10px;border:0;background:#22c55e;font-weight:700;">
+      Payer {{ price_tnd }} TND
+    </button>
+  </form>
+</body>
+</html>
