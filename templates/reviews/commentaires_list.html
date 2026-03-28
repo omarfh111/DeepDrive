@@ -5,37 +5,393 @@
 {% block page_title %}Commentaires{% endblock %}
 {% block breadcrumb_leaf %}Commentaires{% endblock %}
 
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ===== SAME PRO STYLE (users list) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:25px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626;
+  border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:800; font-size:28px;
+  margin:0 0 8px 0; letter-spacing:-.5px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.8);
+  font-size:14px; margin:0; font-weight:500;
+}
+.header-stats-pro{display:flex; gap:20px;}
+.stat-box-pro{
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(10px);
+  padding:18px 28px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);
+  transition:.3s;
+}
+.stat-box-pro:hover{transform:translateY(-3px); border-color: rgba(220,38,38,.5);}
+.stat-box-pro .number{
+  color:#DC2626; font-size:32px; font-weight:800; line-height:1;
+  margin-bottom:6px;
+}
+.stat-box-pro .label{
+  color: rgba(255,255,255,.85);
+  font-size:12px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.5px;
+}
+
+/* CARD */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:28px 35px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-header-content-pro{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:20px;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:15px; margin:0;
+}
+.card-title-icon-pro{
+  width:50px; height:50px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  transition:.3s;
+}
+.card-title-icon-pro:hover{transform:scale(1.05);}
+.card-title-icon-pro i{font-size:22px; color:#fff;}
+.card-title-pro h5{color:#1a1a1a; font-weight:800; font-size:20px; margin:0;}
+
+/* FILTER FORM (search + select + button) */
+.search-box-pro{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+.search-input-wrapper-pro{position:relative;}
+.search-input-wrapper-pro i{
+  position:absolute; left:16px; top:50%;
+  transform: translateY(-50%);
+  color:#9ca3af; font-size:16px;
+}
+.search-input-pro{
+  width:340px;
+  padding:13px 18px 13px 48px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  font-size:14px;
+  transition:.3s;
+  background:#f8f9fa;
+  font-weight:500;
+}
+.search-input-pro:focus{
+  border-color:#DC2626;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.1);
+  background:#fff;
+}
+.select-pro{
+  min-width:190px;
+  padding:13px 14px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  font-size:14px;
+  background:#f8f9fa;
+  font-weight:600;
+  transition:.3s;
+}
+.select-pro:focus{
+  border-color:#DC2626;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.1);
+  background:#fff;
+}
+.btn-search-pro{
+  padding:13px 26px;
+  background:#DC2626;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14px;
+  transition:.3s;
+  display:flex; align-items:center; gap:8px;
+}
+.btn-search-pro:hover{
+  background:#991B1B;
+  transform: translateY(-2px);
+  box-shadow:0 6px 20px rgba(220,38,38,.3);
+}
+
+/* TABLE */
+.table-container-pro{width:100%;}
+.table-pro{width:100%; margin:0;}
+.table-pro thead{
+  background:#f8f9fa;
+  border-bottom:2px solid #e5e7eb;
+}
+.table-pro thead th{
+  padding:16px 12px;
+  font-weight:800;
+  font-size:11px;
+  color:#1a1a1a;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  border:none;
+  white-space:nowrap;
+}
+.table-pro thead th i{color:#DC2626; margin-right:6px; font-size:12px;}
+.table-pro tbody tr{
+  border-bottom:1px solid #f3f4f6;
+  transition:.3s;
+}
+.table-pro tbody tr:hover{
+  background:#fef3f2;
+  box-shadow: inset 3px 0 0 #DC2626;
+}
+.table-pro tbody td{
+  padding:14px 12px;
+  font-size:12px;
+  color:#4b5563;
+  font-weight:500;
+  vertical-align:middle;
+  border:none;
+}
+
+/* BADGES */
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+.badge-approved{
+  background:#f3f4f6;
+  color:#1a1a1a;
+  border:1px solid #d1d5db;
+}
+.badge-pending{
+  background:#fef3c7;
+  color:#92400e;
+  border:1px solid #f59e0b;
+}
+
+/* REVIEW LINK */
+.review-link-pro{
+  font-weight:700;
+  color:#111827;
+  text-decoration:none;
+  border-bottom:1px dashed rgba(220,38,38,.35);
+}
+.review-link-pro:hover{color:#DC2626; border-bottom-color:#DC2626;}
+
+/* ACTION BUTTONS */
+.action-buttons-pro{display:flex; gap:8px; justify-content:flex-end;}
+.btn-action-pro{
+  width:38px; height:38px;
+  border-radius:10px;
+  border:none;
+  display:flex; align-items:center; justify-content:center;
+  transition:.3s;
+  cursor:pointer;
+}
+.btn-view-pro{
+  background:#f3f4f6;
+  color:#111827;
+  border:1px solid #e5e7eb;
+}
+.btn-view-pro:hover{
+  background:#111827;
+  color:#fff;
+  transform: translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.btn-action-pro i{font-size:15px;}
+
+/* EMPTY */
+.empty-state-pro{
+  padding:80px 40px;
+  text-align:center;
+}
+.empty-state-icon-pro{
+  width:100px; height:100px;
+  margin:0 auto 25px;
+  background:#f3f4f6;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.empty-state-icon-pro i{font-size:45px; color:#9ca3af;}
+.empty-state-pro h4{
+  color:#1a1a1a;
+  font-weight:800;
+  font-size:22px;
+  margin-bottom:12px;
+}
+.empty-state-pro p{
+  color:#6b7280;
+  font-size:14px;
+  margin:0;
+  font-weight:500;
+}
+
+/* PAGINATION */
+.pagination-pro .page-link{
+  border-radius:12px !important;
+  border:2px solid #e5e7eb;
+  color:#111827;
+  font-weight:800;
+}
+.pagination-pro .page-link:hover{
+  border-color:#DC2626;
+  color:#DC2626;
+}
+.pagination-pro .page-item.active .page-link{
+  background:#DC2626;
+  border-color:#DC2626;
+  color:#fff;
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px;height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .header-stats-pro{width:100%;}
+  .stat-box-pro{flex:1;text-align:center;padding:15px 20px;}
+  .search-input-pro{width:100%;}
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row">
-  <div class="col-xl-12">
-    <div class="card overflow-hidden">
-      <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <h5 class="card-title text-dark mb-0">Liste des commentaires</h5>
-          <form class="d-flex" method="get">
-            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (texte, user, review)">
-            <select class="form-select form-select-sm me-2" name="status">
-              <option value="">— Statut (tous) —</option>
-              <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approuvés</option>
-              <option value="pending"  {% if status == 'pending'  %}selected{% endif %}>En attente</option>
-            </select>
-            <button class="btn btn-sm btn-primary">Filtrer</button>
-          </form>
+<div class="container-fluid">
+
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Gestion des commentaires</h2>
+          <p>Parcourir, filtrer et consulter les commentaires liés aux avis</p>
         </div>
       </div>
 
-      <div class="card-body p-0">
-        <div class="table-responsive table-centered mt-0">
-          <table class="table table-centered table-nowrap table-hover mb-0">
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">
+            {% with rows=page_obj|default:commentaires %}
+              {{ rows|length|default:0 }}
+            {% endwith %}
+          </div>
+          <div class="label">Affichés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Main Card ===== -->
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-list"></i>
+              </div>
+              <h5>Liste des commentaires</h5>
+            </div>
+
+            <form class="search-box-pro" method="get" id="comment-filter-form">
+              <div class="search-input-wrapper-pro">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  id="comment-filter-input"
+                  class="search-input-pro"
+                  type="search"
+                  name="q"
+                  value="{{ q }}"
+                  placeholder="Rechercher (texte, user, review)..."
+                >
+              </div>
+
+              <select class="select-pro" name="status" id="comment-status-select">
+                <option value="">— Statut (tous) —</option>
+                <option value="approved" {% if status == 'approved' %}selected{% endif %}>Approuvés</option>
+                <option value="pending"  {% if status == 'pending'  %}selected{% endif %}>En attente</option>
+              </select>
+
+              <button class="btn-search-pro" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                <span>Filtrer</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="table-container-pro">
+          <table class="table-pro">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Commentaire</th>
-                <th>Utilisateur</th>
-                <th>Avis</th>
-                <th>Date</th>
-                <th>Statut</th>
-                <th class="text-end">Actions</th>
+                <th class="ps-3"><i class="fa-solid fa-hashtag"></i> ID</th>
+                <th><i class="fa-solid fa-comment-dots"></i> Commentaire</th>
+                <th><i class="fa-solid fa-user"></i> Utilisateur</th>
+                <th><i class="fa-solid fa-star"></i> Avis</th>
+                <th><i class="fa-solid fa-calendar"></i> Date</th>
+                <th><i class="fa-solid fa-circle-check"></i> Statut</th>
+                <th style="text-align:right;"><i class="fa-solid fa-gear"></i> Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -43,56 +399,104 @@
               {% if rows %}
                 {% for c in rows %}
                 <tr>
-                  <td class="ps-3">#{{ c.id }}</td>
+                  <td class="ps-3">
+                    <span class="badge-pro" style="background:#f8f9fa;color:#6b7280;border:1px solid #e5e7eb;">
+                      <i class="fa-solid fa-hashtag"></i>
+                      {{ c.id }}
+                    </span>
+                  </td>
+
                   <td>{{ c.commentaire|truncatewords:15 }}</td>
-                  <td>{{ c.user.first_name }} {{ c.user.last_name }}</td>
+
+                  <td style="font-weight:700;color:#111827;">
+                    <i class="fa-solid fa-user" style="color:#DC2626;margin-right:6px;"></i>
+                    {{ c.user.first_name }} {{ c.user.last_name }}
+                  </td>
+
                   <td>
-                    <a href="{% url 'reviews:backoffice_review_detail' c.review.pk %}" class="text-decoration-underline">
+                    <a href="{% url 'reviews:backoffice_review_detail' c.review.pk %}" class="review-link-pro">
                       {{ c.review.titre|truncatewords:6 }}
                     </a>
                   </td>
-                  <td>{{ c.date_commentaire|date:"Y-m-d" }}</td>
+
+                  <td>
+                    <span style="color:#6b7280;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px;">
+                      <i class="fa-solid fa-calendar" style="color:#DC2626;"></i>
+                      {{ c.date_commentaire|date:"Y-m-d" }}
+                    </span>
+                  </td>
+
                   <td>
                     {% if c.is_approved %}
-                      <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">approved</span>
+                      <span class="badge-pro badge-approved">
+                        <i class="fa-solid fa-check"></i>
+                        approved
+                      </span>
                     {% else %}
-                      <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">pending</span>
+                      <span class="badge-pro badge-pending">
+                        <i class="fa-solid fa-clock"></i>
+                        pending
+                      </span>
                     {% endif %}
                   </td>
-                  <td class="text-end align-middle">
-                    <div class="d-inline-flex align-items-center gap-1">
-                      <!-- Voir -->
-                      <a href="{% url 'reviews:backoffice_commentaire_detail' c.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Détails">
-                        <i class="mdi mdi-eye-outline text-primary fs-14"></i>
+
+                  <td>
+                    <div class="action-buttons-pro">
+                      <a
+                        href="{% url 'reviews:backoffice_commentaire_detail' c.pk %}"
+                        class="btn-action-pro btn-view-pro"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Détails"
+                      >
+                        <i class="fa-solid fa-eye"></i>
                       </a>
                     </div>
                   </td>
                 </tr>
                 {% endfor %}
               {% else %}
-                <tr><td colspan="7" class="text-center py-4 text-muted">Aucun commentaire.</td></tr>
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state-pro">
+                      <div class="empty-state-icon-pro">
+                        <i class="fa-solid fa-comments-slash"></i>
+                      </div>
+                      <h4>Aucun commentaire</h4>
+                      <p>Essayez d'ajuster vos critères de recherche</p>
+                    </div>
+                  </td>
+                </tr>
               {% endif %}
               {% endwith %}
             </tbody>
           </table>
         </div>
-      </div>
 
-      {% if page_obj and page_obj.paginator.num_pages > 1 %}
-      <div class="card-footer">
-        <nav aria-label="Pagination">
-          <ul class="pagination mb-0 justify-content-end">
-            {% if page_obj.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
-            {% endif %}
-            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
-            {% if page_obj.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
-            {% endif %}
-          </ul>
-        </nav>
+        {% if page_obj and page_obj.paginator.num_pages > 1 %}
+        <div class="card-header-pro" style="border-top:2px solid #e5e7eb; border-bottom:none;">
+          <nav aria-label="Pagination">
+            <ul class="pagination pagination-pro mb-0 justify-content-end">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a>
+                </li>
+              {% endif %}
+
+              <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+              </li>
+
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+
       </div>
-      {% endif %}
     </div>
   </div>
 </div>
@@ -101,7 +505,28 @@
 {% block extra_js %}
 <script>
   // Tooltips Bootstrap
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+  });
+
+  // Auto submit on typing + change status (same UX style)
+  (function () {
+    const form = document.getElementById("comment-filter-form");
+    const input = document.getElementById("comment-filter-input");
+    const status = document.getElementById("comment-status-select");
+    if (!form) return;
+
+    let t = null;
+    if (input) {
+      input.addEventListener("input", function () {
+        clearTimeout(t);
+        t = setTimeout(function () { form.submit(); }, 400);
+      });
+    }
+    if (status) {
+      status.addEventListener("change", function () { form.submit(); });
+    }
+  })();
 </script>
 {% endblock %}

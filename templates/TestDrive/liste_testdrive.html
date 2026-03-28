@@ -7,168 +7,568 @@
     <div class="rts-wrapper-inner">
         {% include "partials/header/header-three.html" %}
         
-        <main class="ms-main rts-section-gap">
-            <div class="container">
-                <!-- TITRE + FILTRES (sans <form>) -->
-                <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
-                    <h2 class="title mb-0">Mes Test Drives</h2>
-                    <form id="filtersForm" class="d-flex gap-2 align-items-center flex-wrap" method="get">
-                      <input class="form-control"
-                            type="search"
-                            id="searchInput"
-                            name="q"
-                            value="{{ q }}"
-                            placeholder="Rechercher (marque, modèle, test_location)">
-
-                      <select class="form-select"
-                              id="statusSelect"
-                              name="status"
-                              onchange="this.form.submit()">
-                          <option value="">Tous les statuts</option>
-                          <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
-                          <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
-                          <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
-                      </select>
-
-                      <select class="form-select"
-                              id="sortSelect"
-                              name="sort"
-                              onchange="this.form.submit()">
-                          <option value="">Tri par date</option>
-                          <option value="date_desc" {% if sort == "date_desc" or not sort %}selected{% endif %}>Récent → Ancien</option>
-                          <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Ancien → Récent</option>
-                      </select>
-                  </form>
-
-                </div>
-
-                {% if messages %}
-                <div class="mb-4">
-                    {% for message in messages %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="card shadow-sm rounded-3 overflow-hidden">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr class="text-center">
-                                    <th>ID</th>
-                                    <th>VOITURE</th>
-                                    <th>Test LOCATION</th>
-                                    <th>DATE DE RÉSERVATION</th>
-                                    <th>STATUT</th>
-                                    <th class="text-end">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for t in page_obj %}
-                                <tr>
-                                    <td class="text-center fw-bold">#{{ t.id_test_drive }}</td>
-                                    <td>{{ t.car.marque }} {{ t.car.modele }}</td>
-                                    <td>{{ t.test_location }}</td>
-                                    <td class="text-center">
-                                        {{ t.reservation_date|date:"d/m/Y" }} à {{ t.reservation_time|time:"H:i" }}
-                                    </td>
-                                    <td class="text-center">
-                                        {% if t.status == "done" %}
-                                        <span class="badge bg-success">Terminé</span>
-                                        {% elif t.status == "not_done" %}
-                                        <span class="badge bg-warning text-dark">En attente</span>
-                                        {% elif t.status == "cancelled" %}
-                                        <span class="badge bg-danger">Annulé</span>
-                                        {% else %}
-                                        <span class="badge bg-secondary">Inconnu</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{% url 'TestDrive:testdrive_details' t.id_test_drive %}" class="btn btn-sm btn-outline-primary" title="Voir">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        {% if t.status == "not_done" %}
-                                        <a href="{% url 'TestDrive:TestDrive_update' t.id_test_drive %}" class="btn btn-sm btn-outline-success ms-1" title="Modifier">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="fa fa-car fa-2x mb-3"></i><br>
-                                        Aucun test drive trouvé.
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+        <main class="ms-main">
+            <!-- HERO SECTION -->
+            <section class="hero-section" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 80px 0 60px 0; position: relative; overflow: hidden;">
+                <!-- Pattern animé -->
+                <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+                
+                <div class="container" style="position: relative; z-index: 1;">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div style="display: inline-block; padding: 8px 20px; background: rgba(220, 38, 38, 0.1); border-radius: 50px; margin-bottom: 15px;">
+                                <p style="color: #DC2626; margin: 0; font-weight: 700; letter-spacing: 1.5px; font-size: 12px;">GESTION</p>
+                            </div>
+                            <h1 style="color: #fff; font-size: 48px; font-weight: 800; margin-bottom: 15px; line-height: 1.2;">
+                                Mes Test Drives
+                            </h1>
+                            <p style="color: #a0a0a0; font-size: 17px; margin: 0; line-height: 1.6;">
+                                Gérez et filtrez vos rendez-vous de test drive
+                            </p>
+                        </div>
+                        <div class="col-lg-6 text-lg-end">
+                            <div style="display: inline-block; padding: 30px 45px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
+                                <div style="color: #DC2626; font-size: 42px; font-weight: 800; margin-bottom: 8px;">{{ page_obj.paginator.count }}</div>
+                                <div style="color: #a0a0a0; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Rendez-vous</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Pagination -->
-                {% if page_obj.paginator.count %}
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{{ querystring }}">Précédent</a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled"><span class="page-link">Précédent</span></li>
-                        {% endif %}
-                        
-                        <li class="page-item disabled">
-                            <span class="page-link">
-                                Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                            </span>
-                        </li>
-                        
-                        {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{{ querystring }}">Suivant</a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled"><span class="page-link">Suivant</span></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
+            <!-- MESSAGES -->
+            {% if messages %}
+            <div class="container" style="margin-top: -30px; margin-bottom: 40px; position: relative; z-index: 10;">
+                {% for message in messages %}
+                <div class="alert-modern" style="display: flex; align-items: center; gap: 20px; padding: 20px 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-left: 5px solid #DC2626; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #991b1b; animation: slideInDown 0.5s ease;">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff;">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong style="display: block; margin-bottom: 5px; font-size: 16px;">Succès !</strong>
+                        <span style="font-size: 14px;">{{ message }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="background: rgba(0,0,0,0.1); border: none; color: inherit; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.3s; font-size: 18px;">×</button>
+                </div>
+                {% endfor %}
             </div>
+            {% endif %}
+
+            <!-- CONTENU PRINCIPAL -->
+            <section class="content-section" style="padding: 60px 0 80px 0; background: #f8f9fa;">
+                <div class="container">
+                    
+                    <!-- FILTRES AVANCÉS -->
+                    <div class="filters-panel" style="background: #fff; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.08);">
+                        <form id="filtersForm" method="get">
+                            
+                            <!-- Ligne 1 : Recherche -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-12">
+                                    <label style="color: #1a1a1a; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block;">
+                                        <i class="fa-solid fa-magnifying-glass" style="color: #DC2626; margin-right: 8px;"></i>
+                                        Recherche globale
+                                    </label>
+                                    <div style="position: relative;">
+                                        <i class="fa-solid fa-search" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 16px;"></i>
+                                        <input class="form-control"
+                                               type="search"
+                                               id="searchInput"
+                                               name="q"
+                                               value="{{ q }}"
+                                               placeholder="Rechercher par marque, modèle, lieu de test..."
+                                               style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 20px 14px 50px; width: 100%; font-size: 15px; transition: all 0.3s; background: #f9fafb;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ligne 2 : Filtres multiples -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-lg-3 col-md-6">
+                                    <label style="color: #1a1a1a; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block;">
+                                        <i class="fa-solid fa-signal" style="color: #DC2626; margin-right: 8px;"></i>
+                                        Statut
+                                    </label>
+                                    <select class="form-control"
+                                            id="statusSelect"
+                                            name="status"
+                                            style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 18px; width: 100%; font-size: 15px; background: #f9fafb; cursor: pointer;">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="not_done" {% if status == "not_done" %}selected{% endif %}>En attente</option>
+                                        <option value="done" {% if status == "done" %}selected{% endif %}>Terminé</option>
+                                        <option value="cancelled" {% if status == "cancelled" %}selected{% endif %}>Annulé</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label style="color: #1a1a1a; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block;">
+                                        <i class="fa-solid fa-sort" style="color: #DC2626; margin-right: 8px;"></i>
+                                        Trier par date
+                                    </label>
+                                    <select class="form-control"
+                                            id="sortSelect"
+                                            name="sort"
+                                            style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 18px; width: 100%; font-size: 15px; background: #f9fafb; cursor: pointer;">
+                                        <option value="date_desc" {% if sort == "date_desc" or not sort %}selected{% endif %}>Plus récent d'abord</option>
+                                        <option value="date_asc" {% if sort == "date_asc" %}selected{% endif %}>Plus ancien d'abord</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label style="color: #1a1a1a; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block;">
+                                        <i class="fa-solid fa-calendar-days" style="color: #DC2626; margin-right: 8px;"></i>
+                                        Date début
+                                    </label>
+                                    <input type="date"
+                                           class="form-control"
+                                           id="dateFrom"
+                                           name="date_from"
+                                           value="{{ date_from }}"
+                                           style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 18px; width: 100%; font-size: 15px; background: #f9fafb; cursor: pointer;">
+                                </div>
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label style="color: #1a1a1a; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block;">
+                                        <i class="fa-solid fa-calendar-days" style="color: #DC2626; margin-right: 8px;"></i>
+                                        Date fin
+                                    </label>
+                                    <input type="date"
+                                           class="form-control"
+                                           id="dateTo"
+                                           name="date_to"
+                                           value="{{ date_to }}"
+                                           style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 18px; width: 100%; font-size: 15px; background: #f9fafb; cursor: pointer;">
+                                </div>
+                            </div>
+
+                            <!-- Ligne 3 : Actions -->
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto ms-auto">
+                                    <a href="/testdrive/liste/" 
+                                       class="btn-reset"
+                                       style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #f3f4f6; border: 2px solid #e5e7eb; border-radius: 10px; color: #6b7280; font-weight: 600; text-decoration: none; transition: all 0.3s; font-size: 15px;">
+                                        <i class="fa-solid fa-rotate-right"></i>
+                                        Réinitialiser les filtres
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TABLEAU -->
+                    <div class="table-container" id="tableContainer" style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.08);">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" style="margin: 0;">
+                                <thead style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
+                                    <tr>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; text-align: center; border: none;">
+                                            ID
+                                        </th>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border: none;">
+                                            VOITURE
+                                        </th>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border: none;">
+                                            LIEU
+                                        </th>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; text-align: center; border: none;">
+                                            DATE & HEURE
+                                        </th>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; text-align: center; border: none;">
+                                            STATUT
+                                        </th>
+                                        <th style="padding: 20px 25px; color: #fff; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; text-align: center; border: none;">
+                                            ACTIONS
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for t in page_obj %}
+                                    <tr class="table-row" style="border-bottom: 1px solid #f0f0f0; transition: all 0.3s;">
+                                        <td style="padding: 20px 25px; text-align: center; vertical-align: middle;">
+                                            <span style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff; border-radius: 8px; font-weight: 700; font-size: 14px;">
+                                                #{{ t.id_test_drive }}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 20px 25px; vertical-align: middle;">
+                                            <div style="display: flex; align-items: center; gap: 15px;">
+                                                <div style="width: 50px; height: 50px; background: #f8f9fa; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                    <i class="fa-solid fa-car" style="font-size: 22px; color: #DC2626;"></i>
+                                                </div>
+                                                <div>
+                                                    <div style="color: #1a1a1a; font-weight: 700; font-size: 15px; margin-bottom: 3px;">{{ t.car.marque }}</div>
+                                                    <div style="color: #6b7280; font-size: 13px;">{{ t.car.modele }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 20px 25px; vertical-align: middle;">
+                                            <div style="color: #4b5563; font-weight: 500; font-size: 14px;">
+                                                <i class="fa-solid fa-location-dot" style="color: #DC2626; margin-right: 8px;"></i>
+                                                {{ t.test_location }}
+                                            </div>
+                                        </td>
+                                        <td style="padding: 20px 25px; text-align: center; vertical-align: middle;">
+                                            <div style="color: #1a1a1a; font-weight: 600; font-size: 14px; margin-bottom: 5px;">
+                                                <i class="fa-solid fa-calendar-days" style="color: #DC2626; margin-right: 6px;"></i>
+                                                {{ t.reservation_date|date:"d/m/Y" }}
+                                            </div>
+                                            <div style="color: #6b7280; font-size: 13px;">
+                                                <i class="fa-solid fa-clock" style="color: #DC2626; margin-right: 6px;"></i>
+                                                {{ t.reservation_time|time:"H:i" }}
+                                            </div>
+                                        </td>
+                                        <td style="padding: 20px 25px; text-align: center; vertical-align: middle;">
+                                            {% if t.status == "done" %}
+                                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: #1a1a1a; color: #fff; border-radius: 8px; font-weight: 600; font-size: 13px;">
+                                                <i class="fa-solid fa-circle-check"></i> Terminé
+                                            </span>
+                                            {% elif t.status == "not_done" %}
+                                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: #6b7280; color: #fff; border-radius: 8px; font-weight: 600; font-size: 13px;">
+                                                <i class="fa-solid fa-clock"></i> En attente
+                                            </span>
+                                            {% elif t.status == "cancelled" %}
+                                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: #DC2626; color: #fff; border-radius: 8px; font-weight: 600; font-size: 13px;">
+                                                <i class="fa-solid fa-circle-xmark"></i> Annulé
+                                            </span>
+                                            {% else %}
+                                            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; background: #9ca3af; color: #fff; border-radius: 8px; font-weight: 600; font-size: 13px;">
+                                                <i class="fa-solid fa-question"></i> Inconnu
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td style="padding: 20px 25px; text-align: center; vertical-align: middle;">
+                                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                                <a href="{% url 'TestDrive:testdrive_details' t.id_test_drive %}" 
+                                                   class="btn-action"
+                                                   style="width: 38px; height: 38px; background: #1a1a1a; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s; text-decoration: none;"
+                                                   title="Voir les détails">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                                {% if t.status == "not_done" %}
+                                                <a href="{% url 'TestDrive:TestDrive_update' t.id_test_drive %}" 
+                                                   class="btn-action"
+                                                   style="width: 38px; height: 38px; background: #DC2626; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: #fff; transition: all 0.3s; text-decoration: none;"
+                                                   title="Modifier">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" style="padding: 80px 20px; text-align: center;">
+                                            <div style="max-width: 400px; margin: 0 auto;">
+                                                <div style="width: 100px; height: 100px; background: #f8f9fa; border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fa-solid fa-inbox" style="font-size: 45px; color: #DC2626;"></i>
+                                                </div>
+                                                <h4 style="color: #1a1a1a; font-weight: 700; margin-bottom: 12px; font-size: 22px;">Aucun résultat</h4>
+                                                <p style="color: #6b7280; margin-bottom: 25px; font-size: 15px;">Aucun test drive ne correspond à vos critères</p>
+                                                <a href="/testdrive/liste/" 
+                                                   style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px; background: #DC2626; color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.3s;">
+                                                    <i class="fa-solid fa-rotate-right"></i> Réinitialiser
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PAGINATION -->
+                    {% if page_obj.paginator.count %}
+                    <nav class="mt-4">
+                        <ul style="display: flex; justify-content: center; gap: 10px; list-style: none; padding: 0; margin: 0; flex-wrap: wrap;">
+                            {% if page_obj.has_previous %}
+                            <li>
+                                <a href="?page={{ page_obj.previous_page_number }}{{ querystring }}" 
+                                   style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #fff; border-radius: 10px; color: #1a1a1a; font-weight: 600; text-decoration: none; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <i class="fa-solid fa-chevron-left"></i> Précédent
+                                </a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <span style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #f3f4f6; border-radius: 10px; color: #9ca3af; font-weight: 600;">
+                                    <i class="fa-solid fa-chevron-left"></i> Précédent
+                                </span>
+                            </li>
+                            {% endif %}
+                            
+                            <li>
+                                <span style="display: flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 10px; color: #fff; font-weight: 700;">
+                                    Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                            <li>
+                                <a href="?page={{ page_obj.next_page_number }}{{ querystring }}" 
+                                   style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #fff; border-radius: 10px; color: #1a1a1a; font-weight: 600; text-decoration: none; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    Suivant <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <span style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #f3f4f6; border-radius: 10px; color: #9ca3af; font-weight: 600;">
+                                    Suivant <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </section>
         </main>
     </div>
 </div>
 
-{% include "partials/footer/footer-three.html" %}
+<style>
+/* DÉSACTIVER LE LOADER SUR CETTE PAGE */
+.loader-wrapper {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Form Controls */
+.form-control:focus {
+    border-color: #DC2626 !important;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1) !important;
+    background: #fff !important;
+    outline: none;
+}
+
+.form-control:hover {
+    border-color: #DC2626 !important;
+    background: #fff !important;
+}
+
+/* Table Row Hover */
+.table-row:hover {
+    background: #fef2f2 !important;
+    transform: scale(1.005);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Boutons Actions */
+.btn-action:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Bouton Reset */
+.btn-reset:hover {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #fff !important;
+}
+
+/* Pagination */
+nav a:hover {
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Animation */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-modern {
+    animation: slideInDown 0.5s ease;
+}
+
+/* Désactiver sticky */
+.header-sticky-active {
+    display: none !important;
+}
+
+.rts-header.header-sticky {
+    position: relative !important;
+}
+
+/* Supprimer gaps */
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rts-wrapper-inner {
+    margin-bottom: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px !important;
+    }
+    
+    .hero-section {
+        padding: 60px 0 40px 0 !important;
+    }
+    
+    .section-header .text-lg-end {
+        text-align: left !important;
+        margin-top: 20px;
+    }
+    
+    .table-responsive {
+        font-size: 13px;
+    }
+    
+    th, td {
+        padding: 12px 10px !important;
+    }
+}
+</style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const form     = document.getElementById("filtersForm");
-    const searchEl = document.getElementById("searchInput");
-
-    if (!form || !searchEl) return;
-
-    let timer;
-
-    // Auto submit 500 ms after user stops typing
-    searchEl.addEventListener("input", function () {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            form.requestSubmit();   // HTML5-safe submit
-        }, 500);
+// SOLUTION ULTIME - Marqueur de position
+(function() {
+    'use strict';
+    
+    // Bloquer complètement le scroll automatique du navigateur
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    
+    // Créer un marqueur invisible
+    function createScrollMarker(scrollY) {
+        // Supprimer ancien marqueur
+        const oldMarker = document.getElementById('scroll-marker-td');
+        if (oldMarker) oldMarker.remove();
+        
+        // Créer nouveau marqueur à la position exacte
+        const marker = document.createElement('div');
+        marker.id = 'scroll-marker-td';
+        marker.style.position = 'absolute';
+        marker.style.top = scrollY + 'px';
+        marker.style.left = '0';
+        marker.style.width = '1px';
+        marker.style.height = '1px';
+        marker.style.visibility = 'hidden';
+        document.body.appendChild(marker);
+        return marker;
+    }
+    
+    // Sauvegarder avant rechargement
+    window.addEventListener('beforeunload', function() {
+        const y = window.pageYOffset || document.documentElement.scrollTop;
+        sessionStorage.setItem('td_y', y);
+        createScrollMarker(y);
     });
+    
+    // Restaurer après chargement
+    const savedY = sessionStorage.getItem('td_y');
+    if (savedY) {
+        const yPos = parseInt(savedY);
+        
+        // Forcer le scroll immédiatement
+        document.documentElement.scrollTop = yPos;
+        document.body.scrollTop = yPos;
+        window.scrollTo(0, yPos);
+        
+        // Créer marqueur
+        const marker = createScrollMarker(yPos);
+        
+        // Attendre que la page soit chargée et rescroller
+        setTimeout(function() {
+            window.scrollTo(0, yPos);
+            marker.scrollIntoView({block: 'start', behavior: 'auto'});
+        }, 50);
+        
+        setTimeout(function() {
+            window.scrollTo(0, yPos);
+            sessionStorage.removeItem('td_y');
+        }, 200);
+        
+        setTimeout(function() {
+            window.scrollTo(0, yPos);
+        }, 500);
+    }
+})();
 
-    // Hitting Enter also submits (without reloading twice)
-    searchEl.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            form.requestSubmit();
+document.addEventListener("DOMContentLoaded", function () {
+    // Désactiver sticky
+    const header = document.querySelector('.rts-header');
+    if (header) {
+        header.style.position = 'relative';
+        header.classList.remove('header-sticky');
+    }
+    
+    window.addEventListener('scroll', function() {
+        const stickyHeader = document.querySelector('.header-sticky-active');
+        if (stickyHeader) {
+            stickyHeader.style.display = 'none';
         }
     });
+    
+    // Restaurer une dernière fois après DOMContentLoaded
+    const savedY = sessionStorage.getItem('td_y');
+    if (savedY) {
+        setTimeout(function() {
+            window.scrollTo(0, parseInt(savedY));
+        }, 100);
+    }
+    
+    const form = document.getElementById("filtersForm");
+
+    function saveAndSubmit() {
+        const y = window.pageYOffset || document.documentElement.scrollTop;
+        sessionStorage.setItem('td_y', y);
+        form.submit();
+    }
+
+    // Recherche
+    const searchEl = document.getElementById("searchInput");
+    if (searchEl) {
+        let timer;
+        searchEl.addEventListener("input", function () {
+            clearTimeout(timer);
+            timer = setTimeout(saveAndSubmit, 500);
+        });
+
+        searchEl.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                saveAndSubmit();
+            }
+        });
+    }
+
+    // Filtres
+    ['statusSelect', 'sortSelect', 'dateFrom', 'dateTo'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', saveAndSubmit);
+    });
+});
+
+// Forcer après chargement complet (après le loader)
+window.addEventListener('load', function() {
+    const savedY = sessionStorage.getItem('td_y');
+    if (savedY) {
+        const yPos = parseInt(savedY);
+        setTimeout(function() {
+            window.scrollTo({top: yPos, behavior: 'auto'});
+        }, 100);
+        setTimeout(function() {
+            window.scrollTo({top: yPos, behavior: 'auto'});
+        }, 300);
+        setTimeout(function() {
+            window.scrollTo({top: yPos, behavior: 'auto'});
+        }, 600);
+    }
 });
 </script>
 

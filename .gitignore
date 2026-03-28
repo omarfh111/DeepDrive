@@ -1,9 +1,11 @@
 
 .venv/
 venv/
-.env
 .venv1/
-venv1/
+env/
+venv*/
+.venv*/
+.env
 
 db.sqlite3
 

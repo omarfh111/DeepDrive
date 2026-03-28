@@ -1,3 +1,4 @@
+{# templates/TestDrive/admin_testdrive_edit.html #}
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
@@ -5,108 +6,407 @@
 {% block page_title %}Test Drives{% endblock %}
 {% block breadcrumb_leaf %}{{ t|yesno:"Modifier,Ajouter" }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
 {% block content %}
+<style>
+/* ===== SAME MODERN STYLE (red/black) ===== */
+.modern-card {
+  background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  border:1px solid rgba(0,0,0,0.05);overflow:hidden;transition:all .3s ease;
+}
+.modern-card:hover{box-shadow:0 8px 30px rgba(0,0,0,0.10);}
+
+/* CARD HEADER */
+.modern-card-header{
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  padding:28px 35px;position:relative;overflow:hidden;
+}
+.modern-card-header::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+  background-size:40px 40px;opacity:.5;
+}
+.modern-card-header::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#DC2626;
+}
+.modern-card-header-content{position:relative;z-index:1;display:flex;align-items:center;gap:18px;}
+.header-icon-wrapper{
+  width:55px;height:55px;background:#DC2626;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 15px rgba(220,38,38,0.30);
+}
+.header-icon-wrapper i{font-size:24px;color:#fff;}
+.header-text h5{color:#fff;font-weight:800;font-size:20px;margin:0 0 5px 0;letter-spacing:-.5px;}
+.header-text p{color:rgba(255,255,255,0.75);font-size:13px;margin:0;font-weight:500;}
+
+/* CARD BODY */
+.modern-card-body{padding:35px;background:#fff;}
+
+/* PAGE HEADER */
+.page-header-modern{
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;padding:32px 38px;margin-bottom:30px;
+  border:1px solid rgba(220,38,38,0.30);
+  box-shadow:0 8px 30px rgba(0,0,0,0.15);
+  position:relative;overflow:hidden;
+}
+.page-header-modern::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+  background-size:40px 40px;opacity:.5;
+}
+.page-header-modern::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#DC2626;
+}
+.page-header-content{position:relative;z-index:1;}
+.page-header-modern h4{
+  color:#fff;font-weight:800;font-size:26px;margin:0;
+  display:flex;align-items:center;gap:15px;letter-spacing:-.5px;
+}
+.page-header-icon{
+  width:60px;height:60px;background:#DC2626;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;
+  box-shadow:0 6px 18px rgba(220,38,38,0.30);
+}
+
+/* BREADCRUMB */
+.breadcrumb-modern{
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);
+  padding:10px 20px;border-radius:10px;margin:0;border:1px solid rgba(255,255,255,0.15);
+}
+.breadcrumb-modern .breadcrumb-item{font-size:13px;font-weight:600;}
+.breadcrumb-modern .breadcrumb-item a{
+  color:rgba(255,255,255,0.7);text-decoration:none;transition:all .2s;
+  display:flex;align-items:center;gap:6px;
+}
+.breadcrumb-modern .breadcrumb-item a:hover{color:#DC2626;}
+.breadcrumb-modern .breadcrumb-item.active{color:#fff;font-weight:700;}
+
+/* FORM GROUPS + LABELS */
+.form-group-modern{margin-bottom:25px;}
+.form-label-modern{
+  color:#1a1a1a;font-weight:700;font-size:14px;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-label-modern .label-icon{
+  width:32px;height:32px;background:#DC2626;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
+}
+
+/* INPUTS */
+.form-control-modern,.form-select-modern{
+  width:100%;padding:13px 18px;border:2px solid #e5e7eb;border-radius:12px;
+  font-size:14px;transition:all .3s ease;background:#f8f9fa;font-weight:500;color:#1a1a1a;
+}
+.form-control-modern:focus,.form-select-modern:focus{
+  border-color:#DC2626 !important;outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,0.1) !important;background:#fff !important;
+}
+
+/* ERRORS */
+.error-text{
+  color:#DC2626;font-size:12px;font-weight:600;margin-top:6px;
+  display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(220,38,38,0.05);
+  border-radius:6px;border-left:3px solid #DC2626;
+}
+.error-text i{font-size:12px;}
+
+.alert-danger-modern{
+  background:#fee2e2;border:2px solid #fca5a5;border-radius:14px;
+  padding:18px 22px;color:#991b1b;font-weight:600;display:flex;align-items:start;gap:15px;margin-bottom:25px;
+}
+.alert-danger-modern .alert-icon{
+  width:42px;height:42px;background:#DC2626;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0;
+}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:15px;margin:28px 0 20px 0;}
+.section-divider .line{flex:1;height:2px;background:#e5e7eb;}
+.section-divider .label{
+  color:#6b7280;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:1px;
+  display:flex;align-items:center;gap:8px;padding:6px 16px;background:#f8f9fa;
+  border-radius:16px;border:1px solid #e5e7eb;
+}
+.section-divider .label i{color:#DC2626;font-size:13px;}
+
+/* BUTTONS */
+.btn-modern{
+  padding:13px 28px;border-radius:12px;font-weight:700;font-size:14px;
+  transition:all .3s ease;border:none;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-primary-modern{
+  background:#DC2626;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,0.25);
+}
+.btn-primary-modern:hover{
+  background:#991B1B;transform:translateY(-2px);box-shadow:0 6px 18px rgba(220,38,38,0.35);
+}
+.btn-secondary-modern{
+  background:#fff;color:#6b7280;border:2px solid #e5e7eb;
+}
+.btn-secondary-modern:hover{
+  background:#1a1a1a;color:#fff;border-color:#1a1a1a;transform:translateY(-2px);
+}
+
+.info-box-modern{
+  background:#f8f9fa;border:2px solid #e5e7eb;border-radius:14px;padding:18px 20px;margin-top:18px;
+  display:flex;align-items:start;gap:12px;
+}
+.info-box-modern .info-icon{
+  width:40px;height:40px;background:#1a1a1a;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0;
+}
+.info-box-modern .content strong{color:#1a1a1a;font-weight:800;font-size:14px;display:block;margin-bottom:5px;}
+.info-box-modern .content p{color:#6b7280;font-size:13px;margin:0;line-height:1.6;}
+
+@media (max-width:768px){
+  .modern-card-header{padding:22px 20px;}
+  .modern-card-body{padding:25px 20px;}
+  .page-header-modern{padding:25px 20px;}
+  .page-header-modern h4{font-size:22px;}
+  .page-header-icon,.header-icon-wrapper{width:50px;height:50px;font-size:22px;}
+}
+</style>
+
 <div class="container-fluid">
 
-  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-    <div class="flex-grow-1">
-      <h4 class="fs-18 fw-semibold m-0">
-        {% if t %}Modifier Test Drive #{{ t.id_test_drive }}{% else %}Ajouter un Test Drive{% endif %}
-      </h4>
-    </div>
-    <div class="text-end">
-      <ol class="breadcrumb m-0 py-0">
-        <li class="breadcrumb-item"><a href="javascript:void(0);">Test Drives</a></li>
-        <li class="breadcrumb-item active">{% if t %}Modifier{% else %}Ajouter{% endif %}</li>
-      </ol>
+  <!-- Page Header -->
+  <div class="page-header-modern">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div class="page-header-content">
+        <h4>
+          <span class="page-header-icon">
+            <i class="fa-solid {% if t %}fa-pen-to-square{% else %}fa-circle-plus{% endif %}"></i>
+          </span>
+          {% if t %}
+            <div>
+              <div>Modifier Test Drive</div>
+              <small style="font-size: 15px; color: rgba(255,255,255,0.7); font-weight: 700;">
+                #{{ t.id_test_drive }} — {{ t.car.marque }} {{ t.car.modele }}
+              </small>
+            </div>
+          {% else %}
+            Ajouter un Test Drive
+          {% endif %}
+        </h4>
+      </div>
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'TestDrive:admin_testdrive_list' %}">
+              <i class="fa-solid fa-car"></i>
+              Test Drives
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <i class="fa-solid fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+            {% if t %}Modifier{% else %}Ajouter{% endif %}
+          </li>
+        </ol>
+      </nav>
     </div>
   </div>
 
+  <!-- Main Card -->
   <div class="row">
     <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h5 class="card-title mb-0">Informations du test drive</h5>
+      <div class="modern-card">
+
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="header-icon-wrapper">
+              <i class="fa-solid fa-id-card-clip"></i>
+            </div>
+            <div class="header-text">
+              <h5>Informations du test drive</h5>
+              <p>Complétez les champs requis pour créer ou modifier un test drive</p>
+            </div>
+          </div>
         </div>
 
-        <div class="card-body">
+        <div class="modern-card-body">
           <form method="post" novalidate>
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+              <div class="alert-danger-modern">
+                <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div>
+                  <strong>Erreur de validation</strong><br>
+                  {{ form.non_field_errors }}
+                </div>
+              </div>
             {% endif %}
 
-            <div class="row">
+            <div class="row g-4">
+              <!-- Left column -->
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.car.id_for_label }}">Voiture</label>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.car.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-car"></i></span>
+                    Voiture
+                  </label>
                   {{ form.car }}
-                  <div class="text-danger small">{{ form.car.errors }}</div>
+                  {% if form.car.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.car.errors }}</div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.user.id_for_label }}">Utilisateur</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.user.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-user"></i></span>
+                    Utilisateur
+                  </label>
                   {{ form.user }}
-                  <div class="text-danger small">{{ form.user.errors }}</div>
+                  {% if form.user.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.user.errors }}</div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.reservation_date.id_for_label }}">Date de réservation</label>
+                <div class="section-divider">
+                  <div class="line"></div>
+                  <div class="label"><i class="fa-solid fa-calendar-days"></i> Planification</div>
+                  <div class="line"></div>
+                </div>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.reservation_date.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-calendar"></i></span>
+                    Date de réservation
+                  </label>
                   {{ form.reservation_date }}
-                  <div class="text-danger small">{{ form.reservation_date.errors }}</div>
+                  {% if form.reservation_date.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.reservation_date.errors }}</div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.reservation_time.id_for_label }}">Heure de réservation</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.reservation_time.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-clock"></i></span>
+                    Heure de réservation
+                  </label>
                   {{ form.reservation_time }}
-                  <div class="text-danger small">{{ form.reservation_time.errors }}</div>
+                  {% if form.reservation_time.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.reservation_time.errors }}</div>
+                  {% endif %}
+                </div>
+
+              </div>
+
+              <!-- Right column -->
+              <div class="col-lg-6">
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.duration.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-hourglass-half"></i></span>
+                    Durée (minutes)
+                  </label>
+                  {{ form.duration }}
+                  {% if form.duration.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.duration.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.test_location.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    Lieu du test
+                  </label>
+                  {{ form.test_location }}
+                  {% if form.test_location.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.test_location.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.status.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-toggle-on"></i></span>
+                    Statut
+                  </label>
+                  {{ form.status }}
+                  {% if form.status.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.status.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="section-divider">
+                  <div class="line"></div>
+                  <div class="label"><i class="fa-solid fa-address-book"></i> Contact</div>
+                  <div class="line"></div>
+                </div>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.contact_phone.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-phone"></i></span>
+                    Téléphone
+                  </label>
+                  {{ form.contact_phone }}
+                  {% if form.contact_phone.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.contact_phone.errors }}</div>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+
+            <div class="section-divider">
+              <div class="line"></div>
+              <div class="label"><i class="fa-solid fa-file-lines"></i> Informations complémentaires</div>
+              <div class="line"></div>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.driver_license_number.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-id-card"></i></span>
+                    Numéro de permis
+                  </label>
+                  {{ form.driver_license_number }}
+                  {% if form.driver_license_number.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.driver_license_number.errors }}</div>
+                  {% endif %}
                 </div>
               </div>
 
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.duration.id_for_label }}">Durée (minutes)</label>
-                  {{ form.duration }}
-                  <div class="text-danger small">{{ form.duration.errors }}</div>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.test_location.id_for_label }}">Lieu du test</label>
-                  {{ form.test_location }}
-                  <div class="text-danger small">{{ form.test_location.errors }}</div>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.status.id_for_label }}">Statut</label>
-                  {{ form.status }}
-                  <div class="text-danger small">{{ form.status.errors }}</div>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.comments.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-comment-dots"></i></span>
+                    Commentaires
+                  </label>
+                  {{ form.comments }}
+                  {% if form.comments.errors %}
+                    <div class="error-text"><i class="fa-solid fa-circle-exclamation"></i>{{ form.comments.errors }}</div>
+                  {% endif %}
                 </div>
               </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="{{ form.comments.id_for_label }}">Commentaires</label>
-              {{ form.comments }}
-              <div class="text-danger small">{{ form.comments.errors }}</div>
+            <div class="info-box-modern">
+              <div class="info-icon"><i class="fa-solid fa-circle-info"></i></div>
+              <div class="content">
+                <strong>Conseil</strong>
+                <p>Vérifiez la date, l’heure et les informations de contact avant d’enregistrer.</p>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="{{ form.driver_license_number.id_for_label }}">Numéro de permis</label>
-              {{ form.driver_license_number }}
-              <div class="text-danger small">{{ form.driver_license_number.errors }}</div>
+            <div class="d-flex gap-3 mt-4 pt-4" style="border-top: 2px solid #f3f4f6;">
+              <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn-modern btn-secondary-modern">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Annuler</span>
+              </a>
+              <button type="submit" class="btn-modern btn-primary-modern">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Enregistrer</span>
+              </button>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="{{ form.contact_phone.id_for_label }}">Téléphone</label>
-              {{ form.contact_phone }}
-              <div class="text-danger small">{{ form.contact_phone.errors }}</div>
-            </div>
-
-            <div class="d-flex gap-2">
-              <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn btn-outline-secondary">Annuler</a>
-              <button type="submit" class="btn btn-primary">Enregistrer</button>
-            </div>
           </form>
         </div>
       </div>
@@ -114,4 +414,27 @@
   </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Apply modern classes to Django widgets
+  document.addEventListener('DOMContentLoaded', function () {
+    // selects
+    document.querySelectorAll('select').forEach(function (el) {
+      el.classList.add('form-select-modern');
+    });
+
+    // textareas
+    document.querySelectorAll('textarea').forEach(function (el) {
+      el.classList.add('form-control-modern');
+    });
+
+    // inputs (ignore checkbox/radio/hidden/file)
+    document.querySelectorAll('input').forEach(function (el) {
+      if (['checkbox', 'radio', 'hidden', 'file'].includes(el.type)) return;
+      el.classList.add('form-control-modern');
+    });
+  });
+</script>
 {% endblock %}

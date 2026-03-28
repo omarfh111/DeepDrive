@@ -1,0 +1,270 @@
+{% extends 'backoffice/admin_base.html' %}
+{% load static %}
+
+{% block title %}Analyse IA | Dusty{% endblock %}
+{% block page_title %}Analyse IA - Service #{{ service.id }}{% endblock %}
+{% block breadcrumb_leaf %}Analyse IA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* HEADER */
+.ai-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(220,38,38,.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,.15);
+}
+.ai-header::after {
+    content:'';
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:4px;
+    background:#DC2626;
+}
+.ai-header h1 {
+    color:#fff;
+    font-weight:900;
+    font-size:28px;
+}
+.ai-header p {
+    color:rgba(255,255,255,.8);
+    margin:0;
+}
+
+/* MODERN CARD */
+.modern-card {
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    border:1px solid rgba(0,0,0,.05);
+    overflow:hidden;
+}
+.modern-card-header {
+    padding:22px 28px;
+    background:#f8f9fa;
+    border-bottom:2px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.modern-card-title {
+    font-size:18px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.modern-card-title i {
+    color:#DC2626;
+}
+.modern-card-body {
+    padding:28px;
+}
+
+/* BADGES */
+.badge-ai {
+    background:#DC2626;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+/* DAMAGE */
+.damage-item {
+    background:#fef2f2;
+    border-left:4px solid #DC2626;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:12px;
+}
+
+/* COST */
+.cost-item {
+    border-bottom:1px solid #e5e7eb;
+    padding-bottom:10px;
+    margin-bottom:10px;
+}
+.cost-total {
+    border-top:2px solid #DC2626;
+    padding-top:15px;
+    margin-top:15px;
+}
+
+/* BUTTONS */
+.btn-modern {
+    padding:12px 22px;
+    border-radius:12px;
+    font-weight:700;
+    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+}
+.btn-primary-modern {
+    background:#DC2626;
+    color:#fff;
+}
+.btn-primary-modern:hover {
+    background:#991B1B;
+    color:#fff;
+}
+.btn-secondary-modern {
+    background:#fff;
+    color:#6b7280;
+    border:2px solid #e5e7eb;
+}
+.btn-secondary-modern:hover {
+    background:#1a1a1a;
+    color:#fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+    <div class="ai-header">
+        <h1>Analyse IA du Service</h1>
+        <p>Résultats générés automatiquement par intelligence artificielle</p>
+    </div>
+
+{% if service.is_ai_predicted %}
+<div class="row g-4">
+
+    <!-- IMAGE -->
+    <div class="col-xl-8">
+        <div class="modern-card">
+            <div class="modern-card-header">
+                <h5 class="modern-card-title">
+                    <i class="fa-solid fa-image"></i>
+                    Image analysée
+                </h5>
+                <span class="badge-ai">
+                    <i class="fa-solid fa-microchip"></i>
+                    IA ACTIVE
+                </span>
+            </div>
+            <div class="modern-card-body text-center">
+                {% if service.annotated_image %}
+                    <img src="{{ service.annotated_image.url }}" class="img-fluid rounded" style="max-height:550px;">
+                {% elif service.image %}
+                    <img src="{{ service.image.url }}" class="img-fluid rounded" style="max-height:550px;">
+                {% else %}
+                    <p class="text-muted">Aucune image disponible</p>
+                {% endif %}
+
+                <div class="mt-4 d-flex gap-2 justify-content-center flex-wrap">
+                    <a href="{% url 'services:admin_service_list' %}" class="btn-modern btn-secondary-modern">
+                        <i class="fa-solid fa-arrow-left"></i> Retour
+                    </a>
+                    <a href="{% url 'services:reanalyze_service' service.pk %}" class="btn-modern btn-primary-modern">
+                        <i class="fa-solid fa-rotate"></i> Relancer IA
+                    </a>
+                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn-modern btn-secondary-modern">
+                        <i class="fa-solid fa-pen"></i> Modifier
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="col-xl-4">
+
+        <!-- SUMMARY -->
+        <div class="modern-card mb-3">
+            <div class="modern-card-header">
+                <h5 class="modern-card-title">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    Résumé IA
+                </h5>
+            </div>
+            <div class="modern-card-body text-center">
+                <h1 class="fw-bold text-danger">{{ analysis.detection.total_damages }}</h1>
+                <p class="text-muted">Dommage(s) détecté(s)</p>
+
+                <small class="fw-bold">{{ service.ai_confidence|floatformat:1 }}%</small>
+                <div class="progress mt-2">
+                    <div class="progress-bar bg-danger" style="width: {{ service.ai_confidence }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAMAGES -->
+        {% if analysis.detection.damages %}
+        <div class="modern-card mb-3">
+            <div class="modern-card-header">
+                <h5 class="modern-card-title">
+                    <i class="fa-solid fa-list-check"></i>
+                    Dommages détectés
+                </h5>
+            </div>
+            <div class="modern-card-body">
+                {% for damage in analysis.detection.damages %}
+                <div class="damage-item">
+                    <strong>{{ damage.type }}</strong>
+                    <span class="badge-ai float-end">{{ damage.confidence|floatformat:1 }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- COST -->
+        {% if analysis.cost_estimation %}
+        <div class="modern-card">
+            <div class="modern-card-header">
+                <h5 class="modern-card-title">
+                    <i class="fa-solid fa-wallet"></i>
+                    Estimation des coûts
+                </h5>
+            </div>
+            <div class="modern-card-body">
+                {% for detail in analysis.cost_estimation.details %}
+                <div class="cost-item">
+                    <div class="d-flex justify-content-between">
+                        <span>{{ detail.type }}</span>
+                        <strong>{{ detail.cost_min }} - {{ detail.cost_max }} DT</strong>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="cost-total d-flex justify-content-between">
+                    <strong>Total estimé</strong>
+                    <strong class="text-danger">{{ analysis.cost_estimation.total_range }}</strong>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% else %}
+<!-- EMPTY STATE -->
+<div class="modern-card text-center p-5">
+    <i class="fa-solid fa-triangle-exclamation fa-3x text-danger mb-3"></i>
+    <h4>Aucune analyse IA disponible</h4>
+    <p class="text-muted">Ce service n’a pas encore été analysé</p>
+    <a href="{% url 'services:reanalyze_service' service.pk %}" class="btn-modern btn-primary-modern">
+        <i class="fa-solid fa-microchip"></i> Lancer l’analyse
+    </a>
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

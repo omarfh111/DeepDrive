@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.http import JsonResponse
+from .ml_model import predictor
 # @login_required
 # def testdrive_list(request):
 #     user = request.user 
@@ -196,3 +197,28 @@ def admin_testdrive_add(request):
         form = TestDriveForm()
 
     return render(request, "TestDrive/admin_add_testdrive.html", {"form": form})
+
+
+
+
+@staff_member_required
+def admin_predict_testdrive(request, pk):
+    if request.method != "POST":
+        return JsonResponse({"error": "Méthode non autorisée"}, status=405)
+
+    t = get_object_or_404(TestDrive, pk=pk)
+    try:
+        result = predictor.predict_binary(t)
+        t.prediction = result["prediction"]
+        t.probability = result["probability"]
+        t.save()
+
+        if result["prediction"] == 1:
+            msg = f"⚠️ No-Show (probabilité {result['probability']:.1%})"
+        else:
+            msg = f"✅ Client fiable (risque {result['probability']:.1%})"
+
+        return JsonResponse({"result": msg})
+
+    except Exception as e:
+        return JsonResponse({"result": f"⚠️ Erreur IA : {str(e)}"})

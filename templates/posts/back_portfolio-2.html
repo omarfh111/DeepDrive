@@ -5,109 +5,567 @@
 {% block page_title %}Voitures{% endblock %}
 {% block breadcrumb_leaf %}Gestion des voitures{% endblock %}
 
-{% block content %}
-<div class="row">
-  <div class="col-xl-12">
-    <div class="card overflow-hidden">
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-      <!-- Header -->
-      <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <h5 class="card-title text-dark mb-0">Liste des voitures</h5>
-          
+<style>
+/* ===== Pro style (same family as your users list) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:22px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626;
+  border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff;
+  font-weight:900;
+  font-size:28px;
+  margin:0 0 8px 0;
+  letter-spacing:-.5px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.8);
+  font-size:14px;
+  margin:0;
+  font-weight:600;
+}
+.header-stats-pro{display:flex; gap:16px;}
+.stat-box-pro{
+  background: rgba(255,255,255,.10);
+  backdrop-filter: blur(10px);
+  padding:16px 22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);
+  transition:.25s;
+}
+.stat-box-pro:hover{
+  transform: translateY(-2px);
+  border-color: rgba(220,38,38,.5);
+}
+.stat-box-pro .number{
+  color:#DC2626;
+  font-size:30px;
+  font-weight:900;
+  line-height:1;
+  margin-bottom:6px;
+}
+.stat-box-pro .label{
+  color: rgba(255,255,255,.85);
+  font-size:12px;
+  font-weight:700;
+  text-transform: uppercase;
+  letter-spacing:.5px;
+}
+
+/* CARD */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:28px 35px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-header-content-pro{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+}
+.card-title-pro{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin:0;
+}
+.card-title-icon-pro{
+  width:50px;
+  height:50px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.25s;
+}
+.card-title-icon-pro:hover{transform: scale(1.05);}
+.card-title-icon-pro i{font-size:22px; color:#fff;}
+.card-title-pro h5{
+  color:#111827;
+  font-weight:900;
+  font-size:20px;
+  margin:0;
+}
+
+/* SEARCH + ADD */
+.tools-pro{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.search-input-wrapper-pro{position:relative;}
+.search-input-wrapper-pro i{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#9ca3af;
+  font-size:16px;
+}
+.search-input-pro{
+  width:320px;
+  padding:13px 18px 13px 48px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  font-size:14px;
+  transition:.25s;
+  background:#f8f9fa;
+  font-weight:600;
+}
+.search-input-pro:focus{
+  border-color:#DC2626;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.10);
+  background:#fff;
+}
+.btn-pro{
+  padding:13px 18px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:14px;
+  border:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+}
+.btn-pro-primary{
+  background:#DC2626;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(220,38,38,.20);
+}
+.btn-pro-primary:hover{
+  background:#991B1B;
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(220,38,38,.26);
+}
+.btn-pro-ghost{
+  background:#fff;
+  border:2px solid #e5e7eb;
+  color:#111827;
+}
+.btn-pro-ghost:hover{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+  transform:translateY(-2px);
+}
+
+/* TABLE */
+.table-container-pro{overflow:visible; width:100%;}
+.table-pro{width:100%; margin:0;}
+.table-pro thead{
+  background:#f8f9fa;
+  border-bottom:2px solid #e5e7eb;
+}
+.table-pro thead th{
+  padding:16px 12px;
+  font-weight:900;
+  font-size:11px;
+  color:#111827;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  border:none;
+  white-space:nowrap;
+}
+.table-pro thead th i{
+  color:#DC2626;
+  margin-right:6px;
+  font-size:12px;
+}
+.table-pro tbody tr{
+  border-bottom:1px solid #f3f4f6;
+  transition:.25s;
+}
+.table-pro tbody tr:hover{
+  background:#fef3f2;
+  box-shadow: inset 3px 0 0 #DC2626;
+}
+.table-pro tbody td{
+  padding:14px 12px;
+  font-size:12px;
+  color:#4b5563;
+  font-weight:600;
+  vertical-align:middle;
+  border:none;
+}
+
+/* CAR IMAGE */
+.car-thumb{
+  width:92px;
+  height:62px;
+  border-radius:12px;
+  border:2px solid #e5e7eb;
+  background:#fff;
+  object-fit:cover;
+}
+.thumb-empty{
+  width:92px;
+  height:62px;
+  border-radius:12px;
+  border:2px dashed #e5e7eb;
+  background:#f8f9fa;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9ca3af;
+  font-weight:900;
+  font-size:12px;
+}
+
+/* BADGE */
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+}
+.badge-energy{
+  background:#f3f4f6;
+  color:#111827;
+  border:1px solid #d1d5db;
+}
+.badge-energy i{color:#DC2626;}
+
+/* ACTIONS */
+.action-buttons-pro{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+}
+.btn-action-pro{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.25s;
+  cursor:pointer;
+}
+.btn-edit-pro{
+  background:#f3f4f6;
+  color:#111827;
+  border:1px solid #e5e7eb;
+}
+.btn-edit-pro:hover{
+  background:#111827;
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.btn-delete-pro{
+  background:#fee2e2;
+  color:#DC2626;
+  border:1px solid #fca5a5;
+}
+.btn-delete-pro:hover{
+  background:#DC2626;
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(220,38,38,.3);
+}
+.btn-action-pro i{font-size:15px;}
+
+/* EMPTY STATE */
+.empty-state-pro{
+  padding:80px 40px;
+  text-align:center;
+}
+.empty-state-icon-pro{
+  width:100px;
+  height:100px;
+  margin:0 auto 25px;
+  background:#f3f4f6;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.empty-state-icon-pro i{
+  font-size:45px;
+  color:#9ca3af;
+}
+.empty-state-pro h4{
+  color:#111827;
+  font-weight:900;
+  font-size:22px;
+  margin-bottom:10px;
+}
+.empty-state-pro p{
+  color:#6b7280;
+  font-size:14px;
+  margin:0;
+  font-weight:700;
+}
+
+/* Pagination */
+.pagination-pro{
+  padding:16px 20px;
+  display:flex;
+  justify-content:flex-end;
+  border-top:2px solid #f3f4f6;
+}
+.pagination-pro .page-link{
+  border-radius:10px;
+  font-weight:900;
+}
+
+/* Responsive */
+@media (max-width: 768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px; height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .header-stats-pro{width:100%;}
+  .stat-box-pro{flex:1; text-align:center;}
+  .search-input-pro{width:100%;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-car"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Gestion des voitures</h2>
+          <p>Consultez, modifiez et supprimez les voitures du portfolio</p>
         </div>
       </div>
 
-      <!-- Body -->
-      <div class="card-body p-0">
-        {% with cars=page_obj|default:posts %}
-          {% if cars %}
-          <div class="table-responsive table-centered mt-0">
-            <table class="table table-centered table-nowrap table-hover mb-0">
-              <thead>
-                <tr>
-                  <th class="ps-3">Image</th>
-                  <th>Marque</th>
-                  <th>Modèle</th>
-                  <th>Année</th>
-                  <th>Prix</th>
-                  <th>Énergie</th>
-                  <th class="text-end pe-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for post in cars %}
-                <tr>
-                  <td class="ps-3" style="width:120px;">
-                    {% if post.image %}
-                      <img src="{{ post.image.url }}" alt="{{ post.marque }}" class="img-fluid rounded-2" style="max-height:80px;">
-                    {% else %}
-                      <span class="text-muted">—</span>
-                    {% endif %}
-                  </td>
-                  <td class="fw-medium">{{ post.marque }}</td>
-                  <td>{{ post.modele }}</td>
-                  <td>{{ post.year }}</td>
-                  <td>{{ post.price }}&nbsp;DT</td>
-                  <td>
-                    {% if post.energy %}
-                      <span class="badge bg-primary-subtle text-primary fw-medium px-3 py-1 rounded-4">{{ post.energy }}</span>
-                    {% else %}
-                      <span class="text-muted">—</span>
-                    {% endif %}
-                  </td>
-                  <td class="text-end align-middle pe-3">
-                    <div class="d-inline-flex align-items-center gap-1">
-                      <a href="{% url 'posts:admin_update_post' post.id %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
-                        <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
-                      </a>
-                      <a href="{% url 'posts:admin_delete_car' post.id %}" class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer" onclick="return confirm('Supprimer cette voiture ?');">
-                        <i class="mdi mdi-delete text-danger fs-14"></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="7" class="text-center py-4 text-muted">Aucune voiture trouvée.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          {% if cars.paginator and cars.paginator.num_pages > 1 %}
-          <div class="card-footer">
-            <nav aria-label="Pagination">
-              <ul class="pagination mb-0 justify-content-end">
-                {% if cars.has_previous %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ cars.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">«</a>
-                </li>
-                {% endif %}
-                <li class="page-item disabled">
-                  <span class="page-link">Page {{ cars.number }} / {{ cars.paginator.num_pages }}</span>
-                </li>
-                {% if cars.has_next %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ cars.next_page_number }}{% if q %}&q={{ q }}{% endif %}">»</a>
-                </li>
-                {% endif %}
-              </ul>
-            </nav>
-          </div>
-          {% endif %}
-
-          {% else %}
-            <div class="p-4">
-              <div class="alert alert-warning text-center mb-0">
-                Aucune voiture disponible. <a href="{% url 'posts:admin_add_car' %}" class="alert-link">Ajouter maintenant</a>.
-              </div>
-            </div>
-          {% endif %}
+      <div class="header-stats-pro">
+        {% with cars_count=page_obj.paginator.count|default:posts|length %}
+        <div class="stat-box-pro">
+          <div class="number">{{ cars_count|default:0 }}</div>
+          <div class="label">Total</div>
+        </div>
         {% endwith %}
       </div>
+    </div>
+  </div>
 
+  <!-- Main Card -->
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card-pro">
+
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-list"></i>
+              </div>
+              <h5>Liste des voitures</h5>
+            </div>
+
+            <div class="tools-pro">
+              <!-- Search -->
+              <form class="d-flex align-items-center gap-2" method="get" id="cars-filter-form">
+                <div class="search-input-wrapper-pro">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input
+                    class="search-input-pro"
+                    type="search"
+                    name="q"
+                    value="{{ q }}"
+                    placeholder="Rechercher (marque, modèle, énergie...)"
+                    id="cars-filter-input"
+                  >
+                </div>
+                <button class="btn-pro btn-pro-primary" type="submit">
+                  <i class="fa-solid fa-filter"></i>
+                  Filtrer
+                </button>
+              </form>
+
+              <!-- Add -->
+              <a href="{% url 'posts:admin_add_car' %}" class="btn-pro btn-pro-ghost">
+                <i class="fa-solid fa-plus"></i>
+                Ajouter
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container-pro">
+          {% with cars=page_obj|default:posts %}
+            {% if cars %}
+              <table class="table-pro">
+                <thead>
+                  <tr>
+                    <th style="padding-left:18px;"><i class="fa-solid fa-image"></i> Image</th>
+                    <th><i class="fa-solid fa-tag"></i> Marque</th>
+                    <th><i class="fa-solid fa-car-side"></i> Modèle</th>
+                    <th><i class="fa-solid fa-calendar"></i> Année</th>
+                    <th><i class="fa-solid fa-money-bill-wave"></i> Prix</th>
+                    <th><i class="fa-solid fa-gas-pump"></i> Énergie</th>
+                    <th style="text-align:right; padding-right:18px;"><i class="fa-solid fa-gear"></i> Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for post in cars %}
+                  <tr>
+                    <td style="padding-left:18px; width:130px;">
+                      {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.marque }}" class="car-thumb">
+                      {% else %}
+                        <div class="thumb-empty">—</div>
+                      {% endif %}
+                    </td>
+                    <td style="color:#111827; font-weight:900;">{{ post.marque|default:"—" }}</td>
+                    <td>{{ post.modele|default:"—" }}</td>
+                    <td>{{ post.year|default:"—" }}</td>
+                    <td>{{ post.price|default:"—" }}&nbsp;DT</td>
+                    <td>
+                      {% if post.energy %}
+                        <span class="badge-pro badge-energy">
+                          <i class="fa-solid fa-bolt"></i>
+                          {{ post.energy }}
+                        </span>
+                      {% else %}
+                        <span style="color:#9ca3af; font-weight:900;">—</span>
+                      {% endif %}
+                    </td>
+                    <td style="padding-right:18px;">
+                      <div class="action-buttons-pro">
+                        <a
+                          href="{% url 'posts:admin_update_post' post.id %}"
+                          class="btn-action-pro btn-edit-pro"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Modifier"
+                        >
+                          <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <a
+                          href="{% url 'posts:admin_delete_car' post.id %}"
+                          class="btn-action-pro btn-delete-pro"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Supprimer"
+                          onclick="return confirm('⚠️ Supprimer cette voiture ?');"
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty-state-pro">
+                        <div class="empty-state-icon-pro">
+                          <i class="fa-solid fa-car-burst"></i>
+                        </div>
+                        <h4>Aucune voiture trouvée</h4>
+                        <p>Essayez d'ajuster vos critères de recherche</p>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+              {% if cars.paginator and cars.paginator.num_pages > 1 %}
+              <div class="pagination-pro">
+                <nav aria-label="Pagination">
+                  <ul class="pagination mb-0">
+                    {% if cars.has_previous %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ cars.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">«</a>
+                      </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                      <span class="page-link">Page {{ cars.number }} / {{ cars.paginator.num_pages }}</span>
+                    </li>
+                    {% if cars.has_next %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ cars.next_page_number }}{% if q %}&q={{ q }}{% endif %}">»</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+              </div>
+              {% endif %}
+
+            {% else %}
+              <div class="empty-state-pro">
+                <div class="empty-state-icon-pro">
+                  <i class="fa-solid fa-car"></i>
+                </div>
+                <h4>Aucune voiture disponible</h4>
+                <p>
+                  Ajoutez votre première voiture.
+                  <a href="{% url 'posts:admin_add_car' %}" style="color:#DC2626; font-weight:900; text-decoration:none;">Ajouter maintenant</a>
+                </p>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
@@ -116,11 +574,26 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Tooltips
     if (window.bootstrap) {
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
     }
-    if (window.feather) feather.replace();
+
+    // Auto-submit search (same behavior as users page)
+    (function() {
+      const input = document.getElementById("cars-filter-input");
+      const form = document.getElementById("cars-filter-form");
+      if (!input || !form) return;
+
+      let timeoutId = null;
+      input.addEventListener("input", function () {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(function () {
+          form.submit();
+        }, 400);
+      });
+    })();
   });
 </script>
 {% endblock %}

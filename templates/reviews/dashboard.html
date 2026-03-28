@@ -1,295 +1,441 @@
-{% extends "backoffice/admin_base.html" %} {% block title %}Back Office |
-Reviews{% endblock %} {% block page_title %}Back Office – Reviews{% endblock %}
-{% block breadcrumb_leaf %}Reviews Dashboard{% endblock %} {% block extra_css %}
+{% extends "backoffice/admin_base.html" %}
+{% load static %}
+
+{% block title %}Back Office | Reviews{% endblock %}
+{% block page_title %}Back Office – Reviews{% endblock %}
+{% block breadcrumb_leaf %}Reviews Dashboard{% endblock %}
+
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-  .dash-card {
-    transition: transform 0.12s ease;
-  }
-  .dash-card:hover {
-    transform: translateY(-2px);
-  }
-  .stat-value {
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
-  .stat-label {
-    opacity: 0.7;
-  }
-  .mini {
-    font-size: 0.85rem;
-  }
+/* ===== same "Pro" style family (black + red) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* Header */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.55;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:4px;
+  background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:25px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626; border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:800; font-size:28px;
+  margin:0 0 8px 0; letter-spacing:-.5px;
+}
+.header-text-pro p{color:rgba(255,255,255,.8); font-size:14px; margin:0; font-weight:500;}
+
+.header-stats-pro{display:flex; gap:16px; flex-wrap:wrap;}
+.stat-box-pro{
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(10px);
+  padding:16px 22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  transition:.25s;
+  min-width: 150px;
+}
+.stat-box-pro:hover{transform:translateY(-3px); border-color: rgba(220,38,38,.5);}
+.stat-box-pro .number{color:#DC2626; font-size:30px; font-weight:900; line-height:1; margin-bottom:6px;}
+.stat-box-pro .label{color:rgba(255,255,255,.85); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+.stat-box-pro .mini{color:rgba(255,255,255,.75); font-size:12px; font-weight:600; margin-top:6px;}
+
+/* Cards */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-pro + .card-pro{margin-top:16px;}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:22px 26px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:12px;
+  margin:0;
+}
+.card-title-icon-pro{
+  width:46px;height:46px;
+  background:#DC2626;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-title-icon-pro i{color:#fff;font-size:20px;}
+.card-title-pro h5{margin:0;color:#1a1a1a;font-weight:900;font-size:18px;}
+
+/* Buttons */
+.btn-pro{
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:800;
+  font-size:14px;
+  border:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+  text-decoration:none;
+}
+.btn-pro-primary{background:#DC2626;color:#fff; box-shadow:0 4px 12px rgba(220,38,38,.22);}
+.btn-pro-primary:hover{background:#991B1B;color:#fff; transform:translateY(-2px); box-shadow:0 8px 20px rgba(220,38,38,.28);}
+.btn-pro-outline{
+  background:#fff;
+  color:#1a1a1a;
+  border:2px solid #e5e7eb;
+}
+.btn-pro-outline:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a; transform:translateY(-2px);}
+.btn-pro-light{
+  background:#f3f4f6;
+  color:#1a1a1a;
+  border:2px solid #e5e7eb;
+}
+.btn-pro-light:hover{background:#fff; transform:translateY(-2px);}
+
+/* Tables */
+.table-pro{width:100%; margin:0;}
+.table-pro thead{
+  background:#f8f9fa;
+  border-bottom:2px solid #e5e7eb;
+}
+.table-pro thead th{
+  padding:14px 12px;
+  font-weight:900;
+  font-size:11px;
+  color:#1a1a1a;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  border:none;
+  white-space:nowrap;
+}
+.table-pro tbody tr{border-bottom:1px solid #f3f4f6; transition:.25s;}
+.table-pro tbody tr:hover{background:#fef3f2; box-shadow: inset 3px 0 0 #DC2626;}
+.table-pro tbody td{
+  padding:12px 12px;
+  font-size:12px;
+  color:#4b5563;
+  font-weight:600;
+  border:none;
+  vertical-align:middle;
+}
+
+/* Badges */
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.badge-pro-success{background:#f3f4f6;color:#1a1a1a;border-color:#d1d5db;}
+.badge-pro-warning{background:#fef3c7;color:#92400e;border-color:#f59e0b;}
+.badge-pro-note{background:#e0f2fe;color:#075985;border-color:#7dd3fc;}
+
+.table-actions-pro{
+  display:flex;
+  justify-content:flex-end;
+}
+.btn-action-pro{
+  width:38px;height:38px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  background:#f3f4f6;
+  display:flex; align-items:center; justify-content:center;
+  transition:.25s;
+}
+.btn-action-pro:hover{background:#1a1a1a; color:#fff; transform:translateY(-2px);}
+.btn-action-pro i{font-size:14px;}
+
+/* Quick action cards */
+.quick-card-pro{
+  padding:22px 24px;
+}
+.quick-card-pro h5{font-weight:900; color:#1a1a1a; margin-bottom:8px;}
+.quick-card-pro p{color:#6b7280; font-weight:600; margin-bottom:16px;}
+
+/* Responsive */
+@media (max-width: 768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px;height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .stat-box-pro{flex:1; min-width: 140px;}
+}
 </style>
-{% endblock %} {% block content %}
-<div class="row">
-  <!-- Stat: Total Reviews -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value">{{ total_reviews|default:0 }}</div>
-            <div class="stat-label">Avis (tous)</div>
-            <div class="mini text-success mt-1">
-              Approuvés : {{ approved_reviews|default:0 }}
-            </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Reviews Dashboard</h2>
+          <p>Modération & suivi des avis et commentaires</p>
+        </div>
+      </div>
+
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">{{ total_reviews|default:0 }}</div>
+          <div class="label">Avis</div>
+          <div class="mini">Approuvés : {{ approved_reviews|default:0 }}</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ pending_reviews|default:0 }}</div>
+          <div class="label">En attente</div>
+          <div class="mini">À modérer</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ total_comments|default:0 }}</div>
+          <div class="label">Commentaires</div>
+          <div class="mini">Approuvés : {{ approved_comments|default:0 }}</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ avg_rating|default:0 }}/5</div>
+          <div class="label">Note moyenne</div>
+          <div class="mini">Sur avis approuvés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Quick actions ===== -->
+  <div class="row g-3">
+    <div class="col-lg-6">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="card-title-icon-pro"><i class="fa-solid fa-list-check"></i></div>
+            <h5>Gérer les avis</h5>
           </div>
-          <div
-            class="avatar-sm bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center"
-          >
-            <i
-              class="iconify"
-              data-icon="solar:checklist-bold-duotone"
-              style="font-size: 28px"
-            ></i>
+        </div>
+        <div class="quick-card-pro">
+          <p>Modérer, approuver/rejeter, éditer ou supprimer les avis.</p>
+          <a href="{% url 'reviews:reviews_backreviews_list' %}" class="btn-pro btn-pro-primary w-100" style="justify-content:center;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            Ouvrir la liste des avis
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="card-title-icon-pro"><i class="fa-solid fa-comments"></i></div>
+            <h5>Gérer les commentaires</h5>
+          </div>
+        </div>
+        <div class="quick-card-pro">
+          <p>Parcourir et modérer les commentaires récents.</p>
+          <div class="d-grid gap-2">
+            <a href="{% url 'reviews:reviews_commentaires_list' %}" class="btn-pro btn-pro-outline" style="justify-content:center;">
+              <i class="fa-solid fa-list"></i>
+              Liste des commentaires
+            </a>
+            <a href="{% url 'reviews:list' %}" class="btn-pro btn-pro-light" style="justify-content:center;">
+              <i class="fa-solid fa-globe"></i>
+              Voir la page publique
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Stat: Pending Reviews -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value text-warning">
-              {{ pending_reviews|default:0 }}
+  <!-- ===== Recent tables ===== -->
+  <div class="row g-3 mt-1">
+    <div class="col-xl-6">
+      <div class="card-pro h-100">
+        <div class="card-header-pro">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro"><i class="fa-solid fa-star-half-stroke"></i></div>
+              <h5>Avis récents</h5>
             </div>
-            <div class="stat-label">Avis en attente</div>
-            <div class="mini text-muted">À modérer</div>
-          </div>
-          <div
-            class="avatar-sm bg-warning bg-opacity-10 rounded d-flex align-items-center justify-content-center"
-          >
-            <i
-              class="iconify"
-              data-icon="solar:clock-circle-bold-duotone"
-              style="font-size: 28px"
-            ></i>
+            <a href="{% url 'reviews:reviews_backreviews_list' %}" class="btn-pro btn-pro-outline" style="padding:10px 14px; font-size:13px;">
+              <i class="fa-solid fa-arrow-right"></i> Tout voir
+            </a>
           </div>
         </div>
+
+        <div class="p-0">
+          <div class="table-responsive">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Titre</th>
+                  <th>Utilisateur</th>
+                  <th>Note</th>
+                  <th>Statut</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for review in recent_reviews %}
+                <tr>
+                  <td>{{ review.titre|truncatewords:6 }}</td>
+                  <td>{{ review.user.username }}</td>
+                  <td>
+                    <span class="badge-pro badge-pro-note">
+                      <i class="fa-solid fa-star"></i>
+                      {{ review.note }}/5
+                    </span>
+                  </td>
+                  <td>
+                    {% if review.is_approved %}
+                      <span class="badge-pro badge-pro-success">
+                        <i class="fa-solid fa-circle-check"></i> Approuvé
+                      </span>
+                    {% else %}
+                      <span class="badge-pro badge-pro-warning">
+                        <i class="fa-solid fa-clock"></i> En attente
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="table-actions-pro">
+                      <a href="{% url 'reviews:backoffice_review_detail' review.pk %}" class="btn-action-pro" title="Voir">
+                        <i class="fa-solid fa-eye"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center" style="padding:26px; color:#6b7280; font-weight:700;">
+                    Aucun avis
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-xl-6">
+      <div class="card-pro h-100">
+        <div class="card-header-pro">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro"><i class="fa-solid fa-comment-dots"></i></div>
+              <h5>Commentaires récents</h5>
+            </div>
+            <a href="{% url 'reviews:reviews_commentaires_list' %}" class="btn-pro btn-pro-outline" style="padding:10px 14px; font-size:13px;">
+              <i class="fa-solid fa-arrow-right"></i> Tout voir
+            </a>
+          </div>
+        </div>
+
+        <div class="p-0">
+          <div class="table-responsive">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Commentaire</th>
+                  <th>Utilisateur</th>
+                  <th>Avis</th>
+                  <th>Statut</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for comment in recent_comments %}
+                <tr>
+                  <td>{{ comment.commentaire|truncatewords:8 }}</td>
+                  <td>{{ comment.user.username }}</td>
+                  <td>{{ comment.review.titre|truncatewords:5 }}</td>
+                  <td>
+                    {% if comment.is_approved %}
+                      <span class="badge-pro badge-pro-success">
+                        <i class="fa-solid fa-circle-check"></i> Approuvé
+                      </span>
+                    {% else %}
+                      <span class="badge-pro badge-pro-warning">
+                        <i class="fa-solid fa-clock"></i> En attente
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="table-actions-pro">
+                      <a href="{% url 'reviews:backoffice_commentaire_detail' comment.pk %}" class="btn-action-pro" title="Voir">
+                        <i class="fa-solid fa-eye"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center" style="padding:26px; color:#6b7280; font-weight:700;">
+                    Aucun commentaire
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- Stat: Total Comments -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value">{{ total_comments|default:0 }}</div>
-            <div class="stat-label">Commentaires</div>
-            <div class="mini text-success">
-              Approuvés : {{ approved_comments|default:0 }}
-            </div>
-          </div>
-          <div
-            class="avatar-sm bg-info bg-opacity-10 rounded d-flex align-items-center justify-content-center"
-          >
-            <i
-              class="iconify"
-              data-icon="solar:chat-round-dots-bold-duotone"
-              style="font-size: 28px"
-            ></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Stat: Average Rating -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value text-success">
-              {{ avg_rating|default:0 }}/5
-            </div>
-            <div class="stat-label">Note moyenne (approuvés)</div>
-          </div>
-          <div
-            class="avatar-sm bg-success bg-opacity-10 rounded d-flex align-items-center justify-content-center"
-          >
-            <i
-              class="iconify"
-              data-icon="solar:star-bold-duotone"
-              style="font-size: 28px"
-            ></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
+{% endblock %}
 
-<!-- Actions rapides -->
-<div class="row mt-3">
-  <div class="col-md-6">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <h5 class="mb-2">Gérer les avis</h5>
-        <p class="text-muted mb-3">
-          Modérer, approuver/rejeter, éditer ou supprimer les avis.
-        </p>
-        <div class="mt-auto">
-          <a
-            href="{% url 'reviews:reviews_backreviews_list' %}"
-            class="btn btn-primary w-100"
-            >Ouvrir la liste des avis</a
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <h5 class="mb-2">Gérer les commentaires</h5>
-        <p class="text-muted mb-3">
-          Parcourir et modérer les commentaires récents.
-        </p>
-        <div class="mt-auto d-grid gap-2">
-          <a
-            href="{% url 'reviews:reviews_commentaires_list' %}"
-            class="btn btn-outline-secondary"
-            >Liste des commentaires</a
-          >
-          <a href="{% url 'reviews:list' %}" class="btn btn-light"
-            >Voir la page publique</a
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- Deux colonnes: récents -->
-<div class="row mt-4">
-  <!-- Avis récents -->
-  <div class="col-xl-6">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="mb-0">Avis récents</h5>
-          <a
-            href="{% url 'reviews:reviews_backreviews_list' %}"
-            class="btn btn-sm btn-outline-primary"
-            >Tout voir</a
-          >
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Titre</th>
-                <th>Utilisateur</th>
-                <th>Note</th>
-                <th>Statut</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for review in recent_reviews %}
-              <tr>
-                <td>{{ review.titre|truncatewords:6 }}</td>
-                <td>{{ review.user.username }}</td>
-                <td>
-                  <span class="badge bg-success">{{ review.note }}/5</span>
-                </td>
-                <td>
-                  {% if review.is_approved %}
-                  <span class="badge bg-success">Approuvé</span>
-                  {% else %}
-                  <span class="badge bg-warning">En attente</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <a
-                    href="{% url 'reviews:backoffice_review_detail' review.pk %}"
-                    class="btn btn-sm btn-primary"
-                    >Voir</a
-                  >
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="5" class="text-center">Aucun avis</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Commentaires récents -->
-  <div class="col-xl-6">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="mb-0">Commentaires récents</h5>
-          <a
-            href="{% url 'reviews:reviews_commentaires_list' %}"
-            class="btn btn-sm btn-outline-primary"
-            >Tout voir</a
-          >
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Commentaire</th>
-                <th>Utilisateur</th>
-                <th>Avis</th>
-                <th>Statut</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for comment in recent_comments %}
-              <tr>
-                <td>{{ comment.commentaire|truncatewords:8 }}</td>
-                <td>{{ comment.user.username }}</td>
-                <td>{{ comment.review.titre|truncatewords:5 }}</td>
-                <td>
-                  {% if comment.is_approved %}
-                  <span class="badge bg-success">Approuvé</span>
-                  {% else %}
-                  <span class="badge bg-warning">En attente</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <a
-                    href="{% url 'reviews:backoffice_commentaire_detail' comment.pk %}"
-                    class="btn btn-sm btn-primary"
-                    >Voir</a
-                  >
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="5" class="text-center">Aucun commentaire</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %} {% block extra_js %}
+{% block extra_js %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    if (window.feather) {
-      feather.replace();
-    }
+    // If you use Bootstrap tooltips somewhere later:
+    // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    // tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
   });
 </script>
 {% endblock %}

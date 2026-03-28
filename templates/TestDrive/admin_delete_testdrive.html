@@ -1,55 +1,183 @@
+{# templates/TestDrive/admin_testdrive_delete.html #}
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
 {% block title %}Supprimer un Test Drive | Dusty{% endblock %}
-{% block page_title %}Suppression Test Drive{% endblock %}
-{% block breadcrumb_leaf %}Suppression Test Drive{% endblock %}
+{% block page_title %}Test Drives{% endblock %}
+{% block breadcrumb_leaf %}Suppression{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-xl-8">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-danger-subtle">
-        <h5 class="card-title text-danger mb-0">
-          <i class="mdi mdi-alert-circle-outline me-1"></i> Confirmation de suppression
-        </h5>
-      </div>
+<style>
+/* ===== SAME MODERN STYLE ===== */
+.modern-card{
+  background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);overflow:hidden;transition:.3s;
+}
+.modern-card:hover{box-shadow:0 8px 30px rgba(0,0,0,.10);}
 
-      <div class="card-body py-4">
-        <p class="fs-6">
-          Êtes-vous sûr de vouloir <strong class="text-danger">supprimer définitivement</strong> le Test Drive suivant&nbsp;?
-        </p>
+.modern-card-header{
+  background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);
+  padding:28px 35px;position:relative;overflow:hidden;
+}
+.modern-card-header::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#dc2626;
+}
+.modern-card-header-content{
+  position:relative;z-index:1;display:flex;align-items:center;gap:18px;
+}
+.header-icon-wrapper{
+  width:55px;height:55px;background:#dc2626;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 15px rgba(220,38,38,.35);
+}
+.header-icon-wrapper i{font-size:24px;color:#fff;}
+.header-text h5{color:#fff;font-weight:800;font-size:20px;margin:0 0 5px 0;}
+.header-text p{color:rgba(255,255,255,.8);font-size:13px;margin:0;}
 
-        <div class="border rounded-3 p-3 bg-light mb-4">
-          <ul class="list-unstyled mb-0">
-            <li><strong>ID :</strong> #{{ t.id_test_drive }}</li>
-            <li><strong>Utilisateur :</strong> {{ t.user.username }}</li>
-            <li><strong>Voiture :</strong> {{ t.car.marque }} {{ t.car.modele }}</li>
-            <li><strong>Date :</strong> {{ t.reservation_date|date:"d/m/Y" }} à {{ t.reservation_time|time:"H:i" }}</li>
-            <li><strong>Durée :</strong> {{ t.duration }} min</li>
-            <li><strong>Statut :</strong>
-              {% if t.status == "not_done" %}
-                <span class="badge bg-warning-subtle text-warning px-3 py-1 rounded-4">Not done</span>
-              {% elif t.status == "done" %}
-                <span class="badge bg-success-subtle text-success px-3 py-1 rounded-4">Done</span>
-              {% else %}
-                <span class="badge bg-danger-subtle text-danger px-3 py-1 rounded-4">Cancelled</span>
-              {% endif %}
-            </li>
-          </ul>
+.modern-card-body{padding:35px;}
+
+.page-header-modern{
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;padding:32px 38px;margin-bottom:30px;
+  border:1px solid rgba(220,38,38,.3);
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  position:relative;overflow:hidden;
+}
+.page-header-modern::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#dc2626;
+}
+.page-header-modern h4{
+  color:#fff;font-weight:800;font-size:26px;margin:0;
+  display:flex;align-items:center;gap:15px;
+}
+.page-header-icon{
+  width:60px;height:60px;background:#dc2626;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:26px;
+}
+
+.breadcrumb-modern{
+  background:rgba(255,255,255,.1);
+  padding:10px 20px;border-radius:10px;margin:0;
+}
+.breadcrumb-modern .breadcrumb-item a{color:rgba(255,255,255,.7);text-decoration:none;}
+.breadcrumb-modern .breadcrumb-item.active{color:#fff;font-weight:700;}
+
+.info-box-danger{
+  background:#fee2e2;
+  border:2px solid #fca5a5;
+  border-radius:14px;
+  padding:20px;
+}
+.info-box-danger ul li{margin-bottom:6px;font-size:14px;}
+
+.btn-modern{
+  padding:13px 28px;border-radius:12px;font-weight:700;font-size:14px;
+  transition:.3s;border:none;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-danger-modern{
+  background:#dc2626;color:#fff;
+  box-shadow:0 4px 12px rgba(220,38,38,.35);
+}
+.btn-danger-modern:hover{
+  background:#991b1b;transform:translateY(-2px);
+}
+.btn-secondary-modern{
+  background:#fff;color:#6b7280;border:2px solid #e5e7eb;
+}
+.btn-secondary-modern:hover{
+  background:#1a1a1a;color:#fff;border-color:#1a1a1a;
+}
+</style>
+
+<div class="container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header-modern">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <h4>
+        <span class="page-header-icon">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </span>
+        Suppression Test Drive
+      </h4>
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'TestDrive:admin_testdrive_list' %}">
+              <i class="fa-solid fa-car"></i> Test Drives
+            </a>
+          </li>
+          <li class="breadcrumb-item active">Supprimer</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Confirmation Card -->
+  <div class="row justify-content-center">
+    <div class="col-xl-8">
+      <div class="modern-card">
+
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="header-icon-wrapper">
+              <i class="fa-solid fa-trash"></i>
+            </div>
+            <div class="header-text">
+              <h5>Confirmation de suppression</h5>
+              <p>Cette action est irréversible</p>
+            </div>
+          </div>
         </div>
 
-        <form method="post" class="text-center">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger px-4 py-2 rounded-pill me-2">
-            <i class="mdi mdi-delete-outline me-1"></i> Supprimer
-          </button>
-          <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
-            <i class="mdi mdi-arrow-left me-1"></i> Annuler
-          </a>
-        </form>
+        <div class="modern-card-body">
+          <p class="fs-6 mb-4">
+            Êtes-vous sûr de vouloir <strong class="text-danger">supprimer définitivement</strong>
+            le Test Drive suivant ?
+          </p>
+
+          <div class="info-box-danger mb-4">
+            <ul class="list-unstyled mb-0">
+              <li><strong>ID :</strong> #{{ t.id_test_drive }}</li>
+              <li><strong>Utilisateur :</strong> {{ t.user.username }}</li>
+              <li><strong>Voiture :</strong> {{ t.car.marque }} {{ t.car.modele }}</li>
+              <li><strong>Date :</strong> {{ t.reservation_date|date:"d/m/Y" }} à {{ t.reservation_time|time:"H:i" }}</li>
+              <li><strong>Durée :</strong> {{ t.duration }} min</li>
+              <li>
+                <strong>Statut :</strong>
+                {% if t.status == "not_done" %}
+                  <span class="badge bg-warning text-dark px-3 py-1 rounded-pill">Not done</span>
+                {% elif t.status == "done" %}
+                  <span class="badge bg-success px-3 py-1 rounded-pill">Done</span>
+                {% else %}
+                  <span class="badge bg-danger px-3 py-1 rounded-pill">Cancelled</span>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+
+          <form method="post" class="d-flex justify-content-center gap-3">
+            {% csrf_token %}
+            <button type="submit" class="btn-modern btn-danger-modern">
+              <i class="fa-solid fa-trash"></i>
+              Supprimer définitivement
+            </button>
+            <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn-modern btn-secondary-modern">
+              <i class="fa-solid fa-arrow-left"></i>
+              Annuler
+            </a>
+          </form>
+
+        </div>
       </div>
     </div>
   </div>
+
 </div>
 {% endblock %}

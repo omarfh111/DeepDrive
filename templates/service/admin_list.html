@@ -1,226 +1,958 @@
 {% extends 'backoffice/admin_base.html' %}
 {% load static %}
 
-{% block title %}Services List | Dusty{% endblock %}
+{% block title %}Services{% endblock %}
 {% block page_title %}Services{% endblock %}
 {% block breadcrumb_leaf %}Liste des Services{% endblock %}
 
 {% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* HEADER SECTION */
+.page-header-pro {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 35px 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.page-header-pro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.page-header-pro::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #DC2626;
+}
+
+.header-content-pro {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.header-left-pro {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon-pro {
+    width: 70px;
+    height: 70px;
+    background: #DC2626;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+}
+
+.header-icon-pro i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.header-text-pro h2 {
+    color: #fff;
+    font-weight: 800;
+    font-size: 28px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.header-text-pro p {
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.header-stats-pro {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-box-pro {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 18px 28px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-box-pro:hover {
+    transform: translateY(-3px);
+    border-color: rgba(220, 38, 38, 0.5);
+}
+
+.stat-box-pro .number {
+    color: #DC2626;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-box-pro .label {
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* FILTER CARD */
+.filter-card-pro {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+/* FILTER BOX */
+.filter-box-pro {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input-pro {
+    flex: 1;
+    min-width: 250px;
+    padding: 13px 18px 13px 48px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    font-weight: 500;
+}
+
+.search-input-wrapper-pro {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-input-wrapper-pro i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+.search-input-pro:focus {
+    border-color: #DC2626;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    background: #fff;
+}
+
+.select-filter-pro {
+    min-width: 180px;
+    padding: 13px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.select-filter-pro:focus {
+    border-color: #DC2626;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    background: #fff;
+}
+
+.btn-filter-pro {
+    padding: 13px 26px;
+    background: #DC2626;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-filter-pro:hover {
+    background: #991B1B;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+/* ACTION BUTTONS */
+.action-buttons-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-action-modern {
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-action-modern:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.btn-create-modern {
+    background: #DC2626;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.btn-create-modern:hover {
+    background: #991B1B;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35);
+}
+
+.btn-export-modern {
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-export-modern:hover {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.btn-dashboard-modern {
+    background: #fff;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-dashboard-modern:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+}
+
+/* QUICK FILTERS */
+.quick-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.filter-badge-pro {
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid transparent;
+}
+
+.filter-badge-pro:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.filter-badge-all {
+    background: #DC2626;
+    color: #fff;
+}
+
+.filter-badge-all.active {
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.filter-badge-pending {
+    background: #f8f9fa;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.filter-badge-pending.active {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.filter-badge-progress {
+    background: #f8f9fa;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.filter-badge-progress.active {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.filter-badge-completed {
+    background: #f8f9fa;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.filter-badge-completed.active {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* SERVICE CARDS */
+.service-card-modern {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.service-card-header {
+    display: flex;
+    align-items: start;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.service-image-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.service-image-wrapper i {
+    font-size: 32px;
+    color: #DC2626;
+}
+
+.service-info {
+    flex: 1;
+}
+
+.service-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.service-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.badge-pro {
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-en-attente {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.badge-en-cours {
+    background: #fed7aa;
+    color: #92400e;
+    border: 1px solid #fdba74;
+}
+
+.badge-termine {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #d1d5db;
+}
+
+.badge-annule {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.badge-ai {
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #374151;
+}
+
+.service-description {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.service-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.service-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.service-detail-icon {
+    width: 32px;
+    height: 32px;
+    background: #DC2626;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.service-detail-icon i {
+    font-size: 14px;
+    color: #fff;
+}
+
+.service-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.btn-service-action {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.btn-service-edit {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #e5e7eb;
+}
+
+.btn-service-edit:hover {
+    background: #1a1a1a;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-service-delete {
+    background: #fee2e2;
+    color: #DC2626;
+    border: 1px solid #fca5a5;
+    flex: 0 0 auto;
+    padding: 10px 14px;
+}
+
+.btn-service-delete:hover {
+    background: #DC2626;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-service-ai {
+    background: #1a1a1a;
+    color: #fff;
+    flex: 0 0 auto;
+    padding: 10px 14px;
+}
+
+.btn-service-ai:hover {
+    background: #000;
+    transform: translateY(-2px);
+}
+
+/* EMPTY STATE */
+.empty-state-pro {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.empty-state-icon-pro {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state-icon-pro i {
+    font-size: 45px;
+    color: #9ca3af;
+}
+
+.empty-state-pro h4 {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.empty-state-pro p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+}
+
+/* PAGINATION */
+.pagination-pro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 30px 0;
+}
+
+.pagination-btn-pro {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.pagination-btn-pro:hover {
+    background: #DC2626;
+    color: #fff;
+    border-color: #DC2626;
+    transform: scale(1.05);
+}
+
+.pagination-info-pro {
+    padding: 8px 18px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* MESSAGES */
+.alert-modern {
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert-success-modern {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: #1a1a1a;
+}
+
+.alert-danger-modern {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header-pro {
+        padding: 25px 20px;
+    }
+    
+    .header-icon-pro {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .header-icon-pro i {
+        font-size: 28px;
+    }
+    
+    .header-text-pro h2 {
+        font-size: 22px;
+    }
+    
+    .header-stats-pro {
+        width: 100%;
+    }
+    
+    .stat-box-pro {
+        flex: 1;
+        text-align: center;
+        padding: 15px 20px;
+    }
+    
+    .search-input-wrapper-pro,
+    .select-filter-pro {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .action-buttons-group {
+        width: 100%;
+    }
+    
+    .btn-action-modern {
+        flex: 1;
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Messages -->
-{% if messages %}
-<div class="row">
-    <div class="col-12">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <iconify-icon icon="solar:{% if message.tags == 'success' %}check-circle-bold{% else %}danger-triangle-bold{% endif %}" class="fs-18 align-middle me-2"></iconify-icon>
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
+<div class="container-fluid">
+  
+  <!-- Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert-{% if message.tags == 'success' %}success{% else %}danger{% endif %}-modern">
+        <i class="fa-solid fa-{% if message.tags == 'success' %}circle-check{% else %}triangle-exclamation{% endif %}"></i>
+        <span>{{ message }}</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
 
-<!-- Filtres et Recherche -->
-<div class="row mb-3">
-    <div class="col-xl-8">
-        <div class="card">
-            <div class="card-body">
-                <form method="get" class="row g-3 align-items-center">
-                    <!-- Recherche -->
-                    <div class="col-md-6">
-                        <div class="position-relative">
-                            <iconify-icon icon="solar:magnifer-bold" class="search-icon fs-18"></iconify-icon>
-                            <input type="text" name="q" value="{{ q }}" class="form-control search-input" placeholder="Rechercher un service...">
-                        </div>
-                    </div>
-                    
-                    <!-- Filtre Statut -->
-                    <div class="col-md-4">
-                        <select name="status" class="form-select">
-                            <option value="">Tous les statuts</option>
-                            {% for value, label in statuts %}
-                            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <!-- Boutons -->
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <iconify-icon icon="solar:filter-bold" class="align-middle"></iconify-icon>
-                        </button>
-                    </div>
-                </form>
-            </div>
+  <!-- Page Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-wrench"></i>
         </div>
-    </div>
-    
-    <div class="col-xl-4">
-        <div class="d-flex gap-2 h-100 align-items-center">
-            <a href="{% url 'services:admin_service_create' %}" class="btn btn-success flex-fill h-100 d-flex align-items-center justify-content-center">
-                <iconify-icon icon="solar:add-circle-bold" class="fs-20 me-2"></iconify-icon>
-                Nouveau Service
-            </a>
-            <a href="{% url 'services:export_services_pdf' %}?status={{ status }}&q={{ q }}" class="btn btn-danger h-100 d-flex align-items-center justify-content-center" title="Exporter en PDF">
-                <iconify-icon icon="solar:file-download-bold" class="fs-20"></iconify-icon>
-            </a>
-            <a href="{% url 'services:admin_hub' %}" class="btn btn-outline-primary h-100 d-flex align-items-center justify-content-center">
-                <iconify-icon icon="solar:chart-bold" class="fs-20"></iconify-icon>
-            </a>
+        <div class="header-text-pro">
+          <h2>Gestion des services</h2>
+          <p>Gérez tous les services et interventions</p>
         </div>
+      </div>
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">{{ page_obj.paginator.count }}</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ page_obj.paginator.count }}</div>
+          <div class="label">Services</div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- Quick Filters -->
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="d-flex gap-2 flex-wrap">
-            <a href="?status=" class="badge filter-badge {% if not status %}bg-primary{% else %}bg-light text-dark{% endif %} px-3 py-2">
-                <iconify-icon icon="solar:widget-bold" class="align-middle"></iconify-icon>
-                Tous ({{ page_obj.paginator.count }})
-            </a>
-            <a href="?status=En attente" class="badge filter-badge {% if status == 'En attente' %}bg-secondary{% else %}bg-light text-dark{% endif %} px-3 py-2">
-                <iconify-icon icon="solar:clock-circle-bold" class="align-middle"></iconify-icon>
-                En attente
-            </a>
-            <a href="?status=En cours" class="badge filter-badge {% if status == 'En cours' %}bg-warning{% else %}bg-light text-dark{% endif %} px-3 py-2">
-                <iconify-icon icon="solar:settings-bold" class="align-middle"></iconify-icon>
-                En cours
-            </a>
-            <a href="?status=Terminé" class="badge filter-badge {% if status == 'Terminé' %}bg-success{% else %}bg-light text-dark{% endif %} px-3 py-2">
-                <iconify-icon icon="solar:check-circle-bold" class="align-middle"></iconify-icon>
-                Terminés
-            </a>
+  <!-- Filters & Actions -->
+  <div class="filter-card-pro">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      
+      <!-- Search & Filter -->
+      <form method="get" class="filter-box-pro" style="flex: 1;">
+        <div class="search-input-wrapper-pro">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" name="q" value="{{ q }}" class="search-input-pro" placeholder="Rechercher un service...">
         </div>
-    </div>
-</div>
+        
+        <select name="status" class="select-filter-pro">
+          <option value="">Tous les statuts</option>
+          {% for value, label in statuts %}
+            <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        
+        <button type="submit" class="btn-filter-pro">
+          <i class="fa-solid fa-filter"></i>
+          <span>Filtrer</span>
+        </button>
+      </form>
 
-<!-- Liste des Services -->
-<div class="row">
+      <!-- Action Buttons -->
+      <div class="action-buttons-group">
+        <a href="{% url 'services:admin_service_create' %}" class="btn-action-modern btn-create-modern">
+          <i class="fa-solid fa-plus"></i>
+          <span>Nouveau</span>
+        </a>
+        <a href="{% url 'services:export_services_pdf' %}?status={{ status }}&q={{ q }}" class="btn-action-modern btn-export-modern" title="Exporter PDF">
+          <i class="fa-solid fa-file-pdf"></i>
+        </a>
+        <a href="{% url 'services:admin_hub' %}" class="btn-action-modern btn-dashboard-modern" title="Dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Quick Filters -->
+  <div class="quick-filters">
+    <a href="?status=" class="filter-badge-pro filter-badge-all {% if not status %}active{% endif %}">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Tous ({{ page_obj.paginator.count }})</span>
+    </a>
+    <a href="?status=En attente" class="filter-badge-pro filter-badge-pending {% if status == 'En attente' %}active{% endif %}">
+      <i class="fa-solid fa-clock"></i>
+      <span>En attente</span>
+    </a>
+    <a href="?status=En cours" class="filter-badge-pro filter-badge-progress {% if status == 'En cours' %}active{% endif %}">
+      <i class="fa-solid fa-gear"></i>
+      <span>En cours</span>
+    </a>
+    <a href="?status=Terminé" class="filter-badge-pro filter-badge-completed {% if status == 'Terminé' %}active{% endif %}">
+      <i class="fa-solid fa-check"></i>
+      <span>Terminés</span>
+    </a>
+  </div>
+
+  <!-- Services Grid -->
+  <div class="row g-3">
     {% for service in page_obj %}
     <div class="col-xl-4 col-md-6">
-        <div class="card service-card h-100">
-            <div class="card-body">
-                <!-- Header avec image -->
-                <div class="d-flex align-items-start mb-3">
-                    {% if service.image %}
-                    <img src="{{ service.image.url }}" class="rounded me-3" width="60" height="60" style="object-fit: cover;">
-                    {% else %}
-                    <div class="avatar-lg bg-primary-subtle rounded me-3 d-flex align-items-center justify-content-center">
-                        <iconify-icon icon="solar:wrench-bold-duotone" class="fs-32 text-primary"></iconify-icon>
-                    </div>
-                    {% endif %}
-                    <div class="flex-grow-1">
-                        <h5 class="mb-1">{{ service.nom_service }}</h5>
-                        <span class="badge {% if service.statut == 'Terminé' %}bg-success-subtle text-success{% elif service.statut == 'En cours' %}bg-warning-subtle text-warning{% elif service.statut == 'En attente' %}bg-secondary-subtle text-secondary{% else %}bg-danger-subtle text-danger{% endif %}">
-                            {{ service.statut }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <p class="text-muted mb-3" style="font-size: 13px;">{{ service.description|truncatewords:15 }}</p>
-
-                <!-- Infos -->
-                <div class="d-flex flex-column gap-2 mb-3" style="font-size: 13px;">
-                    <div class="d-flex align-items-center text-muted">
-                        <iconify-icon icon="solar:wrench-outline" class="me-2 text-primary"></iconify-icon>
-                        {{ service.type_service }}
-                    </div>
-                    <div class="d-flex align-items-center text-muted">
-                        <iconify-icon icon="solar:calendar-outline" class="me-2 text-primary"></iconify-icon>
-                        {{ service.date_service|date:"d/m/Y" }}
-                    </div>
-                    <div class="d-flex align-items-center text-muted">
-                        <iconify-icon icon="solar:shield-outline" class="me-2 text-primary"></iconify-icon>
-                        {{ service.garantie }}
-                    </div>
-                    {% if service.type_vidange %}
-                    <div class="d-flex align-items-center text-muted">
-                        <iconify-icon icon="solar:oil-outline" class="me-2 text-primary"></iconify-icon>
-                        {{ service.type_vidange }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Actions -->
-                <div class="d-flex gap-2">
-                    <a href="{% url 'services:admin_service_update' service.pk %}" class="btn btn-sm btn-soft-primary flex-fill">
-                        <iconify-icon icon="solar:pen-bold" class="align-middle"></iconify-icon>
-                        Modifier
-                    </a>
-                    <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn btn-sm btn-soft-danger">
-                        <iconify-icon icon="solar:trash-bin-2-bold"></iconify-icon>
-                    </a>
-                </div>
+      <div class="service-card-modern">
+        
+        <!-- Header -->
+        <div class="service-card-header">
+          <div class="service-image-wrapper">
+            {% if service.image %}
+              <img src="{{ service.image.url }}" alt="{{ service.nom_service }}">
+            {% else %}
+              <i class="fa-solid fa-wrench"></i>
+            {% endif %}
+          </div>
+          <div class="service-info">
+            <h3 class="service-title">{{ service.nom_service }}</h3>
+            <div class="service-badges">
+              <span class="badge-pro badge-{{ service.statut|lower|cut:' ' }}">
+                {% if service.statut == 'Terminé' %}
+                  <i class="fa-solid fa-check"></i>
+                {% elif service.statut == 'En cours' %}
+                  <i class="fa-solid fa-gear"></i>
+                {% elif service.statut == 'En attente' %}
+                  <i class="fa-solid fa-clock"></i>
+                {% else %}
+                  <i class="fa-solid fa-xmark"></i>
+                {% endif %}
+                {{ service.statut }}
+              </span>
+              {% if service.is_ai_predicted %}
+                <span class="badge-pro badge-ai">
+                  <i class="fa-solid fa-robot"></i>
+                  IA
+                </span>
+              {% endif %}
             </div>
+          </div>
         </div>
+
+        <!-- Description -->
+        <p class="service-description">{{ service.description|truncatewords:15 }}</p>
+
+        <!-- Details -->
+        <div class="service-details">
+          <div class="service-detail-item">
+            <div class="service-detail-icon">
+              <i class="fa-solid fa-wrench"></i>
+            </div>
+            <span>{{ service.type_service }}</span>
+          </div>
+          
+          <div class="service-detail-item">
+            <div class="service-detail-icon">
+              <i class="fa-solid fa-calendar"></i>
+            </div>
+            <span>{{ service.date_service|date:"d/m/Y" }}</span>
+          </div>
+          
+          <div class="service-detail-item">
+            <div class="service-detail-icon">
+              <i class="fa-solid fa-shield"></i>
+            </div>
+            <span>{{ service.garantie }}</span>
+          </div>
+          
+          {% if service.type_vidange %}
+          <div class="service-detail-item">
+            <div class="service-detail-icon">
+              <i class="fa-solid fa-droplet"></i>
+            </div>
+            <span>{{ service.type_vidange }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <div class="service-actions">
+          {% if service.is_ai_predicted %}
+            <a href="{% url 'services:admin_damage_analysis' service.pk %}" class="btn-service-action btn-service-ai" title="Analyse IA">
+              <i class="fa-solid fa-robot"></i>
+            </a>
+          {% endif %}
+          
+          <a href="{% url 'services:admin_service_update' service.pk %}" class="btn-service-action btn-service-edit">
+            <i class="fa-solid fa-pen"></i>
+            <span>Modifier</span>
+          </a>
+          
+          <a href="{% url 'services:admin_service_delete' service.pk %}" class="btn-service-action btn-service-delete">
+            <i class="fa-solid fa-trash"></i>
+          </a>
+        </div>
+
+      </div>
     </div>
     {% empty %}
+    
+    <!-- Empty State -->
     <div class="col-12">
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <iconify-icon icon="solar:inbox-outline" class="fs-64 text-muted mb-3"></iconify-icon>
-                <h5 class="text-muted">Aucun service trouvé</h5>
-                <p class="text-muted">Essayez de modifier vos filtres ou créez un nouveau service</p>
-                <a href="{% url 'services:admin_service_create' %}" class="btn btn-primary mt-3">
-                    <iconify-icon icon="solar:add-circle-bold" class="align-middle me-2"></iconify-icon>
-                    Créer un service
-                </a>
-            </div>
+      <div class="empty-state-pro">
+        <div class="empty-state-icon-pro">
+          <i class="fa-solid fa-inbox"></i>
         </div>
+        <h4>Aucun service trouvé</h4>
+        <p>Essayez de modifier vos filtres ou créez un nouveau service</p>
+        <a href="{% url 'services:admin_service_create' %}" class="btn-action-modern btn-create-modern">
+          <i class="fa-solid fa-plus"></i>
+          <span>Créer un service</span>
+        </a>
+      </div>
     </div>
+    
     {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+  <div class="pagination-pro">
+    {% if page_obj.has_previous %}
+      <a href="?page=1{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="pagination-btn-pro">
+        <i class="fa-solid fa-angles-left"></i>
+      </a>
+      <a href="?page={{ page_obj.previous_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="pagination-btn-pro">
+        <i class="fa-solid fa-chevron-left"></i>
+      </a>
+    {% endif %}
+
+    <span class="pagination-info-pro">
+      Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="pagination-btn-pro">
+        <i class="fa-solid fa-chevron-right"></i>
+      </a>
+      <a href="?page={{ page_obj.paginator.num_pages }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}" class="pagination-btn-pro">
+        <i class="fa-solid fa-angles-right"></i>
+      </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
 </div>
-
-<!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<div class="row mt-4">
-    <div class="col-12">
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center mb-0">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
-                        <iconify-icon icon="solar:double-alt-arrow-left-bold"></iconify-icon>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
-                        <iconify-icon icon="solar:alt-arrow-left-bold"></iconify-icon>
-                    </a>
-                </li>
-                {% endif %}
-
-                <li class="page-item active">
-                    <span class="page-link">
-                        Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                    </span>
-                </li>
-
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
-                        <iconify-icon icon="solar:alt-arrow-right-bold"></iconify-icon>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if status %}&status={{ status }}{% endif %}{% if q %}&q={{ q }}{% endif %}">
-                        <iconify-icon icon="solar:double-alt-arrow-right-bold"></iconify-icon>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-    </div>
-</div>
-{% endif %}
 
 {% endblock %}
 

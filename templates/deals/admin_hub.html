@@ -1,146 +1,524 @@
 {% extends "backoffice/admin_base.html" %}
 
-{% block title %}Back Office | DeepDrive{% endblock %}
-{% block page_title %}Back Office{% endblock %}
-{% block breadcrumb_leaf %}Back Office{% endblock %}
+{% block title %}Dashboard | DeepDrive{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block breadcrumb_leaf %}Dashboard{% endblock %}
 
 {% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-  .dash-card { transition: transform .12s ease; }
-  .dash-card:hover { transform: translateY(-2px); }
-  .stat-value { font-size: 1.6rem; font-weight: 700; }
-  .stat-label { opacity: .7; }
+/* HEADER SECTION */
+.dashboard-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.dashboard-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #DC2626;
+}
+
+.dashboard-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.dashboard-icon {
+    width: 80px;
+    height: 80px;
+    background: #DC2626;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+}
+
+.dashboard-icon i {
+    font-size: 38px;
+    color: #fff;
+}
+
+.dashboard-text h1 {
+    color: #fff;
+    font-weight: 900;
+    font-size: 32px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.8px;
+}
+
+.dashboard-text p {
+    color: rgba(255,255,255,0.8);
+    font-size: 16px;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* STAT CARDS */
+.stat-card-modern {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.stat-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.stat-content {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-icon-wrapper {
+    width: 65px;
+    height: 65px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.stat-icon-wrapper i {
+    font-size: 30px;
+    color: #fff;
+}
+
+.stat-icon-all {
+    background: #DC2626;
+}
+
+.stat-icon-pending {
+    background: #f59e0b;
+}
+
+.stat-icon-approved {
+    background: #1a1a1a;
+}
+
+.stat-icon-rejected {
+    background: #991B1B;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+}
+
+.stat-number-all {
+    color: #DC2626;
+}
+
+.stat-number-pending {
+    color: #f59e0b;
+}
+
+.stat-number-approved {
+    color: #1a1a1a;
+}
+
+.stat-number-rejected {
+    color: #991B1B;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ACTION CARDS */
+.action-card-modern {
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.action-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.action-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.action-card-icon {
+    width: 55px;
+    height: 55px;
+    background: #DC2626;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.action-card-icon i {
+    font-size: 26px;
+    color: #fff;
+}
+
+.action-card-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 18px;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.action-card-description {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.action-card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* BUTTONS */
+.btn-modern {
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.btn-primary-modern {
+    background: #DC2626;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.btn-primary-modern:hover {
+    background: #991B1B;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35);
+}
+
+.btn-secondary-modern {
+    background: #fff;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-secondary-modern:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+}
+
+.btn-dark-modern {
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-dark-modern:hover {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* SECTION TITLE */
+.section-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title i {
+    color: #DC2626;
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 25px 20px;
+    }
+    
+    .dashboard-icon {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .dashboard-icon i {
+        font-size: 32px;
+    }
+    
+    .dashboard-text h1 {
+        font-size: 24px;
+    }
+    
+    .stat-card-modern,
+    .action-card-modern {
+        padding: 20px;
+    }
+}
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="row">
-  <!-- Stat: Tous -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value">{{ total_partenariats|default:0 }}</div>
-            <div class="stat-label">Partenariats (tous)</div>
-          </div>
-          <div class="avatar-sm bg-primary bg-opacity-10 rounded">
-            <i class="iconify" data-icon="mdi:handshake-outline" style="font-size:28px;"></i>
-          </div>
-        </div>
+<div class="container-fluid">
+  
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="dashboard-header-content">
+      <div class="dashboard-icon">
+        <i class="fa-solid fa-gauge-high"></i>
+      </div>
+      <div class="dashboard-text">
+        <h1>Tableau de bord</h1>
+        <p>Vue d'ensemble de votre plateforme DeepDrive</p>
       </div>
     </div>
   </div>
 
-  <!-- Stat: En attente -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value text-warning">{{ pending_count|default:0 }}</div>
-            <div class="stat-label">En attente</div>
+  <!-- Statistics Row -->
+  <h2 class="section-title">
+    <i class="fa-solid fa-chart-pie"></i>
+    Statistiques des partenariats
+  </h2>
+
+  <div class="row g-3 mb-5">
+    
+    <!-- Stat: Tous -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card-modern">
+        <div class="stat-content">
+          <div class="stat-icon-wrapper stat-icon-all">
+            <i class="fa-solid fa-handshake"></i>
           </div>
-          <div class="avatar-sm bg-warning bg-opacity-10 rounded">
-            <i class="iconify" data-icon="mdi:timer-sand" style="font-size:28px;"></i>
-          </div>
+          <div class="stat-number stat-number-all">{{ total_partenariats|default:0 }}</div>
+          <div class="stat-label">Total partenariats</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Stat: Approuvés -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value text-success">{{ approved_count|default:0 }}</div>
-            <div class="stat-label">Approuvés</div>
+    <!-- Stat: En attente -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card-modern">
+        <div class="stat-content">
+          <div class="stat-icon-wrapper stat-icon-pending">
+            <i class="fa-solid fa-clock"></i>
           </div>
-          <div class="avatar-sm bg-success bg-opacity-10 rounded">
-            <i class="iconify" data-icon="mdi:check-decagram" style="font-size:28px;"></i>
-          </div>
+          <div class="stat-number stat-number-pending">{{ pending_count|default:0 }}</div>
+          <div class="stat-label">En attente</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Stat: Rejetés -->
-  <div class="col-md-3">
-    <div class="card dash-card shadow-sm">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="stat-value text-danger">{{ rejected_count|default:0 }}</div>
-            <div class="stat-label">Rejetés</div>
+    <!-- Stat: Approuvés -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card-modern">
+        <div class="stat-content">
+          <div class="stat-icon-wrapper stat-icon-approved">
+            <i class="fa-solid fa-check"></i>
           </div>
-          <div class="avatar-sm bg-danger bg-opacity-10 rounded">
-            <i class="iconify" data-icon="mdi:close-octagon-outline" style="font-size:28px;"></i>
-          </div>
+          <div class="stat-number stat-number-approved">{{ approved_count|default:0 }}</div>
+          <div class="stat-label">Approuvés</div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Actions rapides -->
-<div class="row mt-3">
-  <div class="col-md-4">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <h5 class="mb-2">Gérer les partenariats</h5>
-        <p class="text-muted mb-3">Modérer les demandes, approuver/rejeter, éditer ou supprimer.</p>
-        <div class="mt-auto">
-          <a href="{% url 'deals:admin_partenariats_list' %}" class="btn btn-primary w-100">
-            Ouvrir la liste
+    <!-- Stat: Rejetés -->
+    <div class="col-md-6 col-lg-3">
+      <div class="stat-card-modern">
+        <div class="stat-content">
+          <div class="stat-icon-wrapper stat-icon-rejected">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          <div class="stat-number stat-number-rejected">{{ rejected_count|default:0 }}</div>
+          <div class="stat-label">Rejetés</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions rapides -->
+  <h2 class="section-title">
+    <i class="fa-solid fa-bolt"></i>
+    Actions rapides
+  </h2>
+
+  <div class="row g-3">
+    
+    <!-- Card 1: Gérer les partenariats -->
+    <div class="col-md-6 col-lg-4">
+      <div class="action-card-modern">
+        <div class="action-card-header">
+          <div class="action-card-icon">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <h3 class="action-card-title">Gérer les partenariats</h3>
+        </div>
+        <p class="action-card-description">
+          Modérez les demandes de partenariat, approuvez ou rejetez-les, éditez ou supprimez des entrées.
+        </p>
+        <div class="action-card-buttons">
+          <a href="{% url 'deals:admin_partenariats_list' %}" class="btn-modern btn-primary-modern">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span>Ouvrir la liste</span>
           </a>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <h5 class="mb-2">Voir le site / Devenir partenaire</h5>
-        <p class="text-muted mb-3">Accéder au formulaire public pour tester l’expérience.</p>
-        <div class="mt-auto d-grid gap-2">
-          <a href="{% url 'deals:partenariat_create' %}" class="btn btn-outline-secondary">
-            Formulaire Partenariat
+    <!-- Card 2: Voir le site -->
+    <div class="col-md-6 col-lg-4">
+      <div class="action-card-modern">
+        <div class="action-card-header">
+          <div class="action-card-icon">
+            <i class="fa-solid fa-globe"></i>
+          </div>
+          <h3 class="action-card-title">Espace public</h3>
+        </div>
+        <p class="action-card-description">
+          Accédez au formulaire public pour tester l'expérience utilisateur ou visitez le site principal.
+        </p>
+        <div class="action-card-buttons">
+          <a href="{% url 'deals:partenariat_create' %}" class="btn-modern btn-secondary-modern">
+            <i class="fa-solid fa-file-contract"></i>
+            <span>Formulaire partenariat</span>
           </a>
-          <a href="{% url 'index' %}" class="btn btn-light">
-            Aller au site public
+          <a href="{% url 'index' %}" class="btn-modern btn-secondary-modern">
+            <i class="fa-solid fa-house"></i>
+            <span>Site public</span>
           </a>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card dash-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <h5 class="mb-2">Administration Django</h5>
-        <p class="text-muted mb-3">Accéder à l’administration standard de Django.</p>
-        <div class="mt-auto">
-          <a href="{% url 'admin:index' %}" class="btn btn-dark w-100">
-            Ouvrir /admin
+    <!-- Card 3: Administration Django -->
+    <div class="col-md-6 col-lg-4">
+      <div class="action-card-modern">
+        <div class="action-card-header">
+          <div class="action-card-icon">
+            <i class="fa-solid fa-shield"></i>
+          </div>
+          <h3 class="action-card-title">Administration Django</h3>
+        </div>
+        <p class="action-card-description">
+          Accédez à l'interface d'administration standard de Django pour une gestion avancée de la base de données.
+        </p>
+        <div class="action-card-buttons">
+          <a href="{% url 'admin:index' %}" class="btn-modern btn-dark-modern">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Ouvrir /admin</span>
           </a>
         </div>
       </div>
     </div>
+
   </div>
+
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
-  // Petit ping visuel (facultatif)
   document.addEventListener('DOMContentLoaded', function () {
-    // Feather icons init (si inclus par base)
-    if (window.feather) feather.replace();
+    // Animation au chargement des cartes
+    const cards = document.querySelectorAll('.stat-card-modern, .action-card-modern');
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.4s ease';
+        
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 50);
+      }, index * 50);
+    });
   });
 </script>
 {% endblock %}

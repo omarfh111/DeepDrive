@@ -2,147 +2,430 @@
 {% load static %}
 
 {% block content %}
-<style>
-  /* ===============================
-     STYLE GLOBAL DU FORMULAIRE
-  =============================== */
-  .testdrive-card {
-    border-radius: 15px;
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    background-color: #fff;
-  }
-
-  .testdrive-title {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    color: #dc3545; /* couleur rouge élégante */
-    margin-bottom: 25px;
-  }
-
-  .testdrive-form .form-group {
-    margin-bottom: 18px;
-  }
-
-  .testdrive-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #333;
-  }
-
-  .testdrive-form input,
-  .testdrive-form select,
-  .testdrive-form textarea {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .testdrive-form input:focus,
-  .testdrive-form select:focus,
-  .testdrive-form textarea:focus {
-    border-color: #dc3545;
-    box-shadow: 0 0 6px rgba(220,53,69,0.3);
-    outline: none;
-  }
-
-  .testdrive-form textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-
-  /* Champs alignés en grille */
-  .testdrive-form .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .testdrive-form .col-md-6 {
-    flex: 1 1 48%;
-  }
-
-  /* Bouton principal épuré */
-  .testdrive-form .btn-primary {
-    background-color: #dc3545;
-    border: none;
-    font-weight: 600;
-    padding: 10px 30px;
-    font-size: 16px;
-    transition: background 0.3s ease;
-  }
-
-  .testdrive-form .btn-primary:hover {
-    background-color: #a71d2a;
-  }
-
-  .text-danger {
-    font-size: 0.875rem;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .testdrive-card {
-      padding: 20px;
-    }
-
-    .testdrive-form .col-md-6 {
-      flex: 1 1 100%;
-    }
-  }
-</style>
-
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
-
     {% include 'partials/header/header-three.html' %}
-    
-    {% with class="service" current="Test-Drive" title="Prendre un rendez-vous" %}
-      {% include 'partials/elements/breadcrumb.html' %}
-    {% endwith %}
 
-    <div class="container">
-      <div class="card testdrive-card">
-        <h2 class="testdrive-title">Réserver votre Test Drive</h2>
-
-        <form method="post" class="testdrive-form" novalidate>
-          {% csrf_token %}
-          
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-              {{ form.non_field_errors }}
+    <main class="ms-main">
+      <!-- TEST DRIVE FORM PREMIUM -->
+      <section class="rts-testdrive-area" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 80px 0; position: relative; overflow: hidden;">
+        <!-- Pattern animé -->
+        <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+          <div class="section-title-area2 text-center mb--80 wow fadeInUp">
+            <div style="display: inline-block; padding: 10px 25px; background: rgba(220, 38, 38, 0.1); border-radius: 50px; margin-bottom: 20px;">
+              <p class="sub-title" style="color: #DC2626; margin: 0; font-weight: 700; letter-spacing: 2px;">TEST DRIVE</p>
             </div>
-          {% endif %}
+            <h2 class="section-title cw" style="color: #fff; font-size: 48px; font-weight: 800; margin-bottom: 20px;">
+              Réservez votre <span style="background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Test Drive</span>
+            </h2>
+            <p style="color: #a0a0a0; max-width: 650px; margin: 0 auto; font-size: 17px; line-height: 1.7;">
+              Remplissez le formulaire ci-dessous pour prendre rendez-vous et tester votre véhicule
+            </p>
+          </div>
           
-          <div class="row">
-            {% for field in form %}
-              <div class="col-md-6 form-group">
-                <label>{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                  <div class="text-danger">{{ field.errors|striptags }}</div>
-                {% endif %}
+          <div class="form-card-premium wow fadeInUp" data-wow-delay=".2s" style="background: #fff; border-radius: 25px; padding: 60px; max-width: 1000px; margin: 0 auto; box-shadow: 0 25px 80px rgba(0,0,0,0.6); position: relative; overflow: hidden;">
+            <!-- Décoration -->
+            <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); border-radius: 50%; opacity: 0.05;"></div>
+            
+            <!-- Affichage des erreurs -->
+            {% if form.non_field_errors or form.errors %}
+            <div class="error-container wow shake" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 6px solid #ef4444; padding: 25px 30px; margin-bottom: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(239, 68, 68, 0.2);">
+              <div style="display: flex; align-items: start; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #ef4444; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <i class="fa-solid fa-exclamation-triangle" style="color: #fff; font-size: 24px;"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h5 style="color: #991b1b; margin-bottom: 15px; font-weight: 700; font-size: 18px;">
+                    <i class="fa-solid fa-circle-xmark"></i> Erreurs détectées dans le formulaire
+                  </h5>
+                  <ul style="margin: 0; padding-left: 0; list-style: none;">
+                    {% if form.non_field_errors %}
+                      <li style="padding: 10px 0; color: #991b1b; font-weight: 500;">{{ form.non_field_errors }}</li>
+                    {% endif %}
+                    {% for field in form %}
+                      {% for error in field.errors %}
+                      <li style="padding: 10px 0; color: #991b1b; font-weight: 500; border-bottom: 1px solid rgba(153, 27, 27, 0.1); display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-chevron-right" style="color: #ef4444; font-size: 12px;"></i>
+                        <strong style="color: #7f1d1d;">{{ field.label }}:</strong> {{ error }}
+                      </li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
               </div>
-            {% endfor %}
-          </div>
+            </div>
+            {% endif %}
 
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary rounded-pill">
-              Enregistrer
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            <form method="post" class="testdrive-form" id="testDriveForm" novalidate>
+              {% csrf_token %}
+              
+              <div class="row g-4">
+                
+                <!-- En-tête section -->
+                <div class="col-12">
+                  <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px 30px; border-radius: 15px; border-left: 5px solid #DC2626; margin-bottom: 20px;">
+                    <h3 style="color: #1a1a1a; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 15px;">
+                      <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-car" style="color: #fff; font-size: 24px;"></i>
+                      </div>
+                      Informations de réservation
+                    </h3>
+                  </div>
+                </div>
 
+                {% for field in form %}
+                <div class="col-md-6">
+                  <div class="form-group-premium">
+                    <label class="form-label-premium">
+                      <i class="fa-solid 
+                        {% if 'nom' in field.name or 'prénom' in field.name %}fa-user
+                        {% elif 'email' in field.name %}fa-envelope
+                        {% elif 'téléphone' in field.name or 'phone' in field.name %}fa-phone
+                        {% elif 'date' in field.name %}fa-calendar-days
+                        {% elif 'heure' in field.name or 'time' in field.name %}fa-clock
+                        {% elif 'voiture' in field.name or 'vehicle' in field.name %}fa-car
+                        {% elif 'message' in field.name or 'commentaire' in field.name %}fa-message
+                        {% else %}fa-circle-info{% endif %}">
+                      </i> 
+                      {{ field.label }} 
+                      {% if field.field.required %}<span style="color: #ef4444;">*</span>{% endif %}
+                    </label>
+                    
+                    <div class="input-wrapper">
+                      {{ field }}
+                      <span class="input-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    </div>
+                    
+                    {% if field.errors %}
+                      <small class="error-message" style="display: block; color: #ef4444; font-size: 13px; margin-top: 8px;">
+                        <i class="fa-solid fa-circle-exclamation"></i> {{ field.errors.0 }}
+                      </small>
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                      <small class="help-text"><i class="fa-solid fa-info-circle"></i> {{ field.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+
+                <!-- Zone d'information -->
+                <div class="col-12">
+                  <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-left: 5px solid #DC2626; padding: 25px 30px; border-radius: 15px; margin-top: 20px;">
+                    <h4 style="color: #1a1a1a; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                      <i class="fa-solid fa-info-circle" style="color: #DC2626;"></i> Informations importantes
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #374151;">
+                      <li style="margin-bottom: 10px;"><strong>Confirmation :</strong> Vous recevrez un email de confirmation sous 24h</li>
+                      <li style="margin-bottom: 10px;"><strong>Durée :</strong> Le test drive dure environ 30 minutes</li>
+                      <li><strong>Documents :</strong> Munissez-vous de votre permis de conduire valide</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Politique -->
+                <div class="col-12">
+                  <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; text-align: center;">
+                    <p style="color: #6b7280; margin: 0; font-size: 14px;">
+                      <i class="fa-solid fa-shield-halved"></i> En soumettant ce formulaire, vous acceptez notre 
+                      <strong style="color: #DC2626;">politique de confidentialité</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="col-12 text-center mt-4">
+                  <button type="submit" class="rts-btn btn-primary-custom radius-small" style="padding: 18px 60px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff; border: none; box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3); transition: all 0.3s; border-radius: 10px;">
+                    <span style="display: flex; align-items: center; gap: 12px; justify-content: center;">
+                      <i class="fa-solid fa-calendar-check"></i> RÉSERVER MON TEST DRIVE
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 </div>
+
+<style>
+/* Form Controls Premium */
+.form-control-premium, 
+.testdrive-form input[type="text"],
+.testdrive-form input[type="email"],
+.testdrive-form input[type="tel"],
+.testdrive-form input[type="date"],
+.testdrive-form input[type="time"],
+.testdrive-form select,
+.testdrive-form textarea {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: #f9fafb !important;
+    font-family: inherit !important;
+}
+
+.form-control-premium:focus,
+.testdrive-form input:focus,
+.testdrive-form select:focus,
+.testdrive-form textarea:focus {
+    border-color: #DC2626 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.1) !important;
+    background: #fff !important;
+    transform: translateY(-2px);
+}
+
+.form-control-premium:hover,
+.testdrive-form input:hover,
+.testdrive-form select:hover,
+.testdrive-form textarea:hover {
+    border-color: #DC2626 !important;
+    background: #fff !important;
+}
+
+.form-control-premium:valid:not(:placeholder-shown),
+.testdrive-form input:valid:not(:placeholder-shown),
+.testdrive-form select:valid,
+.testdrive-form textarea:valid:not(:placeholder-shown) {
+    border-color: #DC2626 !important;
+    background: #fff !important;
+}
+
+.testdrive-form textarea {
+    min-height: 120px !important;
+    resize: vertical !important;
+}
+
+/* Labels Premium */
+.form-label-premium {
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+}
+
+.form-label-premium i {
+    color: #DC2626;
+    margin-right: 8px;
+}
+
+/* Texte d'aide */
+.help-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 8px;
+    display: block;
+    font-style: italic;
+}
+
+/* Input avec icône de validation */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #DC2626;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.form-control-premium:valid:not(:placeholder-shown) ~ .input-icon,
+.testdrive-form input:valid:not(:placeholder-shown) ~ .input-icon,
+.testdrive-form select:valid ~ .input-icon,
+.testdrive-form textarea:valid:not(:placeholder-shown) ~ .input-icon {
+    opacity: 1;
+}
+
+/* Bouton */
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #991B1B 0%, #7f1d1d 100%) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5) !important;
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Supprimer gaps */
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rts-wrapper-inner {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.rts-testdrive-area {
+    margin-bottom: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-card-premium {
+        padding: 35px 25px !important;
+    }
+    
+    h2 {
+        font-size: 32px !important;
+    }
+    
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Animation WOW */
+.wow {
+    visibility: hidden;
+}
+
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+</style>
+
+<script>
+
+
+  
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation au chargement
+    const elements = document.querySelectorAll('.wow');
+    elements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.visibility = 'visible';
+            el.classList.add('fadeInUp');
+        }, index * 200);
+    });
+
+    // Validation email
+    const emailInput = document.querySelector('input[type="email"]');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(this.value)) {
+                this.style.borderColor = '#DC2626';
+                this.style.background = '#fff';
+            } else if (this.value.length > 0) {
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+            }
+        });
+    }
+
+    // Validation téléphone
+    const phoneInput = document.querySelector('input[type="tel"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\d+]/g, '');
+            
+            const isValid = /^\+?\d{8,}$/.test(this.value);
+            if (isValid) {
+                this.style.borderColor = '#DC2626';
+                this.style.background = '#fff';
+            } else if (this.value.length > 0) {
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+            }
+        });
+    }
+
+    // Date minimum = demain
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.min = tomorrow.toISOString().split('T')[0];
+
+        dateInput.addEventListener('change', function() {
+            const selected = new Date(this.value);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            if (selected <= today) {
+                alert('⚠️ Veuillez choisir une date future pour votre test drive.');
+                this.value = '';
+                this.style.borderColor = '#ef4444';
+                this.style.background = '#fef2f2';
+            } else {
+                this.style.borderColor = '#DC2626';
+                this.style.background = '#fff';
+            }
+        });
+    }
+
+    // Validation du formulaire
+    const form = document.getElementById('testDriveForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#ef4444';
+                    field.style.background = '#fef2f2';
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('⚠️ Veuillez remplir tous les champs obligatoires marqués d\'un astérisque (*)');
+                const firstInvalid = this.querySelector('input:invalid, select:invalid, textarea:invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+            }
+        });
+    }
+});
+</script>
+
 {% endblock content %}

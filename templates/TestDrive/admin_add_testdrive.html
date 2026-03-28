@@ -1,58 +1,292 @@
+{# templates/TestDrive/admin_testdrive_add.html (ou ton chemin actuel) #}
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
 {% block title %}Ajouter un Test Drive | Dusty{% endblock %}
-{% block page_title %}Ajouter un Test Drive{% endblock %}
-{% block breadcrumb_leaf %}Nouveau Test Drive{% endblock %}
+{% block page_title %}Test Drives{% endblock %}
+{% block breadcrumb_leaf %}Ajouter{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-xl-8 col-lg-10 mx-auto">
-    <div class="card overflow-hidden shadow-sm">
-      <div class="card-header bg-light d-flex justify-content-between align-items-center">
-        <h5 class="card-title text-dark mb-0">Créer un Test Drive</h5>
-        <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn btn-sm btn-secondary">
-          <i class="mdi mdi-arrow-left me-1"></i> Retour à la liste
-        </a>
+<style>
+/* ===== SAME MODERN STYLE (red/black) ===== */
+.modern-card{
+  background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);overflow:hidden;transition:.3s;
+}
+.modern-card:hover{box-shadow:0 8px 30px rgba(0,0,0,.10);}
+
+.modern-card-header{
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  padding:28px 35px;position:relative;overflow:hidden;
+}
+.modern-card-header::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,.04) 1px,transparent 0);
+  background-size:40px 40px;opacity:.5;
+}
+.modern-card-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#DC2626;}
+.modern-card-header-content{position:relative;z-index:1;display:flex;align-items:center;gap:18px;}
+.header-icon-wrapper{
+  width:55px;height:55px;background:#DC2626;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 15px rgba(220,38,38,.3);
+}
+.header-icon-wrapper i{font-size:24px;color:#fff;}
+.header-text h5{color:#fff;font-weight:800;font-size:20px;margin:0 0 5px 0;letter-spacing:-.5px;}
+.header-text p{color:rgba(255,255,255,.75);font-size:13px;margin:0;font-weight:500;}
+.modern-card-body{padding:35px;background:#fff;}
+
+.page-header-modern{
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;padding:32px 38px;margin-bottom:30px;
+  border:1px solid rgba(220,38,38,.3);box-shadow:0 8px 30px rgba(0,0,0,.15);
+  position:relative;overflow:hidden;
+}
+.page-header-modern::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,.04) 1px,transparent 0);
+  background-size:40px 40px;opacity:.5;
+}
+.page-header-modern::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#DC2626;}
+.page-header-content{position:relative;z-index:1;}
+.page-header-modern h4{
+  color:#fff;font-weight:800;font-size:26px;margin:0;display:flex;align-items:center;gap:15px;letter-spacing:-.5px;
+}
+.page-header-icon{
+  width:60px;height:60px;background:#DC2626;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;
+  box-shadow:0 6px 18px rgba(220,38,38,.3);
+}
+
+.breadcrumb-modern{
+  background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+  padding:10px 20px;border-radius:10px;margin:0;border:1px solid rgba(255,255,255,.15);
+}
+.breadcrumb-modern .breadcrumb-item{font-size:13px;font-weight:600;}
+.breadcrumb-modern .breadcrumb-item a{
+  color:rgba(255,255,255,.7);text-decoration:none;transition:.2s;
+  display:flex;align-items:center;gap:6px;
+}
+.breadcrumb-modern .breadcrumb-item a:hover{color:#DC2626;}
+.breadcrumb-modern .breadcrumb-item.active{color:#fff;font-weight:700;}
+
+.form-group-modern{margin-bottom:25px;}
+.form-label-modern{
+  color:#1a1a1a;font-weight:700;font-size:14px;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-label-modern .label-icon{
+  width:32px;height:32px;background:#DC2626;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
+}
+.form-control-modern,.form-select-modern{
+  width:100%;padding:13px 18px;border:2px solid #e5e7eb;border-radius:12px;
+  font-size:14px;transition:.3s;background:#f8f9fa;font-weight:500;color:#1a1a1a;
+}
+.form-control-modern:focus,.form-select-modern:focus{
+  border-color:#DC2626 !important;outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.1) !important;background:#fff !important;
+}
+.error-text{
+  color:#DC2626;font-size:12px;font-weight:600;margin-top:6px;
+  display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(220,38,38,.05);
+  border-radius:6px;border-left:3px solid #DC2626;
+}
+.alert-danger-modern{
+  background:#fee2e2;border:2px solid #fca5a5;border-radius:14px;padding:18px 22px;color:#991b1b;
+  font-weight:600;display:flex;align-items:start;gap:15px;margin-bottom:25px;
+}
+.alert-danger-modern .alert-icon{
+  width:42px;height:42px;background:#DC2626;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;flex-shrink:0;
+}
+
+.btn-modern{
+  padding:13px 28px;border-radius:12px;font-weight:700;font-size:14px;transition:.3s;border:none;
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+}
+.btn-primary-modern{background:#DC2626;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.25);}
+.btn-primary-modern:hover{background:#991B1B;transform:translateY(-2px);box-shadow:0 6px 18px rgba(220,38,38,.35);}
+.btn-secondary-modern{background:#fff;color:#6b7280;border:2px solid #e5e7eb;}
+.btn-secondary-modern:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a;transform:translateY(-2px);}
+
+.info-box-modern{
+  background:#f8f9fa;border:2px solid #e5e7eb;border-radius:14px;padding:18px 20px;margin-top:18px;
+  display:flex;align-items:start;gap:12px;
+}
+.info-box-modern .info-icon{
+  width:40px;height:40px;background:#1a1a1a;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;flex-shrink:0;
+}
+.info-box-modern .content strong{color:#1a1a1a;font-weight:800;font-size:14px;display:block;margin-bottom:5px;}
+.info-box-modern .content p{color:#6b7280;font-size:13px;margin:0;line-height:1.6;}
+
+@media (max-width:768px){
+  .modern-card-header{padding:22px 20px;}
+  .modern-card-body{padding:25px 20px;}
+  .page-header-modern{padding:25px 20px;}
+  .page-header-modern h4{font-size:22px;}
+  .page-header-icon,.header-icon-wrapper{width:50px;height:50px;font-size:22px;}
+}
+</style>
+
+<div class="container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header-modern">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div class="page-header-content">
+        <h4>
+          <span class="page-header-icon">
+            <i class="fa-solid fa-steering-wheel"></i>
+          </span>
+          Ajouter un Test Drive
+        </h4>
       </div>
 
-      <div class="card-body">
-        <form method="post" class="needs-validation" novalidate>
-          {% csrf_token %}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'TestDrive:admin_testdrive_list' %}">
+              <i class="fa-solid fa-list"></i>
+              Test Drives
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <i class="fa-solid fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+            Nouveau
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-          {% endif %}
+  <!-- Main Card -->
+  <div class="row">
+    <div class="col-xl-10 col-lg-11 mx-auto">
+      <div class="modern-card">
 
-          <div class="row">
-            {% for field in form %}
-              <div class="col-md-6 mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                  {{ field.label }}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                  <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-                {% endif %}
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="header-icon-wrapper">
+              <i class="fa-solid fa-car-side"></i>
+            </div>
+            <div class="header-text">
+              <h5>CrÃ©er un Test Drive</h5>
+              <p>Remplissez les champs requis pour planifier un test drive</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modern-card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="alert-danger-modern">
+                <div class="alert-icon">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                  <strong>Erreur de validation</strong><br>
+                  {{ form.non_field_errors }}
+                </div>
               </div>
-            {% endfor %}
-          </div>
+            {% endif %}
 
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary px-4 py-2">
-              <i class="mdi mdi-content-save-outline me-1"></i> Enregistrer
-            </button>
-          </div>
-        </form>
-      </div>
+            <div class="row g-4">
+              {% for field in form %}
+                <div class="col-md-6">
+                  <div class="form-group-modern">
+                    <label class="form-label-modern" for="{{ field.id_for_label }}">
+                      <span class="label-icon">
+                        {% if field.name == "user" %}
+                          <i class="fa-solid fa-user"></i>
+                        {% elif field.name == "vehicule" or field.name == "vehicle" %}
+                          <i class="fa-solid fa-car"></i>
+                        {% elif field.name == "date" or field.name == "date_testdrive" or field.name == "date_test_drive" %}
+                          <i class="fa-solid fa-calendar-days"></i>
+                        {% elif field.name == "heure" or field.name == "time" %}
+                          <i class="fa-solid fa-clock"></i>
+                        {% elif field.name == "telephone" or field.name == "phone" %}
+                          <i class="fa-solid fa-phone"></i>
+                        {% elif field.name == "email" %}
+                          <i class="fa-solid fa-envelope"></i>
+                        {% elif field.name == "status" %}
+                          <i class="fa-solid fa-toggle-on"></i>
+                        {% else %}
+                          <i class="fa-solid fa-pen"></i>
+                        {% endif %}
+                      </span>
+                      {{ field.label }}
+                    </label>
 
-      <div class="card-footer bg-light text-center">
-        <small class="text-muted">
-          <i class="mdi mdi-information-outline me-1"></i>
-          Tous les champs marqués sont obligatoires.
-        </small>
+                    {{ field }}
+
+                    {% if field.errors %}
+                      <div class="error-text">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ field.errors|striptags }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="d-flex gap-3 mt-4 pt-4" style="border-top: 2px solid #f3f4f6;">
+              <a href="{% url 'TestDrive:admin_testdrive_list' %}" class="btn-modern btn-secondary-modern">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Retour Ã  la liste</span>
+              </a>
+              <button type="submit" class="btn-modern btn-primary-modern">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Enregistrer</span>
+              </button>
+            </div>
+
+            <div class="info-box-modern">
+              <div class="info-icon">
+                <i class="fa-solid fa-circle-info"></i>
+              </div>
+              <div class="content">
+                <strong>Info</strong>
+                <p>Tous les champs requis doivent Ãªtre remplis avant lâ€™enregistrement.</p>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
       </div>
     </div>
   </div>
+
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Apply modern classes to Django-rendered widgets
+  document.addEventListener('DOMContentLoaded', function () {
+    // Selects
+    document.querySelectorAll('select').forEach(function (el) {
+      el.classList.add('form-select-modern');
+    });
+
+    // Textareas
+    document.querySelectorAll('textarea').forEach(function (el) {
+      el.classList.add('form-control-modern');
+    });
+
+    // Inputs (ignore checkbox/radio/hidden)
+    document.querySelectorAll('input').forEach(function (el) {
+      if (['checkbox', 'radio', 'hidden', 'file'].includes(el.type)) return;
+      el.classList.add('form-control-modern');
+    });
+  });
+</script>
 {% endblock %}

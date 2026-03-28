@@ -74,4 +74,13 @@ class TestDrive(models.Model):
         )
 
     def __str__(self):
-        return f"TestDrive #{self.id_test_drive} - {{ t.user.first_name }} {{ t.user.last_name }} - {self.car.marque} {self.car.modele}"
+        full = f"{self.user.first_name} {self.user.last_name}".strip()
+        return f"TestDrive #{self.id_test_drive} - {full} - {self.car.marque} {self.car.modele}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["car", "reservation_date", "reservation_time"],
+                name="uniq_testdrive_slot_per_car",
+            )
+        ]

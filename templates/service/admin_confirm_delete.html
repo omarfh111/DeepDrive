@@ -1,122 +1,467 @@
 {% extends 'backoffice/admin_base.html' %}
 {% load static %}
 
-{% block title %}Supprimer Service | Dusty{% endblock %}
+{% block title %}Supprimer Service{% endblock %}
 {% block page_title %}Confirmation de suppression{% endblock %}
 {% block breadcrumb_leaf %}Supprimer Service{% endblock %}
 
 {% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
-.delete-card {
-    max-width: 600px;
-    margin: 50px auto;
-    animation: slideDown 0.3s ease;
+/* CONTAINER */
+.delete-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
+
+/* DELETE CARD */
+.delete-card-modern {
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(220, 38, 38, 0.15);
+    border: 2px solid rgba(220, 38, 38, 0.2);
+    overflow: hidden;
+    animation: slideDown 0.4s ease;
+}
+
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-50px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
-.danger-icon {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+
+.delete-card-body {
+    padding: 50px 40px;
+    text-align: center;
+}
+
+/* DANGER ICON */
+.danger-icon-wrapper {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 30px;
-    animation: shake 0.5s;
+    box-shadow: 0 10px 40px rgba(220, 38, 38, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+    position: relative;
 }
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+
+.danger-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 3px solid rgba(220, 38, 38, 0.3);
+    animation: ripple 2s ease-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+.danger-icon-wrapper i {
+    font-size: 56px;
+    color: #fff;
+}
+
+/* TITLE */
+.delete-title {
+    color: #1a1a1a;
+    font-weight: 900;
+    font-size: 32px;
+    margin-bottom: 15px;
+    letter-spacing: -0.8px;
+}
+
+.delete-subtitle {
+    color: #6b7280;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 35px;
+}
+
+/* SERVICE INFO BOX */
+.service-info-box {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 2px solid #fca5a5;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.service-info-content {
+    display: flex;
+    align-items: start;
+    gap: 20px;
+}
+
+.service-image-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.service-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.service-icon-box {
+    width: 90px;
+    height: 90px;
+    background: #DC2626;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.service-icon-box i {
+    font-size: 38px;
+    color: #fff;
+}
+
+.service-details {
+    flex: 1;
+}
+
+.service-name {
+    color: #991b1b;
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.service-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.service-detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.service-detail-icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(220, 38, 38, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.service-detail-icon i {
+    font-size: 12px;
+    color: #DC2626;
+}
+
+.service-detail-item strong {
+    color: #1a1a1a;
+    font-weight: 700;
+    min-width: 60px;
+}
+
+/* WARNING ALERT */
+.warning-alert-modern {
+    background: #fef3c7;
+    border: 2px solid #fde68a;
+    border-left: 5px solid #f59e0b;
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 35px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: warning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes warning-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+    }
+}
+
+.warning-icon-box {
+    width: 50px;
+    height: 50px;
+    background: #f59e0b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.warning-icon-box i {
+    font-size: 24px;
+    color: #fff;
+}
+
+.warning-text {
+    color: #92400e;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: left;
+}
+
+/* BUTTONS */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.btn-modern-large {
+    padding: 16px 40px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    min-width: 180px;
+    justify-content: center;
+}
+
+.btn-cancel-modern {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-cancel-modern:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.btn-delete-modern {
+    background: #DC2626;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+.btn-delete-modern:hover {
+    background: #991B1B;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5);
+}
+
+/* ALTERNATIVE LINK */
+.alternative-link {
+    padding-top: 20px;
+    border-top: 2px solid #f3f4f6;
+}
+
+.alternative-link a {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.alternative-link a:hover {
+    color: #DC2626;
+    transform: translateX(5px);
+}
+
+.alternative-link a i {
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .delete-card-body {
+        padding: 35px 25px;
+    }
+    
+    .danger-icon-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .danger-icon-wrapper i {
+        font-size: 45px;
+    }
+    
+    .delete-title {
+        font-size: 26px;
+    }
+    
+    .service-info-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .service-detail-item {
+        justify-content: center;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-modern-large {
+        width: 100%;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="row">
-    <div class="col-12">
-        <div class="card delete-card">
-            <div class="card-body text-center p-5">
-                <!-- Icône d'avertissement -->
-                <div class="danger-icon">
-                    <iconify-icon icon="solar:danger-triangle-bold" class="fs-48 text-danger"></iconify-icon>
-                </div>
-
-                <!-- Titre -->
-                <h3 class="mb-3 fw-bold">Confirmer la suppression</h3>
-                <p class="text-muted mb-4">Êtes-vous sûr de vouloir supprimer ce service ?</p>
-
-                <!-- Détails du service -->
-                <div class="alert alert-danger-subtle mb-4">
-                    <div class="d-flex align-items-start text-start">
-                        {% if service.image %}
-                        <img src="{{ service.image.url }}" class="rounded me-3" width="80" height="80" style="object-fit: cover;">
-                        {% else %}
-                        <div class="avatar-lg bg-danger-subtle rounded me-3 d-flex align-items-center justify-content-center flex-shrink-0">
-                            <iconify-icon icon="solar:wrench-bold-duotone" class="fs-32 text-danger"></iconify-icon>
-                        </div>
-                        {% endif %}
-                        <div class="flex-grow-1">
-                            <h5 class="mb-2 text-danger">{{ service.nom_service }}</h5>
-                            <div class="d-flex flex-column gap-2" style="font-size: 14px;">
-                                <div>
-                                    <iconify-icon icon="solar:wrench-outline" class="align-middle me-2"></iconify-icon>
-                                    <strong>Type:</strong> {{ service.type_service }}
-                                </div>
-                                <div>
-                                    <iconify-icon icon="solar:calendar-outline" class="align-middle me-2"></iconify-icon>
-                                    <strong>Date:</strong> {{ service.date_service|date:"d/m/Y" }}
-                                </div>
-                                <div>
-                                    <iconify-icon icon="solar:chart-outline" class="align-middle me-2"></iconify-icon>
-                                    <strong>Statut:</strong> {{ service.statut }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Avertissement -->
-                <div class="alert alert-warning border-warning mb-4">
-                    <iconify-icon icon="solar:danger-circle-bold" class="fs-20 align-middle me-2"></iconify-icon>
-                    <strong>Attention !</strong> Cette action est irréversible.
-                </div>
-
-                <!-- Boutons d'action -->
-                <form method="post" class="d-inline">
-                    {% csrf_token %}
-                    <div class="d-flex gap-3 justify-content-center">
-                        <a href="{% url 'services:admin_service_list' %}" class="btn btn-light btn-lg px-5">
-                            <iconify-icon icon="solar:close-circle-bold" class="align-middle me-2"></iconify-icon>
-                            Annuler
-                        </a>
-                        <button type="submit" class="btn btn-danger btn-lg px-5">
-                            <iconify-icon icon="solar:trash-bin-2-bold" class="align-middle me-2"></iconify-icon>
-                            Oui, supprimer
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Lien retour -->
-                <div class="mt-4">
-                    <a href="{% url 'services:admin_service_update' service.pk %}" class="text-muted">
-                        <iconify-icon icon="solar:pen-outline" class="align-middle me-1"></iconify-icon>
-                        Ou modifier ce service
-                    </a>
-                </div>
-            </div>
+<div class="container-fluid">
+  <div class="delete-container">
+    <div class="delete-card-modern">
+      <div class="delete-card-body">
+        
+        <!-- Danger Icon -->
+        <div class="danger-icon-wrapper">
+          <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
+
+        <!-- Title -->
+        <h2 class="delete-title">Confirmer la suppression</h2>
+        <p class="delete-subtitle">Êtes-vous absolument sûr de vouloir supprimer ce service ?</p>
+
+        <!-- Service Info Box -->
+        <div class="service-info-box">
+          <div class="service-info-content">
+            {% if service.image %}
+              <div class="service-image-wrapper">
+                <img src="{{ service.image.url }}" alt="{{ service.nom_service }}">
+              </div>
+            {% else %}
+              <div class="service-icon-box">
+                <i class="fa-solid fa-wrench"></i>
+              </div>
+            {% endif %}
+            
+            <div class="service-details">
+              <h3 class="service-name">{{ service.nom_service }}</h3>
+              
+              <div class="service-detail-item">
+                <div class="service-detail-icon">
+                  <i class="fa-solid fa-wrench"></i>
+                </div>
+                <strong>Type:</strong>
+                <span>{{ service.type_service }}</span>
+              </div>
+              
+              <div class="service-detail-item">
+                <div class="service-detail-icon">
+                  <i class="fa-solid fa-calendar"></i>
+                </div>
+                <strong>Date:</strong>
+                <span>{{ service.date_service|date:"d/m/Y" }}</span>
+              </div>
+              
+              <div class="service-detail-item">
+                <div class="service-detail-icon">
+                  <i class="fa-solid fa-chart-simple"></i>
+                </div>
+                <strong>Statut:</strong>
+                <span>{{ service.statut }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Warning Alert -->
+        <div class="warning-alert-modern">
+          <div class="warning-icon-box">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </div>
+          <div class="warning-text">
+            <strong>Attention !</strong> Cette action est irréversible. Toutes les données associées seront définitivement perdues.
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <form method="post" class="d-inline w-100">
+          {% csrf_token %}
+          <div class="button-group">
+            <a href="{% url 'services:admin_service_list' %}" class="btn-modern-large btn-cancel-modern">
+              <i class="fa-solid fa-xmark"></i>
+              <span>Annuler</span>
+            </a>
+            <button type="submit" class="btn-modern-large btn-delete-modern">
+              <i class="fa-solid fa-trash"></i>
+              <span>Oui, supprimer</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Alternative Link -->
+        <div class="alternative-link">
+          <a href="{% url 'services:admin_service_update' service.pk %}">
+            <i class="fa-solid fa-pen"></i>
+            <span>Ou modifier ce service à la place</span>
+          </a>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}

@@ -69,7 +69,7 @@ class DustyFormMixin:
 class PostForm(DustyFormMixin, forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ['owner','sold']
+        exclude = ['owner','sold','embedding','predicted_price','offer_label']
         fields = "__all__"
         
         widgets = {

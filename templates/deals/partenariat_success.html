@@ -1,13 +1,305 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
     {% include 'partials/header/header-three.html' %}
-    <main class="ms-main rts-section-gap text-center">
-      <h2 class="title">🎉 Félicitations !</h2>
-      <p>Votre demande de partenariat a bien été envoyée.</p>
-      <a href="/" class="rts-btn btn-primary mt-3">Retour à l'accueil</a>
+    
+    <main class="ms-main">
+      <!-- PAGE DE SUCCÈS PREMIUM -->
+      <section class="rts-success-area" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 120px 0; position: relative; overflow: hidden; min-height: 100vh; display: flex; align-items: center;">
+        <!-- Pattern animé -->
+        <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+        
+        <!-- Confetti décoratifs -->
+        <div class="confetti" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+          <div class="confetti-piece" style="position: absolute; width: 10px; height: 10px; background: #DC2626; top: 20%; left: 10%; animation: fall 3s infinite;"></div>
+          <div class="confetti-piece" style="position: absolute; width: 8px; height: 8px; background: #ef4444; top: 30%; left: 80%; animation: fall 3.5s infinite;"></div>
+          <div class="confetti-piece" style="position: absolute; width: 12px; height: 12px; background: #DC2626; top: 15%; left: 50%; animation: fall 4s infinite;"></div>
+          <div class="confetti-piece" style="position: absolute; width: 10px; height: 10px; background: #991B1B; top: 25%; left: 30%; animation: fall 3.8s infinite;"></div>
+          <div class="confetti-piece" style="position: absolute; width: 8px; height: 8px; background: #ef4444; top: 10%; left: 70%; animation: fall 3.2s infinite;"></div>
+        </div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+          <div class="success-card-premium wow fadeInUp" style="background: #fff; border-radius: 30px; padding: 80px 60px; max-width: 800px; margin: 0 auto; box-shadow: 0 30px 100px rgba(0,0,0,0.7); text-align: center; position: relative; overflow: hidden;">
+            
+            <!-- Décoration circulaire -->
+            <div style="position: absolute; top: -100px; left: -100px; width: 250px; height: 250px; background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); border-radius: 50%; opacity: 0.05;"></div>
+            <div style="position: absolute; bottom: -80px; right: -80px; width: 200px; height: 200px; background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); border-radius: 50%; opacity: 0.05;"></div>
+            
+            <!-- Icône de succès animée -->
+            <div class="success-icon-wrapper" style="margin-bottom: 40px;">
+              <div class="success-icon-bg" style="width: 150px; height: 150px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; position: relative; animation: pulse 2s infinite;">
+                <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(220, 38, 38, 0.4);">
+                  <i class="fa-solid fa-check" style="color: #fff; font-size: 60px; animation: checkmark 0.8s ease-out;"></i>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Titre -->
+            <h1 style="color: #1a1a1a; font-size: 42px; font-weight: 800; margin-bottom: 25px; line-height: 1.2;">
+              Félicitations !
+            </h1>
+            
+            <!-- Message principal -->
+            <p style="color: #4b5563; font-size: 20px; line-height: 1.7; margin-bottom: 35px; max-width: 600px; margin-left: auto; margin-right: auto;">
+              Votre demande de partenariat a été <strong style="color: #DC2626;">envoyée avec succès</strong>
+            </p>
+            
+            <!-- Carte d'information -->
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 20px; padding: 35px; margin-bottom: 45px; border-left: 6px solid #DC2626;">
+              <div style="display: flex; align-items: start; gap: 25px; text-align: left;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <i class="fa-solid fa-envelope-circle-check" style="color: #fff; font-size: 28px;"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h3 style="color: #1a1a1a; font-weight: 700; margin-bottom: 15px; font-size: 20px;">
+                    <i class="fa-solid fa-circle-info" style="color: #DC2626;"></i> Prochaines étapes
+                  </h3>
+                  <ul style="margin: 0; padding-left: 0; list-style: none; color: #4b5563;">
+                    <li style="padding: 10px 0; display: flex; align-items: start; gap: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                      <i class="fa-solid fa-circle-check" style="color: #DC2626; margin-top: 4px; flex-shrink: 0;"></i>
+                      <span>Votre demande est actuellement en <strong style="color: #1a1a1a;">statut "Pending"</strong></span>
+                    </li>
+                    <li style="padding: 10px 0; display: flex; align-items: start; gap: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                      <i class="fa-solid fa-circle-check" style="color: #DC2626; margin-top: 4px; flex-shrink: 0;"></i>
+                      <span>Notre équipe va examiner votre dossier <strong style="color: #1a1a1a;">sous 48h</strong></span>
+                    </li>
+                    <li style="padding: 10px 0; display: flex; align-items: start; gap: 12px;">
+                      <i class="fa-solid fa-circle-check" style="color: #DC2626; margin-top: 4px; flex-shrink: 0;"></i>
+                      <span>Vous recevrez un <strong style="color: #1a1a1a;">email de confirmation</strong> avec la décision</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Zone de contact -->
+            <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 15px; padding: 25px; margin-bottom: 45px; border-left: 5px solid #6b7280;">
+              <p style="color: #374151; margin: 0; font-size: 15px; line-height: 1.6;">
+                <i class="fa-solid fa-lightbulb" style="color: #6b7280;"></i> 
+                <strong>Besoin d'aide ?</strong> Contactez-nous à 
+                <a href="mailto:DeepDrive@gmail.com" style="color: #DC2626; font-weight: 700; text-decoration: none;">DeepDrive@gmail.com</a> 
+                ou au <a href="tel:+21652340781" style="color: #DC2626; font-weight: 700; text-decoration: none;">+216 52 340 781</a>
+              </p>
+            </div>
+            
+            <!-- Boutons d'action -->
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+              <a href="/" class="rts-btn btn-primary-custom" style="padding: 18px 45px; font-size: 16px; font-weight: 700; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff; border: none; box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4); border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 12px; transition: all 0.3s;">
+                <i class="fa-solid fa-house"></i> Retour à l'accueil
+              </a>
+             
+            </div>
+            
+            <!-- Footer de la carte -->
+            <div style="margin-top: 50px; padding-top: 30px; border-top: 2px dashed #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 14px; margin: 0;">
+                <i class="fa-solid fa-shield-halved"></i> Vos informations sont sécurisées et confidentielles
+              </p>
+            </div>
+          </div>
+          
+          <!-- Message supplémentaire en bas -->
+          <div class="wow fadeInUp" data-wow-delay=".3s" style="margin-top: 40px; text-align: center;">
+            <p style="color: #a0a0a0; font-size: 16px; margin: 0;">
+              Merci de votre confiance en <strong style="color: #DC2626;">DeepDrive</strong>
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </div>
+
+<style>
+/* Cacher la navbar sticky au scroll */
+.header-sticky-active {
+    display: none !important;
+}
+
+.rts-header.header-sticky {
+    position: relative !important;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(220, 38, 38, 0);
+    }
+}
+
+@keyframes checkmark {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Boutons hover */
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #991B1B 0%, #7f1d1d 100%) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(220, 38, 38, 0.5) !important;
+}
+
+.btn-secondary-custom:hover {
+    background: #000 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Supprimer gaps */
+.rts-section-gap,
+.rts-section-gapBottom,
+.rts-section-gapTop {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rts-wrapper-inner {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.rts-success-area {
+    margin-bottom: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .success-card-premium {
+        padding: 50px 30px !important;
+    }
+    
+    h1 {
+        font-size: 32px !important;
+    }
+    
+    p {
+        font-size: 16px !important;
+    }
+    
+    .success-icon-bg {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    
+    .success-icon-bg > div {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .success-icon-bg i {
+        font-size: 45px !important;
+    }
+    
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animation WOW */
+.wow {
+    visibility: hidden;
+}
+
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+</style>
+
+<script>
+// Désactiver le sticky header sur cette page
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.rts-header');
+    if (header) {
+        header.style.position = 'relative';
+        header.classList.remove('header-sticky');
+    }
+    
+    // Désactiver le scroll sticky
+    window.addEventListener('scroll', function(e) {
+        const stickyHeader = document.querySelector('.header-sticky-active');
+        if (stickyHeader) {
+            stickyHeader.style.display = 'none';
+        }
+    });
+    
+    // Animation au chargement
+    const elements = document.querySelectorAll('.wow');
+    elements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.visibility = 'visible';
+            el.classList.add('fadeInUp');
+        }, index * 200);
+    });
+    
+    // Confetti animation dynamique
+    const confettiContainer = document.querySelector('.confetti');
+    if (confettiContainer) {
+        const colors = ['#DC2626', '#ef4444', '#991B1B', '#6b7280'];
+        for (let i = 0; i < 15; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 10 + 5}px;
+                height: ${Math.random() * 10 + 5}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                top: ${Math.random() * 30}%;
+                left: ${Math.random() * 100}%;
+                animation: fall ${Math.random() * 3 + 2}s infinite;
+                animation-delay: ${Math.random() * 2}s;
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                opacity: 0.7;
+            `;
+            confettiContainer.appendChild(confetti);
+        }
+    }
+});
+</script>
+
 {% endblock %}

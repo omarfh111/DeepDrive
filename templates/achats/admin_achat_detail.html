@@ -5,68 +5,328 @@
 {% block page_title %}Achat #{{ achat.id }}{% endblock %}
 {% block breadcrumb_leaf %}Détail de l'achat{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  body{overflow-x:hidden;}
+  .container-fluid{overflow-x:hidden;}
+
+  /* HEADER */
+  .page-header-pro{
+    background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+    border-radius:20px;
+    padding:35px 40px;
+    margin-bottom:26px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    border:1px solid rgba(220,38,38,.30);
+  }
+  .page-header-pro::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+    background-size:40px 40px;
+    opacity:.5;
+  }
+  .page-header-pro::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:4px; background:#DC2626;
+  }
+  .header-content-pro{
+    position:relative; z-index:1;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:18px;
+  }
+  .header-left-pro{display:flex; align-items:center; gap:18px;}
+  .header-icon-pro{
+    width:70px; height:70px;
+    background:#DC2626;
+    border-radius:18px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(220,38,38,.30);
+  }
+  .header-icon-pro i{font-size:32px; color:#fff;}
+  .header-text-pro h2{
+    color:#fff;
+    font-weight:900;
+    font-size:28px;
+    margin:0 0 8px 0;
+    letter-spacing:-.5px;
+  }
+  .header-text-pro p{
+    color:rgba(255,255,255,.82);
+    font-size:14px;
+    margin:0;
+    font-weight:600;
+  }
+
+  /* CARD */
+  .card-pro{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    border:1px solid rgba(0,0,0,.05);
+    overflow:hidden;
+  }
+  .card-header-pro{
+    background:#f8f9fa;
+    padding:22px 26px;
+    border-bottom:2px solid #e5e7eb;
+  }
+  .card-title-pro{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+  }
+  .title-left-pro{
+    display:flex; align-items:center; gap:14px;
+  }
+  .card-title-icon-pro{
+    width:46px; height:46px;
+    background:#DC2626;
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-title-icon-pro i{font-size:18px; color:#fff;}
+  .card-title-pro h5{
+    margin:0;
+    font-weight:900;
+    color:#111827;
+    font-size:18px;
+  }
+
+  /* CONTENT */
+  .card-body-pro{padding:22px 26px;}
+  .ad-wrap-pro{display:flex; gap:16px; align-items:flex-start;}
+  .ad-img-pro{
+    height:130px; width:200px;
+    object-fit:cover;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
+    background:#f8f9fa;
+  }
+  .ad-meta-pro .headline{
+    font-size:18px;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:6px;
+  }
+  .ad-meta-pro .sub{
+    color:#6b7280;
+    font-weight:700;
+    font-size:12px;
+    line-height:1.6;
+  }
+  .btn-pro{
+    padding:11px 14px;
+    border-radius:12px;
+    font-weight:900;
+    font-size:13px;
+    border:2px solid transparent;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    transition:.25s;
+    justify-content:center;
+  }
+  .btn-pro-primary{background:#DC2626; color:#fff;}
+  .btn-pro-primary:hover{background:#991B1B; transform:translateY(-2px); box-shadow:0 8px 20px rgba(220,38,38,.25);}
+  .btn-pro-outline{background:#fff; color:#111827; border-color:#e5e7eb;}
+  .btn-pro-outline:hover{border-color:#111827; transform:translateY(-2px);}
+  .btn-pro-danger{background:#DC2626; color:#fff;}
+  .btn-pro-danger:hover{background:#991B1B; transform:translateY(-2px); box-shadow:0 8px 20px rgba(220,38,38,.25);}
+
+  .kv-pro{display:grid; gap:10px;}
+  .kv-row-pro{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border:1px solid #f3f4f6;
+    border-radius:14px;
+    background:#fff;
+  }
+  .kv-row-pro .k{color:#6b7280; font-weight:900; font-size:12px; text-transform:uppercase; letter-spacing:.4px;}
+  .kv-row-pro .v{color:#111827; font-weight:900; font-size:13px; text-align:right;}
+  .divider-pro{height:1px; background:#e5e7eb; margin:18px 0;}
+
+  .badge-pro{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:900;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .badge-success{background:#f3f4f6; color:#111827; border:1px solid #d1d5db;}
+  .badge-warning{background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb;}
+  .badge-danger{background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;}
+
+  .actions-grid-pro{display:grid; gap:10px;}
+  .actions-grid-pro a{width:100%;}
+  .btn-wide{width:100%;}
+
+  @media (max-width: 992px){
+    .page-header-pro{padding:25px 20px;}
+    .header-text-pro h2{font-size:22px;}
+    .ad-wrap-pro{flex-direction:column;}
+    .ad-img-pro{width:100%; height:220px;}
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row g-3">
-  <div class="col-xxl-8 col-lg-7">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0">Annonce</h5>
-      </div>
-      <div class="card-body">
-        <div class="d-flex gap-3">
-          {% if achat.post.image %}
-            <img src="{{ achat.post.image.url }}" alt="" class="rounded-2" style="height:120px;width:180px;object-fit:cover;">
-          {% endif %}
-          <div>
-            <div class="fs-5 fw-semibold">{{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})</div>
-            <div class="text-muted">Transmission: {{ achat.post.transmission }} • Boîte: {{ achat.post.boite_vitesse }}</div>
-            <div class="text-muted">Énergie: {{ achat.post.energy }} • Carrosserie: {{ achat.post.carrosserie }}</div>
-            <div class="mt-2">
-              <a class="btn btn-sm btn-primary" href="{% url 'posts:admin_update_post' achat.post.id %}">Modifier l’annonce</a>
-            </div>
-          </div>
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Achat #{{ achat.id }}</h2>
+          <p>Détails de l'achat, statut et actions rapides</p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xxl-4 col-lg-5">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0">Achat</h5>
+  <div class="row g-3">
+    <!-- Annonce -->
+    <div class="col-xxl-8 col-lg-7">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="title-left-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-car"></i>
+              </div>
+              <h5>Annonce</h5>
+            </div>
+            <a class="btn-pro btn-pro-outline" href="{% url 'achats:admin_achats_list' %}">
+              <i class="fa-solid fa-arrow-left"></i> Retour
+            </a>
+          </div>
+        </div>
+
+        <div class="card-body-pro">
+          <div class="ad-wrap-pro">
+            {% if achat.post.image %}
+              <img src="{{ achat.post.image.url }}" alt="" class="ad-img-pro">
+            {% else %}
+              <div class="ad-img-pro d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-image" style="color:#9ca3af; font-size:28px;"></i>
+              </div>
+            {% endif %}
+
+            <div class="ad-meta-pro">
+              <div class="headline">
+                {{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})
+              </div>
+              <div class="sub">
+                Transmission : {{ achat.post.transmission|default:"—" }} • Boîte : {{ achat.post.boite_vitesse|default:"—" }}<br>
+                Énergie : {{ achat.post.energy|default:"—" }} • Carrosserie : {{ achat.post.carrosserie|default:"—" }}
+              </div>
+
+              <div class="mt-3">
+                <a class="btn-pro btn-pro-primary" href="{% url 'posts:admin_update_post' achat.post.id %}">
+                  <i class="fa-solid fa-pen"></i> Modifier l’annonce
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="card-body">
-        <div class="mb-2"><strong>Prix:</strong> {{ achat.price }} DT</div>
-        <!-- label can say "buyer", but the value is achat.buyer -->
-<strong>Acheteur:</strong>
-{% firstof achat.buyer.get_full_name achat.buyer.email achat.buyer %}
+    </div>
 
-        <div class="mb-2"><strong>Date:</strong> {{ achat.date_achat|date:"Y-m-d H:i" }}</div>
-        <div class="mb-3">
-          <strong>Statut:</strong>
-{% if achat.statut == 'paid' %}
-  <span class="badge bg-success-subtle text-success">Validé</span>
-{% elif achat.statut == 'canceled' %}
-  <span class="badge bg-danger-subtle text-danger">Annulé</span>
-{% else %}
-  <span class="badge bg-warning-subtle text-warning">En cours</span>
-{% endif %}
+    <!-- Achat -->
+    <div class="col-xxl-4 col-lg-5">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="title-left-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <h5>Achat</h5>
+            </div>
 
+            {% if achat.statut == 'paid' %}
+              <span class="badge-pro badge-success"><i class="fa-solid fa-circle-check"></i> Validé</span>
+            {% elif achat.statut == 'canceled' %}
+              <span class="badge-pro badge-danger"><i class="fa-solid fa-circle-xmark"></i> Annulé</span>
+            {% else %}
+              <span class="badge-pro badge-warning"><i class="fa-solid fa-clock"></i> En cours</span>
+            {% endif %}
+          </div>
         </div>
 
-        <div class="d-grid gap-2">
-          <a class="btn btn-primary" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='validated' %}">Marquer Validé</a>
-          <a class="btn btn-outline-primary" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='pending' %}">Marquer En cours</a>
-          <a class="btn btn-outline-danger" href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='cancelled' %}">Marquer Annulé</a>
-        </div>
+        <div class="card-body-pro">
+          <div class="kv-pro">
+            <div class="kv-row-pro">
+              <div class="k">Prix</div>
+              <div class="v">{{ achat.price }} DT</div>
+            </div>
 
-        <hr>
-        <form method="post" action="{% url 'achats:admin_achat_delete' achat_id=achat.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Supprimer cet achat ?');">
-            Supprimer
-          </button>
-        </form>
+            <div class="kv-row-pro">
+              <div class="k">Acheteur</div>
+              <div class="v">{% firstof achat.buyer.get_full_name achat.buyer.email achat.buyer %}</div>
+            </div>
+
+            <div class="kv-row-pro">
+              <div class="k">Date</div>
+              <div class="v">{{ achat.date_achat|date:"Y-m-d H:i" }}</div>
+            </div>
+
+            <div class="kv-row-pro">
+              <div class="k">Statut</div>
+              <div class="v">
+                {% if achat.statut == 'paid' %}
+                  <span class="badge-pro badge-success"><i class="fa-solid fa-circle-check"></i> Validé</span>
+                {% elif achat.statut == 'canceled' %}
+                  <span class="badge-pro badge-danger"><i class="fa-solid fa-circle-xmark"></i> Annulé</span>
+                {% else %}
+                  <span class="badge-pro badge-warning"><i class="fa-solid fa-clock"></i> En cours</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="divider-pro"></div>
+
+          <div class="actions-grid-pro">
+            <a class="btn-pro btn-pro-primary btn-wide"
+               href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='validated' %}">
+              <i class="fa-solid fa-circle-check"></i> Marquer Validé
+            </a>
+            <a class="btn-pro btn-pro-outline btn-wide"
+               href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='pending' %}">
+              <i class="fa-solid fa-clock"></i> Marquer En cours
+            </a>
+            <a class="btn-pro btn-pro-outline btn-wide"
+               style="border-color:#fca5a5; color:#991b1b;"
+               href="{% url 'achats:admin_achat_update_status' achat_id=achat.id new_status='cancelled' %}">
+              <i class="fa-solid fa-circle-xmark"></i> Marquer Annulé
+            </a>
+          </div>
+
+          <div class="divider-pro"></div>
+
+          <form method="post" action="{% url 'achats:admin_achat_delete' achat_id=achat.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-pro btn-pro-danger btn-wide"
+              onclick="return confirm('Supprimer cet achat ?');">
+              <i class="fa-solid fa-trash"></i> Supprimer
+            </button>
+          </form>
+
+        </div>
       </div>
     </div>
   </div>

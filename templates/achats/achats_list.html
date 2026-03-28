@@ -5,133 +5,602 @@
 {% block page_title %}Achats{% endblock %}
 {% block breadcrumb_leaf %}Gestion des achats{% endblock %}
 
-{% block content %}
-<div class="row">
-  <div class="col-xl-12">
-    <div class="card overflow-hidden">
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  body{overflow-x:hidden;}
+  .container-fluid{overflow-x:hidden;}
 
-      <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <h5 class="card-title text-dark mb-0">Liste des achats</h5>
-          <form class="d-flex gap-2" method="get">
-            <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Rechercher (marque, modèle, buyer)">
-            <select class="form-select" name="statut" style="max-width:220px;">
-              <option value="">— Statut —</option>
-              <option value="pending"   {% if statut == 'pending' %}selected{% endif %}>En cours</option>
-              <option value="validated" {% if statut == 'validated' %}selected{% endif %}>Validé</option>
-              <option value="cancelled" {% if statut == 'cancelled' %}selected{% endif %}>Annulé</option>
-            </select>
-            <button class="btn btn-primary">Filtrer</button>
-          </form>
+  /* HEADER */
+  .page-header-pro{
+    background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+    border-radius:20px;
+    padding:35px 40px;
+    margin-bottom:26px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    border:1px solid rgba(220,38,38,.30);
+  }
+  .page-header-pro::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+    background-size:40px 40px;
+    opacity:.5;
+  }
+  .page-header-pro::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:4px; background:#DC2626;
+  }
+  .header-content-pro{
+    position:relative; z-index:1;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:25px;
+  }
+  .header-left-pro{display:flex; align-items:center; gap:20px;}
+  .header-icon-pro{
+    width:70px; height:70px;
+    background:#DC2626;
+    border-radius:18px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(220,38,38,.30);
+  }
+  .header-icon-pro i{font-size:32px; color:#fff;}
+  .header-text-pro h2{
+    color:#fff;
+    font-weight:800;
+    font-size:28px;
+    margin:0 0 8px 0;
+    letter-spacing:-.5px;
+  }
+  .header-text-pro p{
+    color:rgba(255,255,255,.80);
+    font-size:14px;
+    margin:0;
+    font-weight:600;
+  }
+
+  .header-stats-pro{display:flex; gap:20px;}
+  .stat-box-pro{
+    background:rgba(255,255,255,.10);
+    backdrop-filter: blur(10px);
+    padding:18px 28px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.20);
+    transition: all .3s ease;
+    min-width:140px;
+  }
+  .stat-box-pro:hover{
+    transform: translateY(-3px);
+    border-color: rgba(220,38,38,.50);
+  }
+  .stat-box-pro .number{
+    color:#DC2626;
+    font-size:30px;
+    font-weight:900;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .stat-box-pro .label{
+    color:rgba(255,255,255,.85);
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+
+  /* CARD */
+  .card-pro{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    border:1px solid rgba(0,0,0,.05);
+    overflow:hidden;
+  }
+  .card-header-pro{
+    background:#f8f9fa;
+    padding:26px 30px;
+    border-bottom:2px solid #e5e7eb;
+  }
+  .card-header-content-pro{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:18px;
+  }
+  .card-title-pro{
+    display:flex; align-items:center; gap:14px;
+    margin:0;
+  }
+  .card-title-icon-pro{
+    width:50px; height:50px;
+    background:#DC2626;
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-title-icon-pro i{font-size:20px; color:#fff;}
+  .card-title-pro h5{
+    color:#1a1a1a;
+    font-weight:900;
+    font-size:20px;
+    margin:0;
+  }
+
+  /* FILTERS */
+  .filters-pro{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .search-input-wrapper-pro{position:relative;}
+  .search-input-wrapper-pro i{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#9ca3af;
+    font-size:16px;
+  }
+  .search-input-pro{
+    width:320px;
+    padding:13px 18px 13px 48px;
+    border:2px solid #e5e7eb;
+    border-radius:12px;
+    font-size:14px;
+    transition: all .3s ease;
+    background:#f8f9fa;
+    font-weight:600;
+  }
+  .search-input-pro:focus{
+    border-color:#DC2626;
+    outline:none;
+    box-shadow:0 0 0 4px rgba(220,38,38,.10);
+    background:#fff;
+  }
+  .select-pro{
+    padding:13px 14px;
+    border:2px solid #e5e7eb;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:700;
+    background:#f8f9fa;
+    transition: all .3s ease;
+    min-width:220px;
+  }
+  .select-pro:focus{
+    border-color:#DC2626;
+    outline:none;
+    box-shadow:0 0 0 4px rgba(220,38,38,.10);
+    background:#fff;
+  }
+  .btn-search-pro{
+    padding:13px 22px;
+    background:#DC2626;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-weight:900;
+    font-size:14px;
+    transition: all .3s ease;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-search-pro:hover{
+    background:#991B1B;
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(220,38,38,.30);
+  }
+
+  /* TABLE */
+  .table-container-pro{width:100%; overflow:visible;}
+  .table-pro{width:100%; margin:0;}
+  .table-pro thead{
+    background:#f8f9fa;
+    border-bottom:2px solid #e5e7eb;
+  }
+  .table-pro thead th{
+    padding:16px 12px;
+    font-weight:900;
+    font-size:11px;
+    color:#111827;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    border:none;
+    white-space:nowrap;
+  }
+  .table-pro thead th i{
+    color:#DC2626;
+    margin-right:6px;
+    font-size:12px;
+  }
+  .table-pro tbody tr{
+    border-bottom:1px solid #f3f4f6;
+    transition: all .25s ease;
+  }
+  .table-pro tbody tr:hover{
+    background:#fef3f2;
+    box-shadow: inset 3px 0 0 #DC2626;
+  }
+  .table-pro tbody td{
+    padding:14px 12px;
+    font-size:12px;
+    color:#4b5563;
+    font-weight:600;
+    vertical-align:middle;
+    border:none;
+  }
+
+  /* BADGES */
+  .badge-pro{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:900;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .badge-pro i{font-size:12px;}
+  .badge-success{
+    background:#f3f4f6; color:#111827; border:1px solid #d1d5db;
+  }
+  .badge-warning{
+    background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb;
+  }
+  .badge-danger{
+    background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;
+  }
+
+  /* MINI CARD (annonce) */
+  .ad-pro{display:flex; align-items:center; gap:12px;}
+  .ad-img-pro{
+    width:76px; height:48px;
+    border-radius:10px;
+    object-fit:cover;
+    border:1px solid #e5e7eb;
+    background:#f8f9fa;
+  }
+  .ad-title-pro{font-weight:900; color:#111827; font-size:13px; margin-bottom:2px;}
+  .ad-sub-pro{font-size:11px; color:#6b7280; font-weight:700;}
+
+  /* ACTIONS */
+  .action-buttons-pro{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+  }
+  .btn-action-pro{
+    width:38px; height:38px;
+    border-radius:10px;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: all .25s ease;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .btn-view-pro{
+    background:#f3f4f6;
+    color:#111827;
+    border:1px solid #e5e7eb;
+  }
+  .btn-view-pro:hover{
+    background:#111827;
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+  }
+  .btn-delete-pro{
+    background:#fee2e2;
+    color:#DC2626;
+    border:1px solid #fca5a5;
+  }
+  .btn-delete-pro:hover{
+    background:#DC2626;
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(220,38,38,.28);
+  }
+  .btn-action-pro i{font-size:15px;}
+
+  /* EMPTY */
+  .empty-state-pro{
+    padding:80px 40px;
+    text-align:center;
+  }
+  .empty-state-icon-pro{
+    width:100px; height:100px;
+    margin:0 auto 24px;
+    background:#f3f4f6;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .empty-state-icon-pro i{font-size:44px; color:#9ca3af;}
+  .empty-state-pro h4{
+    color:#111827;
+    font-weight:900;
+    font-size:22px;
+    margin-bottom:10px;
+  }
+  .empty-state-pro p{
+    color:#6b7280;
+    font-size:14px;
+    margin:0;
+    font-weight:600;
+  }
+
+  /* PAGINATION */
+  .pagination-pro{
+    display:flex; justify-content:flex-end;
+    gap:10px; padding:18px 20px;
+    border-top:2px solid #e5e7eb;
+    background:#fff;
+  }
+  .page-pill{
+    padding:10px 14px;
+    border-radius:12px;
+    border:2px solid #e5e7eb;
+    background:#fff;
+    color:#111827;
+    font-weight:900;
+    font-size:13px;
+    text-decoration:none;
+    transition:.25s;
+  }
+  .page-pill:hover{
+    border-color:#111827;
+    transform:translateY(-2px);
+  }
+  .page-pill.disabled{
+    opacity:.6;
+    pointer-events:none;
+  }
+
+  @media (max-width: 768px){
+    .page-header-pro{padding:25px 20px;}
+    .header-icon-pro{width:60px; height:60px;}
+    .header-icon-pro i{font-size:28px;}
+    .header-text-pro h2{font-size:22px;}
+    .header-stats-pro{width:100%;}
+    .stat-box-pro{flex:1; text-align:center;}
+    .search-input-pro{width:100%;}
+    .select-pro{min-width:100%;}
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Page Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Gestion des achats</h2>
+          <p>Suivez les achats, filtrez par statut et accédez aux détails</p>
         </div>
       </div>
 
-      <div class="card-body p-0">
-        {% with achats=page_obj %}
-          {% if achats %}
-          <div class="table-responsive table-centered mt-0">
-            <table class="table table-centered table-nowrap table-hover mb-0">
-              <thead>
-                <tr>
-                  <th class="ps-3">#</th>
-                  <th>Annonce</th>
-                  <th>buyer</th>
-                  <th>Prix</th>
-                  <th>Statut</th>
-                  <th>Date</th>
-                  <th class="text-end pe-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for a in achats %}
-                <tr>
-                  <td class="ps-3">#{{ a.id }}</td>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      {% if a.post.image %}
-                        <img src="{{ a.post.image.url }}" alt="" class="rounded-2" style="height:46px;width:72px;object-fit:cover;">
-                      {% endif %}
-                      <div>
-                        <div class="fw-semibold">{{ a.post.marque }} {{ a.post.modele }}</div>
-                        <small class="text-muted">{{ a.post.year }}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{ a.buyer.first_name }} {{ a.buyer.last_name }}</td>
-                  <td>{{ a.price }}&nbsp;DT</td>
-                  <td>
-                    {% if a.statut == 'paid' %}
-                      <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">Validé</span>
-                    {% elif a.statut == 'canceled' %}
-                      <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">Annulé</span>
-                    {% else %}
-                      <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">En cours</span>
-                    {% endif %}
-                  </td>
-                  <td>{{ a.date_achat|date:"Y-m-d H:i" }}</td>
-                  <td class="text-end align-middle pe-3">
-                    <div class="d-inline-flex align-items-center gap-1">
-                      <a href="{% url 'achats:admin_achat_detail' achat_id=a.id %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Voir">
-                        <i class="mdi mdi-eye-outline text-primary fs-14"></i>
-                      </a>
-                      <a href="{% url 'achats:admin_achat_delete' achat_id=a.id %}" class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer" onclick="return confirm('Supprimer cet achat ?');">
-                        <i class="mdi mdi-delete text-danger fs-14"></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="7" class="text-center py-4 text-muted">Aucun achat trouvé.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          {% if achats.paginator.num_pages > 1 %}
-          <div class="card-footer">
-            <nav aria-label="Pagination">
-              <ul class="pagination mb-0 justify-content-end">
-                {% if achats.has_previous %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ achats.previous_page_number }}&q={{ q }}&statut={{ statut }}">«</a>
-                </li>
-                {% endif %}
-                <li class="page-item disabled">
-                  <span class="page-link">Page {{ achats.number }} / {{ achats.paginator.num_pages }}</span>
-                </li>
-                {% if achats.has_next %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ achats.next_page_number }}&q={{ q }}&statut={{ statut }}">»</a>
-                </li>
-                {% endif %}
-              </ul>
-            </nav>
-          </div>
-          {% endif %}
-
-          {% else %}
-          <div class="p-4">
-            <div class="alert alert-warning text-center mb-0">
-              Aucun achat pour le moment.
-            </div>
-          </div>
-          {% endif %}
-        {% endwith %}
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">{{ page_obj.paginator.count|default:0 }}</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ page_obj|length|default:0 }}</div>
+          <div class="label">Affichés</div>
+        </div>
       </div>
-
     </div>
   </div>
+
+  <!-- Main Card -->
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card-pro">
+
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-list"></i>
+              </div>
+              <h5>Liste des achats</h5>
+            </div>
+
+            <!-- Filters -->
+            <form class="filters-pro" method="get" id="achat-filter-form">
+              <div class="search-input-wrapper-pro">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  class="search-input-pro"
+                  type="search"
+                  name="q"
+                  value="{{ q }}"
+                  placeholder="Rechercher (marque, modèle, buyer)"
+                  id="achat-filter-input"
+                >
+              </div>
+
+              <select class="select-pro" name="statut" id="achat-status">
+                <option value="">— Statut (tous) —</option>
+                <option value="pending"   {% if statut == 'pending' %}selected{% endif %}>En cours</option>
+                <option value="validated" {% if statut == 'validated' %}selected{% endif %}>Validé</option>
+                <option value="cancelled" {% if statut == 'cancelled' %}selected{% endif %}>Annulé</option>
+              </select>
+
+              <button class="btn-search-pro" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                <span>Filtrer</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="table-container-pro">
+          {% with achats=page_obj %}
+            {% if achats %}
+              <table class="table-pro">
+                <thead>
+                  <tr>
+                    <th style="padding-left:18px;"><i class="fa-solid fa-hashtag"></i> ID</th>
+                    <th><i class="fa-solid fa-car"></i> Annonce</th>
+                    <th><i class="fa-solid fa-user"></i> Buyer</th>
+                    <th><i class="fa-solid fa-money-bill-wave"></i> Prix</th>
+                    <th><i class="fa-solid fa-tag"></i> Statut</th>
+                    <th><i class="fa-solid fa-calendar"></i> Date</th>
+                    <th style="text-align:right; padding-right:18px;"><i class="fa-solid fa-gear"></i> Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for a in achats %}
+                  <tr>
+                    <td style="padding-left:18px;">#{{ a.id }}</td>
+
+                    <td>
+                      <div class="ad-pro">
+                        {% if a.post.image %}
+                          <img src="{{ a.post.image.url }}" alt="" class="ad-img-pro">
+                        {% else %}
+                          <div class="ad-img-pro d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-image" style="color:#9ca3af;"></i>
+                          </div>
+                        {% endif %}
+                        <div>
+                          <div class="ad-title-pro">{{ a.post.marque }} {{ a.post.modele }}</div>
+                          <div class="ad-sub-pro">{{ a.post.year }}</div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>{{ a.buyer.first_name }} {{ a.buyer.last_name }}</td>
+
+                    <td>{{ a.price }} DT</td>
+
+                    <td>
+                      {% if a.statut == 'paid' %}
+                        <span class="badge-pro badge-success"><i class="fa-solid fa-circle-check"></i> Validé</span>
+                      {% elif a.statut == 'canceled' %}
+                        <span class="badge-pro badge-danger"><i class="fa-solid fa-circle-xmark"></i> Annulé</span>
+                      {% else %}
+                        <span class="badge-pro badge-warning"><i class="fa-solid fa-clock"></i> En cours</span>
+                      {% endif %}
+                    </td>
+
+                    <td>{{ a.date_achat|date:"Y-m-d H:i" }}</td>
+
+                    <td style="text-align:right; padding-right:18px;">
+                      <div class="action-buttons-pro">
+                        <a
+                          href="{% url 'achats:admin_achat_detail' achat_id=a.id %}"
+                          class="btn-action-pro btn-view-pro"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Voir"
+                        >
+                          <i class="fa-solid fa-eye"></i>
+                        </a>
+
+                        <a
+                          href="{% url 'achats:admin_achat_delete' achat_id=a.id %}"
+                          class="btn-action-pro btn-delete-pro"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Supprimer"
+                          onclick="return confirm('Supprimer cet achat ?');"
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty-state-pro">
+                        <div class="empty-state-icon-pro">
+                          <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+                        <h4>Aucun achat trouvé</h4>
+                        <p>Essayez d’ajuster vos critères de recherche</p>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+              {% if achats.paginator.num_pages > 1 %}
+                <div class="pagination-pro">
+                  {% if achats.has_previous %}
+                    <a class="page-pill" href="?page={{ achats.previous_page_number }}&q={{ q }}&statut={{ statut }}">«</a>
+                  {% else %}
+                    <span class="page-pill disabled">«</span>
+                  {% endif %}
+
+                  <span class="page-pill disabled">Page {{ achats.number }} / {{ achats.paginator.num_pages }}</span>
+
+                  {% if achats.has_next %}
+                    <a class="page-pill" href="?page={{ achats.next_page_number }}&q={{ q }}&statut={{ statut }}">»</a>
+                  {% else %}
+                    <span class="page-pill disabled">»</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+            {% else %}
+              <div class="empty-state-pro">
+                <div class="empty-state-icon-pro">
+                  <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h4>Aucun achat pour le moment</h4>
+                <p>Les achats apparaîtront ici dès qu’ils seront effectués</p>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Bootstrap tooltips
     if (window.bootstrap) {
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    }
+
+    // Auto-submit on typing + change
+    const form = document.getElementById("achat-filter-form");
+    const input = document.getElementById("achat-filter-input");
+    const status = document.getElementById("achat-status");
+
+    let t = null;
+    if (input && form) {
+      input.addEventListener("input", function () {
+        clearTimeout(t);
+        t = setTimeout(() => form.submit(), 450);
+      });
+    }
+    if (status && form) {
+      status.addEventListener("change", () => form.submit());
     }
   });
 </script>

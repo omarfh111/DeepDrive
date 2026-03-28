@@ -1,111 +1,432 @@
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
-{% block title %}DeepDrive Research Engine{% endblock %}
-{% block page_title %}DeepDrive Research Engine{% endblock %}
+{% block title %}DeepDrive Research Engine | Dusty{% endblock %}
+{% block page_title %}Deep Research AI{% endblock %}
 {% block breadcrumb_leaf %}DeepDrive Research Engine{% endblock %}
 
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ===== PRO STYLE (same family as your users/comments pages) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* PAGE HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:25px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626;
+  border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:900; font-size:28px;
+  margin:0 0 8px 0; letter-spacing:-.5px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.8);
+  font-size:14px; margin:0; font-weight:600;
+}
+
+/* CARD */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:22px 28px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-header-content-pro{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:14px; margin:0;
+}
+.card-title-icon-pro{
+  width:46px; height:46px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  transition:.25s;
+}
+.card-title-icon-pro:hover{transform:scale(1.03);}
+.card-title-icon-pro i{font-size:20px; color:#fff;}
+.card-title-pro h5{
+  color:#111827;
+  font-weight:900;
+  font-size:18px;
+  margin:0;
+}
+.card-body-pro{padding:28px;}
+
+/* FORM */
+.form-group-pro{margin-bottom:18px;}
+.form-label-pro{
+  font-weight:900;
+  font-size:13px;
+  color:#111827;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.form-label-pro .label-icon{
+  width:32px; height:32px;
+  background:#DC2626;
+  color:#fff;
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+  box-shadow:0 6px 14px rgba(220,38,38,.2);
+}
+.form-control-pro{
+  width:100%;
+  padding:13px 16px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  font-size:14px;
+  background:#f8f9fa;
+  font-weight:600;
+  transition:.25s;
+}
+.form-control-pro:focus{
+  border-color:#DC2626 !important;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.10) !important;
+  background:#fff !important;
+}
+.form-hint-pro{
+  margin-top:8px;
+  font-size:12px;
+  color:#6b7280;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.form-hint-pro i{color:#DC2626;}
+
+/* BUTTONS */
+.btn-pro{
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  font-weight:900;
+  font-size:13px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+}
+.btn-pro-primary{
+  background:#DC2626;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(220,38,38,.22);
+}
+.btn-pro-primary:hover{
+  background:#991B1B;
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(220,38,38,.28);
+}
+.btn-pro-secondary{
+  background:#fff;
+  color:#111827;
+  border:2px solid #e5e7eb;
+}
+.btn-pro-secondary:hover{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+  transform:translateY(-1px);
+}
+
+/* TABLE */
+.table-wrap-pro{width:100%; overflow:auto;}
+.table-pro{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+}
+.table-pro thead th{
+  background:#f8f9fa;
+  border-bottom:2px solid #e5e7eb;
+  padding:14px 12px;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  color:#111827;
+  white-space:nowrap;
+}
+.table-pro tbody td{
+  padding:12px 12px;
+  font-size:12px;
+  font-weight:600;
+  color:#4b5563;
+  border-bottom:1px solid #f3f4f6;
+  vertical-align:middle;
+}
+.table-pro tbody tr:hover{
+  background:#fef3f2;
+  box-shadow: inset 3px 0 0 #DC2626;
+}
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#111827;
+  white-space:nowrap;
+}
+
+/* REPORT BOX */
+.report-shell-pro{
+  border:2px solid #e5e7eb;
+  border-radius:16px;
+  padding:18px;
+  background:#fff;
+}
+.report-shell-pro .placeholder-pro{
+  color:#6b7280;
+  font-size:13px;
+  font-weight:700;
+  margin:0;
+}
+
+/* Make injected html_report look nicer without breaking it */
+#deepdrive-report{
+  max-width: 100%;
+}
+#deepdrive-report img, #deepdrive-report table{
+  max-width:100%;
+}
+#deepdrive-report table{
+  width:100%;
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px;height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .card-body-pro{padding:20px;}
+}
+</style>
+{% endblock %}
+
 {% block content %}
+<div class="container-fluid">
 
-<!-- Search Section -->
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>DeepDrive Research Engine</h2>
+          <p>Recherches avancées + rapport HTML téléchargeable</p>
+        </div>
+      </div>
 
-        <h4 class="mb-3">DeepDrive Research Engine</h4>
-
-        <form method="post" action="{% url 'ai_agent:deep_research_dashboard' %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label class="form-label">Enter your research query</label>
-            <input
-              type="text"
-              name="query"
-              class="form-control"
-              placeholder="e.g. tell me about Chevrolet Camaro SS and compare it to other models"
-              value="{{ query }}"
-              required
-            />
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100">
-            Run Deep Research
-          </button>
-        </form>
-
+      <div>
+        <span class="badge-pro">
+          <i class="fa-solid fa-bolt" style="color:#DC2626;"></i>
+          IA • Recherche
+        </span>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Search History -->
-{% if history %}
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
+  <!-- ===== Search Section ===== -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+              <h5>Lancer une recherche</h5>
+            </div>
+          </div>
+        </div>
 
-        <h4 class="mb-3">Your Recent Research Queries</h4>
+        <div class="card-body-pro">
+          <form method="post" action="{% url 'ai_agent:deep_research_dashboard' %}" id="research-form">
+            {% csrf_token %}
 
-        <div class="table-responsive">
-          <table class="table table-sm align-middle">
-            <thead>
-              <tr>
-                <th>Query</th>
-                <th class="text-nowrap">Date</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in history %}
-              <tr>
-                <td>{{ item.query|truncatechars:80 }}</td>
-                <td class="text-nowrap">{{ item.created_at|date:"Y-m-d H:i" }}</td>
-                <td class="text-end">
-                  <a
-                    href="{% url 'ai_agent:download_research_html' item.id %}"
-                    class="btn btn-outline-secondary btn-sm"
-                    title="Download HTML Report"
-                  >
-                    <iconify-icon icon="mdi:download-circle-outline" width="22" height="22"></iconify-icon>
+            <div class="form-group-pro">
+              <label class="form-label-pro" for="id_query">
+                <span class="label-icon"><i class="fa-solid fa-pen"></i></span>
+                Votre requête
+              </label>
+              <input
+                type="text"
+                id="id_query"
+                name="query"
+                class="form-control-pro"
+                placeholder="ex: Chevrolet Camaro SS vs Mustang GT, fiabilité, prix, performances..."
+                value="{{ query }}"
+                required
+              />
+              <div class="form-hint-pro">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Astuce : ajoute “compare”, “pros/cons”, “reliability”, “price range” pour un meilleur rapport.</span>
+              </div>
+            </div>
 
-                  </a>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+            <button type="submit" class="btn-pro btn-pro-primary" style="width:100%; justify-content:center;">
+              <i class="fa-solid fa-play"></i>
+              <span>Run Deep Research</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Search History ===== -->
+  {% if history %}
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              <h5>Historique récent</h5>
+            </div>
+
+            <span class="badge-pro">
+              <i class="fa-solid fa-list" style="color:#DC2626;"></i>
+              {{ history|length }} requête(s)
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body-pro">
+          <div class="table-wrap-pro">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th class="text-nowrap">Date</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in history %}
+                <tr>
+                  <td>{{ item.query|truncatechars:90 }}</td>
+                  <td class="text-nowrap">{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                  <td class="text-end">
+                    <a
+                      href="{% url 'ai_agent:download_research_html' item.id %}"
+                      class="btn-pro btn-pro-secondary"
+                      style="padding:10px 14px;"
+                      title="Download HTML Report"
+                    >
+                      <i class="fa-solid fa-download"></i>
+                      <span>HTML</span>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
-<!-- Generated Report -->
-<div class="row mt-3">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
-
-        <h4 class="mb-3">Generated Report</h4>
-
-        {% if html_report %}
-          <div id="deepdrive-report">
-            {{ html_report|safe }}
+  <!-- ===== Generated Report ===== -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <h5>Generated Report</h5>
+            </div>
           </div>
-        {% else %}
-          <p class="text-muted mb-0">
-            No report generated yet. Enter a query above and click “Run Deep Research”.
-          </p>
-        {% endif %}
+        </div>
+
+        <div class="card-body-pro">
+          {% if html_report %}
+            <div class="report-shell-pro">
+              <div id="deepdrive-report">
+                {{ html_report|safe }}
+              </div>
+            </div>
+          {% else %}
+            <div class="report-shell-pro">
+              <p class="placeholder-pro">
+                No report generated yet. Enter a query above and click “Run Deep Research”.
+              </p>
+            </div>
+          {% endif %}
+        </div>
 
       </div>
     </div>
   </div>
-</div>
-<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
+</div>
+
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 {% endblock %}

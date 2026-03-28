@@ -6,11 +6,29 @@ from .models import Post
 from .form import PostForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef,Case, When, IntegerField
 from posts.models import Post
 from achats.models import Achat
 from .ml_model import *
 from django.db.models import Exists, OuterRef, Q, Count, Min, Max
+from pgvector.django import CosineDistance
+import math
+from decimal import Decimal
+
+def cosine_distance(a, b):
+    dot = 0.0
+    na = 0.0
+    nb = 0.0
+    for x, y in zip(a, b):
+        dot += x * y
+        na += x * x
+        nb += y * y
+    denom = math.sqrt(na) * math.sqrt(nb)
+    if denom == 0:
+        return 1.0
+    return 1.0 - (dot / denom)
+
+
 
 # --- Helpers d'accès ---
 def is_admin(user):
@@ -29,7 +47,11 @@ def render_template(request, template_name, context=None, backoffice=False):
     return render(request, template_name, context or {})
 
 # --- Liste / Portfolio ---
+
 def portfolio(request, backoffice=False):
+    # Accept both GET (filters) and POST (image upload + filters)
+    data = request.POST if request.method == "POST" else request.GET
+
     # Base queryset: only posts without PAID achat
     base_qs = Post.objects.annotate(
         has_paid_achat=Exists(
@@ -46,18 +68,18 @@ def portfolio(request, backoffice=False):
     price_max = price_agg['max_price'] or 0
 
     # --- Search text ---
-    q = request.GET.get("q", "").strip()
+    q = (data.get("q") or "").strip()
 
-    # --- Selected price (from GET) ---
-    min_price_param = request.GET.get("min_price")
-    max_price_param = request.GET.get("max_price")
+    # --- Selected price ---
+    min_price_param = data.get("min_price")
+    max_price_param = data.get("max_price")
 
     min_price_sel = price_min
     max_price_sel = price_max
     try:
-        if min_price_param is not None:
+        if min_price_param is not None and str(min_price_param).strip() != "":
             min_price_sel = float(min_price_param)
-        if max_price_param is not None:
+        if max_price_param is not None and str(max_price_param).strip() != "":
             max_price_sel = float(max_price_param)
     except ValueError:
         min_price_sel = price_min
@@ -70,6 +92,13 @@ def portfolio(request, backoffice=False):
         max_price_sel = price_max
     if min_price_sel > max_price_sel:
         min_price_sel, max_price_sel = max_price_sel, min_price_sel
+
+    # --- Selected multi-filters ---
+    selected_energies = data.getlist("energy")
+    selected_marques = data.getlist("marque")
+    selected_transmissions = data.getlist("transmission")
+    selected_etats = data.getlist("etat_general")
+    selected_carrosseries = data.getlist("carrosserie")
 
     # Start from base_qs and apply filters in layers
     filtered_qs = base_qs
@@ -90,27 +119,46 @@ def portfolio(request, backoffice=False):
             price__lte=max_price_sel,
         )
 
-    # 3) fuel / energy filter (counts before filtering, so you see all options)
+    # 3) counts BEFORE applying their own filter (to show available options)
     energy_counts = (
-        filtered_qs
-        .values("energy")
+        filtered_qs.values("energy")
         .annotate(count=Count("id"))
         .order_by("energy")
     )
-
-    selected_energies = request.GET.getlist("energy")
-    if selected_energies:
-        filtered_qs = filtered_qs.filter(energy__in=selected_energies)
-
-    # 4) marque filter + counts
     marque_counts = (
-        filtered_qs
-        .values("marque")
+        filtered_qs.values("marque")
         .annotate(count=Count("id"))
         .order_by("marque")
     )
+    transmission_counts = (
+        filtered_qs.values("transmission")
+        .annotate(count=Count("id"))
+        .order_by("transmission")
+    )
+    etat_counts = (
+        filtered_qs.values("etat_general")
+        .annotate(count=Count("id"))
+        .order_by("etat_general")
+    )
+    carrosserie_counts = (
+        filtered_qs.values("carrosserie")
+        .annotate(count=Count("id"))
+        .order_by("carrosserie")
+    )
 
-    selected_marques = request.GET.getlist("marque")
+    # 4) apply checkbox filters
+    if selected_energies:
+        filtered_qs = filtered_qs.filter(energy__in=selected_energies)
+
+    if selected_transmissions:
+        filtered_qs = filtered_qs.filter(transmission__in=selected_transmissions)
+
+    if selected_etats:
+        filtered_qs = filtered_qs.filter(etat_general__in=selected_etats)
+
+    if selected_carrosseries:
+        filtered_qs = filtered_qs.filter(carrosserie__in=selected_carrosseries)
+
     if selected_marques:
         posts = filtered_qs.filter(marque__in=selected_marques)
     else:
@@ -123,50 +171,51 @@ def portfolio(request, backoffice=False):
     else:
         min_percent = 0
         max_percent = 100
-        # --- Transmission filter ---
-    transmission_counts = (
-        filtered_qs
-        .values("transmission")
-        .annotate(count=Count("id"))
-        .order_by("transmission")
-    )
 
-    selected_transmissions = request.GET.getlist("transmission")
-    if selected_transmissions:
-        filtered_qs = filtered_qs.filter(transmission__in=selected_transmissions)
+    # --- Image similarity search (POST multipart) ---
+    sorted_by_similarity = False
+    query_image = request.FILES.get("query_image")
 
-    # --- Etat Général filter ---
-    etat_counts = (
-        filtered_qs
-        .values("etat_general")
-        .annotate(count=Count("id"))
-        .order_by("etat_general")
-    )
+    if query_image:
+        try:
+            q_emb = embed_car_image(query_image)  # list[float] len=512
 
-    selected_etats = request.GET.getlist("etat_general")
-    if selected_etats:
-        filtered_qs = filtered_qs.filter(etat_general__in=selected_etats)
+            # IMPORTANT: limit candidates for performance (tune the slice)
+            candidate_rows = list(
+                posts.exclude(embedding__isnull=True)
+                    .exclude(embedding=[])
+                    .values("id", "embedding")[:3000]
+            )
 
-    # --- Carrosserie filter ---
-    carrosserie_counts = (
-        filtered_qs
-        .values("carrosserie")
-        .annotate(count=Count("id"))
-        .order_by("carrosserie")
-    )
+            scored = []
+            for row in candidate_rows:
+                emb = row["embedding"]
+                if not isinstance(emb, list) or len(emb) != len(q_emb):
+                    continue
+                d = cosine_distance(emb, q_emb)
+                scored.append((row["id"], d))
 
-    selected_carrosseries = request.GET.getlist("carrosserie")
-    if selected_carrosseries:
-        filtered_qs = filtered_qs.filter(carrosserie__in=selected_carrosseries)
-        # --- Sort by price ---
-    order = request.GET.get("order")
-    if order == "price_asc":
-        posts = posts.order_by("price")
-    elif order == "price_desc":
-        posts = posts.order_by("-price")
-    # else: keep default ordering from Meta (by -id) 
+            scored.sort(key=lambda t: t[1])
+            ordered_ids = [pid for pid, _ in scored]
 
+            if ordered_ids:
+                whens = [When(id=pid, then=pos) for pos, pid in enumerate(ordered_ids)]
+                posts = posts.filter(id__in=ordered_ids).annotate(
+                    _order=Case(*whens, output_field=IntegerField())
+                ).order_by("_order")
+                sorted_by_similarity = True
 
+        except Exception as e:
+            print(f"[SIMSEARCH] failed: {e!r}")
+
+    # --- Sort by price (only if not similarity-sorted) ---
+    order = data.get("order")
+    if not sorted_by_similarity:
+        if order == "price_asc":
+            posts = posts.order_by("price")
+        elif order == "price_desc":
+            posts = posts.order_by("-price")
+        # else: keep default ordering from Meta (by -id)
 
     template = 'portfolio-2.html'
     return render_template(
@@ -192,17 +241,26 @@ def portfolio(request, backoffice=False):
             "carrosserie_counts": carrosserie_counts,
             "selected_carrosseries": selected_carrosseries,
             "selected_order": order,
-
+            "sorted_by_similarity": sorted_by_similarity,
         },
         backoffice
     )
 
 
-# --- Create ---
+
+
+
+
+
+
+
+
+
+
+
 @login_required
 def add_car(request, backoffice=False):
     template = 'add_car.html'
-
     if request.method == 'POST':
         dashboard_image = request.FILES.get('dashboard_image')
         car_image       = request.FILES.get('image')
@@ -266,10 +324,26 @@ def add_car(request, backoffice=False):
         # ---- 4) Validation finale du formulaire ----
         if form.is_valid():
             obj = form.save(commit=False)
+            try:
+                pred_price, label = predict_price_and_label(
+                    annee=obj.annee,
+                    kilometrage=obj.kilometrage,
+                    marque=obj.marque,
+                    modele=obj.modele,
+                    seller_price=float(obj.price),
+                )
+                obj.predicted_price = Decimal(str(round(pred_price)))
+                obj.offer_label = label
+            except Exception as e:
+                print(f"[PRICE_ML] failed for post: {e!r}")
             obj.owner = request.user
             obj.save()
-
-
+            try:
+                with obj.image.open("rb") as f:
+                    obj.embedding = embed_car_image(f)   
+                obj.save(update_fields=["embedding"])
+            except Exception as e:
+                print(f"[EMBED] failed for post {obj.id}: {e!r}")
             if backoffice:
                 return redirect('posts:admin_portfolio')
             return redirect('posts:portfolio')

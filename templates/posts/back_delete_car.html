@@ -5,52 +5,393 @@
 {% block page_title %}Voitures{% endblock %}
 {% block breadcrumb_leaf %}Supprimer{% endblock %}
 
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== Modern Delete (same style family as your "users" pro pages) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* PAGE HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:32px 38px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:18px;
+}
+.header-left-pro{display:flex; align-items:center; gap:18px;}
+.header-icon-pro{
+  width:64px; height:64px;
+  background:#DC2626;
+  border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 18px rgba(220,38,38,.28);
+}
+.header-icon-pro i{font-size:28px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:900; font-size:26px;
+  margin:0; letter-spacing:-.5px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.75);
+  font-size:13px; margin:6px 0 0 0; font-weight:600;
+}
+
+/* BREADCRUMB */
+.breadcrumb-modern{
+  background: rgba(255,255,255,.10);
+  backdrop-filter: blur(10px);
+  padding:10px 16px;
+  border-radius:12px;
+  margin:0;
+  border:1px solid rgba(255,255,255,.15);
+}
+.breadcrumb-modern .breadcrumb-item{
+  font-size:13px; font-weight:700;
+}
+.breadcrumb-modern .breadcrumb-item a{
+  color:rgba(255,255,255,.75);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:.2s;
+}
+.breadcrumb-modern .breadcrumb-item a:hover{color:#DC2626;}
+.breadcrumb-modern .breadcrumb-item.active{
+  color:#fff;
+  font-weight:900;
+}
+
+/* CARD */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.06);
+  overflow:hidden;
+}
+.card-header-pro{
+  background: #f8f9fa;
+  padding:22px 28px;
+  border-bottom:2px solid #e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.card-title-pro{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin:0;
+}
+.card-title-icon-pro{
+  width:46px; height:46px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 14px rgba(220,38,38,.18);
+}
+.card-title-icon-pro i{color:#fff; font-size:20px;}
+.card-title-pro h5{
+  margin:0;
+  color:#111827;
+  font-weight:900;
+  font-size:18px;
+}
+.card-body-pro{padding:28px;}
+
+/* ALERT DANGER */
+.alert-danger-modern{
+  background:#fee2e2;
+  border:2px solid #fca5a5;
+  border-radius:16px;
+  padding:18px 20px;
+  color:#991b1b;
+  font-weight:800;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:22px;
+}
+.alert-danger-modern .alert-icon{
+  width:44px; height:44px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff;
+  font-size:18px;
+  flex-shrink:0;
+}
+.alert-danger-modern small{
+  display:block;
+  color:#7f1d1d;
+  font-weight:700;
+  opacity:.95;
+  margin-top:6px;
+}
+
+/* INFO LIST */
+.info-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px 18px;
+  margin: 18px 0 22px 0;
+}
+@media (max-width: 768px){
+  .info-grid{grid-template-columns: 1fr;}
+}
+.info-item{
+  background:#f8f9fa;
+  border:2px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px 16px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+.info-item .icon{
+  width:38px; height:38px;
+  border-radius:12px;
+  background:#111827;
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  font-size:16px;
+}
+.info-item .label{
+  color:#6b7280;
+  font-weight:900;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:4px;
+}
+.info-item .value{
+  color:#111827;
+  font-weight:800;
+  font-size:13px;
+}
+
+/* IMAGE PREVIEW */
+.preview{
+  border:2px solid #e5e7eb;
+  border-radius:16px;
+  padding:14px;
+  background:#fff;
+  margin-bottom:22px;
+}
+.preview img{
+  width:100%;
+  border-radius:12px;
+  object-fit:cover;
+  max-height:260px;
+}
+
+/* BUTTONS */
+.btn-modern{
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:13px;
+  border:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+}
+.btn-modern-secondary{
+  background:#fff;
+  color:#111827;
+  border:2px solid #e5e7eb;
+}
+.btn-modern-secondary:hover{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+  transform:translateY(-1px);
+}
+.btn-modern-danger{
+  background:#DC2626;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(220,38,38,.22);
+}
+.btn-modern-danger:hover{
+  background:#991B1B;
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(220,38,38,.28);
+}
+
+/* FOOT NOTE */
+.note-pro{
+  margin-top:14px;
+  color:#6b7280;
+  font-size:12px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.note-pro i{color:#DC2626;}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 
-  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-    <div class="flex-grow-1">
-      <h4 class="fs-18 fw-semibold m-0">Supprimer la voiture #{{ car.id }}</h4>
-    </div>
-    <div class="text-end">
-      <ol class="breadcrumb m-0 py-0">
-        <li class="breadcrumb-item"><a href="{% url 'posts:admin_portfolio' %}">Voitures</a></li>
-        <li class="breadcrumb-item active">Supprimer</li>
-      </ol>
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Supprimer la voiture #{{ car.id }}</h2>
+          <p>Cette action est définitive et ne peut pas être annulée.</p>
+        </div>
+      </div>
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'posts:admin_portfolio' %}">
+              <i class="fa-solid fa-car"></i>
+              Voitures
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <i class="fa-solid fa-chevron-right" style="font-size:10px; margin:0 6px;"></i>
+            Supprimer
+          </li>
+        </ol>
+      </nav>
     </div>
   </div>
 
+  <!-- ===== Card ===== -->
   <div class="row">
-    <div class="col-xl-8">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Confirmation</h5></div>
-        <div class="card-body">
-          <div class="alert alert-warning d-flex align-items-start gap-2">
-            <i class="mdi mdi-alert fs-20"></i>
+    <div class="col-xl-8 col-lg-10">
+      <div class="card-pro">
+
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="card-title-icon-pro">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h5>Confirmation de suppression</h5>
+          </div>
+        </div>
+
+        <div class="card-body-pro">
+
+          <div class="alert-danger-modern">
+            <div class="alert-icon">
+              <i class="fa-solid fa-skull-crossbones"></i>
+            </div>
             <div>
-              <strong>Action irréversible.</strong> Es-tu sûr de vouloir supprimer cette voiture ?
+              Action irréversible.
+              <small>Êtes-vous sûr de vouloir supprimer définitivement cette voiture ?</small>
             </div>
           </div>
 
-          <ul class="list-unstyled mb-4">
-            <li><strong>Marque :</strong> {{ car.marque }}</li>
-            <li><strong>Modèle :</strong> {{ car.modele }}</li>
-            <li><strong>Année :</strong> {{ car.year }}</li>
-            <li><strong>Prix :</strong> {{ car.price }} DT</li>
-            <li><strong>Énergie :</strong> {{ car.energy|default:"—" }}</li>
-          </ul>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-tag"></i></div>
+              <div>
+                <div class="label">Marque</div>
+                <div class="value">{{ car.marque|default:"—" }}</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-car-side"></i></div>
+              <div>
+                <div class="label">Modèle</div>
+                <div class="value">{{ car.modele|default:"—" }}</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-calendar"></i></div>
+              <div>
+                <div class="label">Année</div>
+                <div class="value">{{ car.year|default:"—" }}</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+              <div>
+                <div class="label">Prix</div>
+                <div class="value">{{ car.price|default:"—" }} DT</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-gas-pump"></i></div>
+              <div>
+                <div class="label">Énergie</div>
+                <div class="value">{{ car.energy|default:"—" }}</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon"><i class="fa-solid fa-hashtag"></i></div>
+              <div>
+                <div class="label">ID</div>
+                <div class="value">#{{ car.id }}</div>
+              </div>
+            </div>
+          </div>
 
           {% if car.image %}
-          <div class="mb-4">
-            <img src="{{ car.image.url }}" alt="{{ car.marque }}" class="img-fluid rounded-2" style="max-height:220px;">
+          <div class="preview">
+            <img src="{{ car.image.url }}" alt="{{ car.marque }} {{ car.modele }}">
           </div>
           {% endif %}
 
-          <form method="post" class="d-flex gap-2">
+          <form method="post" class="d-flex flex-wrap gap-2">
             {% csrf_token %}
-            <a href="{% url 'posts:admin_portfolio' %}" class="btn btn-outline-secondary">Annuler</a>
-            <button class="btn btn-danger">Confirmer la suppression</button>
+            <a href="{% url 'posts:admin_portfolio' %}" class="btn-modern btn-modern-secondary">
+              <i class="fa-solid fa-arrow-left"></i>
+              Annuler
+            </a>
+            <button type="submit" class="btn-modern btn-modern-danger">
+              <i class="fa-solid fa-trash-can"></i>
+              Confirmer la suppression
+            </button>
           </form>
+
+          <div class="note-pro">
+            <i class="fa-solid fa-circle-info"></i>
+            Conseil : si tu veux seulement masquer la voiture, utilise un champ “is_active” au lieu de supprimer.
+          </div>
+
         </div>
       </div>
     </div>

@@ -1,148 +1,449 @@
 {% extends 'backoffice/admin_base.html' %}
 {% load static %}
 
-{% block title %}Commentaire Detail{% endblock %}
-
-{% block page_title %}Commentaire Detail{% endblock %}
-
+{% block title %}Commentaire #{{ commentaire.id }} | Dusty{% endblock %}
+{% block page_title %}Commentaires{% endblock %}
 {% block breadcrumb_leaf %}Commentaire #{{ commentaire.id }}{% endblock %}
 
-{% block content %}
-<div class="row">
-  <div class="col-12">
-    {% if messages %} {% for message in messages %}
-    <div
-      class="alert alert-{{ message.tags }} alert-dismissible fade show"
-      role="alert"
-    >
-      {{ message }}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
-    {% endfor %} {% endif %}
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <div class="card">
-      <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-          <h4 class="card-title mb-0">Commentaire Details</h4>
-          <div>
-            <a
-              href="{% url 'reviews:reviews_commentaires_list' %}"
-              class="btn btn-secondary"
-            >
-              <iconify-icon icon="solar:arrow-left-bold-duotone"></iconify-icon>
-              Back to List
-            </a>
-          </div>
+<style>
+/* ===== PRO STYLE (same family as users/comments list) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* PAGE HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:25px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626;
+  border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:800; font-size:28px;
+  margin:0 0 8px 0; letter-spacing:-.5px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.8);
+  font-size:14px; margin:0; font-weight:500;
+}
+
+/* CARD */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:22px 28px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-header-content-pro{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:14px; margin:0;
+}
+.card-title-icon-pro{
+  width:46px; height:46px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.card-title-icon-pro i{font-size:20px; color:#fff;}
+.card-title-pro h5{
+  color:#1a1a1a;
+  font-weight:900;
+  font-size:18px;
+  margin:0;
+}
+.card-body-pro{padding:28px;}
+
+/* ALERTS */
+.alert-pro{
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 6px 18px rgba(0,0,0,.05);
+}
+
+/* FORM */
+.form-group-pro{margin-bottom:18px;}
+.form-label-pro{
+  font-weight:800;
+  font-size:13px;
+  color:#111827;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.form-label-pro .label-icon{
+  width:32px; height:32px;
+  background:#DC2626;
+  color:#fff;
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+  box-shadow:0 6px 14px rgba(220,38,38,.2);
+}
+.form-control-pro{
+  width:100%;
+  padding:13px 16px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  font-size:14px;
+  background:#f8f9fa;
+  font-weight:600;
+  transition:.25s;
+}
+.form-control-pro:focus{
+  border-color:#DC2626;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(220,38,38,.10);
+  background:#fff;
+}
+.help-row-pro{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-size:12px;
+  color:#6b7280;
+  font-weight:700;
+  margin-top:8px;
+}
+.help-row-pro i{color:#DC2626;}
+
+/* STATUS BADGE */
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+}
+.badge-approved{
+  background:#f3f4f6; color:#111827;
+  border:1px solid #d1d5db;
+}
+.badge-pending{
+  background:#fef3c7; color:#92400e;
+  border:1px solid #f59e0b;
+}
+
+/* BUTTONS */
+.actions-pro{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding-top:18px;
+  border-top:2px solid #f3f4f6;
+  margin-top:18px;
+}
+.btn-pro{
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  font-weight:900;
+  font-size:13px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+}
+.btn-pro-secondary{
+  background:#fff;
+  color:#111827;
+  border:2px solid #e5e7eb;
+}
+.btn-pro-secondary:hover{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+  transform:translateY(-1px);
+}
+.btn-pro-primary{
+  background:#DC2626;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(220,38,38,.22);
+}
+.btn-pro-primary:hover{
+  background:#991B1B;
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(220,38,38,.28);
+}
+.btn-pro-success{
+  background:#16a34a;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(22,163,74,.18);
+}
+.btn-pro-success:hover{background:#15803d; transform:translateY(-1px);}
+.btn-pro-warning{
+  background:#f59e0b;
+  color:#111827;
+  box-shadow:0 6px 16px rgba(245,158,11,.18);
+}
+.btn-pro-warning:hover{background:#d97706; color:#111827; transform:translateY(-1px);}
+.btn-pro-danger{
+  background:#111827;
+  color:#fff;
+  border:2px solid rgba(220,38,38,.35);
+}
+.btn-pro-danger:hover{
+  background:#DC2626;
+  border-color:#DC2626;
+  transform:translateY(-1px);
+}
+
+/* REVIEW LINK GROUP */
+.input-group-pro{
+  display:flex;
+  gap:10px;
+}
+.input-group-pro .form-control-pro{flex:1;}
+.review-link-btn{
+  white-space:nowrap;
+  padding:12px 14px;
+  border-radius:12px;
+  border:2px solid #e5e7eb;
+  background:#fff;
+  font-weight:900;
+  color:#111827;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:.25s;
+  text-decoration:none;
+}
+.review-link-btn:hover{
+  border-color:#DC2626;
+  color:#DC2626;
+  transform:translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px;height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .card-body-pro{padding:20px;}
+  .input-group-pro{flex-direction:column;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-comment-dots"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Commentaire #{{ commentaire.id }}</h2>
+          <p>Consulter / modifier le commentaire et gérer son statut</p>
         </div>
       </div>
-      <div class="card-body">
-        <form method="post">
-          {% csrf_token %}
 
-          <div class="row">
-            <div class="col-md-8">
-              <div class="mb-3">
-                <label class="form-label">Comment</label>
-                {{ form.commentaire }}
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">User</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  value="{{ commentaire.user.username }}"
-                  readonly
-                />
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Review</label>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    value="{{ commentaire.review.titre }}"
-                    readonly
-                  />
-                  <a
-                    href="{% url 'reviews:backoffice_review_detail' commentaire.review.pk %}"
-                    class="btn btn-outline-primary"
-                  >
-                    View Review
-                  </a>
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Status</label>
-                <div>
-                  {% if commentaire.is_approved %}
-                  <span class="badge bg-success">Approved</span>
-                  {% else %}
-                  <span class="badge bg-warning">Pending</span>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Date Commentaire</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  value="{{ commentaire.date_commentaire|date:'Y-m-d' }}"
-                  readonly
-                />
-              </div>
-
-              <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                  <iconify-icon
-                    icon="solar:diskette-bold-duotone"
-                  ></iconify-icon>
-                  Save Changes
-                </button>
-
-                <form method="post" style="display: inline">
-                  {% csrf_token %}
-                  <button
-                    type="submit"
-                    name="toggle_approval"
-                    class="btn btn-{% if commentaire.is_approved %}warning{% else %}success{% endif %}"
-                  >
-                    <iconify-icon
-                      icon="solar:check-circle-bold-duotone"
-                    ></iconify-icon>
-                    {% if commentaire.is_approved %}Disapprove{% else
-                    %}Approve{% endif %}
-                  </button>
-                </form>
-
-                <form
-                  method="post"
-                  style="display: inline"
-                  onsubmit="return confirm('Are you sure you want to delete this comment?');"
-                >
-                  {% csrf_token %}
-                  <button type="submit" name="delete" class="btn btn-danger">
-                    <iconify-icon
-                      icon="solar:trash-bin-trash-bold-duotone"
-                    ></iconify-icon>
-                    Delete
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </form>
+      <div>
+        <a href="{% url 'reviews:reviews_commentaires_list' %}" class="btn-pro btn-pro-secondary">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Retour à la liste</span>
+        </a>
       </div>
     </div>
   </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show alert-pro" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- ===== Main Card ===== -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </div>
+              <h5>Détails du commentaire</h5>
+            </div>
+
+            <div>
+              {% if commentaire.is_approved %}
+                <span class="badge-pro badge-approved"><i class="fa-solid fa-check"></i> Approved</span>
+              {% else %}
+                <span class="badge-pro badge-pending"><i class="fa-solid fa-clock"></i> Pending</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body-pro">
+          {# IMPORTANT: one single form (avoid nested forms) #}
+          <form method="post" id="comment-form">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-lg-8">
+
+                <!-- Comment -->
+                <div class="form-group-pro">
+                  <label class="form-label-pro" for="{{ form.commentaire.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-comment"></i></span>
+                    Commentaire
+                  </label>
+
+                  {# Render field and force our class via JS below #}
+                  {{ form.commentaire }}
+
+                  <div class="help-row-pro">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Vous pouvez modifier le texte puis enregistrer.</span>
+                  </div>
+                </div>
+
+                <!-- User -->
+                <div class="form-group-pro">
+                  <label class="form-label-pro">
+                    <span class="label-icon"><i class="fa-solid fa-user"></i></span>
+                    Utilisateur
+                  </label>
+                  <input type="text" class="form-control-pro" value="{{ commentaire.user.username }}" readonly>
+                </div>
+
+                <!-- Review -->
+                <div class="form-group-pro">
+                  <label class="form-label-pro">
+                    <span class="label-icon"><i class="fa-solid fa-star"></i></span>
+                    Avis associé
+                  </label>
+
+                  <div class="input-group-pro">
+                    <input type="text" class="form-control-pro" value="{{ commentaire.review.titre }}" readonly>
+                    <a href="{% url 'reviews:backoffice_review_detail' commentaire.review.pk %}" class="review-link-btn">
+                      <i class="fa-solid fa-eye"></i>
+                      <span>Voir l’avis</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Date -->
+                <div class="form-group-pro">
+                  <label class="form-label-pro">
+                    <span class="label-icon"><i class="fa-solid fa-calendar"></i></span>
+                    Date commentaire
+                  </label>
+                  <input type="text" class="form-control-pro" value="{{ commentaire.date_commentaire|date:'Y-m-d' }}" readonly>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions-pro">
+                  <button type="submit" class="btn-pro btn-pro-primary" name="save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Enregistrer</span>
+                  </button>
+
+                  <button
+                    type="submit"
+                    name="toggle_approval"
+                    class="btn-pro {% if commentaire.is_approved %}btn-pro-warning{% else %}btn-pro-success{% endif %}"
+                  >
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span>{% if commentaire.is_approved %}Désapprouver{% else %}Approuver{% endif %}</span>
+                  </button>
+
+                  <button
+                    type="submit"
+                    name="delete"
+                    class="btn-pro btn-pro-danger"
+                    onclick="return confirm('⚠️ Supprimer ce commentaire ? Cette action est irréversible.');"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Supprimer</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+  // Tooltips (if any)
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+    // Apply pro classes to Django widgets rendered by {{ form.commentaire }}
+    const textarea = document.querySelector("#comment-form textarea");
+    if (textarea) {
+      textarea.classList.add("form-control-pro");
+      textarea.setAttribute("rows", textarea.getAttribute("rows") || "5");
+      textarea.setAttribute("placeholder", textarea.getAttribute("placeholder") || "Écrivez votre commentaire...");
+    }
+
+    // Also apply to any select/input inside our form
+    document.querySelectorAll("#comment-form input, #comment-form select, #comment-form textarea").forEach(el => {
+      if (!el.classList.contains("form-control-pro")) el.classList.add("form-control-pro");
+    });
+  });
+</script>
+{% endblock %}

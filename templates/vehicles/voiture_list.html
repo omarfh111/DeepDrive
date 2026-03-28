@@ -1,179 +1,909 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* HERO SECTION */
+.cars-hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.cars-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.cars-hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.hero-content-cars {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.breadcrumb-cars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.breadcrumb-cars a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-cars i {
+    font-size: 10px;
+}
+
+.hero-tag-cars {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.hero-tag-cars span {
+    color: #DC2626;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.hero-title-cars {
+    color: #fff;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle-cars {
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* SIDEBAR */
+.sidebar-cars {
+    position: sticky;
+    top: 20px;
+}
+
+.filter-card-cars {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.filter-title-cars {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-title-cars i {
+    width: 40px;
+    height: 40px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 18px;
+}
+
+/* SEARCH BOX */
+.search-input-cars {
+    width: 100%;
+    padding: 14px 50px 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.search-input-cars:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-btn-cars {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: #DC2626;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.search-btn-cars:hover {
+    background: #991B1B;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* CHECKBOX LIST */
+.checkbox-list-cars {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.checkbox-list-cars::-webkit-scrollbar {
+    width: 5px;
+}
+
+.checkbox-list-cars::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 10px;
+}
+
+.checkbox-list-cars::-webkit-scrollbar-thumb {
+    background: #DC2626;
+    border-radius: 10px;
+}
+
+.checkbox-item-cars {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.checkbox-item-cars:hover {
+    background: #f8f9fa;
+}
+
+.checkbox-label-cars {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.checkbox-label-cars input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #DC2626;
+    border-radius: 6px;
+}
+
+.checkbox-label-cars span {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* PRICE INPUTS */
+.price-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.price-input-cars {
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.price-input-cars:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.btn-apply-price {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.btn-apply-price:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+}
+
+/* CAR CARD */
+.car-card-list {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s;
+}
+
+.car-card-list:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+.car-card-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 0;
+}
+
+.car-image-section {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.car-image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.car-card-list:hover .car-image-section img {
+    transform: scale(1.1);
+}
+
+.car-badge-year {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(220, 38, 38, 0.95);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+}
+
+.car-details-section {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.car-title-list {
+    color: #1a1a1a;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.car-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.feature-item-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.feature-icon-list {
+    width: 36px;
+    height: 36px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.feature-text-list {
+    color: #1a1a1a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.car-footer-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 2px solid #f3f4f6;
+}
+
+.car-price-list {
+    color: #DC2626;
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.car-price-currency {
+    font-size: 16px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.btn-deal {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-deal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* PAGINATION */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.pagination-cars {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item-cars {
+    
+}
+
+.page-link-cars {
+    padding: 12px 20px;
+    background: #fff;
+    color: #1a1a1a;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.page-link-cars:hover {
+    background: #DC2626;
+    color: #fff;
+    border-color: #DC2626;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.page-item-cars.disabled .page-link-cars {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: default;
+}
+
+.page-item-cars.disabled .page-link-cars:hover {
+    background: #f3f4f6;
+    color: #6b7280;
+    transform: none;
+}
+
+/* EMPTY STATE */
+.empty-state-cars {
+    text-align: center;
+    padding: 80px 40px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.empty-icon-cars {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.empty-icon-cars i {
+    font-size: 50px;
+    color: #DC2626;
+}
+
+.empty-title-cars {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.empty-text-cars {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* CTA SECTION */
+.cta-section-cars {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section-cars::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.cta-content-cars {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-title-cars {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+
+.cta-phone-cars {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 40px;
+    background: #DC2626;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
+}
+
+.cta-phone-cars:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.6);
+    color: #fff;
+}
+
+.cta-phone-cars i {
+    font-size: 32px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .car-card-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .car-image-section {
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title-cars {
+        font-size: 36px;
+    }
+    
+    .car-features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-card-cars {
+        padding: 20px;
+    }
+    
+    .car-details-section {
+        padding: 20px;
+    }
+    
+    .cta-title-cars {
+        font-size: 24px;
+    }
+    
+    .cta-phone-cars {
+        font-size: 18px;
+        padding: 15px 30px;
+    }
+}
+</style>
+
 <div class="rts-wrapper">
-  <div class="rts-wrapper-inner">
-    {% include 'partials/header/header-three.html' %}
+    <div class="rts-wrapper-inner">
+        {% include 'partials/header/header-three.html' %}
 
-    {% with class="portfolio" current="Cars" title="Cars" %}
-      {% include 'partials/elements/breadcrumb.html' %}
-    {% endwith %}
+        <main class="ms-main" style="padding: 0; margin: 0;">
+            
+            <!-- HERO SECTION -->
+            <section class="cars-hero-section">
+                <div class="container">
+                    <div class="hero-content-cars">
+                        
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb-cars">
+                            <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>Voitures</span>
+                        </div>
 
-    <div class="rts-portfolio-area inner rts-section-gapNew">
-      <div class="container">
-        <div class="row g-5">
-
-          <!-- SIDEBAR -->
-          <div class="col-lg-4">
-            <div class="sticky-top">
-              <div class="left-side-bar">
-
-                <!-- Search -->
-                <div class="search-area side-box">
-                  <h2>Cars Search</h2>
-                  <form method="get">
-                    <div class="input-wrapper">
-                      <input type="text" name="q" placeholder="Search Vehicles"
-                             value="{{ q|default_if_none:'' }}" required>
-                      <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+                        <div class="hero-tag-cars">
+                            <i class="fa-solid fa-car"></i>
+                            <span>CATALOGUE</span>
+                        </div>
+                        
+                        <h1 class="hero-title-cars">
+                            Parcourir les <span class="hero-gradient">Voitures</span>
+                        </h1>
+                        
+                        <p class="hero-subtitle-cars">
+                            Trouvez votre véhicule idéal parmi notre sélection exclusive
+                        </p>
                     </div>
-                  </form>
-                  <span class="cross"><i class="fa-light fa-xmark"></i></span>
                 </div>
+            </section>
 
-                <!-- Energy -->
-                <div class="car-make side-box">
-                  <h2>Fuel</h2>
-                  <ul class="checkbox-list">
-                    {% for val, lab in energy_choices %}
-                      <li class="checkbox-item">
-                        <label class="checkbox-label">
-                          <input type="checkbox" name="energy" value="{{ val }}"
-                                 {% if val in sel_energies %}checked{% endif %}
-                                 onclick="this.form && this.form.submit()" form="filtersForm">
-                          <span>{{ lab }}</span>
-                        </label>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                  <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                </div>
+            <!-- MAIN CONTENT -->
+            <section style="padding: 60px 0; background: #f8f9fa;">
+                <div class="container">
+                    <div class="row g-4">
+                        
+                        <!-- SIDEBAR -->
+                        <div class="col-lg-4">
+                            <div class="sidebar-cars">
+                                
+                                <!-- SEARCH -->
+                                <div class="filter-card-cars">
+                                    <h3 class="filter-title-cars">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        Recherche
+                                    </h3>
+                                    <form method="get">
+                                        <div class="search-wrapper">
+                                            <input type="text" name="q" class="search-input-cars" 
+                                                   placeholder="Rechercher un véhicule..." 
+                                                   value="{{ q|default_if_none:'' }}">
+                                            <button type="submit" class="search-btn-cars">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
 
-                <!-- Carrosserie -->
-                <div class="car-make side-box">
-                  <h2>Body</h2>
-                  <ul class="checkbox-list">
-                    {% for val, lab in carrosserie_choices %}
-                      <li class="checkbox-item">
-                        <label class="checkbox-label">
-                          <input type="checkbox" name="carrosserie" value="{{ val }}"
-                                 {% if val in sel_carrosseries %}checked{% endif %}
-                                 onclick="this.form && this.form.submit()" form="filtersForm">
-                          <span>{{ lab }}</span>
-                        </label>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                  <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                </div>
+                                <!-- FUEL FILTER -->
+                                <div class="filter-card-cars">
+                                    <h3 class="filter-title-cars">
+                                        <i class="fa-solid fa-gas-pump"></i>
+                                        Carburant
+                                    </h3>
+                                    <form method="get">
+                                        <input type="hidden" name="q" value="{{ q }}">
+                                        {% for v in sel_carrosseries %}
+                                            <input type="hidden" name="carrosserie" value="{{ v }}">
+                                        {% endfor %}
+                                        <input type="hidden" name="min_price" value="{{ min_price }}">
+                                        <input type="hidden" name="max_price" value="{{ max_price }}">
+                                        
+                                        <ul class="checkbox-list-cars">
+                                            {% for val, lab in energy_choices %}
+                                            <li class="checkbox-item-cars">
+                                                <label class="checkbox-label-cars">
+                                                    <input type="checkbox" name="energy" value="{{ val }}"
+                                                           {% if val in sel_energies %}checked{% endif %}
+                                                           onchange="this.form.submit()">
+                                                    <span>{{ lab }}</span>
+                                                </label>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </form>
+                                </div>
 
-                <!-- Price (min/max) -->
-                <div class="price-box side-box">
-                  <h2>Price (TND)</h2>
-                  <form id="filtersForm" method="get">
-                    <input type="hidden" name="q" value="{{ q }}">
-                    {% for v in sel_energies %}<input type="hidden" name="energy" value="{{ v }}">{% endfor %}
-                    {% for v in sel_carrosseries %}<input type="hidden" name="carrosserie" value="{{ v }}">{% endfor %}
-                    <div class="d-flex gap-2">
-                      <input class="form-control" type="number" step="0.001" name="min_price"
-                             placeholder="Min" value="{{ min_price|default:'' }}">
-                      <input class="form-control" type="number" step="0.001" name="max_price"
-                             placeholder="Max" value="{{ max_price|default:'' }}">
+                                <!-- BODY FILTER -->
+                                <div class="filter-card-cars">
+                                    <h3 class="filter-title-cars">
+                                        <i class="fa-solid fa-car-side"></i>
+                                        Carrosserie
+                                    </h3>
+                                    <form method="get">
+                                        <input type="hidden" name="q" value="{{ q }}">
+                                        {% for v in sel_energies %}
+                                            <input type="hidden" name="energy" value="{{ v }}">
+                                        {% endfor %}
+                                        <input type="hidden" name="min_price" value="{{ min_price }}">
+                                        <input type="hidden" name="max_price" value="{{ max_price }}">
+                                        
+                                        <ul class="checkbox-list-cars">
+                                            {% for val, lab in carrosserie_choices %}
+                                            <li class="checkbox-item-cars">
+                                                <label class="checkbox-label-cars">
+                                                    <input type="checkbox" name="carrosserie" value="{{ val }}"
+                                                           {% if val in sel_carrosseries %}checked{% endif %}
+                                                           onchange="this.form.submit()">
+                                                    <span>{{ lab }}</span>
+                                                </label>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </form>
+                                </div>
+
+                                <!-- PRICE FILTER -->
+                                <div class="filter-card-cars">
+                                    <h3 class="filter-title-cars">
+                                        <i class="fa-solid fa-dollar-sign"></i>
+                                        Prix (TND)
+                                    </h3>
+                                    <form id="filtersForm" method="get">
+                                        <input type="hidden" name="q" value="{{ q }}">
+                                        {% for v in sel_energies %}
+                                            <input type="hidden" name="energy" value="{{ v }}">
+                                        {% endfor %}
+                                        {% for v in sel_carrosseries %}
+                                            <input type="hidden" name="carrosserie" value="{{ v }}">
+                                        {% endfor %}
+                                        
+                                        <div class="price-inputs-grid">
+                                            <input class="price-input-cars" type="number" step="0.001" 
+                                                   name="min_price" placeholder="Min" 
+                                                   value="{{ min_price|default:'' }}">
+                                            <input class="price-input-cars" type="number" step="0.001" 
+                                                   name="max_price" placeholder="Max" 
+                                                   value="{{ max_price|default:'' }}">
+                                        </div>
+                                        <button type="submit" class="btn-apply-price">
+                                            <i class="fa-solid fa-check"></i> Appliquer
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- CARS LIST -->
+                        <div class="col-lg-8">
+                            
+                            {% for v in voitures %}
+                            <div class="car-card-list">
+                                <div class="car-card-content">
+                                    
+                                    <!-- IMAGE -->
+                                    <div class="car-image-section">
+                                        <img src="{% static 'images/portfolio/08-sm.webp' %}" alt="{{ v.marque }} {{ v.modele }}">
+                                        {% if v.annee %}
+                                        <div class="car-badge-year">
+                                            <i class="fa-solid fa-calendar"></i> {{ v.annee }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- DETAILS -->
+                                    <div class="car-details-section">
+                                        <div>
+                                            <h3 class="car-title-list">
+                                                {{ v.marque }} {{ v.modele }}
+                                            </h3>
+                                            
+                                            <div class="car-features-grid">
+                                                <div class="feature-item-list">
+                                                    <div class="feature-icon-list">
+                                                        <i class="fa-solid fa-gas-pump"></i>
+                                                    </div>
+                                                    <span class="feature-text-list">
+                                                        {{ v.energy|default:"—" }}
+                                                    </span>
+                                                </div>
+                                                
+                                                <div class="feature-item-list">
+                                                    <div class="feature-icon-list">
+                                                        <i class="fa-solid fa-gears"></i>
+                                                    </div>
+                                                    <span class="feature-text-list">
+                                                        {{ v.boite_vitesse|default:"—" }}
+                                                    </span>
+                                                </div>
+                                                
+                                                <div class="feature-item-list">
+                                                    <div class="feature-icon-list">
+                                                        <i class="fa-solid fa-car"></i>
+                                                    </div>
+                                                    <span class="feature-text-list">
+                                                        {{ v.transmission|default:"—" }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="car-footer-list">
+                                            <div class="car-price-list">
+                                                {% if v.prix %}
+                                                    {{ v.prix|floatformat:0 }}
+                                                    <span class="car-price-currency">TND</span>
+                                                {% else %}
+                                                    <span class="car-price-currency">Prix sur demande</span>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <a href="{% url 'deals:marche_create' v.id %}" class="btn-deal">
+                                                <i class="fa-solid fa-handshake"></i>
+                                                Passer un marché
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="empty-state-cars">
+                                <div class="empty-icon-cars">
+                                    <i class="fa-solid fa-car"></i>
+                                </div>
+                                <h3 class="empty-title-cars">Aucune voiture trouvée</h3>
+                                <p class="empty-text-cars">
+                                    Essayez d'ajuster vos filtres pour trouver plus de résultats
+                                </p>
+                            </div>
+                            {% endfor %}
+
+                            <!-- PAGINATION -->
+                            {% if page_obj and page_obj.paginator.num_pages > 1 %}
+                            <div class="pagination-wrapper">
+                                <ul class="pagination-cars">
+                                    {% if page_obj.has_previous %}
+                                    <li class="page-item-cars">
+                                        <a class="page-link-cars" 
+                                           href="?page={{ page_obj.previous_page_number }}&q={{ q }}{% for x in sel_energies %}&energy={{ x }}{% endfor %}{% for x in sel_carrosseries %}&carrosserie={{ x }}{% endfor %}&min_price={{ min_price }}&max_price={{ max_price }}">
+                                            <i class="fa-solid fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    <li class="page-item-cars disabled">
+                                        <span class="page-link-cars">
+                                            Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                    </li>
+                                    
+                                    {% if page_obj.has_next %}
+                                    <li class="page-item-cars">
+                                        <a class="page-link-cars" 
+                                           href="?page={{ page_obj.next_page_number }}&q={{ q }}{% for x in sel_energies %}&energy={{ x }}{% endfor %}{% for x in sel_carrosseries %}&carrosserie={{ x }}{% endfor %}&min_price={{ min_price }}&max_price={{ max_price }}">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                        </div>
                     </div>
-                    <button class="rts-btn btn-primary radius-small mt-2">Apply</button>
-                  </form>
-                  <span class="cross"><i class="fa-light fa-xmark"></i></span>
                 </div>
+            </section>
 
-              </div>
-            </div>
-          </div>
-          <!-- /SIDEBAR -->
-
-          <!-- LIST -->
-          <div class="col-lg-8">
-            <div class="right">
-
-              {% for v in voitures %}
-              <div class="project-wrapper2 list-style mb--30">
-                <div class="image-area">
-                  {# Remplace par ton champ image si tu en as un #}
-                  <img src="{% static 'images/portfolio/08-sm.webp' %}" height="206" alt="">
+            <!-- CTA SECTION -->
+            <section class="cta-section-cars">
+                <div class="container">
+                    <div class="cta-content-cars">
+                        <h2 class="cta-title-cars">Des questions ? Appelez-nous maintenant</h2>
+                        <a href="tel:+16544521505" class="cta-phone-cars">
+                            <i class="fa-solid fa-phone"></i>
+                            +1-654-452-1505
+                        </a>
+                    </div>
                 </div>
-
-                <div class="content-area">
-                  <h6 class="title">{{ v.marque }} {{ v.modele }} {% if v.annee %}({{ v.annee }}){% endif %}</h6>
-                  <ul class="feature-area">
-                    <li>
-                      <img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">
-                      {{ v.energy|default:"—" }}
-                    </li>
-                    <li>
-                      <img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">
-                      {{ v.boite_vitesse|default:"—" }}
-                    </li>
-                    <li>
-                      <img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">
-                      {{ v.transmission|default:"—" }}
-                    </li>
-                  </ul>
-
-                  <div class="button-area">
-                    <p class="cw">
-                      {% if v.prix %}{{ v.prix }} TND{% else %}—{% endif %}
-                    </p>
-
-                    <a href="{% url 'deals:marche_create' v.id %}"
-                       class="rts-btn btn-primary radius-small">
-                      Passer un marché
-                    </a>
-                  </div>
-                </div>
-              </div>
-              {% empty %}
-                <p class="mt-3">Aucune voiture enregistrée pour le moment.</p>
-              {% endfor %}
-
-              {% if page_obj and page_obj.paginator.num_pages > 1 %}
-              <nav class="mt-3">
-                <ul class="pagination">
-                  {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link"
-                       href="?page={{ page_obj.previous_page_number }}&q={{ q }}{% for x in sel_energies %}&energy={{ x }}{% endfor %}{% for x in sel_carrosseries %}&carrosserie={{ x }}{% endfor %}&min_price={{ min_price }}&max_price={{ max_price }}">«</a></li>
-                  {% endif %}
-                  <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
-                  {% if page_obj.has_next %}
-                    <li class="page-item"><a class="page-link"
-                       href="?page={{ page_obj.next_page_number }}&q={{ q }}{% for x in sel_energies %}&energy={{ x }}{% endfor %}{% for x in sel_carrosseries %}&carrosserie={{ x }}{% endfor %}&min_price={{ min_price }}&max_price={{ max_price }}">»</a></li>
-                  {% endif %}
-                </ul>
-              </nav>
-              {% endif %}
-
-              <a href="#" class="rts-btn load-more-btn btn-border d-none">Load More</a>
-            </div>
-          </div>
-          <!-- /LIST -->
-
-        </div>
-      </div>
+            </section>
+        </main>
     </div>
-
-    <div class="rts-cta-area area-2">
-      <div class="container">
-        <div class="cta-inner">
-          <h2 class="title">If you have any questions Please Call.</h2>
-          <div class="contact">
-            <a href="callto:+16544521505">
-              <img src="{% static 'images/cta/call.svg' %}" alt="">
-              +1-654-452-1505</a>
-          </div>
-          <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
-          <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
- {% include 'partials/footer/footer-three.html' %}
+
+{% include 'partials/footer/footer-three.html' %}
 {% endblock %}

@@ -2,171 +2,437 @@
 {% load static %}
 
 {% block content %}
-<style>
-  /* Styles globaux */
-  form input,
-  form select,
-  form textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.2s ease-in-out;
-    background-color: #fff;
-  }
-
-  form select {
-    cursor: pointer;
-  }
-
-  form input:focus,
-  form select:focus,
-  form textarea:focus {
-    border-color: #dc3545; /* Rouge au focus */
-    box-shadow: 0 0 6px rgba(220, 53, 69, 0.4);
-    outline: none;
-  }
-
-  form label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: block;
-  }
-
-  .form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .form-col {
-    flex: 1 1 calc(50% - 20px);
-    min-width: 280px;
-  }
-
-  textarea {
-    resize: vertical;
-  }
-
-  .card {
-    border-radius: 15px;
-  }
-
-  /* TITRE */
-  h2.text-primary {
-    color: #dc3545 !important; /* Rouge */
-    font-family: 'Arial Black', Arial, sans-serif; /* Police plus marquée */
-    font-size: 2.2rem;
-    text-transform: uppercase;
-  }
-
-  /* BOUTON */
-  .btn-primary {
-    background-color: #dc3545;
-    border: none;
-    color: #fff;
-    font-weight: 700;
-    font-size: 1rem;
-    padding: 10px 25px; /* réduit largeur */
-    border-radius: 50px;
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-
-  .btn-primary:hover {
-    background-color: #b02a37;
-    transform: translateY(-1px);
-  }
-
-  .btn-outline-secondary {
-    border-color: #6c757d;
-    color: #6c757d;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-
-  .btn-outline-secondary:hover {
-    background-color: #f8f9fa;
-    color: #495057;
-  }
-
-  .text-danger {
-    font-size: 0.875rem;
-  }
-
-  .status-field {
-    margin-top: 25px;
-  }
-
-  @media (max-width: 768px) {
-    .form-col {
-      flex: 1 1 100%;
-    }
-    form select {
-      width: 100%;
-      transform: none;
-    }
-  }
-</style>
 
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
     {% include "partials/header/header-three.html" %}
     
-    {% with class="service" current="Test Drive" title="Modifier un test drive" %}
-      {% include "partials/elements/breadcrumb.html" %}
-    {% endwith %}
+    <main class="ms-main">
+      <!-- HERO SECTION -->
+      <section class="hero-section" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 80px 0 60px 0; position: relative; overflow: hidden;">
+        <!-- Pattern animé -->
+        <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+          <div class="text-center">
+            <div style="display: inline-block; padding: 8px 20px; background: rgba(220, 38, 38, 0.1); border-radius: 50px; margin-bottom: 15px;">
+              <p style="color: #DC2626; margin: 0; font-weight: 700; letter-spacing: 1.5px; font-size: 12px;">MODIFICATION</p>
+            </div>
+            <h1 style="color: #fff; font-size: 48px; font-weight: 800; margin-bottom: 15px; line-height: 1.2;">
+              Modifier le Test Drive
+            </h1>
+            <p style="color: #a0a0a0; font-size: 17px; margin: 0; line-height: 1.6;">
+              Mettez à jour les informations de votre rendez-vous
+            </p>
+          </div>
+        </div>
+      </section>
 
-    <div class="container mt-5 mb-5">
-      <div class="card shadow-lg border-0 p-4">
-        <h2 class="mb-4 text-center text-primary">Modification du Test Drive</h2>
-
-        <form method="post" novalidate>
-          {% csrf_token %}
-          
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-          {% endif %}
-
-          <div class="form-row">
-            {% for field in form %}
-              {% if field.name != 'status' %}
-                <div class="form-col">
-                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                  {{ field }}
-                  {% if field.errors %}
-                    <div class="text-danger mt-1">{{ field.errors|striptags }}</div>
-                  {% endif %}
+      <!-- FORMULAIRE -->
+      <section class="form-section" style="padding: 60px 0 80px 0; background: #f8f9fa;">
+        <div class="container">
+          <div class="form-card-premium" style="background: #fff; border-radius: 25px; padding: 60px; max-width: 1000px; margin: 0 auto; box-shadow: 0 25px 80px rgba(0,0,0,0.1); position: relative; overflow: hidden;">
+            <!-- Décoration -->
+            <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%); border-radius: 50%; opacity: 0.05;"></div>
+            
+            <!-- Affichage des erreurs -->
+            {% if form.non_field_errors or form.errors %}
+            <div class="error-container" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 6px solid #ef4444; padding: 25px 30px; margin-bottom: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(239, 68, 68, 0.2); animation: shake 0.5s;">
+              <div style="display: flex; align-items: start; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #ef4444; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <i class="fa-solid fa-exclamation-triangle" style="color: #fff; font-size: 24px;"></i>
                 </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-
-          <div class="status-field">
-            <label class="form-label fw-semibold">Statut du test drive</label>
-            {% if object.status == "not_done" %}
-              <select name="status" class="form-select">
-                <option value="not_done" selected>En attente</option>
-                <option value="cancelled">Annulé</option>
-              </select>
-            {% else %}
-              <input type="text" value="{{ object.get_status_display }}" readonly class="form-control">
+                <div style="flex: 1;">
+                  <h5 style="color: #991b1b; margin-bottom: 15px; font-weight: 700; font-size: 18px;">
+                    <i class="fa-solid fa-circle-xmark"></i> Erreurs détectées
+                  </h5>
+                  <ul style="margin: 0; padding-left: 0; list-style: none;">
+                    {% if form.non_field_errors %}
+                      <li style="padding: 10px 0; color: #991b1b; font-weight: 500;">{{ form.non_field_errors }}</li>
+                    {% endif %}
+                    {% for field in form %}
+                      {% for error in field.errors %}
+                      <li style="padding: 10px 0; color: #991b1b; font-weight: 500; border-bottom: 1px solid rgba(153, 27, 27, 0.1); display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-chevron-right" style="color: #ef4444; font-size: 12px;"></i>
+                        <strong style="color: #7f1d1d;">{{ field.label }}:</strong> {{ error }}
+                      </li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
             {% endif %}
-          </div>
 
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">
-              Mettre à jour
-            </button>
-            <a href="{% url 'TestDrive:liste_testdrive' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
-              Annuler
-            </a>
-          </div>
-        </form>
-      </div>
-    </div>
+            <form method="post" id="updateForm" novalidate>
+              {% csrf_token %}
+              
+              <div class="row g-4">
+                
+                <!-- En-tête section -->
+                <div class="col-12">
+                  <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px 30px; border-radius: 15px; border-left: 5px solid #DC2626; margin-bottom: 20px;">
+                    <h3 style="color: #1a1a1a; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 15px;">
+                      <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-pen-to-square" style="color: #fff; font-size: 24px;"></i>
+                      </div>
+                      Informations du rendez-vous
+                    </h3>
+                  </div>
+                </div>
 
+                {% for field in form %}
+                  {% if field.name != 'status' %}
+                  <div class="col-md-6">
+                    <div class="form-group-premium">
+                      <label class="form-label-premium">
+                        <i class="fa-solid 
+                          {% if 'nom' in field.name or 'prénom' in field.name %}fa-user
+                          {% elif 'email' in field.name %}fa-envelope
+                          {% elif 'téléphone' in field.name or 'phone' in field.name %}fa-phone
+                          {% elif 'date' in field.name %}fa-calendar-days
+                          {% elif 'heure' in field.name or 'time' in field.name %}fa-clock
+                          {% elif 'voiture' in field.name or 'car' in field.name %}fa-car
+                          {% elif 'location' in field.name or 'lieu' in field.name %}fa-location-dot
+                          {% elif 'message' in field.name or 'commentaire' in field.name %}fa-message
+                          {% else %}fa-circle-info{% endif %}">
+                        </i> 
+                        {{ field.label }} 
+                        {% if field.field.required %}<span style="color: #ef4444;">*</span>{% endif %}
+                      </label>
+                      
+                      <div class="input-wrapper">
+                        {{ field }}
+                        <span class="input-icon"><i class="fa-solid fa-circle-check"></i></span>
+                      </div>
+                      
+                      {% if field.errors %}
+                        <small class="error-message" style="display: block; color: #ef4444; font-size: 13px; margin-top: 8px;">
+                          <i class="fa-solid fa-circle-exclamation"></i> {{ field.errors.0 }}
+                        </small>
+                      {% endif %}
+                      
+                      {% if field.help_text %}
+                        <small class="help-text"><i class="fa-solid fa-info-circle"></i> {{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+
+                <!-- Statut -->
+                <div class="col-12">
+                  <div class="form-group-premium">
+                    <label class="form-label-premium">
+                      <i class="fa-solid fa-signal"></i> Statut du test drive
+                    </label>
+                    
+                    {% if object.status == "not_done" %}
+                    <select name="status" class="form-control-premium" style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px 20px; width: 100%; font-size: 15px; background: #f9fafb; cursor: pointer;">
+                      <option value="not_done" selected>⏳ En attente</option>
+                      <option value="cancelled">❌ Annulé</option>
+                    </select>
+                    <small class="help-text"><i class="fa-solid fa-info-circle"></i> Vous pouvez annuler ce rendez-vous</small>
+                    {% else %}
+                    <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border: 2px solid #6b7280; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 15px;">
+                      <div style="width: 40px; height: 40px; background: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-lock" style="color: #fff; font-size: 18px;"></i>
+                      </div>
+                      <div style="flex: 1;">
+                        <strong style="color: #1f2937; font-size: 16px; display: block;">{{ object.get_status_display }}</strong>
+                        <small style="color: #4b5563; font-size: 13px;">Le statut ne peut plus être modifié</small>
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Zone d'information -->
+                <div class="col-12">
+                  <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-left: 5px solid #DC2626; padding: 25px 30px; border-radius: 15px; margin-top: 20px;">
+                    <h4 style="color: #1a1a1a; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                      <i class="fa-solid fa-info-circle" style="color: #DC2626;"></i> Informations importantes
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #374151;">
+                      <li style="margin-bottom: 10px;"><strong>Modification :</strong> Vérifiez bien toutes les informations avant de valider</li>
+                      <li style="margin-bottom: 10px;"><strong>Annulation :</strong> Si vous annulez, le rendez-vous ne pourra plus être réactivé</li>
+                      <li><strong>Confirmation :</strong> Un email de confirmation vous sera envoyé</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="col-12 text-center mt-4">
+                  <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button type="submit" class="rts-btn btn-primary-custom" style="padding: 18px 60px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: #fff; border: none; box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3); transition: all 0.3s; border-radius: 10px;">
+                      <span style="display: flex; align-items: center; gap: 12px; justify-content: center;">
+                        <i class="fa-solid fa-check-circle"></i> METTRE À JOUR
+                      </span>
+                    </button>
+                    
+                    <a href="{% url 'TestDrive:liste_testdrive' %}" class="rts-btn btn-secondary-custom" style="padding: 18px 60px; font-size: 17px; font-weight: 700; background: #1a1a1a; color: #fff; border: none; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); transition: all 0.3s; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 12px;">
+                      <i class="fa-solid fa-xmark"></i> ANNULER
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 </div>
+
+
+
+<style>
+/* DÉSACTIVER LE LOADER */
+.loader-wrapper {
+    display: none !important;
+}
+
+/* Form Controls Premium */
+.form-control-premium,
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="date"],
+form input[type="time"],
+form select,
+form textarea {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: #f9fafb !important;
+    font-family: inherit !important;
+}
+
+/* Padding spécial pour les selects (éviter la superposition avec la flèche) */
+form select,
+select.form-control-premium {
+    padding-right: 55px !important; /* Augmenté de 45px à 55px */
+    background-position: right 15px center !important; /* Positionner la flèche à droite */
+}
+
+.form-control-premium:focus,
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #DC2626 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.1) !important;
+    background: #fff !important;
+    transform: translateY(-2px);
+}
+
+.form-control-premium:hover,
+form input:hover,
+form select:hover,
+form textarea:hover {
+    border-color: #DC2626 !important;
+    background: #fff !important;
+}
+
+.form-control-premium:valid:not(:placeholder-shown),
+form input:valid:not(:placeholder-shown),
+form select:valid,
+form textarea:valid:not(:placeholder-shown) {
+    border-color: #DC2626 !important;
+    background: #fff !important;
+}
+
+form textarea {
+    min-height: 120px !important;
+    resize: vertical !important;
+}
+
+/* Labels Premium */
+.form-label-premium {
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+}
+
+.form-label-premium i {
+    color: #DC2626;
+    margin-right: 8px;
+}
+
+/* Texte d'aide */
+.help-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 8px;
+    display: block;
+    font-style: italic;
+}
+
+/* Input avec icône de validation */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #DC2626;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+/* Afficher l'icône de validation SEULEMENT pour text, email, tel et textarea */
+form input[type="text"]:valid:not(:placeholder-shown) ~ .input-icon,
+form input[type="email"]:valid:not(:placeholder-shown) ~ .input-icon,
+form input[type="tel"]:valid:not(:placeholder-shown) ~ .input-icon,
+form textarea:valid:not(:placeholder-shown) ~ .input-icon {
+    opacity: 1;
+}
+
+/* NE PAS afficher l'icône pour date, time et select (ils ont déjà leurs propres icônes natives) */
+form input[type="date"] ~ .input-icon,
+form input[type="time"] ~ .input-icon,
+form select ~ .input-icon {
+    display: none !important;
+}
+
+/* Boutons */
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #991B1B 0%, #7f1d1d 100%) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5) !important;
+}
+
+.btn-secondary-custom:hover {
+    background: #000 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Animations */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Désactiver sticky */
+.header-sticky-active {
+    display: none !important;
+}
+
+.rts-header.header-sticky {
+    position: relative !important;
+}
+
+/* Supprimer gaps */
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rts-wrapper-inner {
+    margin-bottom: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px !important;
+    }
+    
+    .form-card-premium {
+        padding: 35px 25px !important;
+    }
+    
+    .hero-section {
+        padding: 60px 0 40px 0 !important;
+    }
+    
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+
+
+<script>
+// Désactiver sticky header
+document.addEventListener("DOMContentLoaded", function () {
+    const header = document.querySelector('.rts-header');
+    if (header) {
+        header.style.position = 'relative';
+        header.classList.remove('header-sticky');
+    }
+    
+    window.addEventListener('scroll', function() {
+        const stickyHeader = document.querySelector('.header-sticky-active');
+        if (stickyHeader) {
+            stickyHeader.style.display = 'none';
+        }
+    });
+
+    // Validation téléphone
+    const phoneInput = document.querySelector('input[type="tel"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\d+]/g, '');
+        });
+    }
+
+    // Validation email
+    const emailInput = document.querySelector('input[type="email"]');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(this.value)) {
+                this.style.borderColor = '#DC2626';
+            } else if (this.value.length > 0) {
+                this.style.borderColor = '#ef4444';
+            }
+        });
+    }
+
+    // Validation du formulaire
+    const form = document.getElementById('updateForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const requiredFields = this.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#ef4444';
+                    field.style.background = '#fef2f2';
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('⚠️ Veuillez remplir tous les champs obligatoires marqués d\'un astérisque (*)');
+                const firstInvalid = this.querySelector('input:invalid, select:invalid, textarea:invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+            }
+        });
+    }
+});
+</script>
+
 {% endblock content %}

@@ -1,175 +1,327 @@
 {% load static %}
 <style>
-.solar--wheel-bold-duotone {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%237e837e' opacity='0.5'%3E%3Cpath d='M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6'/%3E%3Cpath fill-rule='evenodd' d='M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10m-10 6a6 6 0 1 0 0-12a6 6 0 0 0 0 12m3-6a3 3 0 1 1-6 0a3 3 0 0 1 6 0' clip-rule='evenodd'/%3E%3C/g%3E%3Cpath fill='%235e5f5e' d='m9.672 17.532l1.525-2.64a3 3 0 0 1-1.299-.751l-1.524 2.64c.397.301.832.555 1.298.75M6.046 12.75h3.048a3 3 0 0 1 0-1.5H6.047a6 6 0 0 0 0 1.5m2.327-5.53l1.524 2.64a3 3 0 0 1 1.299-.751l-1.525-2.64a6 6 0 0 0-1.298.75m4.429 1.89l1.525-2.64c.465.195.901.449 1.298.75l-1.524 2.64a3 3 0 0 0-1.299-.75m2.103 3.641a3 3 0 0 0 0-1.5h3.048a6 6 0 0 1 0 1.5zm-2.103 2.141c.497-.137.942-.4 1.299-.75l1.524 2.64a6 6 0 0 1-1.298.75z'/%3E%3C/svg%3E");
-}
+  /* SIDEBAR COMPACTE AVEC DROPDOWN */
+  .app-sidebar-menu {
+    width: 260px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #111111 100%);
+    border-right: 1px solid rgba(220, 38, 38, 0.15);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 6px 0 25px rgba(0, 0, 0, 0.3);
+  }
 
+  .app-sidebar-menu::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .app-sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.4);
+    border-radius: 2px;
+  }
+
+  LOGO ÉLÉGANT
+  .logo-box {
+    padding: 22px 20px 18px;
+    text-align: center;
+    border-bottom: 1px solid rgba(220, 38, 38, 0.25);
+    background: rgba(0, 0, 0, 0.5);
+    position: relative;
+  }
+
+  .logo-box::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+  }
+
+  .logo-main {
+    height: 65px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(220, 38, 38, 0.3));
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    padding: 4px;
+  }
+
+  /* .logo-main:hover {
+    transform: scale(1.03);
+    filter: drop-shadow(0 6px 16px rgba(220, 38, 38, 0.4));
+  } */
+
+  /* TITRE MENU */
+  .menu-title {
+    padding: 12px 20px 6px;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: #DC2626;
+    opacity: 0.95;
+  }
+
+  /* ITEMS */
+  #side-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #side-menu > li {
+    margin-bottom: 1px;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 9px 20px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 600;
+    font-size: 12.8px;
+    line-height: 1.3;
+    transition: all 0.25s ease;
+    position: relative;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+  }
+
+  .sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(220, 38, 38, 0.2);
+    border-left-color: #DC2626;
+    transform: translateX(4px);
+    padding-left: 24px;
+  }
+
+  .sidebar-link.active {
+    color: #ffffff;
+    background: rgba(220, 38, 38, 0.3);
+    border-left-color: #DC2626;
+    font-weight: 700;
+  }
+
+  /* ICÔNES */
+  .nav-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    margin-right: 12px;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .sidebar-link:hover .nav-icon,
+  .sidebar-link.active .nav-icon {
+    background: #DC2626;
+    transform: scale(1.08);
+  }
+
+  .nav-icon iconify-icon {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .sidebar-link:hover .nav-icon iconify-icon,
+  .sidebar-link.active .nav-icon iconify-icon {
+    color: #ffffff;
+  }
+
+  /* DROPDOWN REVIEWS & COMMENTS */
+  .dropdown-parent {
+    cursor: pointer;
+  }
+
+  .dropdown-parent > .sidebar-link {
+    padding-right: 16px;
+  }
+
+  .dropdown-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .dropdown-parent.open .dropdown-arrow iconify-icon {
+    transform: rotate(180deg);
+  }
+
+  .tp-submenu {
+    list-style: none;
+    background: rgba(0, 0, 0, 0.3);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dropdown-parent.open .tp-submenu {
+    max-height: 200px;
+    padding: 4px 0 6px 0;
+  }
+
+  .tp-submenu li {
+    margin: 0;
+  }
+
+  .tp-submenu li a {
+    padding: 7px 20px 7px 64px;
+    font-size: 12.2px;
+    color: rgba(255, 255, 255, 0.68);
+    font-weight: 500;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .tp-submenu li a .nav-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .tp-submenu li a .nav-icon iconify-icon {
+    font-size: 14px;
+  }
+
+  .tp-submenu li a:hover {
+    color: #ffffff;
+    background: rgba(220, 38, 38, 0.15);
+    padding-left: 68px;
+  }
+
+  .tp-submenu li a.active {
+    color: #ffffff;
+    font-weight: 650;
+    background: rgba(220, 38, 38, 0.25);
+  }
+
+  /* LOGOUT */
+  .logout-item {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(220, 38, 38, 0.25);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .app-sidebar-menu { width: 72px; }
+    .logo-main { height: 42px; }
+    .logo-box { padding: 16px 12px; }
+    .menu-title, .sidebar-link span:not(.nav-icon), .dropdown-arrow { display: none; }
+    .nav-icon { margin-right: 0; width: 36px; height: 36px; }
+    .sidebar-link { justify-content: center; padding: 12px; }
+    .tp-submenu li a { padding: 8px; justify-content: center; }
+  }
 </style>
+
 <div class="app-sidebar-menu">
   <div class="h-100" data-simplebar>
-    <div id="sidebar-menu">
-      <div class="logo-box">
-        <a class="logo logo-light" >
-          <span class="logo-sm">
-            <img src="{% static 'admin_themes/assets/images/logo-sm.png' %}" alt="" height="22">
-          </span>
-          <span class="logo-lg">
-            <a class="logo" href="#"><img src="{% static 'admin_themes/assets/images/deepdrive-removebg.png' %}" alt="Logo" height="100" width="180"></a>
-          </span>
-        </a>
-        <a class="logo logo-dark" >
-          <span class="logo-sm">
-            <img src="{% static 'admin_themes/assets/images/logo-sm.png' %}" alt="" height="22">
-          </span>
-          <span class="logo-lg">
-            <img src="{% static 'admin_themes/assets/images/logo-dark.png' %}" alt="" height="24">
-          </span>
-        </a>
-      </div>
 
-        <ul id="side-menu">
-
-        <li class="menu-title">Gestion</li>
-
-        <li>
-          <a class="tp-link" href="{% url 'deals:admin_partenariats_list' %}">
-            <span class="nav-icon">
-              <iconify-icon icon="solar:hand-money-bold-duotone"></iconify-icon>
-            </span>
-            <span>Partenariats</span>
-          </a>
-        </li>
+    <!-- Logo -->
+    <div class="logo-box">
+      <!-- <a href="/">
+        <img src="{% static 'admin_themes/assets/images/deepdrive-removebg.png' %}" 
+             alt="DeepDrive" 
+             class="logo-main">
+      </a> -->
 
 
-        <li>
-          <a class="tp-link" href="{% url 'deals:admin_marches' %}">
-            <span class="nav-icon">
-              <iconify-icon icon="solar:shop-2-bold-duotone"></iconify-icon>
-            </span>
-            <span>Marchés</span>
-          </a>
-        </li>
-        <li class="nav-item">
-            <a class="tp-link" href="{% url 'TestDrive:admin_testdrive_list' %}">
-                <span class="nav-icon me-2">
-                    <iconify-icon icon="solar:checklist-bold-duotone" ></iconify-icon>
-                </span>
-                <span class="fw-medium">Test Drive Bookings</span>
-            </a>
-        </li>
-        <!-- Gestion Véhicules -->
-        <li>
-            <a class="tp-link" href="{% url 'posts:admin_portfolio' %}">
-            <span class="nav-icon">
-                <iconify-icon icon="mdi:post-outline"></iconify-icon>
-            </span>
-            <span> Postes </span>
-            </a>
-        </li>
-                <li>
-            <a class="tp-link" href="{% url 'achats:admin_achats_list' %}">
-            <span class="nav-icon">
-                <iconify-icon icon="mdi:cart-outline"></iconify-icon>
-            </span>
-            <span> Achats </span>
-            </a>
-        </li>
-        <!-- Gestion Utilisateurs -->
-        <li>
-            <a class="tp-link" href="{% url 'user_app:admin_user_list' %}">
-            <span class="nav-icon">
-                <iconify-icon icon="solar:shield-user-bold-duotone"></iconify-icon>
-            </span>
-            <span> Utilisateurs </span>
-            </a>
-        </li>
-        <li>
-            <a class="tp-link" href="{% url 'services:admin_service_list' %}">
-            <span class="nav-icon">
-                <iconify-icon icon="mdi:cog-outline"></iconify-icon>
-            </span>
-            <span> Services </span>
-            </a>
-        </li>
-        <!-- Gestion Réponses -->
-        <li>
-            <a class="tp-link" href="javascript:void(0);">
-            <span class="nav-icon">
-                <iconify-icon icon="solar:chat-round-dots-bold-duotone"></iconify-icon>
-            </span>
-            <span> Réponses </span>
-            </a>
-        </li>
-        <li class="tp-menu-item">
-            <a class="tp-link" href="{% url 'reviews:reviews_dashboard' %}">
-                <span class="nav-icon">
-                    <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
-                </span>
-                <span>Reviews & Comments</span>
-                <span class="tp-submenu-arrow tp-dropdown-toggle">
-                    <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
-                </span>
-            </a>
-            <ul class="tp-submenu" style="display: none;">
-                <li>
-                    <a class="tp-link" href="{% url 'reviews:reviews_backreviews_list' %}">
-                        <span class="nav-icon">
-                            <iconify-icon icon="solar:star-bold-duotone"></iconify-icon>
-                        </span>
-                        <span>Reviews</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="tp-link" href="{% url 'reviews:reviews_commentaires_list' %}">
-                        <span class="nav-icon">
-                            <iconify-icon icon="solar:chat-line-bold-duotone"></iconify-icon>
-                        </span>
-                        <span>Comments</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-          <li>
-            <a class="tp-link" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
-              <span class="nav-icon">
-                <iconify-icon icon="solar:logout-3-bold-duotone"></iconify-icon>
-              </span>
-              <span> Logout </span>
-            </a>
-            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none">
-              {% csrf_token %}
-            </form>
-          </li>
-        </li>
-        </ul>
-
-
+      <a class="logo" href="#"><img src="{% static 'admin_themes/assets/images/deepdrive-removebg.png' %}" alt="Logo" height="100" width="180"></a>
     </div>
-    <div class="clearfix"></div>
+
+    <ul id="side-menu">
+
+      <li class="menu-title">Gestion</li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_partenariats_list' %}active{% endif %}" href="{% url 'deals:admin_partenariats_list' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:hand-money-bold-duotone"></iconify-icon></span><span>Partenariats</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_marches' %}active{% endif %}" href="{% url 'deals:admin_marches' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:shop-2-bold-duotone"></iconify-icon></span><span>Marchés</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_testdrive_list' %}active{% endif %}" href="{% url 'TestDrive:admin_testdrive_list' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:steering-wheel-bold-duotone"></iconify-icon></span><span>Test Drive</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_portfolio' %}active{% endif %}" href="{% url 'posts:admin_portfolio' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:notebook-bold-duotone"></iconify-icon></span><span>Postes</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_achats_list' %}active{% endif %}" href="{% url 'achats:admin_achats_list' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:cart-large-4-bold-duotone"></iconify-icon></span><span>Achats</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_user_list' or request.resolver_match.url_name == 'admin_user_edit' %}active{% endif %}" href="{% url 'user_app:admin_user_list' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:users-group-two-rounded-bold-duotone"></iconify-icon></span><span>Utilisateurs</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'admin_service_list' %}active{% endif %}" href="{% url 'services:admin_service_list' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:wrench-bold-duotone"></iconify-icon></span><span>Services</span>
+      </a></li>
+
+      <li><a class="sidebar-link {% if request.resolver_match.url_name == 'deep_research_dashboard' %}active{% endif %}" href="{% url 'ai_agent:deep_research_dashboard' %}">
+        <span class="nav-icon"><iconify-icon icon="solar:cpu-bolt-bold-duotone"></iconify-icon></span><span>Deep Research AI</span>
+      </a></li>
+
+      <li class="menu-title">Reviews</li>
+
+      <!-- DROPDOWN REVIEWS & COMMENTS -->
+      <li class="dropdown-parent">
+        <div class="sidebar-link">
+          <span class="nav-icon"><iconify-icon icon="solar:chat-round-dots-bold-duotone"></iconify-icon></span>
+          <span>Reviews & Comments</span>
+          <span class="dropdown-arrow">
+            <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+          </span>
+        </div>
+        <ul class="tp-submenu">
+          <li><a class="sidebar-link {% if request.resolver_match.url_name == 'reviews_backreviews_list' %}active{% endif %}" href="{% url 'reviews:reviews_backreviews_list' %}">
+            <span class="nav-icon"><iconify-icon icon="solar:star-bold-duotone"></iconify-icon></span><span>Reviews</span>
+          </a></li>
+          <li><a class="sidebar-link {% if request.resolver_match.url_name == 'reviews_commentaires_list' %}active{% endif %}" href="{% url 'reviews:reviews_commentaires_list' %}">
+            <span class="nav-icon"><iconify-icon icon="solar:chat-line-bold-duotone"></iconify-icon></span><span>Comments</span>
+          </a></li>
+        </ul>
+      </li>
+
+      <li class="menu-title">Système</li>
+
+      <!-- Logout -->
+      <li class="logout-item">
+        <a class="sidebar-link" href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+          <span class="nav-icon"><iconify-icon icon="solar:logout-3-bold-duotone"></iconify-icon></span><span>Déconnexion</span>
+        </a>
+        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none">{% csrf_token %}</form>
+      </li>
+
+    </ul>
   </div>
 </div>
-<script>document.querySelectorAll('.tp-dropdown-toggle').forEach(function(arrow) {
-    arrow.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation(); 
-        
-        const link = this.closest('.tp-link');
-        const menuItem = link.parentElement;
-        const submenu = link.nextElementSibling;
-        const arrowIcon = this.querySelector('iconify-icon');
-    
-        if (submenu.style.display === 'none' || submenu.style.display === '') {
-            submenu.style.display = 'block';
-            arrowIcon.setAttribute('icon', 'solar:alt-arrow-up-linear');
-        } else {
-            submenu.style.display = 'none';
-            arrowIcon.setAttribute('icon', 'solar:alt-arrow-down-linear');
-        }
-        menuItem.classList.toggle('active');
-    });
-});</script>
+
+<script>
+  // Gestion du dropdown
+  document.querySelector('.dropdown-parent').addEventListener('click', function(e) {
+    this.classList.toggle('open');
+  });
+
+  // Ouvrir si un sous-item est actif
+  if (document.querySelector('.tp-submenu .sidebar-link.active')) {
+    document.querySelector('.dropdown-parent').classList.add('open');
+  }
+</script>

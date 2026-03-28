@@ -1,68 +1,576 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* DELETE PAGE CONTAINER */
+.delete-page-wrapper {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 60px 0;
+}
+
+/* DELETE CARD ULTRA */
+.delete-card-ultra {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(220, 38, 38, 0.2);
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* HEADER SECTION */
+.delete-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.delete-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.delete-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.breadcrumb-delete {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.breadcrumb-delete a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-delete i {
+    font-size: 10px;
+}
+
+.delete-title-main {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.delete-title-main i {
+    color: #DC2626;
+}
+
+/* WARNING ICON */
+.warning-icon-wrapper {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    box-shadow: 0 15px 40px rgba(220, 38, 38, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+    position: relative;
+}
+
+.warning-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 3px solid rgba(220, 38, 38, 0.3);
+    animation: ripple 2s ease-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+.warning-icon-wrapper i {
+    font-size: 60px;
+    color: #fff;
+}
+
+/* DELETE BODY */
+.delete-body {
+    padding: 50px 40px;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.delete-question {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.delete-subtitle {
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* CAR INFO GRID */
+.car-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.car-image-section {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.car-image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.car-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.car-name-display {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.car-details-section {
+    background: #f8f9fa;
+    border-radius: 18px;
+    padding: 30px;
+}
+
+.detail-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-title i {
+    color: #DC2626;
+    font-size: 20px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-label i {
+    width: 32px;
+    height: 32px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 14px;
+}
+
+.detail-value {
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+/* WARNING ALERT */
+.warning-alert-ultra {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-left: 5px solid #f59e0b;
+    border-radius: 15px;
+    padding: 25px 30px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: start;
+    gap: 20px;
+    animation: warning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes warning-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+    }
+}
+
+.warning-alert-icon {
+    width: 50px;
+    height: 50px;
+    background: #f59e0b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.warning-alert-icon i {
+    font-size: 26px;
+    color: #fff;
+}
+
+.warning-alert-content {
+    flex: 1;
+}
+
+.warning-alert-title {
+    color: #92400e;
+    font-weight: 800;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.warning-alert-text {
+    color: #92400e;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ACTION BUTTONS */
+.action-buttons-delete {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding-top: 30px;
+    border-top: 3px solid #f3f4f6;
+}
+
+.btn-delete-cancel {
+    padding: 18px 35px;
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-delete-cancel:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+
+.btn-delete-confirm {
+    padding: 18px 35px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.btn-delete-confirm:hover {
+    background: linear-gradient(135deg, #991B1B 0%, #7f1d1d 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.6);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .delete-body {
+        padding: 35px 25px;
+    }
+    
+    .car-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons-delete {
+        grid-template-columns: 1fr;
+    }
+    
+    .warning-icon-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .warning-icon-wrapper i {
+        font-size: 50px;
+    }
+    
+    .delete-question {
+        font-size: 22px;
+    }
+}
+</style>
+
 <div class="rts-wrapper">
     <div class="rts-wrapper-inner">
         {% include 'partials/header/header-three.html' %}
 
-        {% with class="service" current="Delete Car" title="Delete Confirmation" %}
-            {% include 'partials/elements/breadcrumb.html' %}
-        {% endwith %}
+        <main class="ms-main" style="padding: 0; margin: 0;">
+            <div class="delete-page-wrapper">
+                <div class="container">
+                    
+                    <div class="delete-card-ultra">
+                        
+                        <!-- HEADER -->
+                        <div class="delete-header">
+                            <div class="breadcrumb-delete">
+                                <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <a href="{% url 'posts:portfolio' %}">Voitures</a>
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span>Suppression</span>
+                            </div>
+                            
+                            <h1 class="delete-title-main">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Confirmation de suppression
+                            </h1>
+                        </div>
 
-        <main class="ms-main rts-section-gap">
-            <div class="ms-page-content">
-                <article class="page checkout-area type-page status-publish hentry">
-                    <div class="ms-sp--header container">
-                        <h2 class="title text-danger">Delete Car</h2>
-                    </div>
-                    <div class="ms-default-page container entry-content">
-                        <div class="woocommerce">
-                            <form method="POST" class="checkout woocommerce-checkout ms-woocommerce-checkout">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="full-grid">
-                                            <div class="billing-fields">
-                                                <div class="checkout-title">
-                                                    <h3>Are you sure you want to delete this car?</h3>
-                                                </div>
-                                                <div class="form-content-box">
-                                                    <p><strong>{{ car.marque }} {{ car.modele }}</strong></p>
-                                                    <p>Price: {{ car.price }} $</p>
-                                                    <p>Kilométrage: {{ car.kilometrage }} km</p>
-                                                </div>
-                                            </div>
+                        <!-- BODY -->
+                        <div class="delete-body">
+                            
+                            <!-- WARNING ICON -->
+                            <div class="warning-icon-wrapper">
+                                <i class="fa-solid fa-exclamation"></i>
+                            </div>
 
-                                            <div class="payment-method mt-40 md-mt-20">
-                                                <div class="bottom-area">
-                                                    <p class="mt-15 text-danger">
-                                                        This action cannot be undone.
-                                                    </p>
-                                                    <button type="submit" class="rts-btn btn-danger">
-                                                        Yes, Delete Car
-                                                    </button>
-                                                    <a href="{% url 'posts:portfolio' %}" class="rts-btn btn-border ms-2">
-                                                        Cancel
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <!-- MESSAGE -->
+                            <div class="delete-message">
+                                <h2 class="delete-question">
+                                    Êtes-vous absolument sûr ?
+                                </h2>
+                                <p class="delete-subtitle">
+                                    Cette action est irréversible et supprimera définitivement ce véhicule de la base de données
+                                </p>
+                            </div>
 
-                                    <div class="col-md-4">
-                                        <div class="ms-checkout-review-order p-3 border rounded">
-                                            <h3>Car Preview</h3>
-                                            <img src="{{ car.image.url }}" class="w-100 rounded" alt="{{ car.modele }}">
-                                        </div>
+                            <!-- CAR INFO -->
+                            <div class="car-info-grid">
+                                
+                                <!-- IMAGE -->
+                                <div class="car-image-section">
+                                    <img src="{{ car.image.url }}" alt="{{ car.marque }} {{ car.modele }}">
+                                    <div class="car-image-overlay">
+                                        <h3 class="car-name-display">
+                                            {{ car.marque }} {{ car.modele }}
+                                        </h3>
                                     </div>
                                 </div>
+
+                                <!-- DETAILS -->
+                                <div class="car-details-section">
+                                    <h3 class="detail-title">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                        Informations
+                                    </h3>
+                                    
+                                    <div class="detail-item">
+                                        <span class="detail-label">
+                                            <i class="fa-solid fa-car"></i>
+                                            Véhicule
+                                        </span>
+                                        <span class="detail-value">{{ car.marque }} {{ car.modele }}</span>
+                                    </div>
+                                    
+                                    <div class="detail-item">
+                                        <span class="detail-label">
+                                            <i class="fa-solid fa-dollar-sign"></i>
+                                            Prix
+                                        </span>
+                                        <span class="detail-value">{{ car.price }} TND</span>
+                                    </div>
+                                    
+                                    <div class="detail-item">
+                                        <span class="detail-label">
+                                            <i class="fa-solid fa-road"></i>
+                                            Kilométrage
+                                        </span>
+                                        <span class="detail-value">{{ car.kilometrage|floatformat:0 }} km</span>
+                                    </div>
+                                    
+                                    <div class="detail-item">
+                                        <span class="detail-label">
+                                            <i class="fa-solid fa-gas-pump"></i>
+                                            Carburant
+                                        </span>
+                                        <span class="detail-value">{{ car.energy }}</span>
+                                    </div>
+                                    
+                                    <div class="detail-item">
+                                        <span class="detail-label">
+                                            <i class="fa-solid fa-gears"></i>
+                                            Transmission
+                                        </span>
+                                        <span class="detail-value">{{ car.boite_vitesse }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- WARNING ALERT -->
+                            <div class="warning-alert-ultra">
+                                <div class="warning-alert-icon">
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                </div>
+                                <div class="warning-alert-content">
+                                    <h4 class="warning-alert-title">
+                                        ⚠️ Attention - Action irréversible
+                                    </h4>
+                                    <p class="warning-alert-text">
+                                        Cette action supprimera définitivement le véhicule ainsi que toutes les données associées (images, historique, etc.). 
+                                        Aucune restauration ne sera possible après validation.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- ACTION BUTTONS -->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="action-buttons-delete">
+                                    <a href="{% url 'posts:portfolio' %}" class="btn-delete-cancel">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Non, annuler
+                                    </a>
+                                    <button type="submit" class="btn-delete-confirm">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        Oui, supprimer définitivement
+                                    </button>
+                                </div>
                             </form>
+
                         </div>
                     </div>
-                </article>
+                </div>
             </div>
         </main>
     </div>
 </div>
+
 {% include 'partials/footer/footer-three.html' %}
 {% endblock content %}

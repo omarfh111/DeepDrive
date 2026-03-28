@@ -1,108 +1,790 @@
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
-{% block title %}Partenariats | Dusty{% endblock %}
+{% block title %}Partenariats{% endblock %}
 {% block page_title %}Partenariats{% endblock %}
 {% block breadcrumb_leaf %}Partenariats{% endblock %}
 
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
 {% block content %}
-<div class="row">
-  <div class="col-xl-12">
-    <div class="card overflow-hidden">
-      <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <h5 class="card-title text-dark mb-0">Liste des partenariats</h5>
-          <form class="d-flex" method="get">
-            <input class="form-control form-control-sm me-2" type="search" name="q" value="{{ q }}" placeholder="Rechercher (société, email, user)">
-            <select class="form-select form-select-sm me-2" name="status">
-              <option value="">— Statut (tous) —</option>
-              {% for val, lab in choices %}
-                <option value="{{ val }}" {% if status == val %}selected{% endif %}>{{ lab }}</option>
-              {% endfor %}
-            </select>
-            <button class="btn btn-sm btn-primary">Filtrer</button>
-          </form>
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* HEADER SECTION */
+.page-header-pro {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 35px 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.page-header-pro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.page-header-pro::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #DC2626;
+}
+
+.header-content-pro {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.header-left-pro {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon-pro {
+    width: 70px;
+    height: 70px;
+    background: #DC2626;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+}
+
+.header-icon-pro i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.header-text-pro h2 {
+    color: #fff;
+    font-weight: 800;
+    font-size: 28px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.header-text-pro p {
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.header-stats-pro {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-box-pro {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 18px 28px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-box-pro:hover {
+    transform: translateY(-3px);
+    border-color: rgba(220, 38, 38, 0.5);
+}
+
+.stat-box-pro .number {
+    color: #DC2626;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-box-pro .label {
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* CARD */
+.card-pro {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.card-header-pro {
+    background: #f8f9fa;
+    padding: 28px 35px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.card-header-content-pro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card-title-pro {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+}
+
+.card-title-icon-pro {
+    width: 50px;
+    height: 50px;
+    background: #DC2626;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.card-title-icon-pro:hover {
+    transform: scale(1.05);
+}
+
+.card-title-icon-pro i {
+    font-size: 22px;
+    color: #fff;
+}
+
+.card-title-pro h5 {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin: 0;
+}
+
+/* FILTERS BOX */
+.filters-box-pro {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input-pro {
+    width: 280px;
+    padding: 13px 18px 13px 48px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    font-weight: 500;
+}
+
+.search-input-wrapper-pro {
+    position: relative;
+}
+
+.search-input-wrapper-pro i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+.search-input-pro:focus {
+    border-color: #DC2626;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    background: #fff;
+}
+
+.select-filter-pro {
+    padding: 13px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #1a1a1a;
+    min-width: 180px;
+}
+
+.select-filter-pro:focus {
+    border-color: #DC2626;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    background: #fff;
+}
+
+.btn-filter-pro {
+    padding: 13px 26px;
+    background: #DC2626;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-filter-pro:hover {
+    background: #991B1B;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+/* TABLE */
+.table-container-pro {
+    overflow: visible;
+    width: 100%;
+}
+
+.table-pro {
+    width: 100%;
+    margin: 0;
+}
+
+.table-pro thead {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.table-pro thead th {
+    padding: 16px 12px;
+    font-weight: 800;
+    font-size: 11px;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+}
+
+.table-pro thead th i {
+    color: #DC2626;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.table-pro tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.3s ease;
+}
+
+.table-pro tbody tr:hover {
+    background: #fef3f2;
+    box-shadow: inset 3px 0 0 #DC2626;
+}
+
+.table-pro tbody td {
+    padding: 14px 12px;
+    font-size: 12px;
+    color: #4b5563;
+    font-weight: 500;
+    vertical-align: middle;
+    border: none;
+}
+
+/* BADGES */
+.badge-pro {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.badge-pro i {
+    font-size: 12px;
+}
+
+.badge-pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.badge-approved {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #d1d5db;
+}
+
+.badge-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* ACTION BUTTONS */
+.action-buttons-pro {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-action-pro {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-edit-pro {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #e5e7eb;
+}
+
+.btn-edit-pro:hover {
+    background: #1a1a1a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-delete-pro {
+    background: #fee2e2;
+    color: #DC2626;
+    border: 1px solid #fca5a5;
+}
+
+.btn-delete-pro:hover {
+    background: #DC2626;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-approve-pro {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #d1d5db;
+}
+
+.btn-approve-pro:hover:not(:disabled) {
+    background: #1a1a1a;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-reject-pro {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.btn-reject-pro:hover:not(:disabled) {
+    background: #f59e0b;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-action-pro:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-action-pro i {
+    font-size: 15px;
+}
+
+/* PAGINATION */
+.pagination-pro {
+    padding: 20px 35px;
+    background: #f8f9fa;
+    border-top: 2px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pagination-pro .pagination {
+    margin: 0;
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-pro .page-item .page-link {
+    padding: 10px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.pagination-pro .page-item .page-link:hover {
+    background: #DC2626;
+    color: #fff;
+    border-color: #DC2626;
+    transform: translateY(-2px);
+}
+
+.pagination-pro .page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #e5e7eb;
+    color: #6b7280;
+}
+
+/* EMPTY STATE */
+.empty-state-pro {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.empty-state-icon-pro {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state-icon-pro i {
+    font-size: 45px;
+    color: #9ca3af;
+}
+
+.empty-state-pro h4 {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.empty-state-pro p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .table-pro thead th,
+    .table-pro tbody td {
+        padding: 12px 8px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header-pro {
+        padding: 25px 20px;
+    }
+    
+    .header-icon-pro {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .header-icon-pro i {
+        font-size: 28px;
+    }
+    
+    .header-text-pro h2 {
+        font-size: 22px;
+    }
+    
+    .header-stats-pro {
+        width: 100%;
+    }
+    
+    .stat-box-pro {
+        flex: 1;
+        text-align: center;
+        padding: 15px 20px;
+    }
+    
+    .search-input-pro {
+        width: 100%;
+    }
+    
+    .select-filter-pro {
+        width: 100%;
+    }
+    
+    .table-pro thead th {
+        font-size: 10px;
+        padding: 10px 6px;
+    }
+    
+    .table-pro tbody td {
+        padding: 10px 6px;
+        font-size: 11px;
+    }
+}
+</style>
+
+<div class="container-fluid">
+  
+  <!-- Page Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-handshake"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Gestion des partenariats</h2>
+          <p>Gérez et validez toutes les demandes de partenariat</p>
         </div>
       </div>
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">{{ page_obj.paginator.count }}</div>
+          <div class="label">Total</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <div class="card-body p-0">
-        <div class="table-responsive table-centered mt-0">
-          <table class="table table-centered table-nowrap table-hover mb-0">
+  <!-- Main Card -->
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-header-content-pro">
+            <div class="card-title-pro">
+              <div class="card-title-icon-pro">
+                <i class="fa-solid fa-list"></i>
+              </div>
+              <h5>Liste des partenariats</h5>
+            </div>
+            
+            <!-- Filters Form -->
+            <form class="filters-box-pro" method="get">
+              <div class="search-input-wrapper-pro">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  class="search-input-pro"
+                  type="search"
+                  name="q"
+                  value="{{ q }}"
+                  placeholder="Rechercher (société, email...)">
+              </div>
+              
+              <select class="select-filter-pro" name="status">
+                <option value="">— Statut (tous) —</option>
+                {% for val, lab in choices %}
+                  <option value="{{ val }}" {% if status == val %}selected{% endif %}>{{ lab }}</option>
+                {% endfor %}
+              </select>
+              
+              <button class="btn-filter-pro" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                <span>Filtrer</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="table-container-pro">
+          <table class="table-pro">
             <thead>
               <tr>
-                <th>ID</th><th>User</th><th>Société</th><th>Email</th><th>Téléphone</th>
-                <th>CEO</th><th>Date</th><th>Plafond</th><th>Statut</th><th class="text-end">Actions</th>
+                <th><i class="fa-solid fa-hashtag"></i> ID</th>
+                <th><i class="fa-solid fa-user"></i> User</th>
+                <th><i class="fa-solid fa-building"></i> Société</th>
+                <th><i class="fa-solid fa-envelope"></i> Email</th>
+                <th><i class="fa-solid fa-phone"></i> Téléphone</th>
+                <th><i class="fa-solid fa-user-tie"></i> CEO</th>
+                <th><i class="fa-solid fa-calendar"></i> Date</th>
+                <th><i class="fa-solid fa-dollar-sign"></i> Plafond</th>
+                <th><i class="fa-solid fa-circle-check"></i> Statut</th>
+                <th style="text-align: right;"><i class="fa-solid fa-gear"></i> Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for p in page_obj %}
               <tr>
-                <td class="ps-3">#{{ p.id_partenariat }}</td>
-                <td>{% if p.user_id %}{{ p.user.username }}{% else %}&mdash;{% endif %}</td>
-                <td>{{ p.nom_societe|default:"—" }}</td>
+                <td>
+                  <span class="badge-pro" style="background: #f8f9fa; color: #6b7280; border: 1px solid #e5e7eb;">
+                    <i class="fa-solid fa-hashtag"></i>
+                    {{ p.id_partenariat }}
+                  </span>
+                </td>
+                <td>
+                  <span style="font-weight: 600; color: #1a1a1a;">
+                    {% if p.user_id %}{{ p.user.username }}{% else %}—{% endif %}
+                  </span>
+                </td>
+                <td>
+                  <span style="font-weight: 600; color: #1a1a1a;">
+                    {{ p.nom_societe|default:"—" }}
+                  </span>
+                </td>
                 <td>{{ p.email|default:"—" }}</td>
                 <td>{{ p.telephone|default:"—" }}</td>
                 <td>{{ p.nom_ceo|default:"—" }}</td>
-                <td>{{ p.date_partenariat }}</td>
+                <td>
+                  <span style="color: #6b7280; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-calendar" style="color: #DC2626;"></i>
+                    {{ p.date_partenariat|date:"d/m/Y" }}
+                  </span>
+                </td>
                 <td>{{ p.plafond|default:"—" }}</td>
                 <td>
                   {% if p.status == "pending" %}
-                    <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">pending</span>
+                    <span class="badge-pro badge-pending">
+                      <i class="fa-solid fa-clock"></i>
+                      En attente
+                    </span>
                   {% elif p.status == "approved" %}
-                    <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">approved</span>
+                    <span class="badge-pro badge-approved">
+                      <i class="fa-solid fa-check"></i>
+                      Approuvé
+                    </span>
                   {% else %}
-                    <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">rejected</span>
+                    <span class="badge-pro badge-rejected">
+                      <i class="fa-solid fa-xmark"></i>
+                      Rejeté
+                    </span>
                   {% endif %}
                 </td>
-                <td class="text-end align-middle">
-                  <div class="d-inline-flex align-items-center gap-1">
-                    <a href="{% url 'deals:admin_partenariat_update' p.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="Modifier">
-                      <i class="mdi mdi-pencil-outline text-primary fs-14"></i>
+                <td>
+                  <div class="action-buttons-pro">
+                    <a href="{% url 'deals:admin_partenariat_update' p.pk %}"
+                       class="btn-action-pro btn-edit-pro"
+                       data-bs-toggle="tooltip"
+                       data-bs-title="Modifier">
+                      <i class="fa-solid fa-pen"></i>
                     </a>
-                    <form method="post" action="{% url 'deals:admin_partenariat_delete' p.pk %}" class="d-inline m-0" onsubmit="return confirm('Supprimer ce partenariat ?');">
+                    
+                    <form method="post"
+                          action="{% url 'deals:admin_partenariat_approve' p.pk %}"
+                          class="d-inline m-0">
                       {% csrf_token %}
-                      <button class="btn btn-icon btn-sm bg-danger-subtle" data-bs-toggle="tooltip" data-bs-title="Supprimer">
-                        <i class="mdi mdi-delete text-danger fs-14"></i>
+                      <button class="btn-action-pro btn-approve-pro"
+                              {% if p.status == 'approved' %}disabled{% endif %}
+                              data-bs-toggle="tooltip"
+                              data-bs-title="Approuver">
+                        <i class="fa-solid fa-check"></i>
                       </button>
                     </form>
-                    <form method="post" action="{% url 'deals:admin_partenariat_approve' p.pk %}" class="d-inline m-0">
+                    
+                    <form method="post"
+                          action="{% url 'deals:admin_partenariat_reject' p.pk %}"
+                          class="d-inline m-0">
                       {% csrf_token %}
-                      <button class="btn btn-icon btn-sm bg-success-subtle" {% if p.status == 'approved' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Approuver">
-                        <i class="mdi mdi-check text-success fs-14"></i>
+                      <button class="btn-action-pro btn-reject-pro"
+                              {% if p.status == 'rejected' %}disabled{% endif %}
+                              data-bs-toggle="tooltip"
+                              data-bs-title="Rejeter">
+                        <i class="fa-solid fa-xmark"></i>
                       </button>
                     </form>
-                    <form method="post" action="{% url 'deals:admin_partenariat_reject' p.pk %}" class="d-inline m-0">
+                    
+                    <form method="post"
+                          action="{% url 'deals:admin_partenariat_delete' p.pk %}"
+                          class="d-inline m-0"
+                          onsubmit="return confirm('⚠️ Êtes-vous sûr de vouloir supprimer ce partenariat ?');">
                       {% csrf_token %}
-                      <button class="btn btn-icon btn-sm bg-warning-subtle" {% if p.status == 'rejected' %}disabled{% endif %} data-bs-toggle="tooltip" data-bs-title="Rejeter">
-                        <i class="mdi mdi-close text-warning fs-14"></i>
+                      <button class="btn-action-pro btn-delete-pro"
+                              data-bs-toggle="tooltip"
+                              data-bs-title="Supprimer">
+                        <i class="fa-solid fa-trash"></i>
                       </button>
                     </form>
                   </div>
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="10" class="text-center py-4 text-muted">Aucun partenariat.</td></tr>
+              <tr>
+                <td colspan="10">
+                  <div class="empty-state-pro">
+                    <div class="empty-state-icon-pro">
+                      <i class="fa-solid fa-handshake-slash"></i>
+                    </div>
+                    <h4>Aucun partenariat trouvé</h4>
+                    <p>Essayez d'ajuster vos critères de recherche</p>
+                  </div>
+                </td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-      </div>
 
-      {% if page_obj.paginator.num_pages > 1 %}
-      <div class="card-footer">
-        <nav aria-label="Pagination">
-          <ul class="pagination mb-0 justify-content-end">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">«</a></li>
-            {% endif %}
-            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">»</a></li>
-            {% endif %}
-          </ul>
-        </nav>
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-pro">
+          <nav aria-label="Pagination">
+            <ul class="pagination mb-0">
+              {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q }}">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </a>
+              </li>
+              {% endif %}
+              
+              <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+              </li>
+              
+              {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q }}">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
 </div>
@@ -110,7 +792,7 @@
 
 {% block extra_js %}
 <script>
-  // Activer les tooltips Bootstrap
+  // Initialize tooltips
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
 </script>

@@ -5,65 +5,325 @@
 {% block page_title %}Voitures{% endblock %}
 {% block breadcrumb_leaf %}Modifier{% endblock %}
 
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ===== Pro style (same family as your users/cars list) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* HEADER */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:30px 36px;
+  margin-bottom:22px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.5;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:4px; background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:18px;
+}
+.header-left-pro{display:flex; align-items:center; gap:16px;}
+.header-icon-pro{
+  width:62px; height:62px;
+  background:#DC2626;
+  border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:28px; color:#fff;}
+.header-text-pro h2{
+  color:#fff;
+  font-weight:900;
+  font-size:24px;
+  margin:0 0 6px 0;
+  letter-spacing:-.4px;
+}
+.header-text-pro p{
+  color:rgba(255,255,255,.8);
+  font-size:13px;
+  margin:0;
+  font-weight:700;
+}
+.breadcrumb-pro{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  color:rgba(255,255,255,.8);
+  font-weight:800;
+  font-size:12px;
+}
+.breadcrumb-pro a{color:#fff; text-decoration:none;}
+.breadcrumb-pro .sep{opacity:.5}
+
+/* CARDS */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:22px 24px;
+  border-bottom:2px solid #e5e7eb;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:12px;
+  margin:0;
+  color:#111827;
+  font-weight:900;
+  font-size:16px;
+}
+.card-title-pro .ico{
+  width:44px; height:44px;
+  background:#DC2626;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.card-title-pro .ico i{color:#fff; font-size:18px;}
+.card-body-pro{padding:22px 24px;}
+
+/* INFO LIST */
+.info-row{
+  display:flex; justify-content:space-between; gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid #f3f4f6;
+  font-size:13px;
+  font-weight:700;
+  color:#374151;
+}
+.info-row strong{color:#111827; font-weight:900;}
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+}
+.badge-energy{
+  background:#f3f4f6;
+  color:#111827;
+  border:1px solid #d1d5db;
+}
+.badge-energy i{color:#DC2626;}
+
+/* IMAGE PREVIEW */
+.preview-box{
+  border:2px solid #e5e7eb;
+  background:#f8f9fa;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+}
+.preview-img{
+  max-height:240px;
+  border-radius:14px;
+  border:2px solid #e5e7eb;
+}
+.preview-empty{
+  color:#9ca3af;
+  font-weight:900;
+  padding:30px 0;
+}
+
+/* FORM */
+.form-label-pro{
+  font-weight:900;
+  font-size:12px;
+  color:#111827;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.form-label-pro i{color:#DC2626;}
+.help-pro{font-size:12px; color:#6b7280; font-weight:700;}
+.err-pro{font-size:12px; color:#DC2626; font-weight:800; margin-top:6px;}
+
+input, select, textarea{
+  border-radius:12px !important;
+}
+.form-control, .form-select{
+  border:2px solid #e5e7eb !important;
+  padding:12px 12px !important;
+  font-weight:700;
+}
+.form-control:focus, .form-select:focus, textarea:focus{
+  border-color:#DC2626 !important;
+  box-shadow:0 0 0 4px rgba(220,38,38,.10) !important;
+}
+
+/* BUTTONS */
+.btn-pro{
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:14px;
+  border:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  transition:.25s;
+}
+.btn-pro-primary{
+  background:#DC2626;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(220,38,38,.20);
+}
+.btn-pro-primary:hover{
+  background:#991B1B;
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(220,38,38,.26);
+}
+.btn-pro-ghost{
+  background:#fff;
+  border:2px solid #e5e7eb;
+  color:#111827;
+}
+.btn-pro-ghost:hover{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+  transform:translateY(-2px);
+}
+.btn-pro-danger{
+  background:#fee2e2;
+  color:#DC2626;
+  border:2px solid #fca5a5;
+}
+.btn-pro-danger:hover{
+  background:#DC2626;
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(220,38,38,.18);
+}
+
+/* Responsive */
+@media (max-width: 768px){
+  .page-header-pro{padding:22px 18px;}
+  .header-icon-pro{width:56px; height:56px;}
+  .header-text-pro h2{font-size:20px;}
+  .card-body-pro{padding:18px;}
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 
-  <!-- En-tête + fil d’ariane -->
-  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-    <div class="flex-grow-1">
-      <h4 class="fs-18 fw-semibold m-0">Modifier voiture #{{ post.id }}</h4>
-    </div>
-    <div class="text-end">
-      <ol class="breadcrumb m-0 py-0">
-        <li class="breadcrumb-item"><a href="{% url 'posts:admin_portfolio' %}">Voitures</a></li>
-        <li class="breadcrumb-item active">Modifier</li>
-      </ol>
+  <!-- Pro Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Modifier voiture #{{ post.id }}</h2>
+          <p>Mettre à jour les informations et l’image de la voiture</p>
+        </div>
+      </div>
+
+      <div class="breadcrumb-pro">
+        <a href="{% url 'posts:admin_portfolio' %}">Voitures</a>
+        <span class="sep">/</span>
+        <span>Modifier</span>
+      </div>
     </div>
   </div>
 
   <div class="row g-3">
-    <!-- Colonne infos (lecture seule) -->
+    <!-- Left: Infos -->
     <div class="col-xl-5">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Informations</h5></div>
-        <div class="card-body">
-          <div class="mb-2"><strong>Marque : </strong>{{ post.marque|default:"—" }}</div>
-          <div class="mb-2"><strong>Modèle : </strong>{{ post.modele|default:"—" }}</div>
-          <div class="mb-2"><strong>Année : </strong>{{ post.year|default:"—" }}</div>
-          <div class="mb-2"><strong>Prix : </strong>{{ post.price|default:"—" }} <span class="text-muted">DT</span></div>
-          <div class="mb-2">
-            <strong>Énergie : </strong>
-            {% if post.energy %}
-              <span class="badge bg-primary-subtle text-primary fw-medium px-3 py-1 rounded-4">{{ post.energy }}</span>
-            {% else %}
-              —
-            {% endif %}
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <span class="ico"><i class="fa-solid fa-circle-info"></i></span>
+            <span>Informations</span>
           </div>
+        </div>
+
+        <div class="card-body-pro">
+          <div class="info-row"><strong>Marque</strong><span>{{ post.marque|default:"—" }}</span></div>
+          <div class="info-row"><strong>Modèle</strong><span>{{ post.modele|default:"—" }}</span></div>
+          <div class="info-row"><strong>Année</strong><span>{{ post.year|default:"—" }}</span></div>
+          <div class="info-row"><strong>Prix</strong><span>{{ post.price|default:"—" }} <span class="text-muted">DT</span></span></div>
+          <div class="info-row" style="border-bottom:0;">
+            <strong>Énergie</strong>
+            <span>
+              {% if post.energy %}
+                <span class="badge-pro badge-energy"><i class="fa-solid fa-bolt"></i>{{ post.energy }}</span>
+              {% else %}
+                —
+              {% endif %}
+            </span>
+          </div>
+
           {% if post.created_at or post.updated_at %}
-          <hr>
-          <div class="mb-2"><strong>Créé le : </strong>{{ post.created_at|date:"d/m/Y H:i"|default:"—" }}</div>
-          <div class="mb-2"><strong>Dernière MAJ : </strong>{{ post.updated_at|date:"d/m/Y H:i"|default:"—" }}</div>
+          <hr class="my-3">
+          <div class="info-row"><strong>Créé le</strong><span>{{ post.created_at|date:"d/m/Y H:i"|default:"—" }}</span></div>
+          <div class="info-row" style="border-bottom:0;"><strong>Dernière MAJ</strong><span>{{ post.updated_at|date:"d/m/Y H:i"|default:"—" }}</span></div>
           {% endif %}
 
-          <hr>
-          <div class="mb-2"><strong>Aperçu image</strong></div>
-          <div class="border rounded-3 p-3 text-center bg-light-subtle">
+          <hr class="my-3">
+
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <strong style="color:#111827; font-weight:900;">Aperçu image</strong>
+            <span class="badge-pro badge-energy"><i class="fa-solid fa-image"></i> Preview</span>
+          </div>
+
+          <div class="preview-box">
             {% if post.image %}
-              <img id="preview-img" src="{{ post.image.url }}" alt="{{ post.marque }}" class="img-fluid rounded-2" style="max-height:220px;">
+              <img id="preview-img" src="{{ post.image.url }}" alt="{{ post.marque }}" class="img-fluid preview-img">
+              <div id="no-img" class="preview-empty d-none">— Aucune image —</div>
             {% else %}
-              <img id="preview-img" alt="Prévisualisation" class="img-fluid rounded-2 d-none" style="max-height:220px;">
-              <div id="no-img" class="text-muted">— Aucune image —</div>
+              <img id="preview-img" alt="Prévisualisation" class="img-fluid preview-img d-none">
+              <div id="no-img" class="preview-empty">— Aucune image —</div>
             {% endif %}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Colonne formulaire -->
+    <!-- Right: Form -->
     <div class="col-xl-7">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Modifier</h5></div>
-        <div class="card-body">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <span class="ico"><i class="fa-solid fa-sliders"></i></span>
+            <span>Modifier</span>
+          </div>
+          <a href="{% url 'posts:admin_portfolio' %}" class="btn-pro btn-pro-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour
+          </a>
+        </div>
+
+        <div class="card-body-pro">
           <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
@@ -72,77 +332,106 @@
             {% endif %}
 
             <div class="row">
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.marque.id_for_label }}">Marque</label>
-                  {{ form.marque }}
-                  <div class="text-danger small">{{ form.marque.errors }}</div>
-                </div>
+              <div class="col-lg-6 mb-3">
+                <label class="form-label-pro" for="{{ form.marque.id_for_label }}">
+                  <i class="fa-solid fa-tag"></i> Marque
+                </label>
+                {{ form.marque }}
+                {% if form.marque.errors %}<div class="err-pro">{{ form.marque.errors }}</div>{% endif %}
               </div>
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.modele.id_for_label }}">Modèle</label>
-                  {{ form.modele }}
-                  <div class="text-danger small">{{ form.modele.errors }}</div>
-                </div>
+
+              <div class="col-lg-6 mb-3">
+                <label class="form-label-pro" for="{{ form.modele.id_for_label }}">
+                  <i class="fa-solid fa-car-side"></i> Modèle
+                </label>
+                {{ form.modele }}
+                {% if form.modele.errors %}<div class="err-pro">{{ form.modele.errors }}</div>{% endif %}
               </div>
             </div>
 
             <div class="row">
-              <div class="col-lg-4">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.year.id_for_label }}">Année</label>
-                  {{ form.year }}
-                  <div class="text-danger small">{{ form.year.errors }}</div>
-                </div>
+              <div class="col-lg-4 mb-3">
+                <label class="form-label-pro" for="{{ form.year.id_for_label }}">
+                  <i class="fa-solid fa-calendar"></i> Année
+                </label>
+                {{ form.year }}
+                {% if form.year.errors %}<div class="err-pro">{{ form.year.errors }}</div>{% endif %}
               </div>
-              <div class="col-lg-4">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.price.id_for_label }}">Prix (DT)</label>
-                  {{ form.price }}
-                  <div class="text-danger small">{{ form.price.errors }}</div>
-                </div>
+
+              <div class="col-lg-4 mb-3">
+                <label class="form-label-pro" for="{{ form.price.id_for_label }}">
+                  <i class="fa-solid fa-money-bill-wave"></i> Prix (DT)
+                </label>
+                {{ form.price }}
+                {% if form.price.errors %}<div class="err-pro">{{ form.price.errors }}</div>{% endif %}
               </div>
-              <div class="col-lg-4">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.energy.id_for_label }}">Énergie</label>
-                  {{ form.energy }}
-                  <div class="text-danger small">{{ form.energy.errors }}</div>
-                </div>
+
+              <div class="col-lg-4 mb-3">
+                <label class="form-label-pro" for="{{ form.energy.id_for_label }}">
+                  <i class="fa-solid fa-bolt"></i> Énergie
+                </label>
+                {{ form.energy }}
+                {% if form.energy.errors %}<div class="err-pro">{{ form.energy.errors }}</div>{% endif %}
               </div>
             </div>
 
             <!-- Image -->
             <div class="mb-3">
-              <label class="form-label" for="{{ form.image.id_for_label }}">Changer l’image</label>
+              <label class="form-label-pro" for="{{ form.image.id_for_label }}">
+                <i class="fa-solid fa-image"></i> Changer l’image
+              </label>
               {{ form.image }}
-              <div class="text-danger small">{{ form.image.errors }}</div>
-              <div class="form-text">Formats conseillés : JPG/PNG, &lt; 2 MB.</div>
+              {% if form.image.errors %}<div class="err-pro">{{ form.image.errors }}</div>{% endif %}
+              <div class="help-pro mt-2">Formats conseillés : JPG/PNG, &lt; 2 MB.</div>
             </div>
 
-            <!-- Autres champs éventuels (si ton form en contient) -->
+            <!-- Other fields (if any) -->
             {% for f in form.visible_fields %}
               {% if f.name != 'marque' and f.name != 'modele' and f.name != 'year' and f.name != 'price' and f.name != 'energy' and f.name != 'image' %}
                 <div class="mb-3">
-                  <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                  <label class="form-label-pro" for="{{ f.id_for_label }}">
+                    <i class="fa-solid fa-circle-dot"></i> {{ f.label }}
+                  </label>
                   {{ f }}
-                  <div class="text-danger small">{{ f.errors }}</div>
+                  {% if f.errors %}<div class="err-pro">{{ f.errors }}</div>{% endif %}
                 </div>
               {% endif %}
             {% endfor %}
 
-            <div class="d-flex flex-wrap gap-2">
-              <a href="{% url 'posts:admin_portfolio' %}" class="btn btn-outline-secondary">Annuler</a>
-              <button class="btn btn-primary">Enregistrer</button>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <a href="{% url 'posts:admin_portfolio' %}" class="btn-pro btn-pro-ghost">
+                <i class="fa-solid fa-xmark"></i>
+                Annuler
+              </a>
 
-              <!-- Suppression en POST, même style Dusty -->
-              <form method="post" action="{% url 'posts:admin_delete_car' post.id %}" class="ms-auto" onsubmit="return confirm('Supprimer cette voiture ?');">
-                {% csrf_token %}
-                <button class="btn btn-danger"><i class="mdi mdi-delete"></i> Supprimer</button>
-              </form>
+              <button type="submit" class="btn-pro btn-pro-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Enregistrer
+              </button>
+
+              <!-- Delete as POST (IMPORTANT: can't nest forms) -->
+              <button
+                type="submit"
+                class="btn-pro btn-pro-danger ms-auto"
+                form="delete-car-form"
+              >
+                <i class="fa-solid fa-trash"></i>
+                Supprimer
+              </button>
             </div>
-
           </form>
+
+          <!-- Separate delete form (no nested form issue) -->
+          <form
+            id="delete-car-form"
+            method="post"
+            action="{% url 'posts:admin_delete_car' post.id %}"
+            onsubmit="return confirm('⚠️ Supprimer cette voiture ?');"
+            class="d-none"
+          >
+            {% csrf_token %}
+          </form>
+
         </div>
       </div>
     </div>
@@ -153,9 +442,9 @@
 
 {% block extra_js %}
 <script>
-  // Aperçu live de l’image (même esprit que le template marché : léger, vanilla)
+  // Live preview
   document.addEventListener('DOMContentLoaded', function () {
-    const inputId = "{{ form.image.id_for_label }}"; // id de l'input file
+    const inputId = "{{ form.image.id_for_label }}";
     const input = document.getElementById(inputId);
     const preview = document.getElementById('preview-img');
     const noImg = document.getElementById('no-img');
@@ -165,12 +454,19 @@
         const file = e.target.files && e.target.files[0];
         if (!file) return;
         const url = URL.createObjectURL(file);
+
         if (preview) {
           preview.src = url;
           preview.classList.remove('d-none');
         }
         if (noImg) noImg.classList.add('d-none');
       });
+    }
+
+    // Bootstrap tooltips if needed
+    if (window.bootstrap) {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
     }
   });
 </script>

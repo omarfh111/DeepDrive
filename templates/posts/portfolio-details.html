@@ -1,361 +1,1231 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block content %}
-    <div class="rts-wrapper">
-        <div class="rts-wrapper-inner">
-            <!-- header area start -->
-            {% include 'partials/header/header-three.html' %}
-            <!-- header area end -->
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* HERO SECTION */
+.detail-hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.detail-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.detail-hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.hero-content-detail {
+    position: relative;
+    z-index: 2;
+}
+
+.breadcrumb-detail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.breadcrumb-detail a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.breadcrumb-detail a:hover {
+    color: #ef4444;
+}
+
+.breadcrumb-detail i {
+    font-size: 10px;
+}
+
+.car-title-detail {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.car-subtitle-detail {
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.car-subtitle-detail span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.car-subtitle-detail i {
+    color: #DC2626;
+}
+
+/* MAIN IMAGE */
+.main-image-section {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.main-image-wrapper {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+}
+
+.main-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(220, 38, 38, 0.95);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* CONTENT CARD */
+.content-card-detail {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.section-title-detail {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title-detail i {
+    width: 45px;
+    height: 45px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 20px;
+}
+
+/* DESCRIPTION TEXT */
+.description-text {
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.description-text strong {
+    color: #1a1a1a;
+    font-weight: 800;
+}
+
+/* SPECS GRID */
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.spec-box {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.spec-box:hover {
+    background: #fff;
+    border-color: #DC2626;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
+}
+
+.spec-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.spec-icon i {
+    font-size: 28px;
+    color: #DC2626;
+}
+
+.spec-label {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.spec-value {
+    color: #1a1a1a;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* FEATURE LIST */
+.feature-list-detail {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.feature-list-detail li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.feature-list-detail li:hover {
+    background: #fef2f2;
+    transform: translateX(5px);
+}
+
+.feature-list-detail i {
+    width: 32px;
+    height: 32px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.feature-list-detail span {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* SIDEBAR */
+.sidebar-detail {
+    position: sticky;
+    top: 20px;
+}
+
+/* PRICE CARD */
+.price-card-detail {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    margin-bottom: 25px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.price-card-detail::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.2) 0%, transparent 70%);
+}
+
+.price-display {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding-bottom: 25px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    margin-bottom: 25px;
+}
+
+.price-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.price-amount {
+    color: #DC2626;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.price-currency {
+    font-size: 20px;
+    color: rgba(255,255,255,0.8);
+    margin-left: 5px;
+}
+
+.price-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.price-meta li {
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-meta li:last-child {
+    border-bottom: none;
+}
+
+.price-meta i {
+    color: #DC2626;
+    font-size: 16px;
+}
+
+.btn-purchase {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-purchase:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.6);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* OVERVIEW CARD */
+.overview-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.overview-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.overview-title i {
+    color: #DC2626;
+    font-size: 22px;
+}
+
+.overview-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.overview-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.overview-list li:last-child {
+    border-bottom: none;
+}
+
+.overview-label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.overview-label i {
+    color: #DC2626;
+    font-size: 16px;
+}
+
+.overview-value {
+    color: #1a1a1a;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* MAP CARD */
+.map-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.map-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.map-title i {
+    color: #DC2626;
+    font-size: 22px;
+}
+
+.map-wrapper {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid #e5e7eb;
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 250px;
+    border: none;
+    display: block;
+}
+
+/* CONTACT CARD */
+.contact-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.contact-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.contact-title i {
+    color: #DC2626;
+    font-size: 22px;
+}
+
+.contact-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #DC2626;
+    margin: 0 auto 20px;
+    overflow: hidden;
+}
+
+.contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contact-name {
+    color: #1a1a1a;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.contact-role {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-contact {
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.btn-phone {
+    background: #DC2626;
+    color: #fff;
+}
+
+.btn-phone:hover {
+    background: #991B1B;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.btn-message {
+    background: #f3f4f6;
+    color: #1a1a1a;
+}
+
+.btn-message:hover {
+    background: #1a1a1a;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* SHARE CARD */
+.share-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.share-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.share-title i {
+    color: #DC2626;
+    font-size: 22px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-share {
+    flex: 1;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-size: 20px;
+}
+
+.btn-share-facebook {
+    background: #1877f2;
+    color: #fff;
+}
+
+.btn-share-twitter {
+    background: #1da1f2;
+    color: #fff;
+}
+
+.btn-share-instagram {
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    color: #fff;
+}
+
+.btn-share:hover {
+    transform: scale(1.1);
+}
+
+/* MESSAGE FORM */
+.message-form-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.form-input-message {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background: #f9fafb;
+    margin-bottom: 15px;
+}
+
+.form-input-message:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+textarea.form-input-message {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.form-checkbox input {
+    width: 20px;
+    height: 20px;
+    accent-color: #DC2626;
+    cursor: pointer;
+}
+
+.form-checkbox label {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.form-checkbox a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5);
+}
+
+/* CTA SECTION */
+.cta-section-detail {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-title {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+
+.cta-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 40px;
+    background: #DC2626;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
+}
+
+.cta-phone:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.6);
+    color: #fff;
+}
+
+.cta-phone i {
+    font-size: 32px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .car-title-detail {
+        font-size: 28px;
+    }
+    
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .feature-list-detail {
+        grid-template-columns: 1fr;
+    }
+    
+    .content-card-detail {
+        padding: 25px;
+    }
+    
+    .main-image-wrapper {
+        height: 300px;
+    }
+    
+    .cta-title {
+        font-size: 24px;
+    }
+    
+    .cta-phone {
+        font-size: 18px;
+        padding: 15px 30px;
+    }
+}
+</style>
+
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        {% include 'partials/header/header-three.html' %}
+
+        <main class="ms-main" style="padding: 0; margin: 0;">
             
-
-            <div class="rts-portfolio-area inner rts-section-gapNew">
+            <!-- HERO SECTION -->
+            <section class="detail-hero-section">
                 <div class="container">
-                    <div class="row g-5">
+                    <div class="hero-content-detail">
+                        
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb-detail">
+                            <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <a href="{% url 'posts:portfolio' %}">Voitures</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>{{ post.marque }} {{ post.modele }}</span>
+                        </div>
+
+                        <h1 class="car-title-detail">
+                            {{ post.marque }} {{ post.modele }}
+                        </h1>
+                        
+                        <div class="car-subtitle-detail">
+                            <span><i class="fa-solid fa-calendar"></i> {{ post.year }}</span>
+                            <span><i class="fa-solid fa-road"></i> {{ post.kilometrage|floatformat:0 }} Km</span>
+                            <span><i class="fa-solid fa-gas-pump"></i> {{ post.energy }}</span>
+                            <span><i class="fa-solid fa-gears"></i> {{ post.boite_vitesse }}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAIN CONTENT -->
+            <section style="padding: 60px 0; background: #f8f9fa;">
+                <div class="container">
+                    <div class="row g-4">
+                        
+                        <!-- MAIN COLUMN -->
                         <div class="col-lg-8">
-                            <div class="portfolio-details-area">
-                                <div class="portfolio-slider-area mb--40">
-                                  <div class="swiper projectSlider4">
-                                    <div class="swiper-wrapper">
-                                      <div class="swiper-slide">
-                                        <div class="image">
-                                          <img src="{{ post.image.url }}" width="662" alt="{{ post.marque }} {{ post.modele }}">
-                                        </div>
-                                      </div>
+                            
+                            <!-- MAIN IMAGE -->
+                            <div class="main-image-section">
+                                <div class="main-image-wrapper">
+                                    <img src="{{ post.image.url }}" alt="{{ post.marque }} {{ post.modele }}">
+                                    <div class="image-badge">
+                                        <i class="fa-solid fa-star"></i> {{ post.etat_general }}
                                     </div>
-                                  </div>
-                                  
                                 </div>
+                            </div>
 
-                                <h2 class="mb--30">Car Description</h2>
-
-                                <p class="mb--10">
-                                  <strong>{{ post.marque }} {{ post.modele }}</strong> · {{ post.year }} · {{ post.carrosserie }}
-                                </p>
-
-                                <p class="mb--10">
-                                  {{ post.kilometrage|floatformat:0 }} Km • {{ post.energy }} • {{ post.boite_vitesse }} • {{ post.transmission }}
-                                </p>
-
-                                <p class="mb--30">
-                                  État : {{ post.etat_general }} — 
-                                  {{ post.nb_proprietes }} propriétaire{{ post.nb_proprietes|pluralize }} — 
-                                  Gouvernorat : {{ post.gouvernerat }}.
-                                </p>
-
-                               <h2 class="mb--30">Car Features</h2>
-<ul class="feature-list mb--40">
-  <li><i class="fa-regular fa-circle-check"></i> Énergie : {{ post.energy }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Boîte de vitesses : {{ post.boite_vitesse }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Transmission : {{ post.transmission }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Carrosserie : {{ post.carrosserie }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Puissance fiscale : {{ post.puissance_fiscale }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> État général : {{ post.etat_general }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Nombre de propriétaires : {{ post.nb_proprietes }}</li>
-  <li><i class="fa-regular fa-circle-check"></i> Gouvernorat : {{ post.gouvernerat }}</li>
-</ul>
-
-<h2 class="mb--30">Key Specs</h2>
-<ul class="specs-list mb--40">
-  <li>
-    <span class="number">1</span>
-    <div class="text">
-      <h6>Année</h6>
-      <p>{{ post.year }}</p>
-    </div>
-  </li>
-  <li>
-    <span class="number">2</span>
-    <div class="text">
-      <h6>Kilométrage</h6>
-      <p>{{ post.kilometrage|floatformat:0 }} Km</p>
-    </div>
-  </li>
-  <li>
-    <span class="number">3</span>
-    <div class="text">
-      <h6>Énergie</h6>
-      <p>{{ post.energy }}</p>
-    </div>
-  </li>
-  <li>
-    <span class="number">4</span>
-    <div class="text">
-      <h6>Boîte de vitesses</h6>
-      <p>{{ post.boite_vitesse }}</p>
-    </div>
-  </li>
-  <li>
-    <span class="number">5</span>
-    <div class="text">
-      <h6>Transmission</h6>
-      <p>{{ post.transmission }}</p>
-    </div>
-  </li>
-  <li>
-    <span class="number">6</span>
-    <div class="text">
-      <h6>Carrosserie</h6>
-      <p>{{ post.carrosserie }}</p>
-    </div>
-  </li>
-</ul>
-
+                            <!-- DESCRIPTION -->
+                            <div class="content-card-detail">
+                                <h2 class="section-title-detail">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                    Description du véhicule
+                                </h2>
                                 
-                                <h2 class="mb--30">Car Engine </h2>
-                                <ul class="feature-list2 mb--30">
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Displacement
-                                      </p>
-                                      <p>
-                                        3L
-                                      </p>
-                                    </div> 
-                                  </li>
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Torque
-                                      </p>
-                                      <p>
-                                        350 lb.-ft
-                                      </p>
-                                    </div> 
-                                  </li>
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Horespower
-                                      </p>
-                                      <p>
-                                        210 kW / 286 hp
-                                      </p>
-                                    </div> 
-                                  </li>
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Number of cylinders
-                                      </p>
-                                      <p>
-                                        4
-                                      </p>
-                                    </div> 
-                                  </li>
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Engine Layout
-                                      </p>
-                                      <p>
-                                        First-Engine
-                                      </p>
-                                    </div> 
-                                  </li>
-                                  <li>
-                                    <i class="fa-regular fa-circle-check"></i>
-                                    <div class="text">
-                                      <p>
-                                        Engine Configurations
-                                      </p>
-                                      <p>
-                                        V Engine (V6, V8)
-                                      </p>
-                                    </div> 
-                                  </li>
+                                <p class="description-text">
+                                    <strong>{{ post.marque }} {{ post.modele }}</strong> · {{ post.year }} · {{ post.carrosserie }}
+                                </p>
+                                
+                                <p class="description-text">
+                                    {{ post.kilometrage|floatformat:0 }} Km • {{ post.energy }} • {{ post.boite_vitesse }} • {{ post.transmission }}
+                                </p>
+                                
+                                <p class="description-text">
+                                    État : <strong>{{ post.etat_general }}</strong> — 
+                                    {{ post.nb_proprietes }} propriétaire{{ post.nb_proprietes|pluralize }} — 
+                                    Gouvernorat : <strong>{{ post.gouvernerat }}</strong>.
+                                </p>
+                            </div>
+
+                            <!-- SPECS GRID -->
+                            <div class="content-card-detail">
+                                <h2 class="section-title-detail">
+                                    <i class="fa-solid fa-gauge-high"></i>
+                                    Caractéristiques principales
+                                </h2>
+                                
+                                <div class="specs-grid">
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-calendar"></i>
+                                        </div>
+                                        <div class="spec-label">Année</div>
+                                        <div class="spec-value">{{ post.year }}</div>
+                                    </div>
+                                    
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-road"></i>
+                                        </div>
+                                        <div class="spec-label">Kilométrage</div>
+                                        <div class="spec-value">{{ post.kilometrage|floatformat:0 }} Km</div>
+                                    </div>
+                                    
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-gas-pump"></i>
+                                        </div>
+                                        <div class="spec-label">Énergie</div>
+                                        <div class="spec-value">{{ post.energy }}</div>
+                                    </div>
+                                    
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-gears"></i>
+                                        </div>
+                                        <div class="spec-label">Boîte</div>
+                                        <div class="spec-value">{{ post.boite_vitesse }}</div>
+                                    </div>
+                                    
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-car-side"></i>
+                                        </div>
+                                        <div class="spec-label">Carrosserie</div>
+                                        <div class="spec-value">{{ post.carrosserie }}</div>
+                                    </div>
+                                    
+                                    <div class="spec-box">
+                                        <div class="spec-icon">
+                                            <i class="fa-solid fa-bolt"></i>
+                                        </div>
+                                        <div class="spec-label">Puissance</div>
+                                        <div class="spec-value">{{ post.puissance_fiscale }} CV</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FEATURES -->
+                            <div class="content-card-detail">
+                                <h2 class="section-title-detail">
+                                    <i class="fa-solid fa-list-check"></i>
+                                    Équipements & Options
+                                </h2>
+                                
+                                <ul class="feature-list-detail">
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Énergie : {{ post.energy }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Boîte : {{ post.boite_vitesse }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Transmission : {{ post.transmission }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Carrosserie : {{ post.carrosserie }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Puissance fiscale : {{ post.puissance_fiscale }} CV</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>État : {{ post.etat_general }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Propriétaires : {{ post.nb_proprietes }}</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Localisation : {{ post.gouvernerat }}</span>
+                                    </li>
                                 </ul>
-                                <form action="#" class="message-form mb--100">
-                                  <h2>Send Message</h2>
-                                  <div class="form-inner">
-                                    <div class="input-wrapper">
-                                      <input type="text" name="Name" placeholder="Your Name" required>
-                                      <input type="email" name="Email" placeholder="Your Email*" required>
-                                      <input type="text" name="Phone" placeholder="Phone" required>
-                                    </div>
-                                    <textarea name="message" id="message" placeholder="Type a message*"></textarea>
-                                    <div class="form-bottom">
-                                      <label class="checkbox-label">
-                                        <input type="checkbox" />
-                                        <span>I accept The <a href="#">Privacy Policy</a></span>
-                                      </label>
-                                      <button class="rts-btn btn-primary radius-small" type="submit"><img src="{% static 'images/portfolio/send.svg' %}" alt="">Submit Message</button>
-                                    </div>
-                                  </div>
-                                </form>
+                            </div>
+
+                            <!-- MESSAGE FORM -->
+                            <div class="message-form-card">
+                                <h2 class="section-title-detail">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    Envoyer un message
+                                </h2>
                                 
+                                <form action="#" method="POST">
+                                    <input type="text" name="name" placeholder="Votre nom" class="form-input-message" required>
+                                    <input type="email" name="email" placeholder="Votre email" class="form-input-message" required>
+                                    <input type="tel" name="phone" placeholder="Téléphone" class="form-input-message" required>
+                                    <textarea name="message" placeholder="Votre message" class="form-input-message" required></textarea>
+                                    
+                                    <div class="form-checkbox">
+                                        <input type="checkbox" id="privacy" required>
+                                        <label for="privacy">
+                                            J'accepte la <a href="#">Politique de confidentialité</a>
+                                        </label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn-submit">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                        Envoyer le message
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                          <div class="sticky-top">
-                            <div class="left-side-bar">
-                                <div class="price-area side-box">
-                                    <h5>${{ post.price }}</h5>
-                                    <ul class="price-meta">
-                                      <li><img src="{% static 'images/portfolio/calender.svg' %}" alt=""> Feb 23, 2025</li>
-                                      <li><img src="{% static 'images/portfolio/view.svg' %}" alt=""> View</li>
-                                      <li><img src="{% static 'images/portfolio/heart.svg' %}" alt=""> Favourite</li>
-                                    </ul>
-                                    <div class="price-btn">
-                                      <a class="rts-btn btn-primary radius-small"
-   href="{% url 'achats:start_purchase' post_id=post.id %}">
-   Call For Final Price
-</a>
 
+                        <!-- SIDEBAR -->
+                        <div class="col-lg-4">
+                            <div class="sidebar-detail">
+                                
+                                <!-- PRICE CARD -->
+                                <div class="price-card-detail">
+                                    <div class="price-display">
+                                        <div class="price-label">Prix</div>
+                                        <div class="price-amount">
+                                            {{ post.price|floatformat:0 }}
+                                            <span class="price-currency">TND</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <ul class="price-meta">
+                                        <li>
+                                            <i class="fa-solid fa-calendar"></i>
+                                            Publié le Feb 23, 2025
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-eye"></i>
+                                            125 vues
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-heart"></i>
+                                            23 favoris
+                                        </li>
+                                    </ul>
+                                    
+                                    <a href="{% url 'achats:start_purchase' post_id=post.id %}" class="btn-purchase">
+                                        <i class="fa-solid fa-phone"></i>
+                                        Appeler pour le prix final
+                                    </a>
+                                </div>
+
+                                <!-- OVERVIEW CARD -->
+                                <div class="overview-card">
+                                    <h3 class="overview-title">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                        Aperçu
+                                    </h3>
+                                    
+                                    <ul class="overview-list">
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-car"></i>
+                                                Marque
+                                            </span>
+                                            <span class="overview-value">{{ post.marque }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-tag"></i>
+                                                Modèle
+                                            </span>
+                                            <span class="overview-value">{{ post.modele }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-calendar"></i>
+                                                Année
+                                            </span>
+                                            <span class="overview-value">{{ post.year }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-road"></i>
+                                                Kilométrage
+                                            </span>
+                                            <span class="overview-value">{{ post.kilometrage|floatformat:0 }} Km</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-gas-pump"></i>
+                                                Carburant
+                                            </span>
+                                            <span class="overview-value">{{ post.energy }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-gears"></i>
+                                                Boîte
+                                            </span>
+                                            <span class="overview-value">{{ post.boite_vitesse }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-star"></i>
+                                                État
+                                            </span>
+                                            <span class="overview-value">{{ post.etat_general }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="overview-label">
+                                                <i class="fa-solid fa-user"></i>
+                                                Propriétaires
+                                            </span>
+                                            <span class="overview-value">{{ post.nb_proprietes }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- MAP CARD -->
+                                <div class="map-card">
+                                    <h3 class="map-title">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        Localisation
+                                    </h3>
+                                    <div class="map-wrapper">
+                                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14602.288851207937!2d90.47855065!3d23.798243149999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1663151706353!5m2!1sen!2sbd" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                     </div>
                                 </div>
-                                <div class="overview side-box">
-  <h2>Car Overview</h2>
-  <ul class="feature-list2">
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
-      <div class="text">
-        <p>Marque / Modèle</p>
-        <p>{{ post.marque }} {{ post.modele }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
-      <div class="text">
-        <p>Kilométrage</p>
-        <p>{{ post.kilometrage|floatformat:0 }} Km</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/11.svg' %}" alt="">
-      <div class="text">
-        <p>Énergie</p>
-        <p>{{ post.energy }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/12.svg' %}" alt="">
-      <div class="text">
-        <p>Boîte de vitesses</p>
-        <p>{{ post.boite_vitesse }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/14.svg' %}" alt="">
-      <div class="text">
-        <p>Transmission</p>
-        <p>{{ post.transmission }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/15.svg' %}" alt="">
-      <div class="text">
-        <p>Puissance fiscale</p>
-        <p>{{ post.puissance_fiscale }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/16.svg' %}" alt="">
-      <div class="text">
-        <p>Carrosserie</p>
-        <p>{{ post.carrosserie }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/13.svg' %}" alt="">
-      <div class="text">
-        <p>Nombre de propriétaires</p>
-        <p>{{ post.nb_proprietes }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
-      <div class="text">
-        <p>Gouvernorat</p>
-        <p>{{ post.gouvernerat }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
-      <div class="text">
-        <p>État général</p>
-        <p>{{ post.etat_general }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/09.svg' %}" alt="">
-      <div class="text">
-        <p>Année</p>
-        <p>{{ post.year }}</p>
-      </div> 
-    </li>
-    <li>
-      <img src="{% static 'images/portfolio/feature-icon/10.svg' %}" alt="">
-      <div class="text">
-        <p>Prix</p>
-        <p>{{ post.price|floatformat:0 }} DT</p>
-      </div> 
-    </li>
-  </ul>
+
+                                <!-- CONTACT CARD -->
+                                <div class="contact-card">
+                                    <h3 class="contact-title">
+                                        <i class="fa-solid fa-user"></i>
+                                        Contact
+                                    </h3>
+                                    
+                                    <div class="contact-avatar">
+                                        <img src="{% static 'images/portfolio/author.webp' %}" alt="Jonathon Doe">
+                                    </div>
+                                    
+                                    <h4 class="contact-name">Jonathon Doe</h4>
+                                    <p class="contact-role">Concessionnaire</p>
+                                    
+                                    <div class="contact-buttons">
+                                        <a href="#" class="btn-contact btn-whatsapp">
+                                            <i class="fa-brands fa-whatsapp"></i>
+                                            +14844578513
+                                        </a>
+                                        <a href="#" class="btn-contact btn-phone">
+                                            <i class="fa-solid fa-phone"></i>
+                                            +18143511443
+                                        </a>
+                                        <a href="#" class="btn-contact btn-message">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            Envoyer un message
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- SHARE CARD -->
+                                <div class="share-card">
+                                    <h3 class="share-title">
+                                        <i class="fa-solid fa-share-nodes"></i>
+                                        Partager
+                                    </h3>
+                                    
+                                    <div class="share-buttons">
+                                        <button class="btn-share btn-share-facebook">
+                                            <i class="fa-brands fa-facebook-f"></i>
+                                        </button>
+                                        <button class="btn-share btn-share-twitter">
+                                            <i class="fa-brands fa-twitter"></i>
+                                        </button>
+                                        <button class="btn-share btn-share-instagram">
+                                            <i class="fa-brands fa-instagram"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA SECTION -->
+            <section class="cta-section-detail">
+                <div class="container">
+                    <div class="cta-content">
+                        <h2 class="cta-title">Des questions ? Appelez-nous maintenant</h2>
+                        <a href="tel:+16544521505" class="cta-phone">
+                            <i class="fa-solid fa-phone"></i>
+                            +1-654-452-1505
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
 
-                                <div class="map-area side-box">
-                                  <h2>Location</h2>
-                                  <div class="contact-map-area-fluid">
-                                    <iframe class="contact-map" height="250" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14602.288851207937!2d90.47855065!3d23.798243149999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1663151706353!5m2!1sen!2sbd" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                </div>
-                                </div>
-                                <div class="contact side-box">
-                                    <h2>Contacts</h2>
-                                    <div class="contact-inner">
-                                      <div class="author-img">
-                                        <img src="{% static 'images/portfolio/author.webp' %}" alt="">
-                                      </div>
-                                      <h5>Jonathon Doe</h5>
-                                      <p>Car Dealer</p>
-                                      <div class="contact-button-area">
-                                        <a href="#" class="rts-btn radius-small whatsapp"><img src="{% static 'images/portfolio/whatsapp.svg' %}" alt=""> +14844578513</a>
-                                        <a href="#" class="rts-btn radius-small btn-primary phone"><img src="{% static 'images/portfolio/phone.svg' %}" alt=""> +18143511443</a>
-                                        <a href="#" class="rts-btn radius-small telegram"><img src="{% static 'images/portfolio/send.svg' %}" alt=""> Send Message</a>
-                                      </div>
-                                    </div>
-                                </div>
-                                <div class="social-area side-box">
-                                  <h2>Share</h2>
-                                  <ul>
-                                    <li>
-                                      <i class="fa-brands fa-facebook-f"></i>
-                                    </li>
-                                    <li>
-                                      <i class="fa-brands fa-twitter"></i>
-                                    </li>
-                                    <li>
-                                      <i class="fa-brands fa-instagram"></i>
-                                    </li>
-                                  </ul>
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="rts-cta-area area-2">
-                <div class="container">
-                    <div class="cta-inner">
-                        <h2 class="title">If you have any questions Please Call.</h2>
-                        <div class="contact">
-                            <a href="callto:+16544521505">
-                                <img src="{% static 'images/cta/call.svg' %}" alt="">
-                                +1-654-452-1505</a>
-                        </div>
-                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
-                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% include 'partials/footer/footer-three.html' %}
+{% include 'partials/footer/footer-three.html' %}
 {% endblock content %}

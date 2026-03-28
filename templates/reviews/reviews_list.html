@@ -2,286 +2,451 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
+
 <div class="rts-wrapper">
   <div class="rts-wrapper-inner">
     {% include 'partials/header/header-three.html' %}
 
-    {% with class="portfolio" current="Reviews" title="Reviews" %}
-      {% include 'partials/elements/breadcrumb.html' %}
-    {% endwith %}
-
-    <div class="rts-blog-area inner rts-section-gapTop">
-      <div class="container">
-        <div class="row g-5">
-
-          <!-- MAIN LIST -->
-          <div class="col-lg-8">
-            <!-- Average rating card (optional) -->
-            {% if avg_rating %}
-            <div class="card p-4 mb-4 shadow-sm border-0">
-              <div class="d-flex align-items-center justify-content-between">
-                <div>
-                  <h5 class="m-0">Average Rating</h5>
-                  <small class="text-muted">{{ total_reviews|default:0 }} review{{ total_reviews|default:0|pluralize }}</small>
-                </div>
-                <div class="d-flex align-items-center">
-                  <div class="me-2">
-                    <strong class="fs-4 text-warning">{{ avg_rating }}/5</strong>
-                  </div>
-                  <div class="text-warning">
-                    {% for i in "12345" %}
-                      {% if forloop.counter <= avg_rating %}
-                        <i class="fas fa-star"></i>
-                      {% elif forloop.counter|add:"-0.5" <= avg_rating %}
-                        <i class="fas fa-star-half-alt"></i>
-                      {% else %}
-                        <i class="far fa-star"></i>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </div>
+    <main class="ms-main">
+      <!-- HERO SECTION -->
+      <section class="hero-section" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 60px 0 50px 0; position: relative; overflow: hidden;">
+        <div class="bg-pattern" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div style="display: inline-block; padding: 8px 20px; background: rgba(220, 38, 38, 0.15); border-radius: 50px; margin-bottom: 15px; border: 1px solid rgba(220, 38, 38, 0.3);">
+                <p style="color: #DC2626; margin: 0; font-weight: 700; letter-spacing: 1.5px; font-size: 12px;">AVIS CLIENTS</p>
+              </div>
+              <h1 style="color: #fff; font-size: 42px; font-weight: 800; margin-bottom: 15px; line-height: 1.2;">
+                Tous les <span style="color: #DC2626;">Avis</span>
+              </h1>
+              <p style="color: #a0a0a0; font-size: 16px; margin: 0; line-height: 1.6;">
+                Découvrez les expériences authentiques de nos clients
+              </p>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+              <div style="display: inline-block; padding: 30px 45px; background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);">
+                <div style="color: #DC2626; font-size: 48px; font-weight: 800; margin-bottom: 8px; line-height: 1;">{{ total_reviews }}</div>
+                <div style="color: #e0e0e0; font-size: 14px; font-weight: 600; letter-spacing: 1px;">AVIS DISPONIBLES</div>
               </div>
             </div>
-            {% endif %}
-
-            <div class="left">
-              <div class="row g-5">
-                {% if page_obj %}
-                  {% for review in page_obj %}
-                    <div class="col-lg-6">
-                      <div class="blog-wrapper h-100">
-                        <div class="image-area">
-                          {% if review.image %}
-                            <a href="{% url 'reviews:detail' review.pk %}">
-                              <img src="{{ review.image.url }}" alt="{{ review.titre }}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;">
-                            </a>
-                          {% else %}
-                            <a href="{% url 'reviews:detail' review.pk %}">
-                              <img src="{% static 'images/placeholders/review.webp' %}" alt="{{ review.titre }}" style="width:100%;height:220px;object-fit:cover;border-radius:12px;">
-                            </a>
-                          {% endif %}
-                        </div>
-                        <div class="content">
-                          <p class="blog-meta d-flex align-items-center gap-2 m-0">
-                            <span class="badge bg-light text-dark">Review</span>
-                            <span class="text-warning">
-                              {% for i in "12345" %}
-                                {% if forloop.counter <= review.note %}
-                                  <i class="fas fa-star"></i>
-                                {% elif forloop.counter|add:"-0.5" <= review.note %}
-                                  <i class="fas fa-star-half-alt"></i>
-                                {% else %}
-                                  <i class="far fa-star"></i>
-                                {% endif %}
-                              {% endfor %}
-                              <span class="text-dark ms-1">{{ review.note }}/5</span>
-                            </span>
-                          </p>
-                          <h6 class="mt-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <a href="{% url 'reviews:detail' review.pk %}">{{ review.titre|truncatechars:50 }}</a>
-                          </h6>
-                          <p class="text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            {{ review.description|truncatewords:20 }}
-                          </p>
-                          <div class="author-date">
-                            <div class="person" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                              <i class="fa-regular fa-user"></i>
-                              {{ review.user.username|truncatechars:15 }}
-                            </div>
-                            <div class="date">
-                              {% with full_name=review.user.first_name|add:" "|add:review.user.last_name %}
-                                  {{ full_name|truncatechars:15 }}
-                              {% endwith %}
-                            </div>
-                          </div>
-                          {% if review.comment_count > 0 %}
-                          <div class="mt-2 small text-muted">
-                            <i class="far fa-comments"></i> {{ review.comment_count }} comment{{ review.comment_count|pluralize }}
-                          </div>
-                          {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  <div class="col-12">
-                    <div class="alert alert-info text-center">
-                      <p class="mb-3">No reviews found. Be the first to leave a review!</p>
-                      {% if user.is_authenticated %}
-                        <a href="{% url 'reviews:add' %}" class="rts-btn btn-primary">Add Review</a>
-                      {% endif %}
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Pagination / Load more style -->
-            {% if page_obj and page_obj.has_other_pages %}
-              <div class="d-flex justify-content-center mt-5">
-                <nav aria-label="Reviews pagination">
-                  <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Previous</a>
-                      </li>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                      {% if page_obj.number == num %}
-                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <li class="page-item">
-                          <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ num }}</a>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Next</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                </nav>
-              </div>
-            {% endif %}
-
-            {% if user.is_authenticated %}
-              <div class="text-center mt-4">
-                <a href="{% url 'reviews:add' %}" class="rts-btn btn-border"><i class="fas fa-plus me-2"></i>Add Your Review</a>
-              </div>
-            {% else %}
-              <div class="text-center mt-4">
-                <p>Please <a href="{% url 'account' %}">login</a> to add a review.</p>
-              </div>
-            {% endif %}
           </div>
+        </div>
+      </section>
 
-          <!-- SIDEBAR -->
-          <div class="col-lg-4">
-            <div class="sticky-top">
-              <div class="right-side-bar">
-
-                <!-- Search & Filters (moved to sidebar like blog template) -->
-                <div class="search-area side-box">
-                  <h2>Search Reviews</h2>
-                  <form method="get" action="{% url 'reviews:list' %}">
-                    <div class="input-wrapper mb-3">
-                      <input type="text" name="q" placeholder="Search reviews" value="{{ search_query }}">
-                      <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+      <!-- CONTENU PRINCIPAL -->
+      <section class="content-section" style="padding: 50px 0 70px 0; background: #f8f9fa;">
+        <div class="container">
+          <div class="row g-4">
+            
+            <!-- SIDEBAR FILTRES -->
+            <div class="col-lg-3">
+              <div style="position: sticky; top: 20px;">
+                
+                <!-- Actions Rapides -->
+                <div class="filter-card" style="background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.04);">
+                  <h4 style="color: #1a1a1a; font-weight: 800; font-size: 17px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
+                    <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-bolt" style="color: #fff; font-size: 16px;"></i>
                     </div>
-                    <div class="row g-2">
-                      <div class="col-6">
-                        <input class="form-control" type="number" name="min_note" placeholder="Min 0–5" min="0" max="5" step="0.1" value="{{ request.GET.min_note }}">
-                      </div>
-                      <div class="col-6">
-                        <input class="form-control" type="number" name="max_note" placeholder="Max 0–5" min="0" max="5" step="0.1" value="{{ request.GET.max_note }}">
-                      </div>
-                      <div class="col-12">
-                        <select name="sort" class="form-select">
-                          <option value="-date_joined" {% if request.GET.sort == '-date_joined' %}selected{% endif %}>Newest First</option>
-                          <option value="date_joined" {% if request.GET.sort == 'date_joined' %}selected{% endif %}>Oldest First</option>
-                          <option value="-note" {% if request.GET.sort == '-note' %}selected{% endif %}>Highest Rating</option>
-                          <option value="note" {% if request.GET.sort == 'note' %}selected{% endif %}>Lowest Rating</option>
-                        </select>
-                      </div>
-                      <div class="col-12 d-grid">
-                        <button class="rts-btn btn-primary" type="submit">Filter</button>
-                      </div>
+                    Actions rapides
+                  </h4>
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'reviews:add' %}" class="btn-action-primary" style="display: flex; align-items: center; gap: 10px; padding: 13px 18px; background: #DC2626; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; transition: all 0.3s; border: 2px solid #DC2626;">
+                      <i class="fa-solid fa-plus"></i>
+                      Ajouter un avis
+                    </a>
+                    <a href="{% url 'reviews:my_reviews' %}" class="btn-action-secondary" style="display: flex; align-items: center; gap: 10px; padding: 13px 18px; background: #1a1a1a; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; transition: all 0.3s; border: 2px solid #1a1a1a;">
+                      <i class="fa-solid fa-user"></i>
+                      Mes avis
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account' %}" class="btn-action-primary" style="display: flex; align-items: center; gap: 10px; padding: 13px 18px; background: #DC2626; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; transition: all 0.3s; border: 2px solid #DC2626;">
+                      <i class="fa-solid fa-sign-in-alt"></i>
+                      Se connecter
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Recherche -->
+                <div class="filter-card" style="background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.04);">
+                  <h4 style="color: #1a1a1a; font-weight: 800; font-size: 17px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
+                    <div style="width: 36px; height: 36px; background: #f3f4f6; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-search" style="color: #DC2626; font-size: 16px;"></i>
+                    </div>
+                    Rechercher
+                  </h4>
+                  <form method="get" action="{% url 'reviews:list' %}">
+                    <div style="position: relative;">
+                      <input type="text" name="q" placeholder="Rechercher un avis..." value="{{ search_query }}" style="width: 100%; padding: 13px 45px 13px 15px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; transition: all 0.3s; background: #f8f9fa; font-weight: 500;">
+                      <button type="submit" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #DC2626; border: none; width: 38px; height: 38px; border-radius: 10px; color: #fff; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-search" style="font-size: 14px;"></i>
+                      </button>
                     </div>
                   </form>
                 </div>
 
-                <!-- Quick rating filters -->
-                <div class="car-make side-box">
-                  <h2>Quick Rating</h2>
-                  <ul class="checkbox-list">
-                    <li class="checkbox-item d-flex justify-content-between align-items-center">
-                      <a class="text-decoration-none" href="?min_note=4&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
-                        <span>4★ & Up</span>
-                      </a>
-                      <i class="fa-regular fa-star"></i>
-                    </li>
-                    <li class="checkbox-item d-flex justify-content-between align-items-center">
-                      <a class="text-decoration-none" href="?min_note=3&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
-                        <span>3★ & Up</span>
-                      </a>
-                      <i class="fa-regular fa-star"></i>
-                    </li>
-                    <li class="checkbox-item d-flex justify-content-between align-items-center">
-                      <a class="text-decoration-none" href="?min_note=2&sort=-note{% if search_query %}&q={{ search_query }}{% endif %}">
-                        <span>2★ & Up</span>
-                      </a>
-                      <i class="fa-regular fa-star"></i>
-                    </li>
-                  </ul>
+                <!-- Filtre par Note -->
+                <div class="filter-card" style="background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.04);">
+                  <h4 style="color: #1a1a1a; font-weight: 800; font-size: 17px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
+                    <div style="width: 36px; height: 36px; background: #f3f4f6; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-star" style="color: #DC2626; font-size: 16px;"></i>
+                    </div>
+                    Filtrer par note
+                  </h4>
+                  <form method="get" action="{% url 'reviews:list' %}">
+                    {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                      <label class="filter-radio" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #f8f9fa; border-radius: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;">
+                        <input type="radio" name="min_note" value="" {% if not request.GET.min_note %}checked{% endif %} onchange="this.form.submit()" style="accent-color: #DC2626; width: 18px; height: 18px;">
+                        <span style="color: #1a1a1a; font-weight: 600; font-size: 14px; flex: 1;">Toutes les notes</span>
+                      </label>
+                      <label class="filter-radio" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #f8f9fa; border-radius: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;">
+                        <input type="radio" name="min_note" value="5" {% if request.GET.min_note == '5' %}checked{% endif %} onchange="this.form.submit()" style="accent-color: #DC2626; width: 18px; height: 18px;">
+                        <span style="color: #1a1a1a; font-weight: 600; font-size: 14px; flex: 1;">5 étoiles</span>
+                        <span style="font-size: 14px;">⭐⭐⭐⭐⭐</span>
+                      </label>
+                      <label class="filter-radio" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #f8f9fa; border-radius: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;">
+                        <input type="radio" name="min_note" value="4" {% if request.GET.min_note == '4' %}checked{% endif %} onchange="this.form.submit()" style="accent-color: #DC2626; width: 18px; height: 18px;">
+                        <span style="color: #1a1a1a; font-weight: 600; font-size: 14px; flex: 1;">4+ étoiles</span>
+                        <span style="font-size: 14px;">⭐⭐⭐⭐</span>
+                      </label>
+                      <label class="filter-radio" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #f8f9fa; border-radius: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent;">
+                        <input type="radio" name="min_note" value="3" {% if request.GET.min_note == '3' %}checked{% endif %} onchange="this.form.submit()" style="accent-color: #DC2626; width: 18px; height: 18px;">
+                        <span style="color: #1a1a1a; font-weight: 600; font-size: 14px; flex: 1;">3+ étoiles</span>
+                        <span style="font-size: 14px;">⭐⭐⭐</span>
+                      </label>
+                    </div>
+                  </form>
                 </div>
 
-                <!-- Recent Reviews (mini list) -->
-                {% if recent_reviews %}
-                <div class="recent-post side-box">
-                  <h2>Recent Reviews</h2>
-                  <ul class="blog-list">
-                    {% for r in recent_reviews %}
-                    <li>
-                      <div class="image-area">
-                        <a href="{% url 'reviews:detail' r.pk %}">
-                          {% if r.image %}
-                            <img src="{{ r.image.url }}" width="100" height="80" style="object-fit:cover;border-radius:8px;" alt="{{ r.titre }}">
-                          {% else %}
-                            <img src="{% static 'images/placeholders/review-sm.webp' %}" width="100" height="80" style="object-fit:cover;border-radius:8px;" alt="{{ r.titre }}">
-                          {% endif %}
-                        </a>
-                      </div>
-                      <div class="content" style="overflow: hidden;">
-                        <h6 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                          <a href="{% url 'reviews:detail' r.pk %}">{{ r.titre|truncatechars:40 }}</a>
-                        </h6>
-                        <p class="blog-meta">{{ r.date_review|date:"M d, Y" }}</p>
-                      </div>
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </div>
+                <!-- Réinitialiser -->
+                {% if request.GET.min_note or search_query %}
+                <button onclick="window.location.href='{% url 'reviews:list' %}'" class="btn-reset" style="width: 100%; padding: 13px; background: #fff; border: 2px solid #e5e7eb; border-radius: 12px; color: #6b7280; font-weight: 700; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;">
+                  <i class="fa-solid fa-rotate-right"></i>
+                  Réinitialiser les filtres
+                </button>
                 {% endif %}
-
-                <!-- Tag-like section: useful meta -->
-                <div class="tag-area side-box">
-                  <h2>Tips</h2>
-                  <ul>
-                    <li>Verified buyers</li>
-                    <li>Photos attached</li>
-                    <li>5-star highlights</li>
-                    <li>Most discussed</li>
-                  </ul>
-                </div>
-
               </div>
             </div>
+
+            <!-- GRILLE AVIS -->
+            <div class="col-lg-9">
+              
+              <!-- En-tête Résultats -->
+              <div class="results-header" style="background: #fff; border-radius: 20px; padding: 25px 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 30px; border: 1px solid rgba(0,0,0,0.04);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                  <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-list" style="color: #DC2626; font-size: 22px;"></i>
+                    </div>
+                    <div>
+                      <div style="color: #1a1a1a; font-weight: 800; font-size: 20px; line-height: 1.2; margin-bottom: 2px;">
+                        <span style="color: #DC2626;">{{ total_reviews }}</span> Avis
+                      </div>
+                      <p style="color: #6b7280; font-size: 13px; margin: 0;">Expériences authentiques</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Tri -->
+                  <div style="position: relative; min-width: 220px;">
+                    <select onchange="sortReviews(this.value)" class="sort-select" style="width: 100%; padding: 13px 45px 13px 15px; border: 2px solid #e5e7eb; border-radius: 12px; font-weight: 600; font-size: 14px; color: #1a1a1a; cursor: pointer; appearance: none; background: #f8f9fa url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22%23DC2626%22 viewBox=%220 0 16 16%22><path d=%22M8 11L3 6h10z%22/></svg>') no-repeat right 15px center; transition: all 0.3s;">
+                      <option value="-date_joined" {% if not request.GET.sort or request.GET.sort == '-date_joined' %}selected{% endif %}>📅 Plus récent d'abord</option>
+                      <option value="date_joined" {% if request.GET.sort == 'date_joined' %}selected{% endif %}>📅 Plus ancien d'abord</option>
+                      <option value="-note" {% if request.GET.sort == '-note' %}selected{% endif %}>⭐ Note la plus haute</option>
+                      <option value="note" {% if request.GET.sort == 'note' %}selected{% endif %}>⭐ Note la plus basse</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Grille des Avis -->
+              {% if page_obj.object_list %}
+              <div class="row g-4" id="reviewsGrid">
+                {% for review in page_obj %}
+                <div class="col-md-6">
+                  <div class="review-card" style="background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s; height: 100%; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.04);">
+                    
+                    <!-- Image -->
+                    <div style="position: relative; height: 250px; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                      <a href="{% url 'reviews:detail' review.pk %}">
+                        {% if review.image %}
+                        <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="review-img" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                        {% else %}
+                        <img src="{% static 'images/placeholders/review.webp' %}" alt="{{ review.titre }}" class="review-img" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                        {% endif %}
+                      </a>
+                      
+                      <!-- Badge Note -->
+                      <div style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 25px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-star" style="color: #DC2626; font-size: 15px;"></i>
+                        <span style="font-weight: 800; font-size: 16px; color: #1a1a1a;">{{ review.note|floatformat:1 }}</span>
+                      </div>
+
+                      <!-- Badge Sentiment -->
+                      {% if review.sentiment_percentage is not None %}
+                      <div style="position: absolute; top: 15px; left: 15px; padding: 8px 15px; border-radius: 25px; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 15px rgba(0,0,0,0.12); backdrop-filter: blur(10px); {% if review.sentiment_percentage >= 80 %}background: rgba(34, 197, 94, 0.95); color: #fff;{% elif review.sentiment_percentage >= 60 %}background: rgba(59, 130, 246, 0.95); color: #fff;{% elif review.sentiment_percentage >= 40 %}background: rgba(251, 191, 36, 0.95); color: #fff;{% else %}background: rgba(239, 68, 68, 0.95); color: #fff;{% endif %}">
+                        <i class="fa-solid {% if review.sentiment_percentage >= 80 %}fa-heart{% elif review.sentiment_percentage >= 60 %}fa-thumbs-up{% elif review.sentiment_percentage >= 40 %}fa-meh{% else %}fa-thumbs-down{% endif %}" style="font-size: 14px;"></i>
+                        <span>{{ review.sentiment_percentage|floatformat:0 }}%</span>
+                      </div>
+                      {% endif %}
+                    </div>
+
+                    <!-- Contenu -->
+                    <div style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
+                      <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <span style="color: #6b7280; font-size: 13px; display: flex; align-items: center; gap: 6px; font-weight: 500;">
+                          <i class="fa-regular fa-calendar" style="color: #DC2626;"></i>
+                          {{ review.date_review|date:"d M Y" }}
+                        </span>
+                        {% if review.comment_count is not None %}
+                        <span style="color: #6b7280; font-size: 13px; display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: #f3f4f6; border-radius: 20px; font-weight: 600;">
+                          <i class="fa-regular fa-comments" style="color: #DC2626;"></i>
+                          {{ review.comment_count }}
+                        </span>
+                        {% endif %}
+                      </div>
+
+                      <h3 style="color: #1a1a1a; font-weight: 800; font-size: 19px; margin-bottom: 12px; line-height: 1.3; min-height: 52px;">
+                        <a href="{% url 'reviews:detail' review.pk %}" class="review-title" style="color: inherit; text-decoration: none; transition: color 0.2s;">
+                          {{ review.titre|truncatechars:60 }}
+                        </a>
+                      </h3>
+
+                      <p style="color: #6b7280; font-size: 14px; line-height: 1.7; margin-bottom: 20px; flex: 1;">
+                        {{ review.description|truncatewords:18 }}
+                      </p>
+
+                      <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 2px solid #f3f4f6;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                          <div style="width: 42px; height: 42px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <i class="fa-solid fa-user" style="color: #fff; font-size: 16px;"></i>
+                          </div>
+                          <div>
+                            <span style="color: #1a1a1a; font-weight: 700; font-size: 14px; display: block; line-height: 1.2;">
+                              {% if review.user.first_name %}
+                                {{ review.user.first_name }}
+                              {% else %}
+                                {{ review.user.username }}
+                              {% endif %}
+                            </span>
+                            <span style="color: #9ca3af; font-size: 12px; font-weight: 500;">Vérifié</span>
+                          </div>
+                        </div>
+                        <a href="{% url 'reviews:detail' review.pk %}" class="btn-read-more" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #1a1a1a; color: #fff; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; transition: all 0.3s; border: 2px solid #1a1a1a;">
+                          <span>Lire</span>
+                          <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+
+              <!-- Pagination -->
+              {% if page_obj.has_other_pages %}
+              <nav style="margin-top: 50px;">
+                <ul style="display: flex; justify-content: center; gap: 10px; list-style: none; padding: 0; margin: 0; flex-wrap: wrap;">
+                  {% if page_obj.has_previous %}
+                  <li>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.min_note %}&min_note={{ request.GET.min_note }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" style="display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: #fff; border: 2px solid #e5e7eb; border-radius: 10px; color: #4b5563; text-decoration: none; transition: all 0.3s; font-weight: 600;">
+                      <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+
+                  {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                  <li>
+                    <span style="display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: #1a1a1a; border: 2px solid #1a1a1a; border-radius: 10px; color: #fff; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">{{ num }}</span>
+                  </li>
+                  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li>
+                    <a href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.min_note %}&min_note={{ request.GET.min_note }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" style="display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: #fff; border: 2px solid #e5e7eb; border-radius: 10px; color: #4b5563; text-decoration: none; transition: all 0.3s; font-weight: 700;">{{ num }}</a>
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+
+                  {% if page_obj.has_next %}
+                  <li>
+                    <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if request.GET.min_note %}&min_note={{ request.GET.min_note }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" style="display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: #fff; border: 2px solid #e5e7eb; border-radius: 10px; color: #4b5563; text-decoration: none; transition: all 0.3s; font-weight: 600;">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+              {% endif %}
+
+              {% else %}
+              <!-- Aucun Résultat -->
+              <div style="background: #fff; border-radius: 25px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+                <div style="width: 100px; height: 100px; margin: 0 auto 25px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <i class="fa-solid fa-inbox" style="font-size: 45px; color: #DC2626;"></i>
+                </div>
+                <h3 style="color: #1a1a1a; font-weight: 800; font-size: 26px; margin-bottom: 12px;">Aucun avis trouvé</h3>
+                <p style="color: #6b7280; font-size: 16px; margin-bottom: 35px; max-width: 400px; margin-left: auto; margin-right: auto;">Essayez d'ajuster vos filtres ou vos critères de recherche</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'reviews:add' %}" class="btn-action-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 35px; background: #DC2626; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 700; transition: all 0.3s; border: 2px solid #DC2626; font-size: 15px;">
+                  <i class="fa-solid fa-plus"></i>
+                  Soyez le premier à laisser un avis
+                </a>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
           </div>
-          <!-- /SIDEBAR -->
-
         </div>
-      </div>
-    </div>
-
-    <div class="rts-cta-area area-2">
-      <div class="container">
-        <div class="cta-inner">
-          <h2 class="title">If you have any questions Please Call.</h2>
-          <div class="contact">
-            <a href="callto:+16544521505">
-              <img src="{% static 'images/cta/call.svg' %}" alt=""> +1-654-452-1505
-            </a>
-          </div>
-          <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
-          <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
-        </div>
-      </div>
-    </div>
-
+      </section>
+    </main>
   </div>
 </div>
-{% include 'partials/footer/footer-three.html' %}
+
+<style>
+/* DÉSACTIVER LE LOADER */
+.loader-wrapper {
+    display: none !important;
+}
+
+.header-sticky-active {
+    display: none !important;
+}
+
+.rts-header.header-sticky {
+    position: relative !important;
+}
+
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rts-wrapper-inner {
+    margin-bottom: 0 !important;
+}
+
+/* HOVER EFFECTS SUBTILES */
+.filter-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1) !important;
+}
+
+.btn-action-primary:hover {
+    background: #b91c1c !important;
+    border-color: #b91c1c !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.25);
+}
+
+.btn-action-secondary:hover {
+    background: #000 !important;
+    border-color: #000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-reset:hover {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+.filter-radio:has(input:checked) {
+    background: #fff !important;
+    border-color: #DC2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.filter-radio:hover {
+    background: #fff !important;
+    border-color: #e5e7eb !important;
+}
+
+input[type="text"]:focus,
+.sort-select:focus {
+    border-color: #DC2626 !important;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1) !important;
+    background: #fff !important;
+}
+
+.results-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.08) !important;
+}
+
+.sort-select:hover {
+    border-color: #DC2626 !important;
+}
+
+/* REVIEW CARDS */
+.review-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12) !important;
+}
+
+.review-card:hover .review-img {
+    transform: scale(1.08);
+}
+
+.review-title:hover {
+    color: #DC2626;
+}
+
+.btn-read-more:hover {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+    transform: translateX(3px);
+}
+
+/* PAGINATION */
+.pagination-btn:hover {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    color: #fff !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 32px !important;
+    }
+    
+    .hero-section {
+        padding: 50px 0 40px 0 !important;
+    }
+}
+</style>
+
+<script>
+function sortReviews(sortBy) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('sort', sortBy);
+    urlParams.delete('page');
+    window.location.search = urlParams.toString();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const header = document.querySelector('.rts-header');
+    if (header) {
+        header.style.position = 'relative';
+        header.classList.remove('header-sticky');
+    }
+    
+    window.addEventListener('scroll', function() {
+        const stickyHeader = document.querySelector('.header-sticky-active');
+        if (stickyHeader) {
+            stickyHeader.style.display = 'none';
+        }
+    });
+});
+</script>
+
 {% endblock content %}

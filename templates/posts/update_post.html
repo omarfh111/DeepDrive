@@ -1,156 +1,895 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* HERO SECTION */
+.update-hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.update-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.update-hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.hero-content-update {
+    position: relative;
+    z-index: 2;
+}
+
+.breadcrumb-update {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.breadcrumb-update a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-update i {
+    font-size: 10px;
+}
+
+.hero-tag-update {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.hero-tag-update span {
+    color: #DC2626;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.hero-title-update {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle-update {
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* FORM CARD */
+.form-card-update {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f3f4f6;
+}
+
+.form-section-icon-box {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+    flex-shrink: 0;
+}
+
+.form-section-icon-box i {
+    color: #fff;
+    font-size: 22px;
+}
+
+.form-section-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.form-section-subtitle {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* FORM GROUPS */
+.form-group-update {
+    margin-bottom: 0;
+}
+
+.form-label-update {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label-update i {
+    color: #DC2626;
+    font-size: 15px;
+}
+
+.required-star {
+    color: #DC2626;
+    margin-left: 4px;
+}
+
+.form-input-update {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.form-input-update:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input-update:hover {
+    border-color: #DC2626;
+    background: #fff;
+}
+
+select.form-input-update {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23DC2626' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 45px;
+}
+
+textarea.form-input-update {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-help-text {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-help-text i {
+    color: #DC2626;
+    font-size: 13px;
+}
+
+/* FILE UPLOAD */
+.file-upload-wrapper {
+    margin-top: 10px;
+}
+
+.file-upload-area {
+    border: 3px dashed #DC2626;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    position: relative;
+}
+
+.file-upload-area:hover {
+    border-color: #991B1B;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    transform: scale(1.02);
+}
+
+.file-upload-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+}
+
+.file-upload-icon i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.file-upload-text {
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.file-upload-hint {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* IMAGE PREVIEW */
+.image-preview-card {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border: 2px solid #e5e7eb;
+}
+
+.preview-label {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.preview-label i {
+    color: #DC2626;
+}
+
+.preview-image-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.preview-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+.preview-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(16, 185, 129, 0.95);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* SIDEBAR INFO */
+.info-card-update {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 20px;
+    color: #fff;
+}
+
+.info-card-title {
+    color: #fff;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-card-title i {
+    width: 45px;
+    height: 45px;
+    background: #DC2626;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.info-section {
+    margin-bottom: 30px;
+}
+
+.info-section-title {
+    color: #DC2626;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-section-title i {
+    font-size: 18px;
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    margin-bottom: 12px;
+    padding-left: 25px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.info-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.alert-info-update {
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    border-left: 4px solid #DC2626;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 30px;
+}
+
+.alert-info-update strong {
+    color: #DC2626;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.alert-info-update p {
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* BUTTONS */
+.btn-actions-update {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 3px solid #f3f4f6;
+}
+
+.btn-update-primary {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-update-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5);
+    color: #fff;
+}
+
+.btn-update-secondary {
+    padding: 16px 40px;
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-update-secondary:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+/* ERROR MESSAGES */
+.error-message {
+    color: #DC2626;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 13px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.error-message i {
+    font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero-title-update {
+        font-size: 32px;
+    }
+    
+    .form-card-update {
+        padding: 25px;
+    }
+    
+    .info-card-update {
+        padding: 25px;
+        margin-top: 30px;
+    }
+    
+    .btn-actions-update {
+        flex-direction: column;
+    }
+    
+    .btn-update-primary,
+    .btn-update-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
 <div class="rts-wrapper">
     <div class="rts-wrapper-inner">
         {% include 'partials/header/header-three.html' %}
         
-        {% with class="service" current="Update Car" title="Update Car Details" %}
-            {% include 'partials/elements/breadcrumb.html' %}
-        {% endwith %}
-        
-        <main class="ms-main rts-section-gap">
-            <div class="ms-page-content">
+        <main class="ms-main" style="padding: 0; margin: 0;">
+            
+            <!-- HERO SECTION -->
+            <section class="update-hero-section">
+                <div class="container">
+                    <div class="hero-content-update">
+                        
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb-update">
+                            <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <a href="{% url 'posts:portfolio' %}">Voitures</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>Modifier</span>
+                        </div>
 
-                <!--================= Update Car Form =================-->
-                <article class="page checkout-area type-page status-publish hentry">
-                    <div class="ms-sp--header container">
-                        <h2 class="title">Update {{ post.marque }} {{ post.modele }}</h2>
+                        <div class="hero-tag-update">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>MISE À JOUR</span>
+                        </div>
+                        
+                        <h1 class="hero-title-update">
+                            Modifier <span class="hero-gradient">{{ post.marque }} {{ post.modele }}</span>
+                        </h1>
+                        
+                        <p class="hero-subtitle-update">
+                            Mettez à jour les informations de votre véhicule avec notre système intelligent
+                        </p>
                     </div>
-                    <div class="ms-default-page container entry-content">
-                        <div class="woocommerce">
-                            <form method="POST" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="full-grid">
-                                            <div class="billing-fields">
-                                                <div class="checkout-title">
-                                                    <h3>Car Details</h3>
-                                                </div>
-                                                <div class="form-content-box">
-                                                    <div class="row">
-                                                        {% for field in form %}
-                                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">
-                                                                    {{ field.label }}
-                                                                    {% if field.field.required %}
-                                                                        <span class="text-danger">*</span>
-                                                                    {% endif %}
-                                                                </label>
+                </div>
+            </section>
 
-                                                                {# dashboard image (odometer) #}
-                                                                {% if field.name == 'dashboard_image' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        📸 Téléchargez une photo claire du tableau de bord pour mettre à jour automatiquement le kilométrage.
-                                                                    </small>
-
-                                                                    <div id="dashboard-preview" class="mt-2" {% if post.dashboard_image %}style="display:block"{% else %}style="display:none"{% endif %}>
-                                                                        <img
-                                                                            src="{% if post.dashboard_image %}{{ post.dashboard_image.url }}{% endif %}"
-                                                                            alt="Dashboard preview"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 200px;">
-                                                                    </div>
-
-                                                                {# kilometrage field #}
-                                                                {% elif field.name == 'kilometrage' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        💡 Sera mis à jour automatiquement si vous téléchargez une nouvelle photo du tableau de bord.
-                                                                    </small>
-
-                                                                {# main car image field #}
-                                                                {% elif field.name == 'image' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        Photo principale de la voiture
-                                                                    </small>
-
-                                                                    <div id="car-image-preview" class="mt-2" style="display:block">
-                                                                        <img
-                                                                            src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'images/portfolio/04.webp' %}{% endif %}"
-                                                                            alt="Car preview"
-                                                                            class="img-thumbnail"
-                                                                            style="max-width: 200px;">
-                                                                    </div>
-
-                                                                {% else %}
-                                                                    {{ field }}
-                                                                {% endif %}
-
-                                                                {% if field.errors %}
-                                                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
-                                                                {% endif %}
-
-                                                                {% if field.help_text %}
-                                                                    <small class="form-text text-muted d-block mt-1">{{ field.help_text }}</small>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="payment-method mt-40 md-mt-20">
-                                                <div class="bottom-area">
-                                                    <p class="mt-15">
-                                                        Mettez à jour les informations de la voiture puis enregistrez vos modifications.
-                                                    </p>
-                                                    <button type="submit" class="add-btn rts-btn btn-primary">
-                                                        💾 Save Changes
-                                                    </button>
-                                                    <a href="{% url 'posts:portfolio' %}" class="rts-btn btn-border ms-2">
-                                                        ❌ Cancel
-                                                    </a>
-                                                </div>
-                                            </div>
+            <!-- FORM SECTION -->
+            <section style="padding: 60px 0; background: #f8f9fa;">
+                <div class="container">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            
+                            <!-- FORM COLUMN -->
+                            <div class="col-lg-8">
+                                
+                                <!-- INFORMATIONS GÉNÉRALES -->
+                                <div class="form-card-update">
+                                    <div class="form-section-header">
+                                        <div class="form-section-icon-box">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="form-section-title">Informations générales</h2>
+                                            <p class="form-section-subtitle">Marque, modèle et prix</p>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="ms-checkout-review-order p-3 border rounded">
-                                            <h3>ℹ️ Information</h3>
-                                            <div class="mb-3">
-                                                <h5>📊 Extraction Automatique</h5>
-                                                <p class="small">
-                                                    Si vous téléchargez une nouvelle photo du tableau de bord, l'IA tentera de mettre à jour automatiquement le kilométrage.
-                                                </p>
+                                    
+                                    <div class="row g-4">
+                                        {% for field in form %}
+                                            {% if field.name == 'marque' or field.name == 'modele' or field.name == 'price' %}
+                                            <div class="col-md-4">
+                                                <div class="form-group-update">
+                                                    <label class="form-label-update" for="{{ field.id_for_label }}">
+                                                        {% if field.name == 'marque' %}
+                                                            <i class="fa-solid fa-car"></i>
+                                                        {% elif field.name == 'modele' %}
+                                                            <i class="fa-solid fa-tag"></i>
+                                                        {% elif field.name == 'price' %}
+                                                            <i class="fa-solid fa-dollar-sign"></i>
+                                                        {% endif %}
+                                                        {{ field.label }}
+                                                        {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                                    </label>
+                                                    {{ field }}
+                                                    {% if field.errors %}
+                                                        <div class="error-message">
+                                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                                            {{ field.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
                                             </div>
-
-                                            <div class="mb-3">
-                                                <h5>📋 Conseils pour de meilleurs résultats :</h5>
-                                                <ul class="small">
-                                                    <li>✓ Photo claire et bien éclairée</li>
-                                                    <li>✓ Cadrage centré sur le compteur kilométrique</li>
-                                                    <li>✓ Éviter les reflets et l'éblouissement</li>
-                                                    <li>✓ Image nette (pas floue)</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="alert alert-info small">
-                                                <strong>💡 Astuce :</strong> Vous pouvez laisser le kilométrage tel quel si vous ne souhaitez pas le modifier.
-                                            </div>
-                                        </div>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                </article>
-                <!--================= End Update Car Form =================-->
 
-            </div>
+                                <!-- CARACTÉRISTIQUES TECHNIQUES -->
+                                <div class="form-card-update">
+                                    <div class="form-section-header">
+                                        <div class="form-section-icon-box">
+                                            <i class="fa-solid fa-gears"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="form-section-title">Caractéristiques techniques</h2>
+                                            <p class="form-section-subtitle">Motorisation et équipements</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row g-4">
+                                        {% for field in form %}
+                                            {% if field.name == 'kilometrage' or field.name == 'energy' or field.name == 'boite_vitesse' or field.name == 'etat_general' or field.name == 'carrosserie' or field.name == 'couleur' or field.name == 'nb_places' or field.name == 'puissance_fiscale' %}
+                                            <div class="col-md-6">
+                                                <div class="form-group-update">
+                                                    <label class="form-label-update" for="{{ field.id_for_label }}">
+                                                        {% if field.name == 'kilometrage' %}
+                                                            <i class="fa-solid fa-road"></i>
+                                                        {% elif field.name == 'energy' %}
+                                                            <i class="fa-solid fa-gas-pump"></i>
+                                                        {% elif field.name == 'boite_vitesse' %}
+                                                            <i class="fa-solid fa-gears"></i>
+                                                        {% elif field.name == 'etat_general' %}
+                                                            <i class="fa-solid fa-star"></i>
+                                                        {% elif field.name == 'carrosserie' %}
+                                                            <i class="fa-solid fa-car-side"></i>
+                                                        {% elif field.name == 'couleur' %}
+                                                            <i class="fa-solid fa-palette"></i>
+                                                        {% elif field.name == 'nb_places' %}
+                                                            <i class="fa-solid fa-users"></i>
+                                                        {% elif field.name == 'puissance_fiscale' %}
+                                                            <i class="fa-solid fa-bolt"></i>
+                                                        {% endif %}
+                                                        {{ field.label }}
+                                                        {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                                    </label>
+                                                    
+                                                    {% if field.name == 'kilometrage' %}
+                                                        {{ field }}
+                                                        <div class="form-help-text">
+                                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                                            Mis à jour automatiquement avec l'image du tableau de bord
+                                                        </div>
+                                                    {% else %}
+                                                        {{ field }}
+                                                    {% endif %}
+                                                    
+                                                    {% if field.errors %}
+                                                        <div class="error-message">
+                                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                                            {{ field.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- PHOTOS DU VÉHICULE -->
+                                <div class="form-card-update">
+                                    <div class="form-section-header">
+                                        <div class="form-section-icon-box">
+                                            <i class="fa-solid fa-images"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="form-section-title">Photos du véhicule</h2>
+                                            <p class="form-section-subtitle">Image principale et tableau de bord</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row g-4">
+                                        <!-- MAIN IMAGE -->
+                                        {% for field in form %}
+                                            {% if field.name == 'image' %}
+                                            <div class="col-md-6">
+                                                <div class="form-group-update">
+                                                    <label class="form-label-update">
+                                                        <i class="fa-solid fa-image"></i>
+                                                        {{ field.label }}
+                                                        {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                                    </label>
+                                                    
+                                                    <div class="file-upload-wrapper">
+                                                        <label for="{{ field.id_for_label }}" class="file-upload-area">
+                                                            <div class="file-upload-icon">
+                                                                <i class="fa-solid fa-camera"></i>
+                                                            </div>
+                                                            <div class="file-upload-text">Photo principale</div>
+                                                            <div class="file-upload-hint">Format JPG, PNG (Max 5MB)</div>
+                                                        </label>
+                                                        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" accept="image/*" style="display: none;">
+                                                    </div>
+
+                                                    <div class="image-preview-card" id="car-image-preview">
+                                                        <div class="preview-label">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            Aperçu actuel
+                                                        </div>
+                                                        <div class="preview-image-wrapper">
+                                                            <img src="{% if post.image %}{{ post.image.url }}{% else %}{% static 'images/portfolio/04.webp' %}{% endif %}" alt="Car">
+                                                            <div class="preview-badge">
+                                                                <i class="fa-solid fa-check"></i> Actuelle
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {% if field.errors %}
+                                                        <div class="error-message">
+                                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                                            {{ field.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <!-- DASHBOARD IMAGE -->
+                                        {% for field in form %}
+                                            {% if field.name == 'dashboard_image' %}
+                                            <div class="col-md-6">
+                                                <div class="form-group-update">
+                                                    <label class="form-label-update">
+                                                        <i class="fa-solid fa-gauge-high"></i>
+                                                        {{ field.label }}
+                                                        {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                                    </label>
+                                                    
+                                                    <div class="file-upload-wrapper">
+                                                        <label for="{{ field.id_for_label }}" class="file-upload-area">
+                                                            <div class="file-upload-icon">
+                                                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                                            </div>
+                                                            <div class="file-upload-text">Photo du tableau de bord</div>
+                                                            <div class="file-upload-hint">Cliquez ou glissez l'image ici</div>
+                                                        </label>
+                                                        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" accept="image/*" style="display: none;">
+                                                    </div>
+                                                    
+                                                    <div class="form-help-text">
+                                                        <i class="fa-solid fa-robot"></i>
+                                                        L'IA extraira automatiquement le kilométrage
+                                                    </div>
+
+                                                    {% if post.dashboard_image %}
+                                                    <div class="image-preview-card" id="dashboard-preview">
+                                                        <div class="preview-label">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            Aperçu actuel
+                                                        </div>
+                                                        <div class="preview-image-wrapper">
+                                                            <img src="{{ post.dashboard_image.url }}" alt="Dashboard">
+                                                            <div class="preview-badge">
+                                                                <i class="fa-solid fa-check"></i> Actuelle
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="image-preview-card" id="dashboard-preview" style="display: none;">
+                                                        <div class="preview-label">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            Aperçu
+                                                        </div>
+                                                        <div class="preview-image-wrapper">
+                                                            <img src="" alt="Dashboard preview">
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if field.errors %}
+                                                        <div class="error-message">
+                                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                                            {{ field.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- ACTION BUTTONS -->
+                                <div class="btn-actions-update">
+                                    <button type="submit" class="btn-update-primary">
+                                        <i class="fa-solid fa-floppy-disk"></i>
+                                        Enregistrer les modifications
+                                    </button>
+                                    <a href="{% url 'posts:portfolio' %}" class="btn-update-secondary">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Annuler
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- SIDEBAR INFO -->
+                            <div class="col-lg-4">
+                                <div class="info-card-update">
+                                    <h3 class="info-card-title">
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                        Conseils & Astuces
+                                    </h3>
+
+                                    <div class="info-section">
+                                        <div class="info-section-title">
+                                            <i class="fa-solid fa-robot"></i>
+                                            Extraction IA
+                                        </div>
+                                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">
+                                            Téléchargez une photo du tableau de bord et notre IA mettra à jour automatiquement le kilométrage.
+                                        </p>
+                                    </div>
+
+                                    <div class="info-section">
+                                        <div class="info-section-title">
+                                            <i class="fa-solid fa-camera"></i>
+                                            Photo de qualité
+                                        </div>
+                                        <ul class="info-list">
+                                            <li>Photo claire et bien éclairée</li>
+                                            <li>Cadrage centré sur le compteur</li>
+                                            <li>Éviter les reflets</li>
+                                            <li>Image nette (pas floue)</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="info-section">
+                                        <div class="info-section-title">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                            Sécurité
+                                        </div>
+                                        <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">
+                                            Vos modifications sont sauvegardées de manière sécurisée. Vous pouvez annuler à tout moment.
+                                        </p>
+                                    </div>
+
+                                    <div class="alert-info-update">
+                                        <strong>
+                                            <i class="fa-solid fa-circle-info"></i>
+                                            Info importante
+                                        </strong>
+                                        <p>
+                                            Si vous ne souhaitez pas modifier certains champs, laissez-les tels quels. Seuls les champs modifiés seront mis à jour.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
         </main>
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Dashboard preview
+    // Add form-input-update class to all inputs, selects, and textareas
+    const allFormFields = document.querySelectorAll('input:not([type="file"]), select, textarea');
+    allFormFields.forEach(field => {
+        field.classList.add('form-input-update');
+    });
+
+    // Dashboard image preview
     const dashboardInput = document.querySelector('input[name="dashboard_image"]');
     if (dashboardInput) {
         dashboardInput.addEventListener('change', function(e) {
@@ -160,7 +899,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(event) {
                     const preview = document.getElementById('dashboard-preview');
                     const img = preview.querySelector('img');
+                    const badge = preview.querySelector('.preview-badge');
                     img.src = event.target.result;
+                    badge.innerHTML = '<i class="fa-solid fa-sparkles"></i> Nouvelle';
+                    badge.style.background = 'rgba(220, 38, 38, 0.95)';
                     preview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
@@ -178,8 +920,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(event) {
                     const preview = document.getElementById('car-image-preview');
                     const img = preview.querySelector('img');
+                    const badge = preview.querySelector('.preview-badge');
                     img.src = event.target.result;
-                    preview.style.display = 'block';
+                    badge.innerHTML = '<i class="fa-solid fa-sparkles"></i> Nouvelle';
+                    badge.style.background = 'rgba(220, 38, 38, 0.95)';
                 };
                 reader.readAsDataURL(file);
             }
@@ -187,5 +931,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
 {% include 'partials/footer/footer-three.html' %}
 {% endblock content %}

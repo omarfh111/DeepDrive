@@ -22,6 +22,11 @@ from autovolt.views import RoleAwareLoginView, back_users
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
+
+def advisor_front(request):
+    return redirect("advisor_ui")
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -82,7 +87,7 @@ urlpatterns = [
     path('achats/', include(('achats.urls', 'achats'), namespace='achats')),
     path("ai-agent/", include("ai_agent.urls")),
     path("api/advisor/", include("advisor.urls")),
-    # autovolt/urls.py
+    path("advisor/", include("advisor.urls")),
 
 
 ]

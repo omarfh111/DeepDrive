@@ -1,111 +1,737 @@
 {% extends "backoffice/admin_base.html" %}
 {% load static %}
 
-{% block title %}Éditer marché #{{ marche.id }} | Dusty{% endblock %}
+{% block title %}Éditer marché #{{ marche.id }}{% endblock %}
 {% block page_title %}Marchés{% endblock %}
 {% block breadcrumb_leaf %}Modifier{% endblock %}
 
-{% block content %}
-<div class="container-fluid">
+{% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
 
-  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-    <div class="flex-grow-1">
-      <h4 class="fs-18 fw-semibold m-0">Modifier marché #{{ marche.id }}</h4>
-    </div>
-    <div class="text-end">
-      <ol class="breadcrumb m-0 py-0">
-        <li class="breadcrumb-item"><a href="{% url 'deals:admin_marches' %}">Marchés</a></li>
-        <li class="breadcrumb-item active">Modifier</li>
-      </ol>
+{% block content %}
+<style>
+/* PAGE HEADER */
+.page-header-modern {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 32px 38px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.page-header-modern::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #DC2626;
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 1;
+}
+
+.page-header-modern h4 {
+    color: #fff;
+    font-weight: 800;
+    font-size: 26px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    letter-spacing: -0.5px;
+}
+
+.page-header-icon {
+    width: 60px;
+    height: 60px;
+    background: #DC2626;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 26px;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.3);
+}
+
+/* BREADCRUMB */
+.breadcrumb-modern {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.breadcrumb-modern .breadcrumb-item {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.breadcrumb-modern .breadcrumb-item a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breadcrumb-modern .breadcrumb-item a:hover {
+    color: #DC2626;
+}
+
+.breadcrumb-modern .breadcrumb-item.active {
+    color: #fff;
+    font-weight: 700;
+}
+
+/* CARDS */
+.modern-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.modern-card-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 22px 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.5;
+}
+
+.modern-card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #DC2626;
+}
+
+.modern-card-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-header-icon {
+    width: 45px;
+    height: 45px;
+    background: #DC2626;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.card-header-icon i {
+    font-size: 20px;
+    color: #fff;
+}
+
+.modern-card-header h5 {
+    color: #fff;
+    font-weight: 800;
+    font-size: 18px;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.modern-card-body {
+    padding: 30px;
+}
+
+/* INFO ITEMS */
+.info-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item-icon {
+    width: 35px;
+    height: 35px;
+    background: #DC2626;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-item-icon i {
+    font-size: 16px;
+    color: #fff;
+}
+
+.info-item-content {
+    flex: 1;
+}
+
+.info-item-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.info-item-value {
+    font-size: 15px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+/* SEPARATOR */
+.separator-modern {
+    margin: 25px 0;
+    border: none;
+    border-top: 2px solid #f3f4f6;
+}
+
+/* HIGHLIGHT BOX */
+.highlight-box {
+    background: #fef3f2;
+    border: 2px solid #fca5a5;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 20px;
+}
+
+.highlight-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.highlight-item:last-child {
+    margin-bottom: 0;
+}
+
+.highlight-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.highlight-label i {
+    color: #DC2626;
+    font-size: 16px;
+}
+
+.highlight-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: #DC2626;
+}
+
+/* BADGES */
+.badge-pro {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-en-attente {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.badge-valide {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    border: 1px solid #d1d5db;
+}
+
+.badge-annule {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* FORM GROUPS */
+.form-group-modern {
+    margin-bottom: 22px;
+}
+
+.form-label-modern {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-label-modern .label-icon {
+    width: 32px;
+    height: 32px;
+    background: #DC2626;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+/* FORM CONTROLS */
+.form-control-modern,
+.form-select-modern {
+    width: 100%;
+    padding: 13px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.form-control-modern:focus,
+.form-select-modern:focus {
+    border-color: #DC2626 !important;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1) !important;
+    background: #fff !important;
+}
+
+.form-control-modern:disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+/* ERROR TEXT */
+.error-text {
+    color: #DC2626;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ALERT */
+.alert-danger-modern {
+    background: #fee2e2;
+    border: 2px solid #fca5a5;
+    border-radius: 14px;
+    padding: 16px 20px;
+    color: #991b1b;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.alert-danger-modern i {
+    font-size: 20px;
+}
+
+/* BUTTONS */
+.btn-modern {
+    padding: 13px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary-modern {
+    background: #DC2626;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+.btn-primary-modern:hover {
+    background: #991B1B;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35);
+}
+
+.btn-secondary-modern {
+    background: #fff;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-secondary-modern:hover {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header-modern {
+        padding: 25px 20px;
+    }
+    
+    .page-header-modern h4 {
+        font-size: 22px;
+    }
+    
+    .page-header-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+    }
+    
+    .modern-card-body {
+        padding: 20px;
+    }
+}
+</style>
+
+<div class="container-fluid">
+  
+  <!-- Page Header -->
+  <div class="page-header-modern">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div class="page-header-content">
+        <h4>
+          <span class="page-header-icon">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </span>
+          Modifier marché #{{ marche.id }}
+        </h4>
+      </div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'deals:admin_marches' %}">
+              <i class="fa-solid fa-chart-line"></i>
+              Marchés
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <i class="fa-solid fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+            Modifier
+          </li>
+        </ol>
+      </nav>
     </div>
   </div>
 
+  <!-- Content -->
   <div class="row g-3">
-    <!-- Colonne infos (read-only) -->
+    
+    <!-- Colonne Informations -->
     <div class="col-xl-5">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Informations</h5></div>
-        <div class="card-body">
-          <div class="mb-2"><strong>Partenaire : </strong>{{ marche.partenaire.nom_societe|default:"—" }}</div>
-          <div class="mb-2"><strong>Voiture : </strong>{{ marche.voiture.marque }} {{ marche.voiture.modele }}</div>
-          <div class="mb-2"><strong>Prix unitaire : </strong>{{ marche.prix_unitaire|floatformat:3 }} TND</div>
-          <div class="mb-2"><strong>Créé le : </strong>{{ marche.created_at|date:"d/m/Y H:i" }}</div>
-          <div class="mb-2"><strong>Dernière MAJ : </strong>{{ marche.updated_at|date:"d/m/Y H:i" }}</div>
-          <div class="mb-2">
-            <strong>État actuel : </strong>
-            {% if marche.etat == "en_attente" %}
-              <span class="badge bg-warning-subtle text-warning fw-medium px-3 py-1 rounded-4">en attente</span>
-            {% elif marche.etat == "valide" %}
-              <span class="badge bg-success-subtle text-success fw-medium px-3 py-1 rounded-4">validé</span>
-            {% else %}
-              <span class="badge bg-danger-subtle text-danger fw-medium px-3 py-1 rounded-4">annulé</span>
-            {% endif %}
+      <div class="modern-card">
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="card-header-icon">
+              <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <h5>Informations du marché</h5>
           </div>
-          <hr>
-          <div class="d-flex flex-column gap-1">
-            <div><strong>Total actuel : </strong>{{ marche.total_prix|floatformat:3 }} TND</div>
-            <div><strong>Rentabilité estimée : </strong>{{ marche.rentabilite_estime|floatformat:3 }} TND</div>
+        </div>
+        <div class="modern-card-body">
+          
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-handshake"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">Partenaire</div>
+              <div class="info-item-value">{{ marche.partenaire.nom_societe|default:"—" }}</div>
+            </div>
           </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-car"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">Voiture</div>
+              <div class="info-item-value">{{ marche.voiture.marque }} {{ marche.voiture.modele }}</div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-tag"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">Prix unitaire</div>
+              <div class="info-item-value" style="color: #DC2626;">{{ marche.prix_unitaire|floatformat:3 }} TND</div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-calendar-plus"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">Créé le</div>
+              <div class="info-item-value">{{ marche.created_at|date:"d/m/Y H:i" }}</div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">Dernière mise à jour</div>
+              <div class="info-item-value">{{ marche.updated_at|date:"d/m/Y H:i" }}</div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="info-item-content">
+              <div class="info-item-label">État actuel</div>
+              <div class="info-item-value">
+                {% if marche.etat == "en_attente" %}
+                  <span class="badge-pro badge-en-attente">
+                    <i class="fa-solid fa-clock"></i>
+                    En attente
+                  </span>
+                {% elif marche.etat == "valide" %}
+                  <span class="badge-pro badge-valide">
+                    <i class="fa-solid fa-check"></i>
+                    Validé
+                  </span>
+                {% else %}
+                  <span class="badge-pro badge-annule">
+                    <i class="fa-solid fa-xmark"></i>
+                    Annulé
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <hr class="separator-modern">
+
+          <div class="highlight-box">
+            <div class="highlight-item">
+              <span class="highlight-label">
+                <i class="fa-solid fa-calculator"></i>
+                Total actuel
+              </span>
+              <span class="highlight-value">{{ marche.total_prix|floatformat:3 }} TND</span>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-label">
+                <i class="fa-solid fa-chart-simple"></i>
+                Rentabilité estimée
+              </span>
+              <span class="highlight-value">{{ marche.rentabilite_estime|floatformat:3 }} TND</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- Colonne formulaire -->
+    <!-- Colonne Formulaire -->
     <div class="col-xl-7">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Modifier</h5></div>
-        <div class="card-body">
+      <div class="modern-card">
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="card-header-icon">
+              <i class="fa-solid fa-pen"></i>
+            </div>
+            <h5>Modifier les détails</h5>
+          </div>
+        </div>
+        <div class="modern-card-body">
+          
           <form method="post" novalidate>
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+              <div class="alert-danger-modern">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>{{ form.non_field_errors }}</div>
+              </div>
             {% endif %}
 
             <div class="row">
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.quantite.id_for_label }}">Quantité</label>
-                  {{ form.quantite }}
-                  <div class="text-danger small">{{ form.quantite.errors }}</div>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.quantite.id_for_label }}">
+                    <span class="label-icon">
+                      <i class="fa-solid fa-boxes"></i>
+                    </span>
+                    Quantité
+                  </label>
+                  <input type="number" name="quantite" id="{{ form.quantite.id_for_label }}" 
+                         class="form-control-modern" 
+                         value="{{ form.quantite.value|default:'' }}"
+                         step="1" min="1">
+                  {% if form.quantite.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.quantite.errors }}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
+
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.taux_rentabilite.id_for_label }}">Taux de rentabilité (%)</label>
-                  {{ form.taux_rentabilite }}
-                  <div class="text-danger small">{{ form.taux_rentabilite.errors }}</div>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.taux_rentabilite.id_for_label }}">
+                    <span class="label-icon">
+                      <i class="fa-solid fa-percent"></i>
+                    </span>
+                    Taux de rentabilité (%)
+                  </label>
+                  <input type="number" name="taux_rentabilite" id="{{ form.taux_rentabilite.id_for_label }}" 
+                         class="form-control-modern" 
+                         value="{{ form.taux_rentabilite.value|default:'' }}"
+                         step="0.01" min="0">
+                  {% if form.taux_rentabilite.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.taux_rentabilite.errors }}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="{{ form.etat.id_for_label }}">État</label>
+            <div class="form-group-modern">
+              <label class="form-label-modern" for="{{ form.etat.id_for_label }}">
+                <span class="label-icon">
+                  <i class="fa-solid fa-circle-check"></i>
+                </span>
+                État du marché
+              </label>
               {{ form.etat }}
-              <div class="text-danger small">{{ form.etat.errors }}</div>
+              {% if form.etat.errors %}
+                <div class="error-text">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  {{ form.etat.errors }}
+                </div>
+              {% endif %}
             </div>
+
+            <hr class="separator-modern">
 
             <!-- Aperçu live -->
+            <h6 style="color: #1a1a1a; font-weight: 800; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+              <i class="fa-solid fa-eye" style="color: #DC2626;"></i>
+              Aperçu des calculs
+            </h6>
+
             <div class="row">
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Total recalculé (TND)</label>
-                  <input id="totalPreview" class="form-control" value="{{ marche.total_prix|floatformat:3 }}" disabled>
+                <div class="form-group-modern">
+                  <label class="form-label-modern">
+                    <span class="label-icon">
+                      <i class="fa-solid fa-calculator"></i>
+                    </span>
+                    Total recalculé (TND)
+                  </label>
+                  <input id="totalPreview" class="form-control-modern" value="{{ marche.total_prix|floatformat:3 }}" disabled>
                 </div>
               </div>
+
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Rentabilité recalculée (TND)</label>
-                  <input id="rentPreview" class="form-control" value="{{ marche.rentabilite_estime|floatformat:3 }}" disabled>
+                <div class="form-group-modern">
+                  <label class="form-label-modern">
+                    <span class="label-icon">
+                      <i class="fa-solid fa-chart-simple"></i>
+                    </span>
+                    Rentabilité recalculée (TND)
+                  </label>
+                  <input id="rentPreview" class="form-control-modern" value="{{ marche.rentabilite_estime|floatformat:3 }}" disabled>
                 </div>
               </div>
             </div>
 
-            <div class="d-flex gap-2">
-              <a href="{% url 'deals:admin_marches' %}" class="btn btn-outline-secondary">Annuler</a>
-              <button class="btn btn-primary">Enregistrer</button>
+            <div class="d-flex gap-3 mt-4 pt-3" style="border-top: 2px solid #f3f4f6;">
+              <a href="{% url 'deals:admin_marches' %}" class="btn-modern btn-secondary-modern">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Annuler</span>
+              </a>
+              <button type="submit" class="btn-modern btn-primary-modern">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Enregistrer les modifications</span>
+              </button>
             </div>
+
           </form>
+
         </div>
       </div>
     </div>
@@ -124,14 +750,18 @@
 
   const q  = document.getElementById("id_quantite");
   const t  = document.getElementById("id_taux_rentabilite");
-
-  // prix unitaire injecté par Django → converti de manière sûre en nombre
   const pu = Number('{{ marche.prix_unitaire|default_if_none:0|floatformat:3 }}'.replace(',', '.'));
 
   const totalEl = document.getElementById("totalPreview");
   const rentEl  = document.getElementById("rentPreview");
 
-  function update() {                 // <-- plus de parenthèse en trop ici
+  // Add form-select-modern class to select
+  const selectEtat = document.getElementById("id_etat");
+  if (selectEtat) {
+    selectEtat.classList.add("form-select-modern");
+  }
+
+  function update() {
     const quant = toNum(q.value);
     const taux  = toNum(t.value);
     const total = pu * quant;
@@ -148,4 +778,3 @@
 })();
 </script>
 {% endblock %}
-

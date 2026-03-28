@@ -1,26 +1,296 @@
 {% extends "backoffice/admin_base.html" %}
-{% block title %}Supprimer l'achat{% endblock %}
-{% block page_title %}Supprimer l'achat{% endblock %}
-{% block breadcrumb_leaf %}Confirmation{% endblock %}
+{% load static %}
+
+{% block title %}Supprimer l'achat #{{ achat.id }} | Dusty{% endblock %}
+{% block page_title %}Achats{% endblock %}
+{% block breadcrumb_leaf %}Supprimer{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  body{overflow-x:hidden;}
+  .container-fluid{overflow-x:hidden;}
+
+  /* HEADER (pro style) */
+  .page-header-pro{
+    background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+    border-radius:20px;
+    padding:30px 36px;
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    border:1px solid rgba(220,38,38,.3);
+  }
+  .page-header-pro::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+    background-size:40px 40px;
+    opacity:.5;
+  }
+  .page-header-pro::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:4px; background:#DC2626;
+  }
+  .header-content-pro{
+    position:relative; z-index:1;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:18px;
+  }
+  .header-left-pro{display:flex; align-items:center; gap:16px;}
+  .header-icon-pro{
+    width:62px; height:62px;
+    background:#DC2626;
+    border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(220,38,38,.3);
+  }
+  .header-icon-pro i{font-size:28px; color:#fff;}
+  .header-text-pro h2{
+    color:#fff;
+    font-weight:900;
+    font-size:24px;
+    margin:0 0 6px 0;
+    letter-spacing:-.4px;
+  }
+  .header-text-pro p{
+    color:rgba(255,255,255,.8);
+    font-size:13px;
+    margin:0;
+    font-weight:700;
+  }
+  .breadcrumb-pro{
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    color:rgba(255,255,255,.8);
+    font-weight:800;
+    font-size:12px;
+  }
+  .breadcrumb-pro a{color:#fff; text-decoration:none;}
+  .breadcrumb-pro .sep{opacity:.5}
+
+  /* CARD */
+  .card-pro{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    border:1px solid rgba(0,0,0,.05);
+    overflow:hidden;
+  }
+  .card-header-pro{
+    background:#f8f9fa;
+    padding:22px 24px;
+    border-bottom:2px solid #e5e7eb;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+  }
+  .card-title-pro{
+    display:flex; align-items:center; gap:12px;
+    margin:0;
+    color:#111827;
+    font-weight:900;
+    font-size:16px;
+  }
+  .card-title-pro .ico{
+    width:44px; height:44px;
+    background:#DC2626;
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-title-pro .ico i{color:#fff; font-size:18px;}
+  .card-body-pro{padding:22px 24px;}
+
+  /* ALERT */
+  .warn-box{
+    background:#fff7ed;
+    border:2px solid #fed7aa;
+    border-radius:16px;
+    padding:14px 16px;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    margin-bottom:16px;
+  }
+  .warn-ico{
+    width:40px; height:40px;
+    background:#DC2626;
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+  .warn-ico i{color:#fff; font-size:18px;}
+  .warn-box strong{color:#111827; font-weight:900;}
+
+  /* DETAILS LIST */
+  .detail-list{
+    list-style:none;
+    padding:0;
+    margin:0 0 18px 0;
+    border:2px solid #e5e7eb;
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .detail-list li{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    border-bottom:1px solid #f3f4f6;
+    font-size:13px;
+    font-weight:700;
+    color:#374151;
+    background:#fff;
+  }
+  .detail-list li:last-child{border-bottom:0;}
+  .detail-list .k{color:#111827; font-weight:900;}
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid #e5e7eb;
+    background:#f8f9fa;
+    color:#111827;
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+  }
+  .pill i{color:#DC2626;}
+
+  /* BUTTONS */
+  .btn-pro{
+    padding:12px 16px;
+    border-radius:12px;
+    font-weight:900;
+    font-size:14px;
+    border:none;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:.25s;
+    text-decoration:none;
+  }
+  .btn-pro-ghost{
+    background:#fff;
+    border:2px solid #e5e7eb;
+    color:#111827;
+  }
+  .btn-pro-ghost:hover{
+    background:#111827;
+    color:#fff;
+    border-color:#111827;
+    transform:translateY(-2px);
+  }
+  .btn-pro-danger{
+    background:#DC2626;
+    color:#fff;
+    box-shadow:0 6px 16px rgba(220,38,38,.20);
+  }
+  .btn-pro-danger:hover{
+    background:#991B1B;
+    transform:translateY(-2px);
+    box-shadow:0 10px 22px rgba(220,38,38,.26);
+  }
+
+  @media (max-width: 768px){
+    .page-header-pro{padding:22px 18px;}
+    .header-icon-pro{width:56px; height:56px;}
+    .header-text-pro h2{font-size:20px;}
+    .card-body-pro{padding:18px;}
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-xl-8">
-    <div class="card">
-      <div class="card-body">
-        <p>Confirmez la suppression de l’achat <strong>#{{ achat.id }}</strong> :</p>
-        <ul>
-          <li>Annonce : {{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})</li>
-          <li>buyer : {{ achat.buyer.username }}</li>
-          <li>Prix : {{ achat.price }} DT</li>
-        </ul>
-        <form method="post">
-          {% csrf_token %}
-          <a href="{% url 'achats:admin_achat_detail' achat_id=achat.id %}" class="btn btn-outline-secondary">Annuler</a>
-          <button type="submit" class="btn btn-danger">Supprimer</button>
-        </form>
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Supprimer l'achat #{{ achat.id }}</h2>
+          <p>Confirmation de suppression (action irréversible)</p>
+        </div>
+      </div>
+
+      <div class="breadcrumb-pro">
+        <a href="{% url 'achats:admin_achats_list' %}">Achats</a>
+        <span class="sep">/</span>
+        <span>Supprimer</span>
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <span class="ico"><i class="fa-solid fa-triangle-exclamation"></i></span>
+            <span>Confirmation</span>
+          </div>
+        </div>
+
+        <div class="card-body-pro">
+
+          <div class="warn-box">
+            <div class="warn-ico"><i class="fa-solid fa-skull-crossbones"></i></div>
+            <div>
+              <div style="font-weight:900; color:#111827; margin-bottom:4px;">
+                Action irréversible
+              </div>
+              <div style="color:#6b7280; font-weight:800; font-size:13px;">
+                Voulez-vous vraiment supprimer définitivement l’achat <span class="pill"><i class="fa-solid fa-hashtag"></i>{{ achat.id }}</span> ?
+              </div>
+            </div>
+          </div>
+
+          <ul class="detail-list">
+            <li>
+              <span class="k">Annonce</span>
+              <span class="pill">
+                <i class="fa-solid fa-car-side"></i>
+                {{ achat.post.marque }} {{ achat.post.modele }} ({{ achat.post.year }})
+              </span>
+            </li>
+            <li>
+              <span class="k">Buyer</span>
+              <span class="pill">
+                <i class="fa-solid fa-user"></i>
+                {{ achat.buyer.username }}
+              </span>
+            </li>
+            <li>
+              <span class="k">Prix</span>
+              <span class="pill">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                {{ achat.price }} DT
+              </span>
+            </li>
+          </ul>
+
+          <form method="post" class="d-flex flex-wrap gap-2">
+            {% csrf_token %}
+            <a href="{% url 'achats:admin_achat_detail' achat_id=achat.id %}" class="btn-pro btn-pro-ghost">
+              <i class="fa-solid fa-arrow-left"></i>
+              Annuler
+            </a>
+            <button type="submit" class="btn-pro btn-pro-danger">
+              <i class="fa-solid fa-trash"></i>
+              Confirmer la suppression
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}

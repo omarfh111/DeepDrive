@@ -1,402 +1,1607 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block content %}
-    
-    <div class="rts-wrapper">
-        <div class="rts-wrapper-inner">
-            <!-- header area start -->
-            {% include 'partials/header/header-three.html' %}
-            <!-- header area end -->
 
-            <!-- Breadcrumb area start -->
-            {% with class="portfolio" current="Cars" title="Cars" %}
-                {% include 'partials/elements/breadcrumb.html' %}   
-            {% endwith %}
-            <!-- Breadcrumb area end -->
-            <div class="rts-portfolio-area inner rts-section-gapNew">
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* GLOBAL */
+body {
+    overflow-x: hidden;
+}
+
+/* HERO ULTRA-PRO */
+.hero-cars-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    padding: 100px 0 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-cars-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.hero-cars-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 50px;
+    margin-bottom: 25px;
+}
+
+.hero-tag span {
+    color: #DC2626;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.hero-title-main {
+    color: #fff;
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 40px;
+}
+
+/* STATS ROW */
+.stats-row-modern {
+    display: flex;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.stat-box-hero {
+    text-align: center;
+}
+
+.stat-number-hero {
+    font-size: 42px;
+    font-weight: 900;
+    color: #DC2626;
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label-hero {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* BREADCRUMB MODERNE */
+.breadcrumb-modern {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.breadcrumb-modern a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-modern i {
+    font-size: 10px;
+}
+
+/* TOOLBAR MODERNE */
+.toolbar-modern {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 18px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.results-count {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.results-count span {
+    color: #DC2626;
+    font-size: 24px;
+}
+
+/* ACTIVE FILTERS */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.filter-tag-remove {
+    background: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #DC2626;
+    color: #fff;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.filter-tag-remove:hover {
+    background: #991B1B;
+    transform: rotate(90deg);
+}
+
+.clear-all-filters {
+    padding: 8px 18px;
+    background: #fee2e2;
+    color: #DC2626;
+    border: none;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.clear-all-filters:hover {
+    background: #DC2626;
+    color: #fff;
+}
+
+/* SORT DROPDOWN */
+.sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sort-label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sort-select {
+    padding: 10px 40px 10px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23DC2626' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #DC2626;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+/* VIEW SWITCHER */
+.view-switcher {
+    display: flex;
+    gap: 8px;
+    background: #f3f4f6;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.view-btn {
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-btn.active {
+    background: #fff;
+    color: #DC2626;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.view-btn:hover {
+    color: #DC2626;
+}
+
+/* SIDEBAR PRO */
+.sidebar-pro {
+    position: sticky;
+    top: 20px;
+}
+
+.filter-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-title i {
+    width: 40px;
+    height: 40px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DC2626;
+    font-size: 18px;
+}
+
+.filter-toggle {
+    width: 28px;
+    height: 28px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    transition: all 0.3s;
+}
+
+.filter-card.collapsed .filter-toggle {
+    transform: rotate(180deg);
+}
+
+.filter-body {
+    max-height: 400px;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.filter-card.collapsed .filter-body {
+    max-height: 0;
+}
+
+/* SEARCH BOX PRO */
+.search-box-pro {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-input-pro {
+    width: 100%;
+    padding: 14px 50px 14px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.search-input-pro:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.search-btn-pro {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 38px;
+    background: #DC2626;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.search-btn-pro:hover {
+    background: #991B1B;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* CHECKBOX LIST PRO */
+.checkbox-list-pro {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.checkbox-list-pro::-webkit-scrollbar {
+    width: 5px;
+}
+
+.checkbox-list-pro::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 10px;
+}
+
+.checkbox-list-pro::-webkit-scrollbar-thumb {
+    background: #DC2626;
+    border-radius: 10px;
+}
+
+.checkbox-item-pro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.checkbox-item-pro:hover {
+    background: #f8f9fa;
+}
+
+.checkbox-label-pro {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    cursor: pointer;
+}
+
+.checkbox-label-pro input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #DC2626;
+    border-radius: 6px;
+}
+
+.checkbox-label-pro span {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.checkbox-badge {
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* PRICE SLIDER PRO */
+.price-slider-pro {
+    padding: 25px 0;
+}
+
+.price-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.price-input-wrapper {
+    position: relative;
+}
+
+.price-input-label {
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.price-input {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    transition: all 0.3s;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: #DC2626;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.price-currency {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #DC2626;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.range-slider-wrapper {
+    position: relative;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.range-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #DC2626 0%, #ef4444 100%);
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 8px;
+    top: 0;
+    background: transparent;
+    pointer-events: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: #DC2626;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: all;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    border: 3px solid #fff;
+}
+
+/* FILE UPLOAD PRO */
+.file-upload-pro {
+    margin-top: 20px;
+    padding: 25px;
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.file-upload-pro:hover {
+    border-color: #DC2626;
+    background: #fef2f2;
+}
+
+.file-upload-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.file-upload-icon i {
+    font-size: 28px;
+    color: #DC2626;
+}
+
+.file-upload-text {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.file-upload-hint {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* AI BUTTON PRO (ROUGE/NOIR) */
+.ai-advisor-pro {
+    background: linear-gradient(135deg, #1a1a1a 0%, #374151 100%);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-advisor-pro::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.2) 0%, transparent 70%);
+}
+
+.ai-advisor-content {
+    position: relative;
+    z-index: 1;
+}
+
+.ai-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+}
+
+.ai-icon-wrapper i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.ai-advisor-title {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.ai-advisor-desc {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.ai-advisor-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.ai-advisor-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    color: #fff;
+}
+
+/* CAR CARD ULTRA-PRO */
+.car-card-ultra {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.car-card-ultra:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.car-image-wrapper {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.car-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.car-card-ultra:hover .car-image-wrapper img {
+    transform: scale(1.1);
+}
+
+.car-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.car-card-ultra:hover .car-overlay {
+    opacity: 1;
+}
+
+/* CAR BADGES */
+.car-badges {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 2;
+}
+
+.badge-status {
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.badge-new {
+    background: rgba(16, 185, 129, 0.95);
+    color: #fff;
+}
+
+.badge-used {
+    background: rgba(107, 114, 128, 0.95);
+    color: #fff;
+}
+
+.badge-featured {
+    background: rgba(220, 38, 38, 0.95);
+    color: #fff;
+}
+
+.wishlist-btn-ultra {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.wishlist-btn-ultra:hover {
+    background: #DC2626;
+    transform: scale(1.1);
+}
+
+.wishlist-btn-ultra i {
+    font-size: 18px;
+    color: #DC2626;
+}
+
+.wishlist-btn-ultra:hover i {
+    color: #fff;
+}
+
+/* CAR PRICE BADGE */
+.car-price-display {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price-tag-main {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.price-amount {
+    font-size: 24px;
+    font-weight: 900;
+    color: #DC2626;
+    line-height: 1;
+}
+
+.price-currency {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.gallery-btn {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.gallery-btn:hover {
+    background: #1a1a1a;
+    transform: scale(1.1);
+}
+
+.gallery-btn i {
+    font-size: 16px;
+    color: #1a1a1a;
+}
+
+.gallery-btn:hover i {
+    color: #fff;
+}
+
+/* CAR CONTENT */
+.car-content-ultra {
+    padding: 28px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-header {
+    margin-bottom: 20px;
+}
+
+.car-title-ultra {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.car-title-ultra a {
+    color: #1a1a1a;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.car-title-ultra a:hover {
+    color: #DC2626;
+}
+
+.car-subtitle {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.car-subtitle i {
+    color: #DC2626;
+}
+
+/* CAR SPECS GRID */
+.car-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.spec-item {
+    text-align: center;
+    padding: 15px 10px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.spec-item:hover {
+    background: #fef2f2;
+    transform: translateY(-2px);
+}
+
+.spec-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+}
+
+.spec-icon i {
+    font-size: 18px;
+    color: #DC2626;
+}
+
+.spec-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.spec-label {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* CAR ACTIONS */
+.car-actions-ultra {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 2px solid #f3f4f6;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.btn-car-ultra {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-view-details {
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    grid-column: 1 / -1;
+}
+
+.btn-view-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    color: #fff;
+}
+
+.btn-edit {
+    background: #f3f4f6;
+    color: #1a1a1a;
+}
+
+.btn-edit:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #DC2626;
+}
+
+.btn-delete:hover {
+    background: #DC2626;
+    color: #fff;
+}
+
+/* EMPTY STATE PRO */
+.empty-state-pro {
+    text-align: center;
+    padding: 80px 40px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.empty-icon-pro {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.empty-icon-pro i {
+    font-size: 50px;
+    color: #DC2626;
+}
+
+.empty-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.empty-text {
+    color: #6b7280;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+/* ADD CAR BUTTON */
+.btn-add-car-main {
+    padding: 16px 35px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+.btn-add-car-main:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5);
+    color: #fff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .stats-row-modern {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title-main {
+        font-size: 36px;
+    }
+    
+    .toolbar-modern {
+        padding: 20px;
+    }
+    
+    .filter-card {
+        padding: 20px;
+    }
+    
+    .car-specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .car-actions-ultra {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="rts-wrapper">
+    <div class="rts-wrapper-inner">
+        {% include 'partials/header/header-three.html' %}
+
+        <main class="ms-main" style="padding: 0; margin: 0;">
+            
+            <!-- HERO SECTION -->
+            <section class="hero-cars-section">
                 <div class="container">
-                    <div class="row g-5">
-                        <div class="col-lg-4">
-                            <div class="sticky-top">
-                                <div class="left-side-bar">
-                                    <div class="search-area side-box">
-                                        <h2>Cars Search</h2>
-                                        <form action="#">
-                                            <div class="input-wrapper">
-                                                <input type="text" placeholder="Search Vehicles" required>
-                                                <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
-                                            </div>
-                                        </form>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                    <div class="hero-content-wrapper">
+                        
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb-modern">
+                            <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>Voitures</span>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <div class="col-lg-7">
+                                <div class="hero-tag">
+                                    <i class="fa-solid fa-car"></i>
+                                    <span>MARKETPLACE</span>
+                                </div>
+                                
+                                <h1 class="hero-title-main">
+                                    Trouvez la <span class="hero-gradient">Voiture</span><br>
+                                    de vos rêves
+                                </h1>
+                                
+                                <p class="hero-subtitle">
+                                    Explorez notre collection exclusive de véhicules neufs et d'occasion. 
+                                    Qualité garantie, prix transparents et service professionnel.
+                                </p>
+                                
+                                <a href="{% url 'posts:add_car' %}" class="btn-add-car-main">
+                                    <i class="fa-solid fa-plus-circle"></i>
+                                    Vendre ma voiture
+                                </a>
+
+                                <div class="stats-row-modern">
+                                    <div class="stat-box-hero">
+                                        <span class="stat-number-hero">{{ posts|length }}+</span>
+                                        <span class="stat-label-hero">Véhicules</span>
                                     </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Make</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Mercedes-Benz</span>
-                                              </label>
-                                              <span>(130)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Volkswagen</span>
-                                              </label>
-                                              <span>(80)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Mitsubishi</span>
-                                              </label>
-                                              <span>(199)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Honda</span>
-                                              </label>
-                                              <span>(70)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Lamborghini</span>
-                                              </label>
-                                              <span>(160)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    <div class="stat-box-hero">
+                                        <span class="stat-number-hero">{{ marque_counts|length }}+</span>
+                                        <span class="stat-label-hero">Marques</span>
                                     </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Model</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Chevrolet</span>
-                                              </label>
-                                              <span>(64)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Ford</span>
-                                              </label>
-                                              <span>(199)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Tesla</span>
-                                              </label>
-                                              <span>(59)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>BMW</span>
-                                              </label>
-                                              <span>(230)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Audi</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="price-box side-box">
-                                        <h2>Price</h2>
-                                        <div class="slider-container">
-                                            <!-- Histogram -->
-                                            <div class="histogram">
-                                              <!-- Create bars dynamically -->
-                                              <div class="histogram-bar" style="height: 67px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 52px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 99px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 99px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 98px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 107px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 93px;"></div>
-                                              <div class="histogram-bar" style="height: 102px;"></div>
-                                              <div class="histogram-bar" style="height: 52px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                              <div class="histogram-bar" style="height: 94px;"></div>
-                                              <div class="histogram-bar" style="height: 75px;"></div>
-                                              <div class="histogram-bar" style="height: 86px;"></div>
-                                            </div>
-                                        
-                                            <!-- Range Slider -->
-                                            <div class="range-slider">
-                                              <div class="track"></div>
-                                              <div class="range" id="range"></div>
-                                              <input type="range" id="minRange" min="0" max="100" value="20">
-                                              <input type="range" id="maxRange" min="0" max="100" value="80">
-                                            </div>
-                                        
-                                            <!-- Price Labels -->
-                                            <div class="price-labels">
-                                              <span id="minPrice">$500</span>
-                                              <span id="maxPrice">$5000</span>
-                                            </div>
-                                        </div>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Seats</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>2 seats</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>3 seats</span>
-                                              </label>
-                                              <span>(23)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>4 seats</span>
-                                              </label>
-                                              <span>(179)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>5 seats</span>
-                                              </label>
-                                              <span>(40)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>6 seats</span>
-                                              </label>
-                                              <span>(120)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="car-make side-box">
-                                        <h2>Car Color</h2>
-                                        <ul class="checkbox-list">
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" checked />
-                                                <span>Matte Black</span>
-                                              </label>
-                                              <span>(30)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Orange</span>
-                                              </label>
-                                              <span>(23)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Black</span>
-                                              </label>
-                                              <span>(179)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Yellow</span>
-                                              </label>
-                                              <span>(40)</span>
-                                            </li>
-                                            <li class="checkbox-item">
-                                              <label class="checkbox-label">
-                                                <input type="checkbox" />
-                                                <span>Neon Colors</span>
-                                              </label>
-                                              <span>(120)</span>
-                                            </li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
-                                    </div>
-                                    <div class="tag-area side-box">
-                                        <h2>Fuel</h2>
-                                        <ul>
-                                            <li>Gasoline</li>
-                                            <li>Diesel</li>
-                                            <li>Plug-in Hybrid</li>
-                                            <li>Hybrid</li>
-                                            <li>Electric</li>
-                                        </ul>
-                                        <span class="cross"><i class="fa-light fa-xmark"></i></span>
+                                    <div class="stat-box-hero">
+                                        <span class="stat-number-hero">100%</span>
+                                        <span class="stat-label-hero">Vérifié</span>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="col-lg-5">
+                                <!-- Stats visuals ou image -->
+                            </div>
                         </div>
-                       
+                    </div>
+                </div>
+            </section>
 
-                       <div class="col-lg-8">
-                            <div class="right">
-                                <a href="{% url 'posts:add_car' %}" class="rts-btn btn-primary icon">
-                        Add Car 
-                        <svg width="19" height="14" viewBox="0 0 19 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.1528 6.00811L15.1813 5.18842C15.3309 5.10019 15.4978 5.04519 15.6706 5.02715C15.8434 5.00911 16.018 5.02844 16.1827 5.08385C16.3473 5.13926 16.4981 5.22943 16.6249 5.34826C16.7516 5.46709 16.8513 5.61179 16.9172 5.77255C16.9502 5.8559 17.0149 5.92278 17.0971 5.95859C17.1793 5.9944 17.2723 5.99621 17.3558 5.96363C17.4394 5.93106 17.5066 5.86674 17.5429 5.78474C17.5791 5.70274 17.5815 5.60972 17.5494 5.52601C17.3736 5.0788 17.0318 4.71681 16.5954 4.51566C16.159 4.31452 15.6617 4.28978 15.2075 4.44661L13.9709 1.86671C13.7783 1.50841 13.4892 1.21119 13.1364 1.00872C12.7836 0.806256 12.3811 0.706623 11.9746 0.72111H5.69838C5.29189 0.706618 4.88947 0.806252 4.5367 1.00872C4.18393 1.2112 3.89492 1.50842 3.70239 1.86671L2.46493 4.44766C2.18546 4.35271 1.88745 4.32546 1.5954 4.36816C1.30335 4.41085 1.02561 4.52228 0.785021 4.69326C0.544436 4.86424 0.347882 5.0899 0.211526 5.35167C0.0751708 5.61344 0.00291053 5.90384 0.00068986 6.19899C0.00224379 6.41916 -0.00051108 7.49933 0.000669637 7.74197V10.4673C0.000691269 10.6313 0.0634892 10.7891 0.176179 10.9083C0.288869 11.0275 0.442906 11.0991 0.606686 11.1083V12.2894C0.606965 12.5403 0.706713 12.7807 0.884052 12.9581C1.06139 13.1355 1.30184 13.2353 1.55266 13.2356H2.76668C3.01755 13.2353 3.25807 13.1356 3.43548 12.9582C3.61289 12.7808 3.71269 12.5403 3.71298 12.2894V11.1119H11.1124C11.2012 11.1101 11.2858 11.0735 11.3479 11.0101C11.41 10.9466 11.4448 10.8614 11.4448 10.7726C11.4448 10.6838 11.41 10.5985 11.3479 10.5351C11.2858 10.4717 11.2012 10.4351 11.1124 10.4333H5.53436C5.51034 10.2485 5.59193 10.0507 5.80241 10.0499H11.0104C11.0992 10.0481 11.1837 10.0116 11.2458 9.94815C11.308 9.88472 11.3428 9.79946 11.3428 9.71066C11.3428 9.62186 11.308 9.5366 11.2458 9.47317C11.1837 9.40974 11.0992 9.37319 11.0104 9.37137H5.80241C5.66848 9.37269 5.5363 9.40198 5.41435 9.45736C5.2924 9.51274 5.18337 9.59299 5.09424 9.69297C5.00511 9.79295 4.93786 9.91045 4.8968 10.0379C4.85573 10.1654 4.84176 10.3001 4.85577 10.4333C3.81305 10.4355 1.73428 10.4317 0.679253 10.4333V8.07632H2.76669C2.83334 8.07534 2.89825 8.05486 2.9534 8.01741C3.00855 7.97997 3.05153 7.9272 3.07704 7.86561C3.10255 7.80402 3.10947 7.73631 3.09694 7.67083C3.08442 7.60536 3.053 7.54499 3.00656 7.49716C2.49017 7.01359 1.85698 6.12142 1.05003 6.18392L0.681024 6.1839C0.684878 6.00118 0.730963 5.82183 0.81567 5.65989C0.900378 5.49794 1.02141 5.3578 1.1693 5.25042C1.31718 5.14304 1.48791 5.07134 1.66813 5.04092C1.84834 5.01051 2.03314 5.02221 2.20808 5.07511C3.0697 5.37141 4.8627 6.31875 5.78551 6.25667L11.8894 6.25664C12.3228 6.25738 12.752 6.17294 13.1528 6.00811ZM1.28528 11.1119H3.03442V12.2894C3.03435 12.3604 3.00612 12.4285 2.95592 12.4786C2.90573 12.5288 2.83767 12.557 2.7667 12.557H1.55267C1.48175 12.5569 1.41377 12.5287 1.36364 12.4785C1.31351 12.4284 1.28533 12.3604 1.28528 12.2894V11.1119ZM1.66864 7.11859L1.94763 7.39774H0.679263V6.86246C1.01671 6.8517 1.42423 6.84327 1.66864 7.11859ZM4.7756 5.37889L3.09538 4.70172L4.31438 2.15979C4.45333 1.91849 4.65589 1.72 4.89995 1.58596C5.14401 1.45192 5.4202 1.3875 5.69838 1.39971H11.9746C12.2529 1.38757 12.5291 1.45205 12.7733 1.5861C13.0174 1.72016 13.2201 1.91865 13.3592 2.15996L14.5773 4.70114L12.897 5.37974C12.5774 5.51116 12.235 5.57854 11.8894 5.57805H5.78552C5.43902 5.57912 5.09575 5.51143 4.7756 5.37889Z" fill="white"/>
-                            <path d="M6.80079 7.39746C6.71201 7.39928 6.62748 7.43583 6.56533 7.49926C6.50319 7.56269 6.46838 7.64795 6.46838 7.73675C6.46838 7.82555 6.50319 7.91081 6.56533 7.97424C6.62748 8.03767 6.71201 8.07421 6.80079 8.07603H10.8723C10.9611 8.07421 11.0456 8.03767 11.1077 7.97424C11.1699 7.91081 11.2047 7.82555 11.2047 7.73675C11.2047 7.64795 11.1699 7.56269 11.1077 7.49926C11.0456 7.43583 10.9611 7.39928 10.8723 7.39746H6.80079Z" fill="white"/>
-                            <path d="M17.0355 9.4717H15.8526V8.28899C15.8526 8.19901 15.8169 8.11271 15.7532 8.04908C15.6896 7.98545 15.6033 7.94971 15.5133 7.94971C15.4233 7.94971 15.337 7.98545 15.2734 8.04908C15.2098 8.11271 15.174 8.19901 15.174 8.28899V9.4717H13.9911C13.9012 9.4717 13.8149 9.50745 13.7512 9.57108C13.6876 9.63471 13.6519 9.72101 13.6519 9.81099C13.6519 9.90098 13.6876 9.98727 13.7512 10.0509C13.8149 10.1145 13.9012 10.1503 13.9911 10.1503H15.174V11.3332C15.174 11.4231 15.2098 11.5094 15.2734 11.5731C15.337 11.6367 15.4233 11.6724 15.5133 11.6724C15.6033 11.6724 15.6896 11.6367 15.7532 11.5731C15.8168 11.5094 15.8526 11.4231 15.8526 11.3332V10.1503H17.0355C17.1243 10.1486 17.2089 10.112 17.2712 10.0486C17.3334 9.98516 17.3682 9.89985 17.3682 9.811C17.3682 9.72214 17.3334 9.63683 17.2712 9.57339C17.2089 9.50994 17.1243 9.47344 17.0355 9.4717Z" fill="white"/>
-                            <path d="M15.5133 6.32373C14.5889 6.32478 13.7027 6.69244 13.0491 7.34605C12.3954 7.99967 12.0277 8.88587 12.0266 9.81024C12.2182 14.4358 18.8091 14.4344 19 9.8102C18.9989 8.88583 18.6312 7.99965 17.9775 7.34604C17.3239 6.69243 16.4377 6.32478 15.5133 6.32373ZM15.5133 12.6183C14.7688 12.6175 14.0551 12.3213 13.5286 11.7949C13.0022 11.2685 12.7061 10.5547 12.7052 9.81024C12.8463 6.09026 18.1808 6.09128 18.3214 9.81026C18.3205 10.5547 18.0244 11.2685 17.498 11.7949C16.9715 12.3214 16.2578 12.6175 15.5133 12.6183Z" fill="white"/>
-                        </svg>                                    
-                        </a>
-                                <div class="row g-5">
+            <!-- MAIN CONTENT -->
+            <section style="padding: 60px 0; background: #f8f9fa;">
+                <div class="container">
+                    <div class="row g-4">
+                        
+                        <!-- SIDEBAR -->
+                        <div class="col-lg-3">
+                            <div class="sidebar-pro">
+                                
+                                <!-- AI ADVISOR -->
+                                <div class="ai-advisor-pro">
+                                    <div class="ai-advisor-content">
+                                        <div class="ai-icon-wrapper">
+                                            <i class="fa-solid fa-robot"></i>
+                                        </div>
+                                        <h4 class="ai-advisor-title">Assistant IA</h4>
+                                        <p class="ai-advisor-desc">
+                                            Trouvez votre voiture idéale avec notre conseiller intelligent
+                                        </p>
+                                        <a href="{% url 'advisor_ui' %}" class="ai-advisor-btn">
+                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                            Démarrer
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- SEARCH -->
+                                <div class="filter-card">
+                                    <div class="filter-title">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        Recherche
+                                    </div>
+                                    <form action="{% url 'posts:portfolio' %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="search-box-pro">
+                                            <input type="text" name="q" class="search-input-pro" placeholder="Chercher..." value="{{ q|default:'' }}">
+                                            <button type="submit" class="search-btn-pro">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="file-upload-pro">
+                                            <input type="file" name="query_image" accept="image/*" style="display: none;" id="imageUpload">
+                                            <label for="imageUpload" style="cursor: pointer; width: 100%;">
+                                                <div class="file-upload-icon">
+                                                    <i class="fa-solid fa-image"></i>
+                                                </div>
+                                                <div class="file-upload-text">Recherche par image</div>
+                                                <div class="file-upload-hint">Glissez ou cliquez pour choisir</div>
+                                            </label>
+                                        </div>
+                                        
+                                        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+                                        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+                                    </form>
+                                </div>
+
+                                <!-- MARQUE FILTER -->
+                                <div class="filter-card">
+                                    <div class="filter-header">
+                                        <div class="filter-title">
+                                            <i class="fa-solid fa-car"></i>
+                                            Marque
+                                        </div>
+                                        <div class="filter-toggle">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="filter-body">
+                                        <form action="{% url 'posts:portfolio' %}" method="get">
+                                            {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+                                            <div class="checkbox-list-pro">
+                                                {% for item in marque_counts %}
+                                                <div class="checkbox-item-pro">
+                                                    <label class="checkbox-label-pro">
+                                                        <input type="checkbox" name="marque" value="{{ item.marque }}" {% if item.marque in selected_marques %}checked{% endif %}>
+                                                        <span>{{ item.marque }}</span>
+                                                    </label>
+                                                    <span class="checkbox-badge">{{ item.count }}</span>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <button type="submit" style="display:none;"></button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- PRICE FILTER -->
+                                <div class="filter-card">
+                                    <div class="filter-header">
+                                        <div class="filter-title">
+                                            <i class="fa-solid fa-dollar-sign"></i>
+                                            Prix
+                                        </div>
+                                        <div class="filter-toggle">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="filter-body">
+                                        <form action="{% url 'posts:portfolio' %}" method="get" id="priceForm">
+                                            {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+                                            {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+                                            
+                                            <div class="price-slider-pro" data-price-min="{{ price_min|default:0 }}" data-price-max="{{ price_max|default:0 }}">
+                                                <div class="price-inputs">
+                                                    <div class="price-input-wrapper">
+                                                        <label class="price-input-label">Min</label>
+                                                        <input type="number" id="minPriceInput" name="min_price" class="price-input" value="{{ min_price_sel|default:price_min }}">
+                                                        <span class="price-currency">TND</span>
+                                                    </div>
+                                                    <div class="price-input-wrapper">
+                                                        <label class="price-input-label">Max</label>
+                                                        <input type="number" id="maxPriceInput" name="max_price" class="price-input" value="{{ max_price_sel|default:price_max }}">
+                                                        <span class="price-currency">TND</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="range-slider-wrapper">
+                                                    <div class="range-fill" id="rangeFill"></div>
+                                                    <input type="range" id="minRange" min="0" max="100" value="{{ min_percent|default:0|floatformat:0 }}">
+                                                    <input type="range" id="maxRange" min="0" max="100" value="{{ max_percent|default:100|floatformat:0 }}">
+                                                </div>
+                                            </div>
+                                            <button type="submit" style="display:none;"></button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- FUEL FILTER -->
+                                <div class="filter-card">
+                                    <div class="filter-header">
+                                        <div class="filter-title">
+                                            <i class="fa-solid fa-gas-pump"></i>
+                                            Carburant
+                                        </div>
+                                        <div class="filter-toggle">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="filter-body">
+                                        <form action="{% url 'posts:portfolio' %}" method="get">
+                                            {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+                                            {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+                                            <div class="checkbox-list-pro">
+                                                {% for item in energy_counts %}
+                                                <div class="checkbox-item-pro">
+                                                    <label class="checkbox-label-pro">
+                                                        <input type="checkbox" name="energy" value="{{ item.energy }}" {% if item.energy in selected_energies %}checked{% endif %}>
+                                                        <span>{{ item.energy }}</span>
+                                                    </label>
+                                                    <span class="checkbox-badge">{{ item.count }}</span>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <button type="submit" style="display:none;"></button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- CARS GRID -->
+                        <div class="col-lg-9">
+                            
+                            <!-- TOOLBAR -->
+                            <div class="toolbar-modern">
+                                <div class="toolbar-left">
+                                    <div class="results-count">
+                                        <span>{{ posts|length }}</span> résultat{{ posts|length|pluralize }}
+                                    </div>
                                     
+                                    <div class="active-filters">
+                                        {% for m in selected_marques %}
+                                        <div class="filter-tag">
+                                            {{ m }}
+                                            <button class="filter-tag-remove" onclick="removeFilter('marque', '{{ m }}')">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                        {% for e in selected_energies %}
+                                        <div class="filter-tag">
+                                            {{ e }}
+                                            <button class="filter-tag-remove" onclick="removeFilter('energy', '{{ e }}')">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                        
+                                        {% if selected_marques or selected_energies %}
+                                        <button class="clear-all-filters" onclick="clearAllFilters()">
+                                            <i class="fa-solid fa-xmark"></i> Tout effacer
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="sort-wrapper">
+                                    <span class="sort-label">Trier par:</span>
+                                    <form action="{% url 'posts:portfolio' %}" method="get" style="display: inline;">
+                                        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+                                        {% for m in selected_marques %}<input type="hidden" name="marque" value="{{ m }}">{% endfor %}
+                                        {% for e in selected_energies %}<input type="hidden" name="energy" value="{{ e }}">{% endfor %}
+                                        <select name="order" class="sort-select" onchange="this.form.submit()">
+                                            <option value="">Par défaut</option>
+                                            <option value="price_asc" {% if selected_order == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+                                            <option value="price_desc" {% if selected_order == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- CARS LIST -->
+                            <div class="row g-4">
                                 {% for post in posts %}
                                 {% if not post.has_paid_achat %}
-                                <div class="col-lg-6">
-                                    <div class="project-wrapper2">
-                                    <div class="image-area">
-                                        <a href="/portfolio-details/{{ post.id }}">
-                                        <img alt="{{ post.modele }}" src="{{ post.image.url }}">
-                                        </a>
-                                        <span class="tag">{{ post.etat_general }}</span>
-                                        <a class="wishlist" href="#"><i class="fa-regular fa-heart"></i></a>
-                                        <a class="gallery-image" href="{{ post.image.url }}">
-                                        <img alt="" src="{% static 'images/icon/image.svg' %}">5
-                                        </a>
-                                    </div>
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="car-card-ultra">
+                                        <div class="car-image-wrapper">
+                                            <a href="/portfolio-details/{{ post.id }}">
+                                                <img src="{{ post.image.url }}" alt="{{ post.marque }} {{ post.modele }}">
+                                            </a>
+                                            
+                                            <div class="car-overlay"></div>
+                                            
+                                            <div class="car-badges">
+                                                <span class="badge-status {% if post.etat_general == 'Neuf' %}badge-new{% else %}badge-used{% endif %}">
+                                                    {{ post.etat_general }}
+                                                </span>
+                                                <button class="wishlist-btn-ultra">
+                                                    <i class="fa-regular fa-heart"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="car-price-display">
+                                                <div class="price-tag-main">
+                                                    <div class="price-amount">{{ post.price }}</div>
+                                                    <div class="price-currency">TND</div>
+                                                </div>
+                                                <button class="gallery-btn">
+                                                    <i class="fa-solid fa-images"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                    <span class="price">{{ post.price }} $</span>
+                                        <div class="car-content-ultra">
+                                            <div class="car-header">
+                                                <h5 class="car-title-ultra">
+                                                    <a href="/portfolio-details/{{ post.id }}">{{ post.marque }} {{ post.modele }}</a>
+                                                </h5>
+                                                <div class="car-subtitle">
+                                                    <i class="fa-solid fa-location-dot"></i>
+                                                    <span>Tunisie</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="car-specs-grid">
+                                                <div class="spec-item">
+                                                    <div class="spec-icon">
+                                                        <i class="fa-solid fa-road"></i>
+                                                    </div>
+                                                    <div class="spec-value">{{ post.kilometrage|floatformat:0 }}</div>
+                                                    <div class="spec-label">KM</div>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <div class="spec-icon">
+                                                        <i class="fa-solid fa-gas-pump"></i>
+                                                    </div>
+                                                    <div class="spec-value">{{ post.energy|truncatechars:8 }}</div>
+                                                    <div class="spec-label">Carburant</div>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <div class="spec-icon">
+                                                        <i class="fa-solid fa-gears"></i>
+                                                    </div>
+                                                    <div class="spec-value">{{ post.boite_vitesse|truncatechars:6 }}</div>
+                                                    <div class="spec-label">Boîte</div>
+                                                </div>
+                                            </div>
 
-                                    <div class="content-area">
-                                        <h6 class="title">
-                                        <a href="/portfolio-details/{{ post.id }}">{{ post.marque }} {{ post.modele }}</a>
-                                        </h6>
-                                        <ul class="feature-area">
-                                        <li><img src="{% static 'images/portfolio/feature-icon/01.svg' %}" alt="">{{ post.kilometrage }} Km</li>
-                                        <li><img src="{% static 'images/portfolio/feature-icon/02.svg' %}" alt="">{{ post.energy }}</li>
-                                        <li><img src="{% static 'images/portfolio/feature-icon/03.svg' %}" alt="">{{ post.boite_vitesse }}</li>
-                                        </ul>
-                                        <div class="button-area">
-                                        <p>{{ post.price }} $</p>
-                                        <a class="rts-btn btn-primary radius-small"
-   href="{% url 'posts:post_detail' pk=post.pk %}">
-  Details
-</a>
-
-
-
-                                        {% if request.user.is_authenticated %}
-                                            {% if request.user.is_staff or request.user.id == post.owner_id %}
-                                                <a class="rts-btn btn-primary radius-small" href="{% url 'posts:update_post' post.id %}">Update</a>
-                                                <a class="rts-btn btn-primary radius-small" href="{% url 'posts:delete_car' post.id %}">Delete</a>
-                                            {% endif %}
-                                        {% endif %}
-                                        {% endif %}
+                                            <div class="car-actions-ultra">
+                                                <a href="{% url 'posts:post_detail' pk=post.pk %}" class="btn-car-ultra btn-view-details">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                    Voir détails
+                                                </a>
+                                                
+                                                {% if request.user.is_authenticated %}
+                                                    {% if request.user.is_staff or request.user.id == post.owner_id %}
+                                                        <a href="{% url 'posts:update_post' post.id %}" class="btn-car-ultra btn-edit">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                            Modifier
+                                                        </a>
+                                                        <a href="{% url 'posts:delete_car' post.id %}" class="btn-car-ultra btn-delete">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                            Supprimer
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                {% endif %}
+                                {% empty %}
+                                <div class="col-12">
+                                    <div class="empty-state-pro">
+                                        <div class="empty-icon-pro">
+                                            <i class="fa-solid fa-car"></i>
+                                        </div>
+                                        <h3 class="empty-title">Aucune voiture trouvée</h3>
+                                        <p class="empty-text">Essayez d'ajuster vos filtres ou ajoutez une nouvelle voiture</p>
+                                        <a href="{% url 'posts:add_car' %}" class="btn-add-car-main">
+                                            <i class="fa-solid fa-plus-circle"></i>
+                                            Ajouter une voiture
+                                        </a>
                                     </div>
                                 </div>
-                                {% empty %}
-                                <p>No cars available.</p>
                                 {% endfor %}
-                                </div>
                             </div>
-                            </div>
-
-
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="rts-cta-area area-2">
-                <div class="container">
-                    <div class="cta-inner">
-                        <h2 class="title">If you have any questions Please Call.</h2>
-                        <div class="contact">
-                            <a href="callto:+16544521505">
-                                <img src="{% static 'images/cta/call.svg' %}" alt="">
-                                +1-654-452-1505</a>
                         </div>
-                        <img class="shape one" src="{% static 'images/cta/round.svg' %}" alt="">
-                        <img class="shape two" src="{% static 'images/cta/line.svg' %}" alt="">
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
+</div>
 
-    <script>
-        const minRange = document.getElementById('minRange');
-        const maxRange = document.getElementById('maxRange');
-        const range = document.getElementById('range');
-        const histogramBars = document.querySelectorAll('.histogram-bar');
-        const minPrice = document.getElementById('minPrice');
-        const maxPrice = document.getElementById('maxPrice');
-    
-        function updateRange() {
-          const minValue = parseInt(minRange.value);
-          const maxValue = parseInt(maxRange.value);
-    
-          // Update the range highlight
-          range.style.left = `${minValue}%`;
-          range.style.right = `${100 - maxValue}%`;
-    
-          // Update the active bars
-          histogramBars.forEach((bar, index) => {
-            const barValue = (index / (histogramBars.length - 1)) * 100;
-            if (barValue >= minValue && barValue <= maxValue) {
-              bar.classList.add('active');
-            } else {
-              bar.classList.remove('active');
-            }
-          });
-    
-          // Update price labels (example: mapping 0-100 to $500-$5000)
-          const minPriceValue = Math.round((minValue / 100) * (5000 - 500) + 500);
-          const maxPriceValue = Math.round((maxValue / 100) * (5000 - 500) + 500);
-          minPrice.textContent = `$${minPriceValue}`;
-          maxPrice.textContent = `$${maxPriceValue}`;
+<script>
+// Filter card collapse
+document.querySelectorAll('.filter-header').forEach(header => {
+    header.addEventListener('click', function() {
+        this.closest('.filter-card').classList.toggle('collapsed');
+    });
+});
+
+// Price slider
+const sliderContainer = document.querySelector('.price-slider-pro');
+if (sliderContainer) {
+    const minRange = document.getElementById('minRange');
+    const maxRange = document.getElementById('maxRange');
+    const rangeFill = document.getElementById('rangeFill');
+    const minPriceInput = document.getElementById('minPriceInput');
+    const maxPriceInput = document.getElementById('maxPriceInput');
+
+    const priceMin = parseFloat(sliderContainer.dataset.priceMin || '0');
+    const priceMax = parseFloat(sliderContainer.dataset.priceMax || '0');
+
+    function percentToPrice(percent) {
+        if (priceMax === priceMin) return priceMin;
+        return Math.round(priceMin + (percent / 100) * (priceMax - priceMin));
+    }
+
+    function updateRange() {
+        const minValue = parseInt(minRange.value);
+        const maxValue = parseInt(maxRange.value);
+
+        if (minValue > maxValue - 5) {
+            minRange.value = maxValue - 5;
         }
+        if (maxValue < minValue + 5) {
+            maxRange.value = minValue + 5;
+        }
+
+        const correctedMin = parseInt(minRange.value);
+        const correctedMax = parseInt(maxRange.value);
+
+        rangeFill.style.left = correctedMin + '%';
+        rangeFill.style.right = (100 - correctedMax) + '%';
+
+        const minPriceValue = percentToPrice(correctedMin);
+        const maxPriceValue = percentToPrice(correctedMax);
+
+        minPriceInput.value = minPriceValue;
+        maxPriceInput.value = maxPriceValue;
+    }
+
+    minRange.addEventListener('input', updateRange);
+    maxRange.addEventListener('input', updateRange);
     
-        // Add event listeners
-        minRange.addEventListener('input', () => {
-          if (parseInt(minRange.value) > parseInt(maxRange.value) - 10) {
-            minRange.value = maxRange.value - 10;
-          }
-          updateRange();
-        });
+    minRange.addEventListener('change', () => minRange.closest('form').submit());
+    maxRange.addEventListener('change', () => maxRange.closest('form').submit());
     
-        maxRange.addEventListener('input', () => {
-          if (parseInt(maxRange.value) < parseInt(minRange.value) + 10) {
-            maxRange.value = parseInt(minRange.value) + 10;
-          }
-          updateRange();
-        });
-    
-        // Initialize
+    minPriceInput.addEventListener('change', function() {
+        const percent = ((this.value - priceMin) / (priceMax - priceMin)) * 100;
+        minRange.value = percent;
         updateRange();
-    </script>
-    {% include 'partials/footer/footer-three.html' %}
-        {% endblock content %}
+        this.closest('form').submit();
+    });
+    
+    maxPriceInput.addEventListener('change', function() {
+        const percent = ((this.value - priceMin) / (priceMax - priceMin)) * 100;
+        maxRange.value = percent;
+        updateRange();
+        this.closest('form').submit();
+    });
+
+    updateRange();
+}
+
+// Auto-submit checkboxes
+document.querySelectorAll('.checkbox-list-pro input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => cb.closest('form').submit());
+});
+
+// Filter removal functions
+function removeFilter(type, value) {
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = '{% url "posts:portfolio" %}';
+    
+    // Keep other filters
+    document.querySelectorAll('input[type="hidden"]').forEach(input => {
+        if (!(input.name === type && input.value === value)) {
+            const newInput = document.createElement('input');
+            newInput.type = 'hidden';
+            newInput.name = input.name;
+            newInput.value = input.value;
+            form.appendChild(newInput);
+        }
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function clearAllFilters() {
+    window.location.href = '{% url "posts:portfolio" %}';
+}
+</script>
+
+{% include 'partials/footer/footer-three.html' %}
+{% endblock content %}

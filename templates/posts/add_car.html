@@ -1,190 +1,940 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* PREVENT HORIZONTAL SCROLL */
+body {
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    overflow-x: hidden;
+}
+
+/* DISABLE STICKY HEADER */
+.loader-wrapper {
+    display: none !important;
+}
+
+.header-sticky-active {
+    display: none !important;
+}
+
+.rts-header.header-sticky {
+    position: relative !important;
+}
+
+.ms-main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* HERO SECTION */
+.add-hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.add-hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #DC2626, transparent);
+}
+
+.hero-content-add {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.breadcrumb-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.breadcrumb-add a {
+    color: #DC2626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb-add i {
+    font-size: 10px;
+}
+
+.hero-tag-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.hero-tag-add span {
+    color: #DC2626;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.hero-title-add {
+    color: #fff;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #DC2626 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle-add {
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* MESSAGES */
+.message-container {
+    margin-top: -30px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.message-alert {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    animation: slideInDown 0.5s ease;
+}
+
+.message-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-left: 5px solid #10b981;
+    color: #065f46;
+}
+
+.message-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-left: 5px solid #DC2626;
+    color: #991b1b;
+}
+
+.message-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.message-icon-success {
+    background: #10b981;
+}
+
+.message-icon-error {
+    background: #DC2626;
+}
+
+.message-close {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    color: inherit;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 18px;
+}
+
+.message-close:hover {
+    background: rgba(0,0,0,0.2);
+}
+
+/* FORM CARD */
+.form-card-add {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s;
+}
+
+.form-card-add:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f3f4f6;
+}
+
+.form-section-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+.form-section-icon i {
+    color: #fff;
+    font-size: 22px;
+}
+
+.form-section-title {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 22px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.form-section-subtitle {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* FORM GROUPS */
+.form-group-add {
+    margin-bottom: 25px;
+}
+
+.form-label-add {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label-add i {
+    color: #DC2626;
+    font-size: 16px;
+}
+
+.required-star {
+    color: #DC2626;
+    margin-left: 4px;
+}
+
+.form-input-add {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background: #f9fafb;
+}
+
+.form-input-add:focus {
+    outline: none;
+    border-color: #DC2626;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input-add:hover {
+    border-color: #DC2626;
+    background: #fff;
+}
+
+select.form-input-add {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23DC2626' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 45px;
+}
+
+textarea.form-input-add {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-help-text {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-help-text i {
+    color: #DC2626;
+    font-size: 14px;
+}
+
+/* FILE UPLOAD */
+.file-upload-wrapper {
+    margin-top: 10px;
+}
+
+.file-upload-area-add {
+    border: 3px dashed #DC2626;
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    position: relative;
+}
+
+.file-upload-area-add:hover {
+    border-color: #991B1B;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    transform: scale(1.02);
+}
+
+.file-upload-icon-add {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+}
+
+.file-upload-icon-add i {
+    font-size: 32px;
+    color: #fff;
+}
+
+.file-upload-text {
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.file-upload-hint {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* IMAGE PREVIEW */
+.image-preview-wrapper {
+    margin-top: 20px;
+    display: none;
+}
+
+.preview-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* SIDEBAR CARDS */
+.sidebar-card-add {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.sidebar-card-dark {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+}
+
+.sidebar-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-card-icon {
+    width: 45px;
+    height: 45px;
+    background: #DC2626;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.sidebar-card-icon i {
+    color: #fff;
+    font-size: 20px;
+}
+
+.sidebar-card-title {
+    font-weight: 800;
+    font-size: 18px;
+    margin: 0;
+}
+
+.sidebar-card-light .sidebar-card-title {
+    color: #1a1a1a;
+}
+
+.sidebar-card-dark .sidebar-card-title {
+    color: #fff;
+}
+
+.sidebar-card-text {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.sidebar-card-light .sidebar-card-text {
+    color: #6b7280;
+}
+
+.sidebar-card-dark .sidebar-card-text {
+    color: rgba(255,255,255,0.8);
+}
+
+/* AI HIGHLIGHT BOX */
+.ai-highlight-box {
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid rgba(220, 38, 38, 0.3);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.ai-highlight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.ai-highlight-header i {
+    color: #DC2626;
+    font-size: 18px;
+}
+
+.ai-highlight-title {
+    color: #DC2626;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.ai-highlight-text {
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* TIPS LIST */
+.tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tips-list li {
+    color: #0c4a6e;
+    font-size: 13px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.tips-list li:hover {
+    background: rgba(255,255,255,0.8);
+    transform: translateX(5px);
+}
+
+.tips-list li i {
+    color: #0284c7;
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+/* EXAMPLE IMAGE */
+.example-image {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* ACTION BUTTONS */
+.btn-actions-add {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.btn-add-primary {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-add-primary:hover {
+    background: linear-gradient(135deg, #991B1B 0%, #7f1d1d 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5);
+    color: #fff;
+}
+
+.btn-add-secondary {
+    padding: 16px 40px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-add-secondary:hover {
+    background: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ANIMATIONS */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero-title-add {
+        font-size: 36px;
+    }
+    
+    .form-card-add {
+        padding: 25px;
+    }
+    
+    .sidebar-card-add {
+        padding: 20px;
+    }
+    
+    .btn-actions-add {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
 <div class="rts-wrapper">
     <div class="rts-wrapper-inner">
         {% include 'partials/header/header-three.html' %}
-        
-        {% with class="service" current="Add Car" title="Add a New Car" %}
-            {% include 'partials/elements/breadcrumb.html' %}
-        {% endwith %}
-        
-        <main class="ms-main rts-section-gap">
-            <div class="ms-page-content">
 
-                <!--================= Add Car Form (styled like Checkout) =================-->
-                <article class="page checkout-area type-page status-publish hentry">
-                    <div class="ms-sp--header container">
-                        <h2 class="title">Add a New Car</h2>
-                    </div>
-                    <div class="ms-default-page container entry-content">
+        <main class="ms-main">
+            
+            <!-- HERO SECTION -->
+            <section class="add-hero-section">
+                <div class="container">
+                    <div class="hero-content-add">
                         
-                        <!-- Display Messages -->
-                        {% if messages %}
-                        <div class="container mb-4">
-                            {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                            {% endfor %}
+                        <!-- Breadcrumb -->
+                        <div class="breadcrumb-add">
+                            <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <a href="{% url 'posts:portfolio' %}">Voitures</a>
+                            <i class="fa-solid fa-chevron-right"></i>
+                            <span>Ajouter</span>
                         </div>
-                        {% endif %}
+
+                        <div class="hero-tag-add">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>NOUVELLE VOITURE</span>
+                        </div>
                         
-                        <div class="woocommerce">
-                            <form method="POST" enctype="multipart/form-data" class="checkout woocommerce-checkout ms-woocommerce-checkout">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="full-grid">
-                                            <div class="billing-fields">
-                                                <div class="checkout-title">
-                                                    <h3>Car Details</h3>
-                                                </div>
-                                                <div class="form-content-box">
-                                                    <div class="row">
-                                                        {% for field in form %}
-                                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="form-group">
-                                                                <label class="form-label fw-semibold">
-                                                                    {{ field.label }}
-                                                                    {% if field.field.required %}
-                                                                        <span class="text-danger">*</span>
-                                                                    {% endif %}
-                                                                </label>
-                                                                
-                                                                <!-- Special handling for dashboard_image field -->
-                                                                {% if field.name == 'dashboard_image' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        📸 Optionnel: Téléchargez une photo claire du tableau de bord pour extraire automatiquement le kilométrage
-                                                                    </small>
-                                                                    <div id="dashboard-preview" class="mt-2" style="display:none;">
-                                                                        <img src="" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
-                                                                    </div>
-                                                                {% elif field.name == 'kilometrage' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        💡 Sera rempli automatiquement si vous téléchargez une photo du tableau de bord
-                                                                    </small>
-                                                                {% elif field.name == 'image' %}
-                                                                    {{ field }}
-                                                                    <small class="form-text text-muted d-block mt-1">
-                                                                        Photo principale de la voiture
-                                                                    </small>
-                                                                    <div id="car-image-preview" class="mt-2" style="display:none;">
-                                                                        <img src="" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
-                                                                    </div>
-                                                                {% else %}
-                                                                    {{ field }}
-                                                                {% endif %}
-                                                                
-                                                                {% if field.errors %}
-                                                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
-                                                                {% endif %}
-                                                                
-                                                                {% if field.help_text %}
-                                                                    <small class="form-text text-muted d-block mt-1">{{ field.help_text }}</small>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="payment-method mt-40 md-mt-20">
-                                                <div class="bottom-area">
-                                                    <p class="mt-15">
-                                                        <strong>Note:</strong> Veuillez vérifier tous les détails de la voiture avant de soumettre le formulaire.
-                                                    </p>
-                                                    <button type="submit" class="add-btn rts-btn btn-primary">
-                                                        💾 Save Car
-                                                    </button>
-                                                    <a href="{% url 'posts:portfolio' %}" class="rts-btn btn-border ms-2">
-                                                        ❌ Cancel
-                                                    </a>
-                                                </div>
-                                            </div>
+                        <h1 class="hero-title-add">
+                            Ajouter une <span class="hero-gradient">Voiture</span>
+                        </h1>
+                        
+                        <p class="hero-subtitle-add">
+                            Remplissez les informations de votre véhicule et notre IA extraira automatiquement les données
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MESSAGES -->
+            {% if messages %}
+            <div class="container message-container">
+                {% for message in messages %}
+                <div class="message-alert {% if message.tags == 'success' %}message-success{% else %}message-error{% endif %}">
+                    <div class="message-icon {% if message.tags == 'success' %}message-icon-success{% else %}message-icon-error{% endif %}">
+                        <i class="fa-solid {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong style="display: block; margin-bottom: 5px; font-size: 16px;">{{ message.tags|capfirst }}</strong>
+                        <span style="font-size: 14px;">{{ message }}</span>
+                    </div>
+                    <button class="message-close" onclick="this.parentElement.remove()">×</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- FORM SECTION -->
+            <section style="padding: 60px 0 80px 0; background: #f8f9fa;">
+                <div class="container">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            
+                            <!-- FORM COLUMN -->
+                            <div class="col-lg-8">
+                                <div class="form-card-add">
+                                    <div class="form-section-header">
+                                        <div class="form-section-icon">
+                                            <i class="fa-solid fa-car"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="form-section-title">Informations du véhicule</h2>
+                                            <p class="form-section-subtitle">Remplissez tous les champs requis</p>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <div class="ms-checkout-review-order p-3 border rounded">
-                                            <h3>ℹ️ Information</h3>
-                                            <div class="mb-3">
-                                                <h5>📊 Extraction Automatique</h5>
-                                                <p class="small">
-                                                    Notre système utilise l'IA pour extraire automatiquement le kilométrage depuis la photo du tableau de bord.
-                                                </p>
+                                    <div class="row g-4">
+                                        {% for field in form %}
+                                        <div class="col-md-6">
+                                            <div class="form-group-add">
+                                                
+                                                <label class="form-label-add">
+                                                    {% if field.name == 'marque' %}
+                                                        <i class="fa-solid fa-tag"></i>
+                                                    {% elif field.name == 'modele' %}
+                                                        <i class="fa-solid fa-car-side"></i>
+                                                    {% elif field.name == 'price' %}
+                                                        <i class="fa-solid fa-dollar-sign"></i>
+                                                    {% elif field.name == 'kilometrage' %}
+                                                        <i class="fa-solid fa-gauge-high"></i>
+                                                    {% elif field.name == 'energy' %}
+                                                        <i class="fa-solid fa-gas-pump"></i>
+                                                    {% elif field.name == 'boite_vitesse' %}
+                                                        <i class="fa-solid fa-gears"></i>
+                                                    {% elif field.name == 'etat_general' %}
+                                                        <i class="fa-solid fa-star"></i>
+                                                    {% elif field.name == 'carrosserie' %}
+                                                        <i class="fa-solid fa-car"></i>
+                                                    {% elif field.name == 'image' %}
+                                                        <i class="fa-solid fa-image"></i>
+                                                    {% elif field.name == 'dashboard_image' %}
+                                                        <i class="fa-solid fa-gauge"></i>
+                                                    {% else %}
+                                                        <i class="fa-solid fa-circle-info"></i>
+                                                    {% endif %}
+                                                    {{ field.label }}
+                                                    {% if field.field.required %}
+                                                        <span class="required-star">*</span>
+                                                    {% endif %}
+                                                </label>
+
+                                                <!-- DASHBOARD IMAGE -->
+                                                {% if field.name == 'dashboard_image' %}
+                                                    <input type="file" name="dashboard_image" id="dashboardInput" accept="image/*" style="display: none;">
+                                                    <label for="dashboardInput" class="file-upload-area-add">
+                                                        <div class="file-upload-icon-add">
+                                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                                        </div>
+                                                        <div class="file-upload-text">Photo du tableau de bord</div>
+                                                        <div class="file-upload-hint">Cliquez ou glissez l'image ici</div>
+                                                    </label>
+                                                    <div class="form-help-text">
+                                                        <i class="fa-solid fa-robot"></i>
+                                                        L'IA extraira automatiquement le kilométrage
+                                                    </div>
+                                                    <div id="dashboard-preview" class="image-preview-wrapper">
+                                                        <img id="dashboardPreviewImg" class="preview-image">
+                                                    </div>
+
+                                                <!-- MAIN IMAGE -->
+                                                {% elif field.name == 'image' %}
+                                                    <input type="file" name="image" id="carImageInput" accept="image/*" style="display: none;" required>
+                                                    <label for="carImageInput" class="file-upload-area-add">
+                                                        <div class="file-upload-icon-add">
+                                                            <i class="fa-solid fa-camera"></i>
+                                                        </div>
+                                                        <div class="file-upload-text">Photo principale</div>
+                                                        <div class="file-upload-hint">Format JPG, PNG (Max 5MB)</div>
+                                                    </label>
+                                                    <div class="form-help-text">
+                                                        <i class="fa-solid fa-image"></i>
+                                                        Photo principale de la voiture
+                                                    </div>
+                                                    <div id="car-image-preview" class="image-preview-wrapper">
+                                                        <img id="carImagePreviewImg" class="preview-image">
+                                                    </div>
+
+                                                <!-- KILOMETRAGE -->
+                                                {% elif field.name == 'kilometrage' %}
+                                                    <input type="number" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-input-add" value="{{ field.value|default:'' }}">
+                                                    <div class="form-help-text">
+                                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                                        Rempli automatiquement depuis la photo du tableau de bord
+                                                    </div>
+
+                                                <!-- OTHER FIELDS -->
+                                                {% else %}
+                                                    {{ field }}
+                                                    {% if field.help_text %}
+                                                    <div class="form-help-text">
+                                                        <i class="fa-solid fa-circle-info"></i>
+                                                        {{ field.help_text }}
+                                                    </div>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% if field.errors %}
+                                                    <div style="color: #DC2626; font-size: 13px; margin-top: 8px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                                        {{ field.errors }}
+                                                    </div>
+                                                {% endif %}
                                             </div>
-                                            
-                                            <div class="mb-3">
-                                                <h5>📋 Conseils pour de meilleurs résultats:</h5>
-                                                <ul class="small">
-                                                    <li>✓ Photo claire et bien éclairée</li>
-                                                    <li>✓ Cadrage centré sur le compteur kilométrique</li>
-                                                    <li>✓ Éviter les reflets et l'éblouissement</li>
-                                                    <li>✓ Image nette (pas floue)</li>
-                                                </ul>
-                                            </div>
-                                            
-                                            <div class="alert alert-info small">
-                                                <strong>💡 Astuce:</strong> Après la soumission, votre voiture apparaîtra automatiquement sur la page du magasin.
-                                            </div>
-                                            
-                                            <img src="{% static 'images/portfolio/04.webp' %}" class="w-100 rounded mt-3" alt="Example car">
                                         </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- ACTION BUTTONS -->
+                                    <div class="btn-actions-add">
+                                        <button type="submit" class="btn-add-primary">
+                                            <i class="fa-solid fa-floppy-disk"></i>
+                                            Enregistrer la voiture
+                                        </button>
+                                        <a href="{% url 'posts:portfolio' %}" class="btn-add-secondary">
+                                            <i class="fa-solid fa-xmark"></i>
+                                            Annuler
+                                        </a>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                </article>
-                <!--================= End Add Car Form =================-->
+                            </div>
 
-            </div>
+                            <!-- SIDEBAR -->
+                            <div class="col-lg-4">
+                                
+                                <!-- AI CARD -->
+                                <div class="sidebar-card-add sidebar-card-dark">
+                                    <div class="sidebar-card-header">
+                                        <div class="sidebar-card-icon">
+                                            <i class="fa-solid fa-robot"></i>
+                                        </div>
+                                        <h3 class="sidebar-card-title">Extraction IA</h3>
+                                    </div>
+                                    <p class="sidebar-card-text">
+                                        Notre système utilise l'intelligence artificielle pour extraire automatiquement le kilométrage depuis la photo du tableau de bord.
+                                    </p>
+                                    <div class="ai-highlight-box">
+                                        <div class="ai-highlight-header">
+                                            <i class="fa-solid fa-sparkles"></i>
+                                            <span class="ai-highlight-title">Précision élevée</span>
+                                        </div>
+                                        <p class="ai-highlight-text">Reconnaissance automatique des chiffres avec une précision de 95%</p>
+                                    </div>
+                                </div>
+
+                                <!-- TIPS CARD -->
+                                <div class="sidebar-card-add" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 2px solid #7dd3fc;">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                        <div style="width: 45px; height: 45px; background: #0284c7; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-lightbulb" style="color: #fff; font-size: 20px;"></i>
+                                        </div>
+                                        <h3 style="color: #0c4a6e; font-weight: 800; font-size: 18px; margin: 0;">Conseils</h3>
+                                    </div>
+                                    <ul class="tips-list">
+                                        <li>
+                                            <i class="fa-solid fa-check"></i>
+                                            <span>Photo claire et bien éclairée</span>
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-check"></i>
+                                            <span>Cadrage centré sur le compteur</span>
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-check"></i>
+                                            <span>Éviter les reflets</span>
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-check"></i>
+                                            <span>Image nette (pas floue)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- INFO CARD -->
+                                <div class="sidebar-card-add sidebar-card-light">
+                                    <div class="sidebar-card-header" style="border-bottom-color: #f3f4f6;">
+                                        <div class="sidebar-card-icon">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </div>
+                                        <h3 class="sidebar-card-title">Information</h3>
+                                    </div>
+                                    <p class="sidebar-card-text">
+                                        Après la soumission, votre voiture apparaîtra automatiquement dans le catalogue.
+                                    </p>
+                                    <img src="{% static 'images/portfolio/04.webp' %}" class="example-image" alt="Example car">
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
         </main>
     </div>
 </div>
 
-<!-- Image Preview Script -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Preview for dashboard image
-    const dashboardInput = document.querySelector('input[name="dashboard_image"]');
-    if (dashboardInput) {
-        dashboardInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const preview = document.getElementById('dashboard-preview');
-                    const img = preview.querySelector('img');
-                    img.src = event.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+// Disable sticky header
+document.addEventListener("DOMContentLoaded", function() {
+    const header = document.querySelector('.rts-header');
+    if (header) {
+        header.style.position = 'relative';
+        header.classList.remove('header-sticky');
     }
     
-    // Preview for main car image
-    const carImageInput = document.querySelector('input[name="image"]');
-    if (carImageInput) {
-        carImageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const preview = document.getElementById('car-image-preview');
-                    const img = preview.querySelector('img');
-                    img.src = event.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+    window.addEventListener('scroll', function() {
+        const stickyHeader = document.querySelector('.header-sticky-active');
+        if (stickyHeader) {
+            stickyHeader.style.display = 'none';
+        }
+    });
+
+    // Add form-input-add class to all inputs
+    const inputs = document.querySelectorAll('input:not([type="file"]), select, textarea');
+    inputs.forEach(input => {
+        if (!input.classList.contains('form-input-add')) {
+            input.classList.add('form-input-add');
+        }
+    });
+});
+
+// Dashboard image preview
+document.getElementById('dashboardInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('dashboardPreviewImg').src = event.target.result;
+            document.getElementById('dashboard-preview').style.display = 'block';
+            document.querySelector('label[for="dashboardInput"]').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Car image preview
+document.getElementById('carImageInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('carImagePreviewImg').src = event.target.result;
+            document.getElementById('car-image-preview').style.display = 'block';
+            document.querySelector('label[for="carImageInput"]').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
     }
 });
 </script>

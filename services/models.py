@@ -66,8 +66,41 @@ class Service(models.Model):
         blank=True, 
         null=True
     )
-    image = models.ImageField(upload_to='media_service/', blank=True, null=True)
-
+    # image = models.ImageField(upload_to='media_service/', blank=True, null=True)
+    image = models.ImageField(
+        upload_to='media_service/',
+        blank=True,
+        null=True,
+        verbose_name="Photo du véhicule"
+    )
+    
+    # Résultats de l'analyse IA (JSON)
+    ai_analysis = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name="Analyse IA des dommages"
+    )
+    
+    # Image annotée avec détections
+    annotated_image = models.ImageField(
+        upload_to='damage_analysis/',
+        blank=True,
+        null=True,
+        verbose_name="Image avec détections"
+    )
+    
+    # Confiance moyenne de l'IA
+    ai_confidence = models.FloatField(
+        blank=True,
+        null=True,
+        verbose_name="Confiance IA (%)"
+    )
+    
+    # Flag pour savoir si l'IA a été utilisée
+    is_ai_predicted = models.BooleanField(
+        default=False,
+        verbose_name="Analysé par IA"
+    )
     def clean(self):
         # Vérifie que date_service est dans le futur
         if self.date_service is not None:

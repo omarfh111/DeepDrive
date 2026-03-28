@@ -6,97 +6,366 @@
 {% block breadcrumb_leaf %}Reviews{% endblock %}
 
 {% block extra_css %}
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <link href="{% static 'admin_themes/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
 <link href="{% static 'admin_themes/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
 <link href="{% static 'admin_themes/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css' %}" rel="stylesheet" type="text/css"/>
+
+<style>
+/* ===== PRO THEME (same as users list) ===== */
+body{overflow-x:hidden;}
+.container-fluid{overflow-x:hidden;}
+
+/* Header */
+.page-header-pro{
+  background: linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);
+  border-radius:20px;
+  padding:35px 40px;
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border:1px solid rgba(220,38,38,.3);
+}
+.page-header-pro::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,.04) 1px, transparent 0);
+  background-size:40px 40px;
+  opacity:.55;
+}
+.page-header-pro::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:4px;
+  background:#DC2626;
+}
+.header-content-pro{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:25px;
+}
+.header-left-pro{display:flex; align-items:center; gap:20px;}
+.header-icon-pro{
+  width:70px; height:70px;
+  background:#DC2626; border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px rgba(220,38,38,.3);
+}
+.header-icon-pro i{font-size:32px; color:#fff;}
+.header-text-pro h2{
+  color:#fff; font-weight:900; font-size:28px;
+  margin:0 0 8px 0; letter-spacing:-.5px;
+}
+.header-text-pro p{color:rgba(255,255,255,.8); font-size:14px; margin:0; font-weight:600;}
+.header-stats-pro{display:flex; gap:16px; flex-wrap:wrap;}
+.stat-box-pro{
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(10px);
+  padding:16px 22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  transition:.25s;
+  min-width: 150px;
+}
+.stat-box-pro:hover{transform:translateY(-3px); border-color: rgba(220,38,38,.5);}
+.stat-box-pro .number{color:#DC2626; font-size:30px; font-weight:900; line-height:1; margin-bottom:6px;}
+.stat-box-pro .label{color:rgba(255,255,255,.85); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;}
+.stat-box-pro .mini{color:rgba(255,255,255,.75); font-size:12px; font-weight:600; margin-top:6px;}
+
+/* Main card */
+.card-pro{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card-header-pro{
+  background:#f8f9fa;
+  padding:22px 26px;
+  border-bottom:2px solid #e5e7eb;
+}
+.card-title-pro{
+  display:flex; align-items:center; gap:12px;
+  margin:0;
+}
+.card-title-icon-pro{
+  width:46px;height:46px;
+  background:#DC2626;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-title-icon-pro i{color:#fff;font-size:20px;}
+.card-title-pro h5{margin:0;color:#1a1a1a;font-weight:900;font-size:18px;}
+
+/* Datatable wrapper */
+.table-wrap-pro{padding:18px 18px 22px;}
+
+/* DataTables polish */
+.dataTables_wrapper .dataTables_filter input{
+  border:2px solid #e5e7eb !important;
+  border-radius:12px !important;
+  padding:10px 14px !important;
+  background:#f8f9fa !important;
+  font-weight:600;
+}
+.dataTables_wrapper .dataTables_filter input:focus{
+  outline:none !important;
+  border-color:#DC2626 !important;
+  box-shadow:0 0 0 4px rgba(220,38,38,.1) !important;
+  background:#fff !important;
+}
+.dataTables_wrapper .dataTables_length select{
+  border:2px solid #e5e7eb !important;
+  border-radius:12px !important;
+  padding:8px 12px !important;
+  background:#f8f9fa !important;
+  font-weight:700;
+}
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate{
+  padding-top:14px;
+  font-weight:700;
+  color:#6b7280;
+}
+
+/* Table look (keep DataTables classes but refine) */
+#reviews-datatable thead th{
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+#reviews-datatable tbody td{
+  font-size:12px;
+  font-weight:650;
+  color:#4b5563;
+  vertical-align:middle;
+}
+#reviews-datatable tbody tr:hover{
+  background:#fef3f2;
+}
+
+/* Badges */
+.badge-pro{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.badge-pro-success{background:#f3f4f6;color:#1a1a1a;border-color:#d1d5db;}
+.badge-pro-warning{background:#fef3c7;color:#92400e;border-color:#f59e0b;}
+.badge-pro-note{background:#e0f2fe;color:#075985;border-color:#7dd3fc;}
+.badge-pro-muted{background:#f9fafb;color:#6b7280;border-color:#e5e7eb;}
+
+/* Action button */
+.action-buttons-pro{display:flex; gap:8px; justify-content:flex-end;}
+.btn-action-pro{
+  width:38px;height:38px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  background:#f3f4f6;
+  display:flex; align-items:center; justify-content:center;
+  transition:.25s;
+  cursor:pointer;
+}
+.btn-action-pro:hover{background:#1a1a1a; color:#fff; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.btn-action-pro i{font-size:14px;}
+
+/* Image thumb */
+.thumb-pro{
+  width:52px; height:52px;
+  border-radius:12px;
+  object-fit:cover;
+  border:2px solid #e5e7eb;
+  background:#f8f9fa;
+}
+
+/* Alerts */
+.alert-pro{
+  border-radius:14px;
+  border:2px solid #e5e7eb;
+  font-weight:700;
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .page-header-pro{padding:25px 20px;}
+  .header-icon-pro{width:60px;height:60px;}
+  .header-icon-pro i{font-size:28px;}
+  .header-text-pro h2{font-size:22px;}
+  .stat-box-pro{flex:1; min-width:140px;}
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title mb-0">All Reviews</h4>
+<div class="container-fluid">
+
+  <!-- ===== Header ===== -->
+  <div class="page-header-pro">
+    <div class="header-content-pro">
+      <div class="header-left-pro">
+        <div class="header-icon-pro">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <div class="header-text-pro">
+          <h2>Reviews Management</h2>
+          <p>Consulter, filtrer et modérer les avis</p>
+        </div>
       </div>
-      <div class="card-body">
 
-        {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-          {% endfor %}
-        {% endif %}
-
-        <table id="reviews-datatable" class="table table-bordered dt-responsive nowrap w-100">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>User</th>
-              <th>Rating</th>
-              <th>Description</th>
-              <th>Image</th>
-              <th>Date Review</th>
-              <th>Date Joined</th>
-              <th>Status</th>
-              <th>Comments</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% with rows=page_obj|default:reviews %}
-            {% if rows %}
-              {% for review in rows %}
-              <tr>
-                <td>{{ review.id }}</td>
-                <td>{{ review.titre }}</td>
-                <td>{{ review.user.first_name }} {{ review.user.last_name }}</td>
-                <td><span class="badge bg-success">{{ review.note }}/5</span></td>
-                <td>{{ review.description|truncatewords:10 }}</td>
-                <td>
-                  {% if review.image %}
-                    <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="img-thumbnail" style="max-width:50px;max-height:50px">
-                  {% else %}
-                    <span class="text-muted">No image</span>
-                  {% endif %}
-                </td>
-                <td>{{ review.date_review|date:"Y-m-d" }}</td>
-                <td>{{ review.date_joined|date:"Y-m-d H:i" }}</td>
-                <td>
-                  {% if review.is_approved %}
-                    <span class="badge bg-success">Approved</span>
-                  {% else %}
-                    <span class="badge bg-warning">Pending</span>
-                  {% endif %}
-                </td>
-                <td>{{ review.commentaires.count }}</td>
-                <td class="text-end">
-                  <div class="d-inline-flex align-items-center gap-1">
-                    <!-- View -->
-                    <a href="{% url 'reviews:backoffice_review_detail' review.pk %}" class="btn btn-icon btn-sm bg-primary-subtle" data-bs-toggle="tooltip" data-bs-title="View">
-                      <i class="mdi mdi-eye-outline text-primary fs-14"></i>
-                    </a>
-                    <!-- Edit (optionnel si route existe) -->
-
-                    <!-- Delete -->
-
-                    <!-- Approve/Disapprove actions are handled in detail view -->
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            {% else %}
-              <tr><td colspan="11" class="text-center text-muted py-4">No reviews.</td></tr>
-            {% endif %}
-            {% endwith %}
-          </tbody>
-        </table>
-
+      <div class="header-stats-pro">
+        <div class="stat-box-pro">
+          <div class="number">{{ total_reviews|default:0 }}</div>
+          <div class="label">Avis</div>
+          <div class="mini">Approuvés : {{ approved_reviews|default:0 }}</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ pending_reviews|default:0 }}</div>
+          <div class="label">En attente</div>
+          <div class="mini">À modérer</div>
+        </div>
+        <div class="stat-box-pro">
+          <div class="number">{{ total_comments|default:0 }}</div>
+          <div class="label">Commentaires</div>
+          <div class="mini">Approuvés : {{ approved_comments|default:0 }}</div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- ===== Table Card ===== -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card-pro">
+        <div class="card-header-pro">
+          <div class="card-title-pro">
+            <div class="card-title-icon-pro"><i class="fa-solid fa-list"></i></div>
+            <h5>All Reviews</h5>
+          </div>
+        </div>
+
+        <div class="table-wrap-pro">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show alert-pro" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="table-responsive">
+            <table id="reviews-datatable" class="table table-bordered dt-responsive nowrap w-100 align-middle">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>User</th>
+                  <th>Rating</th>
+                  <th>Description</th>
+                  <th>Image</th>
+                  <th>Date Review</th>
+                  <th>Date Joined</th>
+                  <th>Status</th>
+                  <th>Comments</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% with rows=page_obj|default:reviews %}
+                {% if rows %}
+                  {% for review in rows %}
+                  <tr>
+                    <td>
+                      <span class="badge-pro badge-pro-muted">
+                        <i class="fa-solid fa-hashtag"></i>
+                        {{ review.id }}
+                      </span>
+                    </td>
+
+                    <td style="font-weight:800; color:#1a1a1a;">
+                      {{ review.titre }}
+                    </td>
+
+                    <td>
+                      {{ review.user.first_name }} {{ review.user.last_name }}
+                    </td>
+
+                    <td>
+                      <span class="badge-pro badge-pro-note">
+                        <i class="fa-solid fa-star"></i>
+                        {{ review.note }}/5
+                      </span>
+                    </td>
+
+                    <td>{{ review.description|truncatewords:10 }}</td>
+
+                    <td>
+                      {% if review.image %}
+                        <img src="{{ review.image.url }}" alt="{{ review.titre }}" class="thumb-pro">
+                      {% else %}
+                        <span class="badge-pro badge-pro-muted">
+                          <i class="fa-solid fa-image"></i> No image
+                        </span>
+                      {% endif %}
+                    </td>
+
+                    <td>{{ review.date_review|date:"Y-m-d" }}</td>
+                    <td>{{ review.date_joined|date:"Y-m-d H:i" }}</td>
+
+                    <td>
+                      {% if review.is_approved %}
+                        <span class="badge-pro badge-pro-success">
+                          <i class="fa-solid fa-circle-check"></i> Approved
+                        </span>
+                      {% else %}
+                        <span class="badge-pro badge-pro-warning">
+                          <i class="fa-solid fa-clock"></i> Pending
+                        </span>
+                      {% endif %}
+                    </td>
+
+                    <td>
+                      <span class="badge-pro badge-pro-muted">
+                        <i class="fa-solid fa-comments"></i>
+                        {{ review.commentaires.count }}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div class="action-buttons-pro">
+                        <a href="{% url 'reviews:backoffice_review_detail' review.pk %}"
+                           class="btn-action-pro"
+                           data-bs-toggle="tooltip"
+                           data-bs-title="View">
+                          <i class="fa-solid fa-eye"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr><td colspan="11" class="text-center text-muted py-4">No reviews.</td></tr>
+                {% endif %}
+                {% endwith %}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 
@@ -122,7 +391,7 @@
       lengthChange: true,
       autoWidth: false,
       pageLength: 25,
-      order: [[7, "desc"]], // tri par Date Joined
+      order: [[7, "desc"]],
       dom: "Bfrtip",
       buttons: ["copy", "csv", "excel", "pdf", "print"],
       language: {
@@ -130,8 +399,8 @@
         lengthMenu: "Show _MENU_ entries",
         info: "Showing _START_ to _END_ of _TOTAL_ entries",
         infoEmpty: "No entries found",
-        infoFiltered: "(filtered from _MAX_ total entries)",
-      },
+        infoFiltered: "(filtered from _MAX_ total entries)"
+      }
     });
   });
 </script>

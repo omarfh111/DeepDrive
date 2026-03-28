@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
-
+from pgvector.django import VectorField
 
 class Post(models.Model):
     MARQUE_CHOICES = [
@@ -153,7 +153,14 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name='posts'
     )
-    
+    embedding = models.JSONField(null=True, blank=True)
+    predicted_price = models.DecimalField(max_digits=12, decimal_places=0, null=True, blank=True)
+    offer_label = models.CharField(
+        max_length=20,
+        choices=[("OVERPRICED", "OVERPRICED"), ("NORMAL", "NORMAL"), ("GOOD_DEAL", "GOOD_DEAL")],
+        null=True,
+        blank=True,
+    )
     def __str__(self):
         return f"{self.marque} {self.modele} ({self.year})"
     

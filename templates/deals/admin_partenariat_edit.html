@@ -6,100 +6,475 @@
 {% block page_title %}Partenariats{% endblock %}
 {% block breadcrumb_leaf %}{{ p|yesno:"Modifier,Ajouter" }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
 {% block content %}
+<style>
+/* MODERN CARD DESIGN */
+.modern-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.modern-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+
+/* CARD HEADER */
+.modern-card-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 28px 35px;
+    position: relative;
+    overflow: hidden;
+}
+.modern-card-header::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size:40px 40px;
+    opacity:.5;
+}
+.modern-card-header::after{
+    content:'';
+    position:absolute; left:0; right:0; bottom:0;
+    height:4px; background:#DC2626;
+}
+.modern-card-header-content{
+    position:relative; z-index:1;
+    display:flex; align-items:center; gap:18px;
+}
+.header-icon-wrapper{
+    width:55px; height:55px;
+    background:#DC2626; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 15px rgba(220,38,38,.3);
+}
+.header-icon-wrapper i{ font-size:24px; color:#fff; }
+.header-text h5{
+    color:#fff; font-weight:800; font-size:20px;
+    margin:0 0 5px 0; letter-spacing:-.5px;
+}
+.header-text p{
+    color:rgba(255,255,255,.75);
+    font-size:13px; margin:0; font-weight:500;
+}
+
+/* CARD BODY */
+.modern-card-body{ padding:35px; background:#fff; }
+
+/* PAGE HEADER */
+.page-header-modern{
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius:20px;
+    padding:32px 38px;
+    margin-bottom:30px;
+    border:1px solid rgba(220,38,38,.3);
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    position:relative; overflow:hidden;
+}
+.page-header-modern::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size:40px 40px;
+    opacity:.5;
+}
+.page-header-modern::after{
+    content:'';
+    position:absolute; left:0; right:0; bottom:0;
+    height:4px; background:#DC2626;
+}
+.page-header-content{ position:relative; z-index:1; }
+.page-header-modern h4{
+    color:#fff; font-weight:800; font-size:26px;
+    margin:0; display:flex; align-items:center; gap:15px;
+    letter-spacing:-.5px;
+}
+.page-header-icon{
+    width:60px; height:60px;
+    background:#DC2626;
+    border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:26px;
+    box-shadow:0 6px 18px rgba(220,38,38,.3);
+}
+
+/* BREADCRUMB */
+.breadcrumb-modern{
+    background:rgba(255,255,255,.1);
+    backdrop-filter: blur(10px);
+    padding:10px 20px;
+    border-radius:10px;
+    margin:0;
+    border:1px solid rgba(255,255,255,.15);
+}
+.breadcrumb-modern .breadcrumb-item{
+    font-size:13px; font-weight:600;
+}
+.breadcrumb-modern .breadcrumb-item a{
+    color:rgba(255,255,255,.7);
+    text-decoration:none;
+    transition:.2s;
+    display:flex; align-items:center; gap:6px;
+}
+.breadcrumb-modern .breadcrumb-item a:hover{ color:#DC2626; }
+.breadcrumb-modern .breadcrumb-item.active{ color:#fff; font-weight:700; }
+
+/* FORM GROUPS */
+.form-group-modern{ margin-bottom:25px; }
+.form-label-modern{
+    color:#1a1a1a;
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:10px;
+    display:flex; align-items:center; gap:10px;
+}
+.form-label-modern .label-icon{
+    width:32px; height:32px;
+    background:#DC2626; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:14px;
+}
+.form-label-modern .required-star{
+    color:#DC2626; font-size:14px; margin-left:3px;
+}
+
+/* FORM CONTROLS */
+.form-control-modern,
+.form-select-modern{
+    width:100%;
+    padding:13px 18px;
+    border:2px solid #e5e7eb;
+    border-radius:12px;
+    font-size:14px;
+    transition:.3s;
+    background:#f8f9fa;
+    font-weight:500;
+    color:#1a1a1a;
+}
+.form-control-modern:focus,
+.form-select-modern:focus{
+    border-color:#DC2626 !important;
+    outline:none;
+    box-shadow:0 0 0 4px rgba(220,38,38,.1) !important;
+    background:#fff !important;
+}
+.form-control-modern::placeholder{
+    color:#9ca3af; font-weight:400;
+}
+
+/* ALERT DANGER */
+.alert-danger-modern{
+    background:#fee2e2;
+    border:2px solid #fca5a5;
+    border-radius:14px;
+    padding:18px 22px;
+    color:#991b1b;
+    font-weight:600;
+    display:flex; align-items:start; gap:15px;
+    margin-bottom:25px;
+}
+.alert-danger-modern .alert-icon{
+    width:42px; height:42px;
+    background:#DC2626; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:18px;
+    flex-shrink:0;
+}
+
+/* ERROR TEXT */
+.error-text{
+    color:#DC2626;
+    font-size:12px;
+    font-weight:600;
+    margin-top:6px;
+    display:flex; align-items:center; gap:6px;
+    padding:6px 10px;
+    background:rgba(220,38,38,.05);
+    border-radius:6px;
+    border-left:3px solid #DC2626;
+}
+.error-text i{ font-size:12px; }
+
+/* TEXTAREA HEIGHT */
+.textarea-modern{ min-height:120px; resize:vertical; }
+
+/* BUTTONS */
+.btn-modern{
+    padding:13px 28px;
+    border-radius:12px;
+    font-weight:700;
+    font-size:14px;
+    transition:.3s;
+    border:none;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+}
+.btn-primary-modern{
+    background:#DC2626;
+    color:#fff;
+    box-shadow:0 4px 12px rgba(220,38,38,.25);
+}
+.btn-primary-modern:hover{
+    background:#991B1B;
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(220,38,38,.35);
+}
+.btn-secondary-modern{
+    background:#fff;
+    color:#6b7280;
+    border:2px solid #e5e7eb;
+}
+.btn-secondary-modern:hover{
+    background:#1a1a1a;
+    color:#fff;
+    border-color:#1a1a1a;
+    transform:translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width:768px){
+    .modern-card-header{ padding:22px 20px; }
+    .modern-card-body{ padding:25px 20px; }
+    .page-header-modern{ padding:25px 20px; }
+    .page-header-modern h4{ font-size:22px; }
+    .page-header-icon, .header-icon-wrapper{ width:50px; height:50px; font-size:22px; }
+}
+</style>
+
 <div class="container-fluid">
 
-  <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-    <div class="flex-grow-1">
-      <h4 class="fs-18 fw-semibold m-0">
-        {% if p %}Modifier partenariat #{{ p.id_partenariat }}{% else %}Ajouter un partenariat{% endif %}
-      </h4>
-    </div>
-    <div class="text-end">
-      <ol class="breadcrumb m-0 py-0">
-        <li class="breadcrumb-item"><a href="javascript:void(0);">Partenariats</a></li>
-        <li class="breadcrumb-item active">{% if p %}Modifier{% else %}Ajouter{% endif %}</li>
-      </ol>
+  <!-- Page Header -->
+  <div class="page-header-modern">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div class="page-header-content">
+        <h4>
+          <span class="page-header-icon">
+            <i class="fa-solid {% if p %}fa-handshake{% else %}fa-handshake-angle{% endif %}"></i>
+          </span>
+
+          {% if p %}
+            <div>
+              <div>Modifier partenariat</div>
+              <small style="font-size: 15px; color: rgba(255,255,255,0.7); font-weight: 600;">
+                #{{ p.id_partenariat }} — {{ p.nom_societe }}
+              </small>
+            </div>
+          {% else %}
+            Ajouter un partenariat
+          {% endif %}
+        </h4>
+      </div>
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-modern">
+          <li class="breadcrumb-item">
+            <a href="{% url 'deals:admin_partenariats_list' %}">
+              <i class="fa-solid fa-handshake"></i>
+              Partenariats
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <i class="fa-solid fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i>
+            {% if p %}Modifier{% else %}Ajouter{% endif %}
+          </li>
+        </ol>
+      </nav>
     </div>
   </div>
 
+  <!-- Main Card -->
   <div class="row">
     <div class="col-12">
-      <div class="card">
-        <div class="card-header"><h5 class="card-title mb-0">Informations du partenariat</h5></div>
+      <div class="modern-card">
 
-        <div class="card-body">
+        <div class="modern-card-header">
+          <div class="modern-card-header-content">
+            <div class="header-icon-wrapper">
+              <i class="fa-solid fa-building"></i>
+            </div>
+            <div class="header-text">
+              <h5>Informations du partenariat</h5>
+              <p>Complétez les champs requis pour créer ou modifier un partenariat</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modern-card-body">
           <form method="post" novalidate>
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-              <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+              <div class="alert-danger-modern">
+                <div class="alert-icon">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                  <strong>Erreur de validation</strong><br>
+                  {{ form.non_field_errors }}
+                </div>
+              </div>
             {% endif %}
 
-            <div class="row">
+            <div class="row g-4">
+
+              <!-- Left Column -->
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.user.id_for_label }}">Utilisateur</label>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.user.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-user"></i></span>
+                    Utilisateur
+                    <span class="required-star">*</span>
+                  </label>
                   {{ form.user }}
-                  <div class="text-danger small">{{ form.user.errors }}</div>
+                  {% if form.user.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.user.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.nom_societe.id_for_label }}">Société</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.nom_societe.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-building"></i></span>
+                    Société
+                    <span class="required-star">*</span>
+                  </label>
                   {{ form.nom_societe }}
-                  <div class="text-danger small">{{ form.nom_societe.errors }}</div>
+                  {% if form.nom_societe.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.nom_societe.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.email.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-envelope"></i></span>
+                    Email
+                    <span class="required-star">*</span>
+                  </label>
                   {{ form.email }}
-                  <div class="text-danger small">{{ form.email.errors }}</div>
+                  {% if form.email.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.email.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.telephone.id_for_label }}">Téléphone</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.telephone.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-phone"></i></span>
+                    Téléphone
+                  </label>
                   {{ form.telephone }}
-                  <div class="text-danger small">{{ form.telephone.errors }}</div>
+                  {% if form.telephone.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.telephone.errors }}
+                    </div>
+                  {% endif %}
                 </div>
+
               </div>
 
+              <!-- Right Column -->
               <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.nom_ceo.id_for_label }}">CEO</label>
+
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.nom_ceo.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-user-tie"></i></span>
+                    CEO
+                  </label>
                   {{ form.nom_ceo }}
-                  <div class="text-danger small">{{ form.nom_ceo.errors }}</div>
+                  {% if form.nom_ceo.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.nom_ceo.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.date_partenariat.id_for_label }}">Date</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.date_partenariat.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                    Date
+                  </label>
                   {{ form.date_partenariat }}
-                  <div class="text-danger small">{{ form.date_partenariat.errors }}</div>
+                  {% if form.date_partenariat.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.date_partenariat.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.plafond.id_for_label }}">Plafond</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.plafond.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-coins"></i></span>
+                    Plafond
+                  </label>
                   {{ form.plafond }}
-                  <div class="text-danger small">{{ form.plafond.errors }}</div>
+                  {% if form.plafond.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.plafond.errors }}
+                    </div>
+                  {% endif %}
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label" for="{{ form.status.id_for_label }}">Statut</label>
+                <div class="form-group-modern">
+                  <label class="form-label-modern" for="{{ form.status.id_for_label }}">
+                    <span class="label-icon"><i class="fa-solid fa-toggle-on"></i></span>
+                    Statut
+                    <span class="required-star">*</span>
+                  </label>
                   {{ form.status }}
-                  <div class="text-danger small">{{ form.status.errors }}</div>
+                  {% if form.status.errors %}
+                    <div class="error-text">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      {{ form.status.errors }}
+                    </div>
+                  {% endif %}
                 </div>
+
               </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="{{ form.detail_societe.id_for_label }}">Détails de la société</label>
+            <div class="form-group-modern" style="margin-top: 10px;">
+              <label class="form-label-modern" for="{{ form.detail_societe.id_for_label }}">
+                <span class="label-icon"><i class="fa-solid fa-align-left"></i></span>
+                Détails de la société
+              </label>
               {{ form.detail_societe }}
-              <div class="text-danger small">{{ form.detail_societe.errors }}</div>
+              {% if form.detail_societe.errors %}
+                <div class="error-text">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  {{ form.detail_societe.errors }}
+                </div>
+              {% endif %}
             </div>
 
-            <div class="d-flex gap-2">
-              <a href="{% url 'deals:admin_partenariats_list' %}" class="btn btn-outline-secondary">Annuler</a>
-              <button class="btn btn-primary">Enregistrer</button>
+            <div class="d-flex gap-3 mt-4 pt-4" style="border-top: 2px solid #f3f4f6;">
+              <a href="{% url 'deals:admin_partenariats_list' %}" class="btn-modern btn-secondary-modern">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Annuler</span>
+              </a>
+              <button type="submit" class="btn-modern btn-primary-modern">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Enregistrer</span>
+              </button>
             </div>
+
           </form>
         </div>
 
@@ -108,4 +483,27 @@
   </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Add modern classes to select/inputs/textarea rendered by Django
+  document.addEventListener('DOMContentLoaded', function() {
+    // selects
+    document.querySelectorAll('select').forEach(function(select) {
+      select.classList.add('form-select-modern');
+    });
+
+    // inputs (skip checkbox/radio)
+    document.querySelectorAll('input').forEach(function(inp) {
+      if (inp.type === 'checkbox' || inp.type === 'radio' || inp.type === 'hidden') return;
+      inp.classList.add('form-control-modern');
+    });
+
+    // textarea
+    document.querySelectorAll('textarea').forEach(function(ta) {
+      ta.classList.add('form-control-modern', 'textarea-modern');
+    });
+  });
+</script>
 {% endblock %}
