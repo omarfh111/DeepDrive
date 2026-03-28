@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p^ej4v$_w2drjf8mx%&(tcph^0z9cy849&awd_wu!4-(wl62s@'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-default-key-for-dev")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -157,8 +157,8 @@ LOGOUT_REDIRECT_URL = None
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STRIPE_SECRET_KEY = "sk_test_51SRag7DU2Akojx7VAI9ZbOLJTHu7KkXUaGgLkLiJtm2FcYrz8HrqbUv1iq20yYCg2hjMm6FSnnTkJBYNN6wriEUo00wYLB6jqX"
-STRIPE_PUBLIC_KEY = "pk_test_51SRag7DU2Akojx7VyG0tPGiKb3JkfS64NmhmArV2ad89sEigE05Ji2JlEXKQGojSmabZDIhp5ZwmIvq2y6wdmh8w007kZLLNmn"
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "")
 STRIPE_WEBHOOK_SECRET = ""  # optional until you set webhook
 STRIPE_CURRENCY = "usd"  
 ADVISOR_PRICE_TND=80
@@ -173,13 +173,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "fkihomar06122003@gmail.com"
-EMAIL_HOST_PASSWORD = "elcs pqrd gkrc dqmp"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD_OMAR", "")
 DEFAULT_FROM_EMAIL = "DeepDrive <fkihomar06122003@gmail.com>"
 
 
-TWILIO_ACCOUNT_SID = "ACadf25df9983d77211a47692c31ec6485"
-TWILIO_AUTH_TOKEN = "01707a8a4245e2d0794a6eedb848a054"
-TWILIO_MESSAGING_SERVICE_SID = "MG48761413776d2391644be162c582092f"
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
+TWILIO_MESSAGING_SERVICE_SID = os.environ.get("TWILIO_MESSAGING_SERVICE_SID", "")
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
@@ -189,7 +189,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "emnakarray61@gmail.com"
-EMAIL_HOST_PASSWORD = "uwve gotm jysk hobm"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD_EMNA", "")
 DEFAULT_FROM_EMAIL = "DeepDrive <emnakarray61@gmail.com>"
 
 ADMIN_NOTIFICATION_EMAILS = [
@@ -199,5 +199,5 @@ ADMIN_NOTIFICATION_EMAILS = [
 
 TESTDRIVE_API_KEY = "change-me-very-long-random"
 
-ROBOFLOW_API_KEY = "Q2zZzhyNB8MtmjfNTNrR"
+ROBOFLOW_API_KEY = os.environ.get("ROBOFLOW_API_KEY", "")
 ROBOFLOW_MODEL_ID = "car-dashboard-icons/3"
